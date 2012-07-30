@@ -1,0 +1,6 @@
+/build/
+/release/
+*.pem
+/platforms/android/bin/
+/platforms/android/assets/
+/platforms/android/gen/

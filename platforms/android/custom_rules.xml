@@ -1,0 +1,70 @@
+<project>
+    <import file="../../common.xml"/>
+    <target name="-pre-build" depends="img,assets,html"/>
+
+    <target name="img">
+        <deploy-img dest="${assets.img.dir}"/>
+    </target>
+
+    <target name="assets" depends="assets-debug,assets-release" />
+
+    <resources id="js.android">
+        <resources refid="js.libs" />
+        <resources refid="js.head" />
+        <resources refid="js.modules" />
+        <resources refid="js.collectors" />
+        <fileset file="${listit.js.platforms.dir}/android/android.js" />
+        <resources refid="js.tail" />
+    </resources>
+
+    <resources id="css.android">
+        <resources refid="css.all" />
+        <fileset file="${listit.css.platforms.dir}/android/android.css" />
+    </resources>
+
+    <target name="assets-debug" unless="build.is.mode.release">
+        <pathconvert property="assets.js.path" refid="js.android">
+            <globmapper from="${listit.dir}/*" to="*"/>
+        </pathconvert>
+        <pathconvert property="assets.css.path" refid="css.android">
+            <globmapper from="${listit.dir}/*" to="*"/>
+        </pathconvert>
+        <copy todir="${assets.css.dir}">
+            <resources refid="css.android" />
+        </copy>
+        <copy todir="${assets.js.dir}">
+            <resources refid="js.android" />
+        </copy>
+    </target>
+
+    <target name="assets-release" if="build.js.mode.release">
+        <property name="assets.css.main.file" value="${assets.css.dir}/main.css" />
+        <property name="assets.css.path" value="${assets.css.main.file}" relative="true" basedir="${assets.dir}" />
+
+        <property name="assets.js.main.file" value="${assets.js.dir}/main.js" />
+        <property name="assets.js.path" value="${assets.js.main.file}" relative="true" basedir="${assets.dir}" />
+
+        <mkdir dir="${assets.css.dir}" />
+        <mkdir dir="${assets.js.dir}" />
+
+        <yuicompress type="css" output="${assets.css.main.file}">
+            <resources refid="css.android" />
+        </yuicompress>
+
+        <yuicompress type="js" output="${assets.js.main.file}">
+            <resources refid="js.android" />
+        </yuicompress>
+    </target>
+
+    <target name="html">
+        <htmltemplate
+            input="${listit.html.tmpl}"
+            output="${assets.html.file}"
+            scripts="${assets.js.path}"
+            stylesheets="${assets.css.path}"
+            />
+    </target>
+    <target name="-pre-clean">
+        <delete dir="${assets.dir}" />
+    </target>
+</project>

@@ -1,0 +1,11 @@
+# Words Of Wisdom #
+
+## Chrome Extension ##
+
+ * The background page is listed in getViews
+ * `window` always refers to the window where the code was written (functions =
+   closures).
+ * Putting view classes in the background page makes them difficult to clean up
+   (causing memory leaks).
+    - It also makes window point to the background page (not good).
+

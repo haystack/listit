@@ -1,0 +1,330 @@
+﻿/*
+ * TODO(wstyke): On Hover/Focus - darken borders for [NewNote, Search, Note].
+ */
+
+html, body {
+  padding: 0px;
+  margin: 0px;
+  height: 100%;
+  width: 100%; /* FF? */
+
+  font-family: Helvetica Neue Ultralight, "Helvetica Neue", "Helvetica", sans-serif;
+  color: #111;
+  font-weight:110;
+  font-size: 14px;
+  line-height: 140%; 
+  background-color: #F5F5F5;
+}
+
+.page {
+  display: none;
+  overflow: auto;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 0;
+  position: absolute;
+}
+
+#statusMsg {
+  position: absolute;
+  bottom: 10px;
+  top: auto;
+  left: 10%;
+  width: 80%;
+  text-align: center;
+  z-index: -10;
+}
+
+#statusMsg > div {
+  width: 300px;
+  background-color: rgba(227, 173, 32, 1);
+  border-radius: 10px;
+}
+#statusMsg.show {
+  z-index: 10;
+}
+
+.jiggly { 
+    -webkit-animation: jiggle 0.2s infinite;
+    -moz-animation: jiggle 0.2s infinite;
+    -o-animation: jiggle 0.2s infinite;
+    animation: jiggle 0.2s infinite;
+}
+
+.spinner { 
+    -webkit-animation: spin 1s linear infinite;
+    -moz-animation: spin 1s linear infinite;
+    -o-animation: spin 1s linear infinite;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes jiggle { 
+    0% { 
+        -moz-transform: rotate(-4deg); 
+    } 
+    50% { 
+        -moz-transform: rotate(4deg); 
+    } 
+} 
+@-o-keyframes jiggle { 
+    0% { 
+        -o-transform: rotate(-4deg); 
+    } 
+    50% { 
+        -o-transform: rotate(4deg); 
+    } 
+} 
+@-moz-keyframes jiggle { 
+    0% { 
+        -moz-transform: rotate(-4deg); 
+    } 
+    50% { 
+        -moz-transform: rotate(4deg); 
+    } 
+} 
+@-webkit-keyframes jiggle { 
+    0% { 
+        -webkit-transform: rotate(-4deg); 
+    } 
+    100% { 
+        -webkit-transform: rotate(4deg); 
+    } 
+}
+
+@-moz-keyframes spin { 
+    from { 
+        -moz-transform: rotate(0deg); 
+    } 
+    to { 
+        -moz-transform: rotate(360deg); 
+    } 
+} 
+
+@-webkit-keyframes spin { 
+    from { 
+        -webkit-transform: rotate(0deg); 
+    } 
+    to { 
+        -webkit-transform: rotate(360deg); 
+    } 
+} 
+
+@-o-keyframes spin { 
+    from { 
+        -o-transform: rotate(0deg); 
+    } 
+    to { 
+        -o-transform: rotate(360deg); 
+    } 
+} 
+
+@keyframes spin { 
+    from { 
+        transform: rotate(0deg); 
+    } 
+    to { 
+        transform: rotate(360deg); 
+    } 
+} 
+
+
+
+/*.noteContents.oneLine {
+  height: 1.2em;
+}*/
+
+
+
+
+.hide {
+  display: none;
+}
+/* Invalid color for output display */
+.invalid {
+  background:#FAEAE6;
+  border:1px solid #9E2A3F;
+}
+/* Valid color for output display */
+.valid {
+  background:#f1fbe5;
+  border:1px solid #8cce3b;
+}
+
+
+/* CSS3 Box Model */
+.hbox {
+  display: -webkit-box;
+  -webkit-box-orient: horizontal;
+  -webkit-box-align: stretch;
+  display: -moz-box;
+  -moz-box-orient: horizontal;
+  -moz-box-align: stretch;
+  display: box;
+  box-orient: horizontal;
+  box-align: stretch;
+}
+
+.vbox {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-box-align: stretch;
+  display: -moz-box;
+  -moz-box-orient: vertical;
+  -moz-box-align: stretch;
+  display: box;
+  box-orient: vertical;
+  box-align: stretch;
+}
+.box {
+  display: box;
+  display: -webkit-box;
+  display: -moz-box;
+}
+
+.flex {
+  -webkit-box-flex: 1;
+  -moz-box-flex: 1;
+  box-flex: 1;
+}
+
+.center_box {
+  -webkit-box-align: center;
+  -webkit-box-pack: center;
+  -moz-box-align: center;
+  -moz-box-pack: center;
+  box-align: center;
+  box-pack: center;
+}
+
+.justified_box {
+  -webkit-box-align: center;
+  -webkit-box-pack: justify;
+  -moz-box-align: center;
+  -moz-box-pack: justify;
+  box-align: center;
+  box-pack: justify;
+}
+
+
+.clickable {
+  cursor:hand; /* Webkit */
+  cursor:pointer; /* FF */
+}
+
+.scroll-x {
+    overflow-x: auto;
+}
+.scroll-y {
+    overflow-y: auto;
+}
+
+/* iOS */
+.scroll-x, .scroll-y {
+    -webkit-overflow-scrolling: touch;
+}
+
+ul.list {
+    list-style: disc outside;
+}
+.bold {
+    font-weight: bold;
+}
+
+/* Glowing input boxes */
+input,textarea,select {
+    border: 1px solid #48E;
+    outline:none;
+    transition: all 0.1s ease-in-out;
+    -webkit-transition: all 0.1s ease-in-out;
+    -moz-transition: all 0.1s ease-in-out;
+    border-radius: 2px;
+    -moz-border-radius: 2px;
+    -webkit-border-radius: 2px;
+    background: white;
+    color: black;
+}
+
+input:focus,textarea:focus,select:focus{
+    box-shadow: 0 0 4px rgba(85, 153, 255, 100);
+    -webkit-box-shadow: 0 0 4px rgba(85, 153, 255, 100);
+    -moz-box-shadow: 0 0 4px rgba(85, 153, 255, 100);
+}
+
+.button {
+  background-color: #59F;
+  border: 1px solid #48E;
+  margin: 2px 5px 2px 5px;
+  border-radius: 5px;
+  color: white;
+}
+
+.right {
+    float: right;
+}
+.left {
+    float: left;
+}
+.clear {
+    clear: both;
+}
+
+p {
+    padding-bottom: 1em;
+}
+
+.ui-state-highlight { 
+    height: 3em; 
+    line-height: 1.2em; 
+}
+
+.grabable {
+  cursor: hand;
+  cursor: grab !important;
+  cursor: -moz-grab;
+  cursor: -webkit-grab;
+}
+
+.grabbing {
+  cursor:hand;
+  cursor:grabbing !important;
+  cursor:-moz-grabbing;
+  cursor:-webkit-grabbing;
+}
+
+.page {
+    min-width: 280px;
+}
+
+.center {
+    text-align: center;
+}
+
+.off-screen {
+    left: -9999px !important;
+    position: absolute !important;
+}
+
+.tableform legend {
+    font-weight: bold;
+}
+
+.tableform .field > * {
+    display: table-cell;
+}
+.tableform .field label {
+    padding-right: 10px;
+}
+.tableform .field {
+    display: table-row;
+}
+.tableform input[type="submit"] {
+    width: 100%;
+    display: table-row;
+    text-align: center;
+}
+
+.tableform fieldset {
+    padding: 10px;
+}
+

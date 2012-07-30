@@ -1,0 +1,151 @@
+<project name="List.it Chrome Extension">
+    <import file="../../common.xml"/>
+
+    <resources id="js.sidebar">
+        <resources refid="js.libs" />
+        <fileset file="${listit.js.platforms.dir}/chrome/sidebar-before.js" />
+        <resources refid="js.common" />
+        <resources refid="js.router" />
+        <fileset dir="${listit.js.dir}">
+            <include name="*/main.js" />
+        </fileset>
+        <fileset dir="${listit.js.dir}">
+            <include name="*/templates.js" />
+        </fileset>
+        <fileset dir="${listit.js.dir}">
+            <include name="*/views.js" />
+        </fileset>
+        <filelist>
+            <file name="${listit.js.platforms.dir}/chrome/sidebar.js" />
+            <file name="${listit.js.dir}/view-setup.js" />
+        </filelist>
+    </resources>
+
+    <resources id="js.background">
+        <resources refid="js.libs" />
+        <fileset file="${listit.js.platforms.dir}/chrome/backbone.omnibox.js" />
+        <resources refid="js.common" />
+        <fileset dir="${listit.js.dir}">
+            <include name="*/main.js" />
+        </fileset>
+        <fileset dir="${listit.js.dir}">
+            <include name="*/models.js" />
+        </fileset>
+        <fileset dir="${listit.js.dir}">
+            <include name="*/collections.js" />
+        </fileset>
+        <resources refid="js.collectors" />
+        <fileset file="${listit.js.platforms.dir}/chrome/background.js" />
+    </resources>
+
+    <resources id="js.content">
+        <resources refid="js.libs.jquery" />
+        <fileset file="${listit.js.platforms.dir}/chrome/content.js" />
+    </resources>
+
+    <target name="build.img">
+        <deploy-img dest="${build.img.dir}"/>
+    </target>
+
+
+    <resources id="css.sidebar">
+        <resources refid="css.all" />
+        <fileset file="${listit.css.platforms.dir}/chrome/sidebar.css" />
+    </resources>
+
+    <target name="build.assets-debug">
+        <pathconvert property="build.sidebar.js.path" refid="js.sidebar">
+            <globmapper from="${listit.dir}/*" to="*"/>
+        </pathconvert>
+        <pathconvert property="build.sidebar.css.path" refid="css.sidebar">
+            <globmapper from="${listit.dir}/*" to="*"/>
+        </pathconvert>
+        <pathconvert property="build.background.js.path" refid="js.background">
+            <globmapper from="${listit.dir}/*" to="*"/>
+        </pathconvert>
+        <pathconvert property="build.content.js.path" refid="js.content">
+            <globmapper from="${listit.dir}/*" to="*"/>
+        </pathconvert>
+    </target>
+
+    <target name="release" depends="build.img,build.assets,build.html,build.manifest">
+        <exec executable="chromium">
+            <arg value="--pack-extension=${build.dir}" />
+            <arg value="--pack-extension-key=${privatekey}" />
+        </exec>
+    </target>
+
+    <target name="debug" depends="build.assets-debug,build.html,build.manifest">
+        <copy todir="${listit.dir}" overwrite="true" flatten="true">
+            <filelist dir="${build.dir}">
+                <file name="manifest.json" />
+                <file name="index.html" />
+            </filelist>
+        </copy>
+    </target>
+
+    <target name="build.assets">
+        <property name="build.sidebar.css.main.file" value="${build.css.dir}/sidebar.css" />
+        <property name="build.sidebar.css.path" value="${build.sidebar.css.main.file}" relative="true" basedir="${build.dir}" />
+
+        <property name="build.sidebar.js.main.file" value="${build.js.dir}/sidebar.js" />
+        <property name="build.sidebar.js.path" value="${build.sidebar.js.main.file}" relative="true" basedir="${build.dir}" />
+
+        <property name="build.background.js.main.file" value="${build.js.dir}/background.js" />
+        <property name="build.background.js.path" value="${build.background.js.main.file}" relative="true" basedir="${build.dir}" />
+
+        <mkdir dir="${build.css.dir}" />
+        <mkdir dir="${build.js.dir}" />
+
+        <!-- TODO: Don't duplicate code -->
+
+        <yuicompress type="css" output="${build.sidebar.css.main.file}">
+            <resources refid="css.sidebar" />
+        </yuicompress>
+
+        <yuicompress type="js" output="${build.background.js.main.file}">
+            <resources refid="js.background" />
+        </yuicompress>
+
+        <yuicompress type="js" output="${build.sidebar.js.main.file}">
+            <resources refid="js.sidebar" />
+        </yuicompress>
+    </target>
+
+    <target name="build.html">
+        <htmltemplate
+            input="${listit.html.tmpl}"
+            output="${build.sidebar.html.file}"
+            scripts="${build.sidebar.js.path}"
+            stylesheets="${build.sidebar.css.path}"
+            />
+    </target>
+
+    <target name="build.manifest">
+        <!--
+        <local name="content_path" />
+        <jsonpath property="content_path" path="${build.content.js.path}" />
+        -->
+        <local name="background_path" />
+        <jsonpath property="background_path" path="${build.background.js.path}" />
+        <copy file="${platform.dir}/manifest.json.tmpl" tofile="${build.dir}/manifest.json">
+            <filterchain>
+                <filterreader classname="org.apache.tools.ant.filters.ReplaceTokens">
+                    <param type="propertiesfile" value="manifest.properties" />
+                    <!--<token key="content_js" value="${content_path}"/>-->
+                    <param type="token" name="background_js" value="${background_path}" />
+                </filterreader>
+            </filterchain>
+        </copy>
+    </target>
+
+    <target name="install">
+        <exec executable="chromium">
+            <arg value="--install-extension=${build.dir}/../chrome.crx" />
+        </exec>
+    </target>
+    <target name="clean">
+        <delete dir="${build.dir}" />
+        <delete dir="${deploy.dir}" />
+    </target>
+</project>

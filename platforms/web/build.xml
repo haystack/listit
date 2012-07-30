@@ -1,0 +1,61 @@
+<project>
+    <import file="../../common.xml"/>
+
+    <target name="img">
+        <deploy-img dest="${deploy.img.dir}"/>
+    </target>
+
+    <target name="css">
+        <property name="deploy.css.main.file" value="${deploy.css.dir}/main.css" />
+        <mkdir dir="${deploy.css.dir}" />
+        <yuicompress type="css" output="${deploy.css.main.file}">
+            <resources refid="css.all" />
+        </yuicompress>
+    </target>
+
+    <target name="js">
+        <property name="deploy.js.main.file" value="${deploy.js.dir}/main.js" />
+        <mkdir dir="${deploy.js.dir}" />
+        <yuicompress type="js" output="${deploy.js.main.file}">
+            <resources refid="js.all" />
+        </yuicompress>
+    </target>
+
+    <target name="html">
+        <property name="deploy.js.main.path" value="${deploy.js.main.file}" relative="true" basedir="${deploy.dir}" />
+        <property name="deploy.css.main.path" value="${deploy.css.main.file}" relative="true" basedir="${deploy.dir}" />
+        <htmltemplate
+            input="${listit.html.tmpl}"
+            output="${deploy.html.file}"
+            scripts="${deploy.js.main.path}"
+            stylesheets="${deploy.css.main.path}"
+            />
+    </target>
+
+    <target name="release"
+        depends="img,css,js,html" />
+
+    <target name="debug">
+        <pathconvert property="deploy.js.files" refid="js.all">
+            <globmapper from="${listit.dir}/*" to="*"/>
+        </pathconvert>
+        <pathconvert property="deploy.css.files" refid="css.all">
+            <globmapper from="${listit.dir}/*" to="*"/>
+        </pathconvert>
+
+        <htmltemplate
+            input="${listit.html.tmpl}"
+            output="${listit.dir}/index.html"
+            scripts="${deploy.js.files}"
+            stylesheets="${deploy.css.files}"
+            />
+    </target>
+
+    <target name="clean">
+        <delete file="${deploy.dir}" />
+        <delete file="${build.dir}" />
+    </target>
+
+</project>
+
+

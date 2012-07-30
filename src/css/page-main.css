@@ -1,0 +1,27 @@
+#controls-container {
+    width: 100%;
+    display: block;
+}
+
+#controls-left {
+    margin-right: 55px;
+}
+
+#controls-right { }
+#controls-bottom {
+    clear: both;
+    border-bottom: 1px solid silver;
+}
+
+/* Note List Styles*/
+#content-container {
+  background-color: #ddd;
+  background-color: #fff;
+  background-color: hsl(60, 100%, 98%); /*(240, 100%, 99%);*/
+}
+.scroll {
+    overflow-x: none;
+    overflow-y: auto;
+    max-height: 100%;
+}
+

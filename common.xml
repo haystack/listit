@@ -1,0 +1,118 @@
+<project name="common">
+    <taskdef resource="net/sf/antcontrib/antlib.xml"/>
+    <dirname property="root.dir" file="${ant.file.common}" />
+
+
+    <property file="${root.dir}/global.properties" />
+    <include file="${root.dir}/resources.xml" />
+
+    <condition property="build.is.mode.release">
+        <equals arg1="${build.target}" arg2="release" />
+    </condition>
+    <propertyregex
+        property="platform"
+        input="${ant.file}"
+        regexp=".*/(.*?)/build.xml"
+        select="\1" />
+    <property name="platform.dir" value="${base-platform.dir}/${platform}" />
+    <property name="deploy.dir" value="${base-deploy.dir}/${platform}" />
+    <property name="build.dir" value="${base-build.dir}/${platform}" />
+    <property file="${platform.dir}/platform.properties" />
+
+    <globmapper id="resource-mapper" from="${listit.dir}/*" to="*"/>
+
+    <mkdir dir="${deploy.dir}" />
+    <mkdir dir="${build.dir}" />
+
+    <macrodef name="jsonpath">
+        <attribute name="path" />
+        <attribute name="property" />
+        <sequential>
+            <local name="contents" />
+            <pathconvert property="contents" pathsep='", "'>
+                <path path="@{path}"/>
+                <globmapper from="${basedir}/*" to="*" />
+            </pathconvert>
+            <property name="@{property}" value='["${contents}"]' />
+        </sequential>
+    </macrodef>
+
+    <macrodef name="deploy-img">
+        <attribute name="dest" />
+        <sequential>
+            <mkdir dir="@{dest}" />
+            <copy todir="@{dest}">
+                <fileset dir="${listit.img.dir}">
+                    <include name="*.png"/>
+                    <include name="*.jpg"/>
+                    <include name="*.gif"/>
+                </fileset>
+            </copy>
+        </sequential>
+    </macrodef>
+
+    <macrodef name="yuicompress">
+        <attribute name="type"/>
+        <attribute name="output"/>
+        <element name="yuiel" implicit="true"/>
+        <sequential>
+            <local name="input" />
+            <loadresource property="input">
+                <concat>
+                    <yuiel />
+                </concat>
+            </loadresource>
+            <apply errorproperty="null" executable="java" parallel="true" inputstring="${input}" addsourcefile="false" output="@{output}">
+                <yuiel />
+                <arg value="-jar"/>
+                <arg value="${tools.yuicompressor}"/>
+                <arg value="--type"/>
+                <arg value="@{type}"/>
+                <mapper type="merge" to="@{output}" />
+            </apply>
+        </sequential>
+    </macrodef> 
+
+    <macrodef name="htmltemplate">
+        <attribute name="output" />
+        <attribute name="input" />
+        <attribute name="scripts" default="" />
+        <attribute name="stylesheets" default="" />
+        <element name="htmltemplate-elements" optional="true" implicit="true" />
+        <sequential>
+            <parallel>
+                <sequential>
+                    <var name="html_scripts" value=""/>
+                    <for param="src" list="@{scripts}" delimiter=":">
+                        <sequential>
+                            <var
+                                name="html_scripts"
+                                value="${html_scripts}&lt;script src='@{src}'&gt;&lt;/script&gt;${line.separator}"
+                                />
+                        </sequential>
+                    </for>
+                </sequential>
+                <sequential>
+                    <var name="html_stylesheets" value=""/>
+                    <for param="src" list="@{stylesheets}" delimiter=":">
+                        <sequential>
+                            <var
+                                name="html_stylesheets"
+                                value="${html_stylesheets}&lt;link rel='stylesheet' type='text/css' href='@{src}' /&gt;${line.separator}"
+                                />
+                        </sequential>
+                    </for>
+                </sequential>
+            </parallel>
+            <copy file="@{input}" tofile="@{output}" force="true">
+                <filterchain>
+                    <replacetokens>
+                        <token key="scripts" value="${html_scripts}"/>
+                        <token key="stylesheets" value="${html_stylesheets}"/>
+                        <htmltemplate-elements />
+                    </replacetokens>
+                </filterchain>
+            </copy>
+        </sequential>
+    </macrodef>
+</project>

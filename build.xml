@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="list-it" basedir="." default="release">
+    <property name="root.dir" value="${basedir}" />
+    <property file="${root.dir}/global.properties" />
+
+    <target name="-set.target.release">
+        <property name="build.target" value="release" />
+    </target>
+
+    <target name="-set.target.debug">
+        <property name="build.target" value="debug" />
+    </target>
+
+    <target name="release" depends="-set.target.release,-build" />
+    <target name="debug" depends="-set.target.debug,-build" />
+
+    <target name="-build" >
+        <subant target="${build.target}">
+            <fileset id="platform-antfiles" dir="${base-platform.dir}">
+                <and>
+                    <filename name="*/build.xml" />
+                    <readable />
+                </and>
+            </fileset>
+        </subant>
+    </target>
+
+    <target name="clean">
+        <delete dir="${base-build.dir}" />
+        <delete dir="${base-deploy.dir}" />
+    </target>
+
+</project>

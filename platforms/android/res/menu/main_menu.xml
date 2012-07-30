@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+    <item android:id="@+id/sync_button" android:title="@string/menu_sync" android:icon="@android:drawable/stat_notify_sync" android:showAsAction="ifRoom"></item>
+    <item android:id="@+id/shrink_button" android:checked="true" android:checkable="true" android:title="@string/menu_shrink" android:icon="@drawable/ic_expander_closed"></item>
+    <item android:id="@+id/settings_button" android:title="@string/menu_settings"></item>
+
+</menu>

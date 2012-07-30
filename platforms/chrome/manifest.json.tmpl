@@ -1,0 +1,28 @@
+{
+	"name": "@name@",
+	"version": "@version@",
+	"description": "@description@",
+	"browser_action": {
+		"default_icon": "@icon@",
+		"default_title": "@title@",
+        "default_popup": "index.html"
+	},
+	"background": {
+        "scripts": @background_js@
+    },
+	"permissions": [
+		"background",
+		"notifications",
+		"http://*.welist.it/*",
+		"https://*.welist.it/*",
+        "unlimitedStorage",
+        "contextMenus",
+        "tabs"
+	],
+	"icons": {
+	    "16": "@icon@"
+    },
+	"omnibox": {"keyword":"listit"},
+	"options_page": "index.html#options",
+	"update_url": "@update_url@"
+}

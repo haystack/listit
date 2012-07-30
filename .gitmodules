@@ -1,0 +1,3 @@
+[submodule "src/js/libs/wysihtml5"]
+	path = src/js/libs/wysihtml5
+	url = git://github.com/xing/wysihtml5.git
