@@ -223,7 +223,11 @@ L.make.notes.NoteCollectionView = Backbone.View.extend({
     remove: function(note, options) {
         var id = note.id || note;
         clearTimeout(this.delayedRemove[id]);
-        this.delayedRemove[id] = setTimeout(_.bind(this._remove, this, note, options), 50);
+        try {
+            this.delayedRemove[id] = setTimeout(_.bind(this._remove, this, note, options), 50);
+        } catch (e) {
+            this._remove(note, options);
+        }
     },
     _remove: function(note, options) {
         var id = note.id || note;
