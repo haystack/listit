@@ -1,5 +1,7 @@
 /**
- * Backbone localStorage Adapter
+ * A Backbone localStorage adapter.
+ *
+ * Originally:
  * https://github.com/jeromegn/Backbone.localStorage
  */
 
