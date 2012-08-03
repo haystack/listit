@@ -4,3 +4,5 @@
 /platforms/android/bin/
 /platforms/android/assets/
 /platforms/android/gen/
+/src/manifest.json
+/src/index.html
