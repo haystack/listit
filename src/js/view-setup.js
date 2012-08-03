@@ -47,10 +47,16 @@ $(document).ready(function() {
     // Open links in a new tab without accidentally modifying notes.
     $(document).on('click', 'a', function(e) {
         var $el = $(this)
-        if ($el.attr('href')[0] !== "#") {
-            window.open($el.attr('href'), '_blank');
-            e.preventDefault();
-        }
+        var href = $el.attr('href');
+        if (!href
+            || href === ""
+            || href[0] === "#"
+            || $el.attr('target')
+            || _.str.startsWith(href, 'javascript'))
+            return;
+
+        window.open(href, '_blank');
+        e.preventDefault();
     });
 
     Backbone.history.start();
