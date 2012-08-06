@@ -66,7 +66,7 @@ L.make.notes.NoteView = Backbone.View.extend({
     events: {
         "focusin .contents": "handleFocus_",
         "focusout .contents": "handleBlur_",
-        'click .close': 'removeNote',
+        'click .close-btn': 'removeNote',
         'click .contents': 'handleClick_',
         'keyup .contents': 'handleKeyUp_',
         'keypress .contents': 'handleKeyPress_'
