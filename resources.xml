@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <project>
+<dirset id="template.dirs" dir="${listit.js.dir}" includes="*/templates/" />
+
 <resources id="js.libs.jquery">
     <filelist dir="${listit.js.dir}/libs">
         <file name="jquery.js" />
@@ -10,6 +12,7 @@
         <include name="jquery.*.js"/>
     </fileset>
 </resources> 
+
 
 <resources id="js.libs.compatability">
     <filelist dir="${listit.js.dir}/libs/">

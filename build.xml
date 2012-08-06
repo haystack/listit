@@ -3,6 +3,8 @@
     <property name="root.dir" value="${basedir}" />
     <property file="${root.dir}/global.properties" />
 
+    <import file="common.xml" />
+
     <target name="-set.target.release">
         <property name="build.target" value="release" />
     </target>
@@ -29,5 +31,6 @@
         <delete dir="${base-build.dir}" />
         <delete dir="${base-deploy.dir}" />
     </target>
+
 
 </project>

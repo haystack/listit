@@ -38,7 +38,7 @@ a, .tabbar a {
   padding: 1em;
   vertical-align:top;
   max-width: 350px;
-  min-width: 280;
+  min-width: 280px;
   display: inline-block;
   text-align: left;
 }

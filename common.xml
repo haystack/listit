@@ -1,3 +1,4 @@
+<!-- vim: set ft=ant : -->
 <project name="common">
     <taskdef resource="net/sf/antcontrib/antlib.xml"/>
     <dirname property="root.dir" file="${ant.file.common}" />
@@ -6,23 +7,29 @@
     <property file="${root.dir}/global.properties" />
     <include file="${root.dir}/resources.xml" />
 
-    <condition property="build.is.mode.release">
-        <equals arg1="${build.target}" arg2="release" />
-    </condition>
-    <propertyregex
-        property="platform"
-        input="${ant.file}"
-        regexp=".*/(.*?)/build.xml"
-        select="\1" />
-    <property name="platform.dir" value="${base-platform.dir}/${platform}" />
-    <property name="deploy.dir" value="${base-deploy.dir}/${platform}" />
-    <property name="build.dir" value="${base-build.dir}/${platform}" />
-    <property file="${platform.dir}/platform.properties" />
+
+    <target name="setup-platform">
+        <condition property="build.is.mode.release">
+            <equals arg1="${build.target}" arg2="release" />
+        </condition>
+        <propertyregex
+            property="platform"
+            input="${ant.file}"
+            regexp=".*/(.*?)/build.xml"
+            select="\1" />
+        <property name="platform.dir" value="${base-platform.dir}/${platform}" />
+        <property name="deploy.dir" value="${base-deploy.dir}/${platform}" />
+        <property name="build.dir" value="${base-build.dir}/${platform}" />
+        <property file="${platform.dir}/platform.properties" />
+    </target>
+
+    <target name="mkdirs" depends="setup-platform">
+        <mkdir dir="${deploy.dir}" />
+        <mkdir dir="${build.dir}" />
+    </target>
+
 
     <globmapper id="resource-mapper" from="${listit.dir}/*" to="*"/>
-
-    <mkdir dir="${deploy.dir}" />
-    <mkdir dir="${build.dir}" />
 
     <macrodef name="jsonpath">
         <attribute name="path" />
@@ -115,4 +122,63 @@
             </copy>
         </sequential>
     </macrodef>
+
+    <scriptdef name="compiletemplates" language="javascript">
+        <attribute name="output" />
+        <attribute name="object" />
+        <element name="fileset" type="fileset"/>
+        <![CDATA[
+        importPackage(java.io);
+
+        function readFile(file) {
+            return ''+new java.lang.String(org.apache.tools.ant.util.FileUtils.readFully(new FileReader(file)));
+        }
+
+        function writeFile(file, text) {
+            var fw = new FileWriter(file);
+            fw.write(text);
+            fw.close();
+        }
+        function load(file) {
+            eval.call(this, readFile(file));
+        }
+
+        load("tools/underscore.js");
+
+        var objectName = attributes.get("object");
+        var outputFile = attributes.get("output");
+
+        var filesets = elements.get("fileset");
+        var src = "// Compiled templates\n// Editing is futile.\n\n";
+        for (var i = 0; i < filesets.size(); i++) {
+            var fileset = filesets.get(i);
+            var basedir = fileset.getDir(project);
+            var files = fileset.getDirectoryScanner(project).getIncludedFiles();
+            for (var j = 0; j < files.length; j++) {
+                var file = new File(basedir, files[j]);
+                var name = String(file.getName()).replace(/\..*$/,"");
+                var contents = readFile(file);
+                src += objectName + "." + name + " = " + _.template(contents).source + ";\n";
+            }
+        }
+        writeFile(outputFile, src);
+        ]]>
+    </scriptdef>
+
+    <target name="compile-templates">
+        <for param="dir">
+            <dirset refid="template.dirs"/>
+            <sequential>
+                <local name="dirname" />
+                <local name="name" />
+                <dirname property="dirname" file="@{dir}" />
+                <basename property="name" file="${dirname}" />
+                <compiletemplates output="${dirname}/templates.js" object="L.templates.${name}">
+                    <fileset dir="@{dir}" includes="*.html" />
+                </compiletemplates>
+            </sequential>
+        </for>
+    </target>
+
+    <target name="-build.setup" depends="setup-platform,mkdirs,compile-templates" />
 </project>

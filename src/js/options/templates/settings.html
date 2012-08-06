@@ -1,0 +1,19 @@
+<h3>Settings</h3>
+<% _.each(options, function(opt) { %>
+<div>
+    <% switch(opt.type) { case "boolean": %>
+    <input <%=opt.attrs %> id="<%=opt.name%>Field" class="input" type="checkbox" name="<%=opt.name%>" <% if (opt.value) { %> checked="checked" <%}%> />
+    <label for="<%=opt.name%>Field"><%=opt.description%></label>
+    <% break; case "hotkey": %>
+    <label for="<%=opt.name%>Field"><%=opt.description%></label>: 
+    <input <%=opt.attrs %> name="<%=opt.name%>" class="hotkey-field input center" type="input" placeholder="No Hotkey" id="<%=opt.name%>Field" value="<%=opt.value%>" />
+    <% break; case "text": %>
+    <label for="<%=opt.name%>Field"><%=opt.description%></label>: 
+    <input <%=opt.attrs %> name="<%=opt.name%>" class="input" type="input" id="<%=opt.name%>Field" value="<%=opt.value%>" />
+    <% break; case "number": %>
+    <label for="<%=opt.name%>Field"><%=opt.description%></label>: 
+    <input <%=opt.attrs %> name="<%=opt.name%>" class="input" type="number" id="<%=opt.name%>Field" value="<%=opt.value%>" />
+    <% break; } %>
+</div>
+<% }); %>
+

@@ -1,11 +1,11 @@
 <project>
     <import file="../../common.xml"/>
 
-    <target name="img">
+    <target name="img" depends="-build.setup">
         <deploy-img dest="${deploy.img.dir}"/>
     </target>
 
-    <target name="css">
+    <target name="css" depends="-build.setup">
         <property name="deploy.css.main.file" value="${deploy.css.dir}/main.css" />
         <mkdir dir="${deploy.css.dir}" />
         <yuicompress type="css" output="${deploy.css.main.file}">
@@ -13,7 +13,7 @@
         </yuicompress>
     </target>
 
-    <target name="js">
+    <target name="js" depends="-build.setup">
         <property name="deploy.js.main.file" value="${deploy.js.dir}/main.js" />
         <mkdir dir="${deploy.js.dir}" />
         <yuicompress type="js" output="${deploy.js.main.file}">
@@ -21,7 +21,7 @@
         </yuicompress>
     </target>
 
-    <target name="html">
+    <target name="html" depends="-build.setup">
         <property name="deploy.js.main.path" value="${deploy.js.main.file}" relative="true" basedir="${deploy.dir}" />
         <property name="deploy.css.main.path" value="${deploy.css.main.file}" relative="true" basedir="${deploy.dir}" />
         <htmltemplate
@@ -33,9 +33,9 @@
     </target>
 
     <target name="release"
-        depends="img,css,js,html" />
+        depends="-buid.setup,img,css,js,html" />
 
-    <target name="debug">
+    <target name="debug" depends="-build.setup">
         <pathconvert property="deploy.js.files" refid="js.all">
             <globmapper from="${listit.dir}/*" to="*"/>
         </pathconvert>
@@ -51,7 +51,7 @@
             />
     </target>
 
-    <target name="clean">
+    <target name="clean" depends="setup-platform">
         <delete file="${deploy.dir}" />
         <delete file="${build.dir}" />
     </target>

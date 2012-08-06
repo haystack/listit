@@ -1,100 +1,132 @@
-"use strict";
+// Compiled templates
+// Editing is futile.
 
-// Options View (Feature Toggles in Settings Page)
-L.templates.options = {
-    settings : _.template([
-        '<h3>Settings</h3>',
-        '<% _.each(options, function(opt) { %>',
-        '<div>',
-        '<% switch(opt.type) { case "boolean": %>',
-        '  <input <%=opt.attrs %> id="<%=opt.name%>Field" type="checkbox" name="<%=opt.name%>" <% if (opt.value) { %> checked="checked" <%}%> />',
-        '  <label for="<%=opt.name%>Field"><%=opt.description%></label>',
-        '<% break; case "hotkey": %>',
-        '  <label for="<%=opt.name%>Field"><%=opt.description%></label>: ',
-        '  <input <%=opt.attrs %> name="<%=opt.name%>" class="hotkey-field input center" type="input" placeholder="No Hotkey" id="<%=opt.name%>Field" value="<%=opt.value%>" />',
-        '<% break; case "text": %>',
-        '  <label for="<%=opt.name%>Field"><%=opt.description%></label>: ',
-        '  <input <%=opt.attrs %> name="<%=opt.name%>" class="input" type="input" id="<%=opt.name%>Field" value="<%=opt.value%>" />',
-        '<% break; case "number": %>',
-        '  <label for="<%=opt.name%>Field"><%=opt.description%></label>: ',
-        '  <input <%=opt.attrs %> name="<%=opt.name%>" class="input" type="number" id="<%=opt.name%>Field" value="<%=opt.value%>" />',
-        '<% break; } %>',
-        '</div>',
-        '<% }); %>'
-        ].join('')),
-    page : _.template([
-        '<div id="options-header">',
-        '<h2 class="options-title">List.it</h2>',
-        '<a id="showListLink" href="#">Take me back to my notes</a>',
-        '</div>',
-        '<div id="options-body"></div>'
-    ].join(' ')),
-    info : _.template([
-        '<h3>Getting started</h3>',
-        '<span>Here are some tips to help you get going with list.it:</span>',
-        '<ul class="list">',
-        '  <li>',
-        '    Open and close list.it by clicking on the',
-        '    <img alt="list-it" src="img/listit-icon.png"> icon',
-        '    in the upper right hand corner of your screen.',
-        '  </li>',
-        '  <li>',
-        '    Make new notes or search old ones by typing',
-        '    into the box at the top of list.it\'s sidebar.',
-        '  </li>',
-        '  <li>',
-        '    Delete notes by clicking on <img alt="x button" src="img/x.png">.',
-        '  </li>',
-        '  <li>',
-        '    Edit notes by clicking one and typing, when you select',
-        '    something else, the note will automatically save.',
-        '  </li>',
-        '</ul>',
-        '<div>',
-        '  If you have any questions, feel free to email',
-        '  <a href="mailto:listit@csail.mit.edu">listit@csail.mit.edu</a>.',
-        '</div>',
-        '<br />',
-        '<div> Looking forward to hearing from you, <br /> <br />',
-            'Wolfe Styke <br />',
-        'electronic max <br />',
-        'Prof. David Karger',
-        '<br /><br />',
-        'List-it team at MIT CSAIL',
-        '</div>'
-    ].join(' ')),
-    importexport : _.template([
-        '<h3>Import/Export</h3>',
-        '<form class="tableform">',
-        '<fieldset>',
-        '<legend>Import: </legend>',
-        '  <div class="field">',
-        '    <label for="importSelect">Format: </label>',
-        '    <%= importSelect %>',
-        '  </div>',
-        '  <div class="field">',
-        '    <label for="importFile">File: </label>',
-        '    <input id="importFile" type="file" value="Import"/>',
-        '  </div>',
-        '  <div class="status"></div>',
-        '  <input type="submit" value="Import" id="importButton"/>',
-        '</fieldset>',
-        '<fieldset>',
-        '<legend>Export: </legend>',
-        '  <div class="field">',
-        '    <label for="exportSelect">Format: </label>',
-        '    <%= exportSelect %>',
-        '  </div>',
-        '  <div class="status"></div>',
-        '  <input type="submit" value="Export" id="exportButton"/>',
-        '</fieldset>',
-        '</form>'
-    ].join(' ')),
-    // TODO: Make a common widget template library.
-    select: _.template(
-        '<select id="<%=id%>">' +
-        '<% _.each(options, function(name, i) { %>' +
-        '<option value="<%=i%>"><%=name%></option>' +
-        '<% }); %>' +
-        '</select>')
+L.templates.options.importexport = function(obj){
+var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'')};
+with(obj||{}){
+__p+='<h3>Import/Export</h3>\n<form class="tableform">\n<fieldset>\n<legend>Import: </legend>\n  <div class="field">\n    <label for="importSelect">Format: </label>\n    '+
+((__t=( importSelect ))==null?'':__t)+
+'\n  </div>\n  <div class="field">\n    <label for="importFile">File: </label>\n    <input class="input" id="importFile" type="file" value="Import"/>\n  </div>\n  <div class="status"></div>\n  <input class="input" type="submit" value="Import" id="importButton"/>\n</fieldset>\n<fieldset>\n<legend>Export: </legend>\n  <div class="field">\n    <label for="exportSelect">Format: </label>\n    '+
+((__t=( exportSelect ))==null?'':__t)+
+'\n  </div>\n  <div class="status"></div>\n  <input class="input" type="submit" value="Export" id="exportButton"/>\n</fieldset>\n</form>\n    \n';
+}
+return __p;
+};
+L.templates.options.info = function(obj){
+var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'')};
+with(obj||{}){
+__p+='<h3>Getting started</h3>\n<span>Here are some tips to help you get going with list.it:</span>\n<ul class="list">\n    ';
+ _.each(tips, function(item) { 
+__p+='\n    <li>'+
+((__t=(item))==null?'':__t)+
+'</li>\n    ';
+ }); 
+__p+='\n</ul>\n<div>\n    If you have any questions, feel free to email\n    <a href="mailto:'+
+((__t=(email))==null?'':__t)+
+'">'+
+((__t=(email))==null?'':__t)+
+'</a>.\n</div>\n<br />\n<div> Looking forward to hearing from you,\n    <ul>\n        ';
+ _.each(credits, function(credit) { 
+__p+='\n        <li>'+
+((__t=(credit))==null?'':__t)+
+'</li>\n        ';
+ }); 
+__p+='\n        <li class="italic">List-it team at MIT CSAIL</li>\n    </ul>\n</div>\n    \n';
+}
+return __p;
+};
+L.templates.options.page = function(obj){
+var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'')};
+with(obj||{}){
+__p+='<div id="options-header">\n    <h2 class="options-title">List.it</h2>\n    <a id="showListLink" href="#">Take me back to my notes</a>\n</div>\n<div id="options-body"></div>\n\n';
+}
+return __p;
+};
+L.templates.options.select = function(obj){
+var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'')};
+with(obj||{}){
+__p+='<select id="'+
+((__t=(id))==null?'':__t)+
+'">\n    ';
+ _.each(options, function(name, i) { 
+__p+='\n    <option value="'+
+((__t=(i))==null?'':__t)+
+'">'+
+((__t=(name))==null?'':__t)+
+'</option>\n    ';
+ }); 
+__p+='\n</select>\n';
+}
+return __p;
+};
+L.templates.options.settings = function(obj){
+var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'')};
+with(obj||{}){
+__p+='<h3>Settings</h3>\n';
+ _.each(options, function(opt) { 
+__p+='\n<div>\n    ';
+ switch(opt.type) { case "boolean": 
+__p+='\n    <input '+
+((__t=(opt.attrs ))==null?'':__t)+
+' id="'+
+((__t=(opt.name))==null?'':__t)+
+'Field" class="input" type="checkbox" name="'+
+((__t=(opt.name))==null?'':__t)+
+'" ';
+ if (opt.value) { 
+__p+=' checked="checked" ';
+}
+__p+=' />\n    <label for="'+
+((__t=(opt.name))==null?'':__t)+
+'Field">'+
+((__t=(opt.description))==null?'':__t)+
+'</label>\n    ';
+ break; case "hotkey": 
+__p+='\n    <label for="'+
+((__t=(opt.name))==null?'':__t)+
+'Field">'+
+((__t=(opt.description))==null?'':__t)+
+'</label>: \n    <input '+
+((__t=(opt.attrs ))==null?'':__t)+
+' name="'+
+((__t=(opt.name))==null?'':__t)+
+'" class="hotkey-field input center" type="input" placeholder="No Hotkey" id="'+
+((__t=(opt.name))==null?'':__t)+
+'Field" value="'+
+((__t=(opt.value))==null?'':__t)+
+'" />\n    ';
+ break; case "text": 
+__p+='\n    <label for="'+
+((__t=(opt.name))==null?'':__t)+
+'Field">'+
+((__t=(opt.description))==null?'':__t)+
+'</label>: \n    <input '+
+((__t=(opt.attrs ))==null?'':__t)+
+' name="'+
+((__t=(opt.name))==null?'':__t)+
+'" class="input" type="input" id="'+
+((__t=(opt.name))==null?'':__t)+
+'Field" value="'+
+((__t=(opt.value))==null?'':__t)+
+'" />\n    ';
+ break; case "number": 
+__p+='\n    <label for="'+
+((__t=(opt.name))==null?'':__t)+
+'Field">'+
+((__t=(opt.description))==null?'':__t)+
+'</label>: \n    <input '+
+((__t=(opt.attrs ))==null?'':__t)+
+' name="'+
+((__t=(opt.name))==null?'':__t)+
+'" class="input" type="number" id="'+
+((__t=(opt.name))==null?'':__t)+
+'Field" value="'+
+((__t=(opt.value))==null?'':__t)+
+'" />\n    ';
+ break; } 
+__p+='\n</div>\n';
+ }); 
+__p+='\n\n';
+}
+return __p;
 };

@@ -76,7 +76,7 @@
   background-color: rgba(128,128,128,.5);
 }
 
-.iconRow {
+#omnibox-icons {
   position: relative;
   left: auto;
   bottom: 0px;

@@ -107,8 +107,26 @@ L.make.options.InfoView = Backbone.View.extend({
     id: "options-info",
     className: "options-item", // TODO:Change
     render: function() {
-        this.$el.html(L.templates.options.info());
+        this.$el.html(L.templates.options.info(this.info));
         return this;
+    },
+    info : {
+        tips: [
+            'Open and close list.it by clicking on the <img alt="list-it" ' +
+                'src="img/listit-icon.png"> icon in the upper right hand ' +
+                'corner of your screen.',
+            'Make new notes or search old ones by typing into the box at the ' +
+                'top of list.it\'s sidebar.',
+            'Delete notes by clicking on <img alt="x button" src="img/x.png">.',
+            'Edit notes by clicking one and typing, when you select',
+            'something else, the note will automatically save.'
+        ],
+        credits: [
+            'Wolfe Styke',
+            'electronic max',
+            'Prof. David Karger'
+        ],
+        email: 'listit@csail.mit.edu'
     }
 });
 

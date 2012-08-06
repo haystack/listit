@@ -12,8 +12,6 @@ html, body {
   color: #111;
   font-weight:110;
   font-size: 14px;
-  line-height: 140%; 
-  background-color: #F5F5F5;
 }
 
 .page {
@@ -230,9 +228,12 @@ ul.list {
 .bold {
     font-weight: bold;
 }
+.italic {
+    font-style: italic;
+}
 
 /* Glowing input boxes */
-input,textarea,select {
+.input,.button {
     border: 1px solid #48E;
     outline:none;
     transition: all 0.1s ease-in-out;
@@ -245,7 +246,7 @@ input,textarea,select {
     color: black;
 }
 
-input:focus,textarea:focus,select:focus{
+.input:focus,.button:focus {
     box-shadow: 0 0 4px rgba(85, 153, 255, 100);
     -webkit-box-shadow: 0 0 4px rgba(85, 153, 255, 100);
     -moz-box-shadow: 0 0 4px rgba(85, 153, 255, 100);
@@ -328,3 +329,16 @@ p {
     padding: 10px;
 }
 
+
+b {
+    font-weight: bold;
+}
+
+i {
+    font-style: italic;
+}
+
+
+.hlist li {
+    display: inline-block;
+}

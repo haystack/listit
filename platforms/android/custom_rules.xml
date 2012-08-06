@@ -1,6 +1,6 @@
 <project>
     <import file="../../common.xml"/>
-    <target name="-pre-build" depends="img,assets,html"/>
+    <target name="-pre-build" depends="-build.setup,img,assets,html"/>
 
     <target name="img">
         <deploy-img dest="${assets.img.dir}"/>

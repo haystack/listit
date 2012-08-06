@@ -1,6 +1,8 @@
 <project name="List.it Chrome Extension">
     <import file="../../common.xml"/>
 
+    <target name="-build.setup" depends="setup-platform,mkdirs" />
+
     <resources id="js.sidebar">
         <resources refid="js.libs" />
         <fileset file="${listit.js.platforms.dir}/chrome/sidebar-before.js" />
@@ -43,17 +45,17 @@
         <fileset file="${listit.js.platforms.dir}/chrome/content.js" />
     </resources>
 
-    <target name="build.img">
-        <deploy-img dest="${build.img.dir}"/>
-    </target>
-
 
     <resources id="css.sidebar">
         <resources refid="css.all" />
         <fileset file="${listit.css.platforms.dir}/chrome/sidebar.css" />
     </resources>
 
-    <target name="build.assets-debug">
+    <target name="build.img" depends="-build.setup">
+        <deploy-img dest="${build.img.dir}"/>
+    </target>
+
+    <target name="build.assets-debug" depends="-build.setup">
         <pathconvert property="build.sidebar.js.path" refid="js.sidebar">
             <globmapper from="${listit.dir}/*" to="*"/>
         </pathconvert>
@@ -68,14 +70,14 @@
         </pathconvert>
     </target>
 
-    <target name="release" depends="build.img,build.assets,build.html,build.manifest">
+    <target name="release" depends="-build.setup,build.img,build.assets,build.html,build.manifest">
         <exec executable="chromium">
             <arg value="--pack-extension=${build.dir}" />
             <arg value="--pack-extension-key=${privatekey}" />
         </exec>
     </target>
 
-    <target name="debug" depends="build.assets-debug,build.html,build.manifest">
+    <target name="debug" depends="-build.setup,build.assets-debug,build.html,build.manifest">
         <copy todir="${listit.dir}" overwrite="true" flatten="true">
             <filelist dir="${build.dir}">
                 <file name="manifest.json" />
@@ -84,7 +86,8 @@
         </copy>
     </target>
 
-    <target name="build.assets">
+
+    <target name="build.assets" depends="-build.setup">
         <property name="build.sidebar.css.main.file" value="${build.css.dir}/sidebar.css" />
         <property name="build.sidebar.css.path" value="${build.sidebar.css.main.file}" relative="true" basedir="${build.dir}" />
 
@@ -112,7 +115,7 @@
         </yuicompress>
     </target>
 
-    <target name="build.html">
+    <target name="build.html" depends="-build.setup">
         <htmltemplate
             input="${listit.html.tmpl}"
             output="${build.sidebar.html.file}"
@@ -121,7 +124,7 @@
             />
     </target>
 
-    <target name="build.manifest">
+    <target name="build.manifest" depends="-build.setup">
         <!--
         <local name="content_path" />
         <jsonpath property="content_path" path="${build.content.js.path}" />
@@ -144,7 +147,8 @@
             <arg value="--install-extension=${build.dir}/../chrome.crx" />
         </exec>
     </target>
-    <target name="clean">
+
+    <target name="clean" depends="setup-platform">
         <delete dir="${build.dir}" />
         <delete dir="${deploy.dir}" />
     </target>

@@ -1,0 +1,26 @@
+<h3>Import/Export</h3>
+<form class="tableform">
+<fieldset>
+<legend>Import: </legend>
+  <div class="field">
+    <label for="importSelect">Format: </label>
+    <%= importSelect %>
+  </div>
+  <div class="field">
+    <label for="importFile">File: </label>
+    <input class="input" id="importFile" type="file" value="Import"/>
+  </div>
+  <div class="status"></div>
+  <input class="input" type="submit" value="Import" id="importButton"/>
+</fieldset>
+<fieldset>
+<legend>Export: </legend>
+  <div class="field">
+    <label for="exportSelect">Format: </label>
+    <%= exportSelect %>
+  </div>
+  <div class="status"></div>
+  <input class="input" type="submit" value="Export" id="exportButton"/>
+</fieldset>
+</form>
+    

@@ -1,77 +1,12 @@
-"use strict";
-L.templates.account = {
-    options: _.template([
-    '<h3>Account Backup Service</h3>',
-    '<p><a href="http://listit.csail.mit.edu/">List.it</a> is a',
-    '<a href="http://code.google.com/p/list-it">free and',
-    'open-source</a> note-taking tool from <a href=',
-    '"http://www.csail.mit.edu/">MIT CSAIL</a> that lets you',
-    'safely, quickly, and easily write stuff down.</p>',
+// Compiled templates
+// Editing is futile.
 
-    '<ul class="list">',
-    '  <li>Access your notes online at <a href=',
-    '  "https://welist.it/zen/index.html">List-it Zen</a>.</li>',
-
-    '  <li>Free backup: your notes are safe.</li>',
-    '</ul>',
-
-    '<form id="loginRegisterForm" class="loginForm" name=',
-    '"loginRegisterForm">',
-    '<p class="modal mode-connected bold">You are logged in as: <span id="emailDisplay"><%- email %></span></p>',
-    ' <div class="modal mode-login mode-register">',
-    '  <label for="email" class="inputLabel">',
-    '    Email:',
-    '  </label><input class="field" id="email" type="email" name="email"',
-    '  spellcheck="false" required="" autofocus="">',
-
-    '  <label for="pw1" class="inputLabel">',
-    '    Password:',
-    '  </label><input class="field" id="pw1" type="password" name="pw1"',
-    '  spellcheck="false" required="">',
-
-    '  <div class="modal mode-register">',
-    '    <label for="pw2" class="inputLabel">',
-    '      Re-type Password:',
-    '    </label><input class="field" id="pw2" type="password" name="pw2"',
-    '    spellcheck="false" required="">',
-    '  </div>',
-    ' </div>',
-
-    '  <div id="formStatus" class="modal formStatus" style="display:none;"></div>',
-    '  <div class="modal mode-register">',
-    '    <p><b>Contribute to science!</b></p>',
-    '    <p>We are conducting research on note taking.',
-    '    If you give us (researchers at MIT) permission to study',
-    '    your notes, you will be helping us to better understand how',
-    '    people record information and enable us to build better',
-    '    tools.</p>',
-    '    <p>If you participate, your notes',
-    '    will be kept confidential to <i>the list.it group</i> and',
-    '    will not be divulged to anyone outside without your',
-    '    explicit (further) permission.</p><input id="participate"',
-    '    class="studyOption" type="checkbox" checked="checked"> <label for="participate">Participate in research study?</label>',
-    '  </div>',
-    '  <div id="loginFormButtons">',
-    '  <div class="modal mode-register noslide formButtons">',
-    '  <div class="container">',
-    '  <input id="createAccountButton" type="button" class="button" value="Create Account!">',
-    '  <input id="cancelButton" type="button" class="button" value="Cancel">',
-    '  </div>',
-    '  </div>',
-    '  <div class="modal mode-login noslide formButtons">',
-    '  <div class="container">',
-    '  <input id="loginButton" type="button" class="button" value="Login">',
-    '  <input id="registerButton" type="button" class="button" value="New Account">',
-    '  </div>',
-    '  </div>',
-    '  <div class="modal mode-connected noslide formButtons">',
-    '  <div class="container">',
-    '  <input id="logoutButton" type="button" class="button" value="Logout">',
-    '  </div>',
-    '  </div>',
-    '  <div class="clear"></div>',
-    '  </div>',
-
-    '</form>'
-    ].join(' '))
+L.templates.account.options = function(obj){
+var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'')};
+with(obj||{}){
+__p+='\n<h3>Account Backup Service</h3>\n<p>\n<a href="http://listit.csail.mit.edu/">List.it</a> is a\n<a href="http://code.google.com/p/list-it">free and open-source</a>\nnote-taking tool from <a href="http://www.csail.mit.edu/">MIT CSAIL</a>\nthat lets you safely, quickly, and easily write stuff down.\n</p>\n\n<ul class="list">\n    <li>Access your notes online at <a href="https://welist.it/zen/index.html">List-it Zen</a>.</li>\n\n    <li>Free backup: your notes are safe.</li>\n</ul>\n\n<form id="loginRegisterForm" class="loginForm" name=\n    "loginRegisterForm">\n    <p class="modal mode-connected bold">You are logged in as: <span id="emailDisplay">'+
+((__t=( email ))==null?'':_.escape(__t))+
+'</span></p>\n    <div class="modal mode-login mode-register">\n        <label for="email" class="inputLabel">Email:</label>\n        <input class="input" id="email" type="email" name="email" spellcheck="false" required="" autofocus="">\n\n        <label for="pw1" class="inputLabel">Password:</label>\n        <input class="input" id="pw1" type="password" name="pw1" spellcheck="false" required="">\n\n        <div class="modal mode-register">\n            <label for="pw2" class="inputLabel">Re-type Password:</label>\n            <input class="input" id="pw2" type="password" name="pw2" spellcheck="false" required="">\n        </div>\n    </div>\n\n    <div id="formStatus" class="modal formStatus" style="display:none;"></div>\n    <div class="modal mode-register">\n        <p>\n        <b>Contribute to science!</b>\n        </p>\n        <p>\n        We are conducting research on note taking.  If you give us (researchers\n        at MIT) permission to study your notes, you will be helping us to\n        better understand how people record information and enable us to build\n        better tools.\n        </p>\n        <p>\n        If you participate, your notes will be kept confidential to\n        <i>the list.it group</i> and will not be divulged to anyone outside\n        without your explicit (further) permission.\n        </p>\n\n        <input id="participate" class="studyOption" type="checkbox" checked="checked">\n        <label for="participate">Participate in research study?</label>\n    </div>\n    <div id="loginFormButtons">\n        <div class="modal mode-register noslide formButtons">\n            <div class="container">\n                <input id="createAccountButton" type="button" class="button" value="Create Account!">\n                <input id="cancelButton" type="button" class="button" value="Cancel">\n            </div>\n        </div>\n        <div class="modal mode-login noslide formButtons">\n            <div class="container">\n                <input id="loginButton" type="button" class="button" value="Login">\n                <input id="registerButton" type="button" class="button" value="New Account">\n            </div>\n        </div>\n        <div class="modal mode-connected noslide formButtons">\n            <div class="container">\n                <input id="logoutButton" type="button" class="button" value="Logout">\n            </div>\n        </div>\n        <div class="clear"></div>\n    </div>\n</form>\n';
 }
+return __p;
+};
