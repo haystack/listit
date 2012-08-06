@@ -43,88 +43,88 @@ html, body {
   z-index: 10;
 }
 
-.jiggly { 
+.jiggly {
     -webkit-animation: jiggle 0.2s infinite;
     -moz-animation: jiggle 0.2s infinite;
     -o-animation: jiggle 0.2s infinite;
     animation: jiggle 0.2s infinite;
 }
 
-.spinner { 
+.spinner {
     -webkit-animation: spin 1s linear infinite;
     -moz-animation: spin 1s linear infinite;
     -o-animation: spin 1s linear infinite;
     animation: spin 1s linear infinite;
 }
 
-@keyframes jiggle { 
-    0% { 
-        -moz-transform: rotate(-4deg); 
-    } 
-    50% { 
-        -moz-transform: rotate(4deg); 
-    } 
-} 
-@-o-keyframes jiggle { 
-    0% { 
-        -o-transform: rotate(-4deg); 
-    } 
-    50% { 
-        -o-transform: rotate(4deg); 
-    } 
-} 
-@-moz-keyframes jiggle { 
-    0% { 
-        -moz-transform: rotate(-4deg); 
-    } 
-    50% { 
-        -moz-transform: rotate(4deg); 
-    } 
-} 
-@-webkit-keyframes jiggle { 
-    0% { 
-        -webkit-transform: rotate(-4deg); 
-    } 
-    100% { 
-        -webkit-transform: rotate(4deg); 
-    } 
+@keyframes jiggle {
+    0% {
+        -moz-transform: rotate(-4deg);
+    }
+    50% {
+        -moz-transform: rotate(4deg);
+    }
+}
+@-o-keyframes jiggle {
+    0% {
+        -o-transform: rotate(-4deg);
+    }
+    50% {
+        -o-transform: rotate(4deg);
+    }
+}
+@-moz-keyframes jiggle {
+    0% {
+        -moz-transform: rotate(-4deg);
+    }
+    50% {
+        -moz-transform: rotate(4deg);
+    }
+}
+@-webkit-keyframes jiggle {
+    0% {
+        -webkit-transform: rotate(-4deg);
+    }
+    100% {
+        -webkit-transform: rotate(4deg);
+    }
 }
 
-@-moz-keyframes spin { 
-    from { 
-        -moz-transform: rotate(0deg); 
-    } 
-    to { 
-        -moz-transform: rotate(360deg); 
-    } 
-} 
+@-moz-keyframes spin {
+    from {
+        -moz-transform: rotate(0deg);
+    }
+    to {
+        -moz-transform: rotate(360deg);
+    }
+}
 
-@-webkit-keyframes spin { 
-    from { 
-        -webkit-transform: rotate(0deg); 
-    } 
-    to { 
-        -webkit-transform: rotate(360deg); 
-    } 
-} 
+@-webkit-keyframes spin {
+    from {
+        -webkit-transform: rotate(0deg);
+    }
+    to {
+        -webkit-transform: rotate(360deg);
+    }
+}
 
-@-o-keyframes spin { 
-    from { 
-        -o-transform: rotate(0deg); 
-    } 
-    to { 
-        -o-transform: rotate(360deg); 
-    } 
-} 
+@-o-keyframes spin {
+    from {
+        -o-transform: rotate(0deg);
+    }
+    to {
+        -o-transform: rotate(360deg);
+    }
+}
 
-@keyframes spin { 
-    from { 
-        transform: rotate(0deg); 
-    } 
-    to { 
-        transform: rotate(360deg); 
-    } 
-} 
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
 
 
 
@@ -274,9 +274,9 @@ p {
     padding-bottom: 1em;
 }
 
-.ui-state-highlight { 
-    height: 3em; 
-    line-height: 1.2em; 
+.ui-state-highlight {
+    height: 3em;
+    line-height: 1.2em;
 }
 
 .grabable {
@@ -319,10 +319,14 @@ p {
 .tableform .field {
     display: table-row;
 }
-.tableform input[type="submit"] {
-    width: 100%;
-    display: table-row;
-    text-align: center;
+.tableform .submit {
+    text-align: right;
+    position: relative;
+    /*display: inline-block;*/
+}
+
+.tableform .submit * {
+    margin: 0px;
 }
 
 .tableform fieldset {
