@@ -1,4 +1,3 @@
-<ul id="<%=obj.id%>" class="wysihtml5-toolbar <%=obj.className%>" style="display: none;">
 <% _.each(items, function(item) { %>
     <% switch(item) { case "italic": %><li title="Italic (ctrl-i)" data-wysihtml5-command="italic"></li>
     <% break; case "underline": %><li title="Underline (ctrl-u)" data-wysihtml5-command="underline"></li>
@@ -19,4 +18,3 @@
     </ul>
     </li>
 <% }}); %>
-</ul>

@@ -2,7 +2,7 @@
 
 L.make.omnibox.OmniboxModel = Backbone.Model.extend({
     // Singleton
-    url : "/options",
+    url : "/omnibox",
     isNew: function() {
         return false;
     },

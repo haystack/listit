@@ -26,14 +26,15 @@ L.make.omnibox.OmniboxView = Backbone.View.extend({
     assertRendered: function() {
         if (!this._rendered) throw new Error("View not rendered.");
     },
-    toolbarItems: [ "mode", "spacer", "bold", "italic", "underline", "foreground" ],
     render: function() {
-        this.$el.html(L.templates.omnibox.input({
-            text: this.model.get("text") || "",
-            toolbar: L.templates.omnibox.toolbar({id: 'omnibox-toolbar', className: "hlist", items: this.toolbarItems})
-        }));
+        if (this._rendered) return this;
+        this.toolbar = new L.make.omnibox.ToolbarView({
+            "id": 'omnibox-toolbar',
+        });
+        this.$el.html(L.templates.omnibox.input({ text: this.model.get("text") || "", }));
+        this.$("#omnibox-bottombar").prepend(this.toolbar.render().el)
         this.editor = new wysihtml5.Editor(this.$el.find('#omnibox-entry').get()[0], {
-            toolbar: this.$el.find("#omnibox-toolbar").get()[0],
+            toolbar: this.toolbar.el,
             parserRules: wysihtml5ParserRules,
             stylesheets: ["css/reset.css", "css/wysihtml5.css"]
         });
@@ -161,3 +162,28 @@ L.make.omnibox.ControlsView = Backbone.View.extend({
     }
 });
 
+
+L.make.omnibox.ToolbarView = Backbone.View.extend({
+    className: "wysihtml5-toolbar hlist",
+    tagName: "ul",
+    attributes: {"style": "display: none;"}, // css isn't working for some reason
+    initialize: function() {
+        var that = this;
+        $(window).one("beforeunload", function() {
+            that.undelegateEvents();
+            that.model.off(null, null, that);
+            L.options.off(null, null, that);
+        });
+        L.options.on("change:toolbar", this.redraw, this);
+    },
+    redraw: function() {
+        if (this._rendered) this.render();
+    },
+    render: function() {
+        this.$el.html(L.templates.omnibox.toolbar({
+            "items": L.options.get("toolbarItems")
+        }));
+        this._rendered = true;
+        return this;
+    }
+});

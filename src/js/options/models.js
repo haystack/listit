@@ -4,7 +4,15 @@ L.make.options.OptionsModel = Backbone.Model.extend({
         shrinkNotes: true,
         expandVariables: true,
         openHotkey: "",
-        notificationTimeout: 5
+        notificationTimeout: 5,
+        toolbarItems: [
+            "mode",
+            "spacer",
+            "bold",
+            "italic",
+            "underline",
+            "foreground"
+        ]
     },
     // Specify user settable options here. The view will automatically
     // format/display them.
