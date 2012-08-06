@@ -186,6 +186,14 @@
 .wysihtml5-toolbar [data-wysihtml5-command-group]:hover [data-wysihtml5-command]{
     display: inline-block;
     position: relative;
+    -moz-box-shadow: 0 0 3px #888;
+    -webkit-box-shadow: 0 0 3px #888;
+    box-shadow: 0 0 3px #888;
+}
+.wysihtml5-toolbar [data-wysihtml5-command-group]:hover [data-wysihtml5-command]:hover{
+    -moz-box-shadow: 0 0 5px #000;
+    -webkit-box-shadow: 0 0 5px #000;
+    box-shadow: 0 0 5px #000;
 }
 .wysihtml5-toolbar [data-wysihtml5-command-group="foreColor"] [data-wysihtml5-command] {
     background-color: transparent;
