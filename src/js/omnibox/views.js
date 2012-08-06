@@ -14,7 +14,7 @@ L.make.omnibox.OmniboxView = Backbone.View.extend({
         $(window).one('beforeunload', function() {
             that.undelegateEvents();
             that.model.off(null, null, that);
-            that.model.set("selection", rangy.saveSelection().rangeInfos);
+            //that.model.set("selection", rangy.saveSelection().rangeInfos);
             that.storeText();
         });
 
@@ -23,31 +23,34 @@ L.make.omnibox.OmniboxView = Backbone.View.extend({
             if (o.source != this) this.setText(t); // Don't update on own event.
         }, this);
     },
+    assertRendered: function() {
+        if (!this._rendered) throw new Error("View not rendered.");
+    },
+    toolbarItems: [ "mode", "spacer", "bold", "italic", "underline", "foreground" ],
     render: function() {
         this.$el.html(L.templates.omnibox.input({
-            text: this.model.get("text") || ""
+            text: this.model.get("text") || "",
+            toolbar: L.templates.omnibox.toolbar({id: 'omnibox-toolbar', className: "hlist", items: this.toolbarItems})
         }));
+        this.editor = new wysihtml5.Editor(this.$el.find('#omnibox-entry').get()[0], {
+            toolbar: this.$el.find("#omnibox-toolbar").get()[0],
+            parserRules: wysihtml5ParserRules,
+            stylesheets: ["css/reset.css", "css/wysihtml5.css"]
+        });
+
+        this._rendered = true;
+
+        this.editor.on('keydown', this._onKeyDown);
+        this.editor.on('keyup', this._onKeyUp);
+        this.editor.on('change', this.onChange);
         return this;
     },
     events: {
-        'click #save-icon': 'saveClicked_',
-        'click #pinIconPlus': 'savePinClicked_',
-
-        'keydown #omnibox-entry': 'keyDownHandler_',
-        'keyup #omnibox-entry': 'keyUpHandler_',
-        'paste #omnibox-entry': 'pasteHandler_',
-        'blur #omnibox-entry': 'focusOutHandler_',
-        'focus #omnibox-entry': 'focusInHandler_',
+        'click #save-icon': '_onSaveClicked',
+        'click #pinIconPlus': '_onSavePinClicked'
     },
-    getTextbox : function() {
-        return this.$("#omnibox-entry");
-    },
-    /**
-    * Handles KEYPRESS event:
-    *   Shift+Enter => create note.
-    * @param {object}
-    */
-    keyDownHandler_: function(event) {
+    // Handle esc/shift-enter
+    _onKeyDown: function(event) {
         event = event || window.event;
         var keyCode = event.keyCode || evt.which;
         switch(keyCode) {
@@ -63,61 +66,13 @@ L.make.omnibox.OmniboxView = Backbone.View.extend({
         }
         setTimeout(L.fixSize, 1);
     },
-    keyPressHandler_: function(event) {
-        if (this.isEmpty()) {
-            this.clearInput();
-        }
-    },
-
-    keyUpHandler_: function(event) {
-        this.storeText();
-    },
-    pasteHandler_: function(event) {
-        L.fixSize();
+    // Store text on change.
+    _onKeyUp: function(event) {
         this.storeText();
     },
     storeText: function() {
+        this.assertRendered();
         this.model.set("text", this.getText(), {source: this});
-    },
-
-    /**
-    * Handles new note focus event.
-    * @param {Object} event The focus event.
-    * @private
-    */
-    focusInHandler_: function(event) {
-        this.$el.addClass('focus');
-
-        if (this.model.get('untouched')) {
-            // First focus is from autofocus.
-            this.model.set('untouched', false);
-            L.log(LogType.CREATE_AUTOFOCUS, {});
-        } else {
-            L.log(LogType.CREATE_FOCUS, {});
-        }
-        var selection = this.model.get("selection");
-        if (selection) {
-            rangy.restoreSelection({
-                doc: document,
-                win: window,
-                rangeInfos: selection,
-                restored: false,
-            });
-            this.model.unset("selection");
-        }
-    },
-    /**
-    * Handles new note blur event.
-    * @param {Object} event The blur event.
-    * @private
-    */
-    focusOutHandler_: function(event) {
-        if (this.isEmpty()) {
-            this.$el.removeClass('focus');
-        } else {
-            this.model.set("selection", rangy.saveSelection().rangeInfos);
-            this.storeText();
-        }
     },
 
     /**
@@ -125,7 +80,7 @@ L.make.omnibox.OmniboxView = Backbone.View.extend({
     * @param {object} click event
     * @private
     */
-    saveClicked_: function(event) {
+    _onSaveClicked: function(event) {
         this.save();
     },
     /**
@@ -133,79 +88,41 @@ L.make.omnibox.OmniboxView = Backbone.View.extend({
     * @param {object} event The click event.
     * @private
     */
-    savePinClicked_: function(event) {
-        this.getTextbox().prepend("!!");
+    _onSavePinClicked: function(event) {
+        this.editor.setValue("!! " + this.editor.getValue());
         this.save();
     },
     save: function() {
+        this.assertRendered();
         this.model.unset("selection");
         // Clean
-        this.getTextbox().cut('.rangySelectionBoundry');
         this.storeText();
         L.vent.trigger("user:save-note");
         this.reset();
     },
 
     /**
-    * Returns true if input element is empty.
-    * @return {boolean}
-    */
-    isEmpty: function() {
-        return this.getTextbox().html().replace(/<br\s*\/?>|\s*/g, '').length === 0;
-    },
-    /**
-    * Returns true of new note box is 2+ lines long.
-    * @return {boolean}
-    */
-    isOneLine: function() {
-        var inputHTML = _.str.trim(this.getText());
-        return inputHTML.search('<div>') === -1;
-    },
-    /**
     * Returns text of note-creation input.
     * @return {string} Text of note-creation input.
     */
     getText: function() {
-        return this.getTextbox().html();
-    },
-    setText: function(text) {
-        this.getTextbox().html(text);
+        this.assertRendered();
+        return this.editor.getValue();
     },
 
-    /**
-    * Clear NewNote's innerText.
-    */
-    clearInput: function() {
-        this.getTextbox().text("");
-        this.model.set("text", "");
-        this.$el.removeClass('nonempty');
+    setText: function(text) {
+        this.assertRendered();
+        this.editor.setValue(text);
     },
 
     /**
     * Resets the field.
     */
     reset: function() {
-        this.clearInput();
-        this.focusInputWithCaret();
+        this.assertRendered();
+        this.editor.clear();
+        this.storeText();
     },
-
-    /**
-    * Focuses row=1, col=1 of new note entry box.
-    */
-    focusInputWithCaret: function() {
-        try {
-            var el = this.$('#omnibox-entry')[0];
-            var range = document.createRange();
-            var sel = window.getSelection();
-            range.setStart(el, 0); //row: el.childNodes[0], col: 0
-            range.collapse(true);
-            sel.removeAllRanges();
-            sel.addRange(range);
-            el.focus();
-        } catch (err) {
-            debug('FAIL: focusInputWithCaret()');
-        }
-    }
 });
 
 // This view does not have a model

@@ -212,7 +212,7 @@ L.util = (function() {
         text = text.replace('&nbsp;', ' ');
         text = _.str.unescapeHTML(text);
         return text;
-    }
+    };
     return util;
 })();
 
@@ -246,4 +246,3 @@ L.util = (function() {
         return this;
     };
 })(jQuery);
-

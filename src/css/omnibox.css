@@ -5,7 +5,7 @@
   border-top-right-radius: 3px;
   border-bottom-left-radius: 3px;
   background: #FFF;
-  padding: 7px 7px;
+  padding: 7px 7px 0px 7px;
   cursor: text;
   width: 100%;
   margin: 14px 7px !important;
@@ -34,24 +34,12 @@
   position: relative;
   top: 0;
   left: 0;
+  width: 100%;
 }
-
-#omnibox-desc {
-  text-align:left;
-  color: #aaa;
-  top:0;
-  left:0;
-  font-size:1.1em;
-  height: 0;
-
-  -webkit-user-select:none;
-  -moz-user-select:none;
-}
-
 
 #optionsCol {
   position: relative;
-  top: 50%;
+  top: 15px;
   float: right;
   font-size: 1.01em;
   color: rgb(120,120,120);
@@ -84,6 +72,13 @@
   padding: 0px;
   margin: 0;
   float:right;
+}
+
+#omnibox-toolbar {
+  position: relative;
+  left: auto;
+  bottom: 0px;
+  float: left;
 }
 
 /* Icon Tab Icon Containers! */

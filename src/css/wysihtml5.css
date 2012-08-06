@@ -1,0 +1,205 @@
+.wysiwyg-color-gray {
+    color: gray;
+}
+
+.wysiwyg-color-red {
+    color: red;
+}
+
+.wysiwyg-color-white {
+    color: white;
+}
+
+.wysiwyg-color-green {
+    color: green;
+}
+
+.wysiwyg-color-yellow {
+    color: yellow;
+}
+
+.wysiwyg-color-maroon {
+    color: maroon;
+}
+
+.wysiwyg-color-navy {
+    color: navy;
+}
+
+.wysiwyg-color-purple {
+    color: purple;
+}
+
+.wysihtml5-toolbar [data-wysihtml5-command=italic] {
+    background-image: url("../img/icons/format-text-italic.png");
+}
+
+.wysihtml5-toolbar [data-wysihtml5-command=underline] {
+    background-image: url("../img/icons/format-text-underline.png");
+}
+
+.wysihtml5-toolbar [data-wysihtml5-command=bold] {
+    background-image: url("../img/icons/format-text-bold.png");
+}
+
+.wysihtml5-toolbar [data-wysihtml5-action=change_view] {
+    background-image: url("../img/icons/mode-html.png");
+}
+
+.wysihtml5-toolbar [data-wysihtml5-command-group=foreColor] {
+    background-image: url("../img/icons/format-text-color.png");
+}
+
+.wysihtml5-toolbar li.spacer {
+    width: 16px;
+}
+
+.wysihtml5-toolbar [data-wysihtml5-command],
+.wysihtml5-toolbar [data-wysihtml5-action],
+.wysihtml5-toolbar [data-wysihtml5-command-group] {
+    background-repeat: no-repeat;
+    width: 16px;
+    height: 16px;
+    margin: 2px;
+    padding: 2px;
+    background-position: center;
+    border-radius: 2px;
+    cursor: pointer;
+}
+
+.wysihtml5-toolbar.wysihtml5-commands-disabled [data-wysihtml5-command]{
+    opacity: .5;
+}
+
+.wysihtml5-toolbar.wysihtml5-commands-disabled [data-wysihtml5-command-group]{
+    opacity: .5;
+}
+
+.wysihtml5-toolbar .wysihtml5-command-active, .wysihtml5-toolbar .wysihtml5-action-active {
+    border: 2px solid #aaa;
+    background-color: #eee;
+    margin: 0 !important;
+}
+
+.wysihtml5-toolbar [data-wysihtml5-command-group] {
+    background-position: center;
+    position: relative;
+}
+
+.wysihtml5-toolbar [data-wysihtml5-command-group]:hover [data-wysihtml5-command="foreColor"][data-wysihtml5-command-value="red"] {
+    background-color: red;
+}
+
+.wysihtml5-toolbar [data-wysihtml5-command-group] [data-wysihtml5-command="foreColor"][data-wysihtml5-command-value="red"] {
+    border-color: red;
+}
+
+.wysihtml5-toolbar [data-wysihtml5-command-group]:hover [data-wysihtml5-command="foreColor"][data-wysihtml5-command-value="green"] {
+    background-color: green;
+}
+
+.wysihtml5-toolbar [data-wysihtml5-command-group] [data-wysihtml5-command="foreColor"][data-wysihtml5-command-value="green"] {
+    border-color: green;
+}
+
+.wysihtml5-toolbar [data-wysihtml5-command-group]:hover [data-wysihtml5-command="foreColor"][data-wysihtml5-command-value="blue"] {
+    background-color: blue;
+}
+
+.wysihtml5-toolbar [data-wysihtml5-command-group] [data-wysihtml5-command="foreColor"][data-wysihtml5-command-value="blue"] {
+    border-color: blue;
+}
+
+.wysihtml5-toolbar [data-wysihtml5-command-group]:hover [data-wysihtml5-command="foreColor"][data-wysihtml5-command-value="navy"] {
+    background-color: navy;
+}
+
+.wysihtml5-toolbar [data-wysihtml5-command-group] [data-wysihtml5-command="foreColor"][data-wysihtml5-command-value="navy"] {
+    border-color: navy;
+}
+
+.wysihtml5-toolbar [data-wysihtml5-command-group]:hover [data-wysihtml5-command="foreColor"][data-wysihtml5-command-value="maroon"] {
+    background-color: maroon;
+}
+
+.wysihtml5-toolbar [data-wysihtml5-command-group] [data-wysihtml5-command="foreColor"][data-wysihtml5-command-value="maroon"] {
+    border-color: maroon;
+}
+
+.wysihtml5-toolbar [data-wysihtml5-command-group]:hover [data-wysihtml5-command="foreColor"][data-wysihtml5-command-value="purple"] {
+    background-color: purple;
+}
+
+.wysihtml5-toolbar [data-wysihtml5-command-group] [data-wysihtml5-command="foreColor"][data-wysihtml5-command-value="purple"] {
+    border-color: purple;
+}
+
+.wysihtml5-toolbar [data-wysihtml5-command-group]:hover [data-wysihtml5-command="foreColor"][data-wysihtml5-command-value="yellow"] {
+    background-color: yellow;
+}
+
+.wysihtml5-toolbar [data-wysihtml5-command-group] [data-wysihtml5-command="foreColor"][data-wysihtml5-command-value="yellow"] {
+    border-color: yellow;
+}
+
+.wysihtml5-toolbar [data-wysihtml5-command-group]:hover [data-wysihtml5-command="foreColor"][data-wysihtml5-command-value="gray"] {
+    background-color: gray;
+}
+
+.wysihtml5-toolbar [data-wysihtml5-command-group] [data-wysihtml5-command="foreColor"][data-wysihtml5-command-value="gray"] {
+    border-color: gray;
+}
+
+.wysihtml5-toolbar [data-wysihtml5-command-group]:hover [data-wysihtml5-command="foreColor"][data-wysihtml5-command-value="white"] {
+    background-color: white;
+}
+
+.wysihtml5-toolbar [data-wysihtml5-command-group] [data-wysihtml5-command="foreColor"][data-wysihtml5-command-value="white"] {
+    border-color: white;
+}
+
+.wysihtml5-toolbar [data-wysihtml5-command-group] > * {
+    border-radius: 2px;
+    position: relative;
+    background: #f5f5f5;
+    line-height: 0;
+    width: 24px;
+    top: -4px;
+    left: -4px;
+}
+.wysihtml5-toolbar [data-wysihtml5-command-group]:hover > * {
+    padding: 1px;
+    left: -6px;
+    top: -6px;
+    border: 1px solid #aaa;
+}
+.wysihtml5-toolbar [data-wysihtml5-command-group] [data-wysihtml5-command] {
+    display: none;
+    position: absolute;
+}
+
+.wysihtml5-toolbar [data-wysihtml5-command-group] .wysihtml5-command-active {
+    display: block;
+}
+
+
+.wysihtml5-toolbar [data-wysihtml5-command-group]:hover [data-wysihtml5-command]{
+    display: inline-block;
+    position: relative;
+}
+.wysihtml5-toolbar [data-wysihtml5-command-group="foreColor"] [data-wysihtml5-command] {
+    background-color: transparent;
+}
+
+.wysihtml5-toolbar [data-wysihtml5-command-group]:hover .wysihtml5-command-active {
+    border-color: #000;
+}
+
+
+b {
+    font-weight: bold;
+}
+
+i {
+    font-style: italic;
+}
