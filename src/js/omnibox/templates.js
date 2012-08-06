@@ -26,7 +26,7 @@ return __p;
 L.templates.omnibox.toolbar = function(obj){
 var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'')};
 with(obj||{}){
-__p+='';
+__p+='<ul class="wysihtml5-toolbar-buttons hlist">\n';
  _.each(items, function(item) { 
 __p+='\n    ';
  switch(item) { case "italic": 
@@ -37,12 +37,14 @@ __p+='<li title="Underline (ctrl-u)" data-wysihtml5-command="underline"></li>\n 
 __p+='<li title="Bold (ctrl-b)" data-wysihtml5-command="bold"></li>\n    ';
  break; case "mode": 
 __p+='<li title="Toggle raw HTML mode" data-wysihtml5-action="change_view"></li>\n    ';
+ break; case "link": 
+__p+='<li title="Insert a link." data-wysihtml5-command="createLink"></li>\n    ';
  break; case "spacer": 
 __p+='<li class="spacer"></li>\n    ';
  break; case "foreground": 
 __p+='\n    <li data-wysihtml5-command-group="foreColor" class="fore-color" title="Color the selected text">\n    <ul>\n        <li data-wysihtml5-command="foreColor" data-wysihtml5-command-value="gray"></li>\n        <li data-wysihtml5-command="foreColor" data-wysihtml5-command-value="maroon"></li>\n        <li data-wysihtml5-command="foreColor" data-wysihtml5-command-value="red"></li>\n        <li data-wysihtml5-command="foreColor" data-wysihtml5-command-value="purple"></li>\n        <li data-wysihtml5-command="foreColor" data-wysihtml5-command-value="green"></li>\n        <li data-wysihtml5-command="foreColor" data-wysihtml5-command-value="yellow"></li>\n        <li data-wysihtml5-command="foreColor" data-wysihtml5-command-value="navy"></li>\n        <li data-wysihtml5-command="foreColor" data-wysihtml5-command-value="blue"></li>\n    </ul>\n    </li>\n';
  }}); 
-__p+='\n';
+__p+='\n</ul>\n<div class="wysihtml5-dialogs">\n    <form data-wysihtml5-dialog="createLink" style="display: none;">\n        <label>Link: </label>\n        <input required="required" data-wysihtml5-dialog-field="href" value="http://" class="input" type="url" />\n        <input class="button" type="submit" data-wysihtml5-dialog-action="save" value="Save" />\n        <div class="close-btn clickable" data-wysihtml5-dialog-action="cancel"></div>\n    </form>\n</div>\n';
 }
 return __p;
 };

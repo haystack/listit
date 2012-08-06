@@ -7,11 +7,11 @@ L.make.options.OptionsModel = Backbone.Model.extend({
         notificationTimeout: 5,
         toolbarItems: [
             "mode",
-            "spacer",
             "bold",
             "italic",
             "underline",
-            "foreground"
+            "foreground",
+            "link"
         ]
     },
     // Specify user settable options here. The view will automatically

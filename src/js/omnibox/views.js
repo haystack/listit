@@ -32,7 +32,7 @@ L.make.omnibox.OmniboxView = Backbone.View.extend({
             "id": 'omnibox-toolbar',
         });
         this.$el.html(L.templates.omnibox.input({ text: this.model.get("text") || "", }));
-        this.$("#omnibox-bottombar").prepend(this.toolbar.render().el)
+        this.$("#omnibox-bottombar").prepend(this.toolbar.render().el);
         this.editor = new wysihtml5.Editor(this.$el.find('#omnibox-entry').get()[0], {
             toolbar: this.toolbar.el,
             parserRules: wysihtml5ParserRules,
@@ -164,8 +164,8 @@ L.make.omnibox.ControlsView = Backbone.View.extend({
 
 
 L.make.omnibox.ToolbarView = Backbone.View.extend({
-    className: "wysihtml5-toolbar hlist",
-    tagName: "ul",
+    className: "wysihtml5-toolbar",
+    tagName: "div",
     attributes: {"style": "display: none;"}, // css isn't working for some reason
     initialize: function() {
         var that = this;

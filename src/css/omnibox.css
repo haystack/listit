@@ -97,3 +97,23 @@
 .iconTab:hover {
   color:black;
 }
+
+#omnibox-toolbar .wysihtml5-dialogs  {
+    position: fixed; /* ick. */
+    left: 10px;
+    right: 10px;
+}
+
+#omnibox-toolbar [data-wysihtml5-dialog] {
+    margin-top: 10px;
+    padding: 10px;
+    -moz-box-shadow: 0 0 10px #888;
+    -webkit-box-shadow: 0 0 10px #888;
+    box-shadow: 0 0 10px #888;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -o-border-radius: 5px;
+    border-radius: 5px;
+    background-color: #f5f5f5 !important;
+    border: 1px solid gray;
+}

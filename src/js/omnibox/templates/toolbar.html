@@ -1,8 +1,10 @@
+<ul class="wysihtml5-toolbar-buttons hlist">
 <% _.each(items, function(item) { %>
     <% switch(item) { case "italic": %><li title="Italic (ctrl-i)" data-wysihtml5-command="italic"></li>
     <% break; case "underline": %><li title="Underline (ctrl-u)" data-wysihtml5-command="underline"></li>
     <% break; case "bold": %><li title="Bold (ctrl-b)" data-wysihtml5-command="bold"></li>
     <% break; case "mode": %><li title="Toggle raw HTML mode" data-wysihtml5-action="change_view"></li>
+    <% break; case "link": %><li title="Insert a link." data-wysihtml5-command="createLink"></li>
     <% break; case "spacer": %><li class="spacer"></li>
     <% break; case "foreground": %>
     <li data-wysihtml5-command-group="foreColor" class="fore-color" title="Color the selected text">
@@ -18,3 +20,12 @@
     </ul>
     </li>
 <% }}); %>
+</ul>
+<div class="wysihtml5-dialogs">
+    <form data-wysihtml5-dialog="createLink" style="display: none;">
+        <label>Link: </label>
+        <input required="required" data-wysihtml5-dialog-field="href" value="http://" class="input" type="url" />
+        <input class="button" type="submit" data-wysihtml5-dialog-action="save" value="Save" />
+        <div class="close-btn clickable" data-wysihtml5-dialog-action="cancel"></div>
+    </form>
+</div>
