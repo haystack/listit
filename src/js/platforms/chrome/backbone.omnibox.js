@@ -1,7 +1,8 @@
+/*global chrome:true */
 /**
  * Create a generic backbone view for the chrome omnibox.
  *
- * Event delegation mimics backbone: 
+ * Event delegation mimics backbone:
  *  start: fired once per input session before the change event.
  *  change: fired when the input changes.
  *  cancel: fired when the aborts the input.
@@ -16,6 +17,7 @@
  **/
 
 (function() {
+    'use strict';
     var _ = this._;
     var Backbone = this.Backbone;
 
@@ -27,16 +29,18 @@
     };
 
     var eventMap = {
-        "change": "onInputChanged",
-        "cancel": "onInputCancelled", 
-        "submit": "onInputEntered",
-        "start": "onInputStarted"
+        'change': 'onInputChanged',
+        'cancel': 'onInputCancelled',
+        'submit': 'onInputEntered',
+        'start': 'onInputStarted'
     };
 
     var viewOptions = ['model', 'collection', 'defaultSuggestion', 'omnibox'];
 
     var getValue = function(object, prop) {
-        if (!(object && object[prop])) return null;
+        if (!(object && object[prop])) {
+            return null;
+        }
         return _.isFunction(object[prop]) ? object[prop]() : object[prop];
     };
 
@@ -44,34 +48,51 @@
     _.extend(Backbone.ChromeOmniboxView.prototype, Backbone.Events, {
         initialize : function() {},
         _configure : function(options) {
-            if (this.options) options = _.extend({}, this.options, options);
+            if (this.options) {
+                options = _.extend({}, this.options, options);
+            }
             var that = this;
             _.each(viewOptions, function(option) {
-                if (options[option]) that[option] = options[option];
+                if (options[option]) {
+                    that[option] = options[option];
+                }
             });
 
             this.options = options;
 
-            if (!this.omnibox)
+            if (!this.omnibox) {
                 this.omnibox = chrome.omnibox;
+            }
 
-            if (this.defaultSuggestion)
+            if (this.defaultSuggestion) {
                 this.omnibox.setDefaultSuggestion({description: this.defaultSuggestion});
-        },
-        delegateEvents: function(events) {
-            if (!(events || (events = getValue(this, 'events')))) return
-
-            for (var key in events) {
-                var evt = eventMap[key];
-                if (!evt) throw new Error('Event "' + key + '" does not exist');
-
-                var method = events[key];
-                if (!_.isFunction(method)) method = this[events[key]];
-                if (!method) throw new Error('Method "' + events[key] + '" does not exist');
-
-                this.omnibox[evt].addListener(_.bind(method, this));
             }
         },
+        delegateEvents: function(events) {
+            if (!(events || (events = getValue(this, 'events'))))  {
+                return;
+            }
+
+            var that = this;
+
+            _.each(events, function(method, key) {
+                var evt = eventMap[key];
+
+                if (!evt) {
+                    throw new Error('Event "' + key + '" does not exist');
+                }
+
+                if (!_.isFunction(method)) {
+                    method = that[events[key]];
+                }
+
+                if (!method) {
+                    throw new Error('Method "' + events[key] + '" does not exist');
+                }
+
+                that.omnibox[evt].addListener(_.bind(method, that));
+            });
+        }
     });
 
     Backbone.ChromeOmniboxView.extend = Backbone.View.extend;

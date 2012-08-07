@@ -1,3 +1,3 @@
-background = chrome.extension.getBackgroundPage();
-console = background.console;
-localStorage = background.localStorage;
+/*global chrome:true */
+window.background = chrome.extension.getBackgroundPage();
+window.console = window.background.console;

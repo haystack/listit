@@ -1,0 +1,1 @@
+ListIt.initModule('logger');

@@ -1,7 +1,6 @@
-// Compiled templates
-// Editing is futile.
+/* Generated Template */
 
-L.templates.omnibox.input = function(obj){
+ListIt.templates.omnibox.input = function(obj){
 var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'')};
 with(obj||{}){
 __p+='<textarea id="omnibox-entry" class="omnibox-entry input-div flex editable" placeholder="Search or Create Note">'+
@@ -10,7 +9,7 @@ __p+='<textarea id="omnibox-entry" class="omnibox-entry input-div flex editable"
 }
 return __p;
 };
-L.templates.omnibox.optioncol = function(obj){
+ListIt.templates.omnibox.optioncol = function(obj){
 var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'')};
 with(obj||{}){
 __p+='<a class="clickable">\n    <img id="syncIcon" class="';
@@ -23,7 +22,7 @@ __p+=' settingIcon" src="img/arrowstill.png" width="16" height="16" title="Save 
 }
 return __p;
 };
-L.templates.omnibox.toolbar = function(obj){
+ListIt.templates.omnibox.toolbar = function(obj){
 var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'')};
 with(obj||{}){
 __p+='<ul class="wysihtml5-toolbar-buttons hlist">\n';

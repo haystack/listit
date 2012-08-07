@@ -3,6 +3,13 @@
 <project>
 <dirset id="template.dirs" dir="${listit.js.dir}" includes="*/templates/" />
 
+
+<fileset id="jshint-files" dir="${listit.js.dir}">
+    <include name="**/*.js" />
+    <exclude name="**/templates.js" />
+    <exclude name="libs/**" />
+</fileset>
+
 <resources id="js.libs.jquery">
     <filelist dir="${listit.js.dir}/libs">
         <file name="jquery.js" />

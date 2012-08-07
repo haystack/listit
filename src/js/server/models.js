@@ -1,181 +1,189 @@
-"use strict";
-// Handles syncing notes with the server.
-// Do not persist
-L.make.server.ServerModel = Backbone.Model.extend({
-    defaults : {
-        url: 'http://welist.it/listit/jv3/',
-        syncing: false,
-        syncingLogs: false,
+(function(L) {
+    'use strict';
+    // Handles syncing notes with the server.
+    // Do not persist
+    L.make.server.ServerModel = Backbone.Model.extend({
+        defaults : {
+            url: 'http://welist.it/listit/jv3/',
+            syncing: false,
+            syncingLogs: false,
 
-        noteSyncInterval: 10*60*1000, // 10m
-        //logSyncInterval:  30*60*1000, // 30m
-        logSyncInterval:  -1 // Disabled
-    },
-    initialize: function() {
-        _.bindAll(this);
-        L.vent.on('user:sync', this.syncNotes);
-    },
-    // Defines a translation between a packaged note and a local note.
-    transTable : {
-        'jid': { here: 'id' },
-        'version': {},
-        'created': {},
-        'edited': {},
-        'contents': {},
-        'meta': { transIn: JSON.parse, transOut: JSON.stringify },
-        'modified': { 
-            transIn: function(v) { return v !== 0; },
-            transOut: function(v) { return v ? 1 : 0; }
-        }
-    },
-    // Make an ajax method call
-    ajax : function(options) {
-        options = _.clone(options);
-        
-        if (options.continuation) {
-            var continuation = options.continuation;
-            options.success = function(data) {
-                continuation(true, data);
-            };
-            if (!options.error) {
-                opitons.error = function(xhdr, stat) {
-                    continuation(false, stat);
-                }
+            noteSyncInterval: 10*60*1000, // 10m
+            //logSyncInterval:  30*60*1000, // 30m
+            logSyncInterval:  -1 // Disabled
+        },
+        initialize: function() {
+            _.bindAll(this);
+            L.vent.on('user:sync', this.syncNotes);
+        },
+        // Defines a translation between a packaged note and a local note.
+        transTable : {
+            'jid': { here: 'id' },
+            'version': {},
+            'created': {},
+            'edited': {},
+            'contents': {},
+            'meta': { transIn: JSON.parse, transOut: JSON.stringify },
+            'modified': {
+                transIn: function(v) { return v !== 0; },
+                transOut: function(v) { return v ? 1 : 0; }
             }
-            delete options.continuation;
-        }
+        },
+        // Make an ajax method call
+        ajax : function(options) {
+            options = _.clone(options);
 
-        // Call with auth token if needed. Do it this way to allow for
-        // asynchronous authentication (password prompts etc.)
-        if (options.auth && !options.authToken) {
+            if (options.continuation) {
+                var continuation = options.continuation;
+                options.success = function(data) {
+                    continuation(true, data);
+                };
+                if (!options.error) {
+                    options.error = function(xhdr, stat) {
+                        continuation(false, stat);
+                    };
+                }
+                delete options.continuation;
+            }
+
+            // Call with auth token if needed. Do it this way to allow for
+            // asynchronous authentication (password prompts etc.)
+            if (options.auth && !options.authToken) {
+                var that = this;
+                L.authmanager.getToken(function(token) {
+                    if (token) {
+                        options.authToken = token;
+                        that.ajax(options);
+                    } else {
+                        (options.error || $.noop)(null, 'Failed to authenticate');
+                        (options.complete || $.noop)();
+                    }
+                });
+                return;
+            }
+
+            if (!options.type) {
+                options.type = options.data ? 'POST' : 'GET';
+            }
+
+            options.url = this.get('url') + options.method + (options.type === 'POST' ? '/' : '') +
+                (options.auth ? ('?HTTP_AUTHORIZATION=' + options.authToken) : '');
+
+            options.crossDomain = true;
+            $.ajax(options);
+        },
+        syncNotes : function() {
+            clearTimeout(this.get('noteSyncTimer'));
+
+            // Don't sync if waiting for a past sync.
+            if (this.get('synching')) {
+                return;
+            }
+
             var that = this;
-            L.authmanager.getToken(function(token) {
-                if (token) {
-                    options.authToken = token;
-                    that.ajax(options);
-                } else {
-                    (options.error || $.noop)(null, "Failed to authenticate");
-                    (options.complete || $.noop)();
+
+            debug('performSync()');
+            this.trigger('sync:start');
+            this.set('syncing', true);
+            this.ajax({
+                method: 'post_json_get_updates',
+                dataType: 'json',
+                auth: true,
+                data: this.bundleNotes(),
+                error: function(xhdr, stat) {
+                    //debug('server.js - Sync Success: ' + success);
+                    //debug('results:', result);
+                    debug('server.js - Sync failed.');
+                    that.trigger('sync:success', stat);
+                },
+                success: function(result) {
+                    that.unbundleNotes(result);
+                    // Successful Ajax Response:
+                    that.trigger('sync:success');
+                },
+                complete: function() {
+                    that.set('syncing', false);
+                    var interval = that.get('noteSyncInterval');
+                    if (interval > 0) {
+                        that.set('noteSyncTimer', setTimeout(that.syncNotes, interval));
+                    }
                 }
             });
-            return;
-        }
+        },
+        syncLogs : function() {
+            if (this.get('syncingLogs')) {
+                return;
+            }
 
-        if (!options.type) {
-            options.type = options["data"] ? 'POST' : 'GET';
-        }
+            var that = this;
 
-        options.url = this.get("url") + options.method + (options.type == 'POST' ? "/" : "") +
-            (options.auth ? ('?HTTP_AUTHORIZATION=' + options.authToken) : '');
-
-        options.crossDomain = true;
-        $.ajax(options);
-    },
-    syncNotes : function() {
-        clearTimeout(this.get("noteSyncTimer"));
-
-        // Don't sync if waiting for a past sync.
-        if (this.get("synching")) return;
-        var that = this;
-
-        debug('performSync()');
-        this.trigger("sync:start");
-        this.set("syncing", true);
-        this.ajax({
-            method: 'post_json_get_updates',
-            dataType: "json",
-            auth: true,
-            data: this.bundleNotes(),
-            error: function(xhdr, stat) {
-                //debug('server.js - Sync Success: ' + success);
-                //debug('results:', result);
-                debug('server.js - Sync failed.');
-                that.trigger("sync:success", stat);
-            },
-            success: function(result) {
-                that.unbundleNotes(result);
-                // Successful Ajax Response:
-                that.trigger("sync:success");
-            },
-            complete: function() {
-                that.set("syncing", false);
-                var interval = that.get("noteSyncInterval");
-                if (interval > 0) {
-                    that.set("noteSyncTimer", setTimeout(that.syncNotes, interval))
+            this.set('syncingLogs', true);
+            this.ajax({
+                method: 'post_json_chrome_logs',
+                auth: true,
+                data: L.logs.toJSON(),
+                error: function() {
+                    debug('FAIL: Logs not sent to server.');
+                    // TODO:Do something?
+                },
+                success: function() {
+                    // TODO: Clear Logs
+                    debug('Implement logging.');
+                },
+                complete: function() {
+                    that.set('syncingLogs', false);
+                    var interval = that.get('logSyncInterval');
+                    if (interval > 0) {
+                        that.set('logSyncTimer', setTimeout(that.syncLogs, interval));
+                    }
                 }
-            }
-        });
-    },
-    syncLogs : function() {
-        if (this.get("syncingLogs")) return;
-        var that = this;
-        this.set("syncingLogs", true);
-        this.ajax({
-            method: "post_json_chrome_logs",
-            auth: true,
-            data: L.logs.toJSON(),
-            error: function() {
-                debug("FAIL: Logs not sent to server.");
-                // TODO:Do something?
-            },
-            success: function() {
-                // TODO: Clear Logs
-                console.log("Implement logging.");
-                alert("Implement logging.");silentsilent
-            },
-            complete: function() {
-                that.set("syncingLogs", false);
-                var interval = that.get("logSyncInterval");
-                if (interval > 0) {
-                    that.set("logSyncTimer", setTimeout(that.syncLogs, interval))
-                }
-            }
-        });
-    },
-    start : function() {
-        // Note: use timout instead of interval for a responsive interface.
-        // Also allows pre-empting
+            });
+        },
+        start : function() {
+            // Note: use timout instead of interval for a responsive interface.
+            // Also allows pre-empting
 
-        var noteSyncInterval = this.get("noteSyncInterval", -1);
-        var logSyncInterval = this.get("logSyncInterval", -1);
+            var noteSyncInterval = this.get('noteSyncInterval', -1),
+                logSyncInterval = this.get('logSyncInterval', -1);
 
-        if (noteSyncInterval > 0) {
-            this.syncNotes();
-        }
-        if (logSyncInterval > 0) {
-            this.syncLogs();
-        }
-    },
-    stop : function() {
-        clearTimeout(this.get("noteSyncTimer"));
-        clearTimeout(this.get("logSyncTimer"));
-    },
-    /**
-     * Package and bundle the given notes.
-     */
-    bundleNotes : function() {
-        var unmodifiedNotes = {};
-        var modifiedNotes = [];
-        var that = this;
-        var pushNote = function(note, deleted) {
-            // TODO: Insert Magic note hack
-            if (note.get("modified")) {
-                modifiedNotes.push(that.packageNote(note, deleted));
-            } else {
-                unmodifiedNotes[note.get("id")] = note.get("version");
+            if (noteSyncInterval > 0) {
+                this.syncNotes();
             }
-        }
-        L.notes.each(function(n) { pushNote(n, false); });
-        L.deletedNotes.each(function(n) { pushNote(n, true); });
+            if (logSyncInterval > 0) {
+                this.syncLogs();
+            }
+        },
+        stop : function() {
+            clearTimeout(this.get('noteSyncTimer'));
+            clearTimeout(this.get('logSyncTimer'));
+        },
+        /**
+        * Package and bundle the given notes.
+        */
+        bundleNotes : function() {
+            var that = this,
+                unmodifiedNotes = {},
+                modifiedNotes = [],
+                pushNote = function(note, deleted) {
+                    // TODO: Insert Magic note hack
+                    if (note.get('modified')) {
+                        modifiedNotes.push(that.packageNote(note, deleted));
+                    } else {
+                        unmodifiedNotes[note.get('id')] = note.get('version');
+                    }
+                };
 
-        return JSON.stringify({
-            modifiedNotes: modifiedNotes,
-            unmodifiedNotes: unmodifiedNotes
-        });
-    },
-    unbundleNotes: function(result) {
-        // Update changed
-        _.chain(result.update.concat(result.updateFinal))
+            L.notes.each(function(n) { pushNote(n, false); });
+            L.deletedNotes.each(function(n) { pushNote(n, true); });
+
+            return JSON.stringify({
+                modifiedNotes: modifiedNotes,
+                unmodifiedNotes: unmodifiedNotes
+            });
+        },
+        unbundleNotes: function(result) {
+            // Update changed
+            _.chain(result.update.concat(result.updateFinal))
             .map(this.unpackageNote)
             .each(function(n) {
                 var deleted = _.pop(n, 'deleted');
@@ -185,130 +193,130 @@ L.make.server.ServerModel = Backbone.Model.extend({
                     note.set(n);
                     note.save();
                 } else {
-                    debug("Updated note doesn't exist, creating", n);
+                    debug('Updated note doesn\'t exist, creating', n);
                     (deleted ? L.deletedNotes : L.notes).add(n, {nosave: true});
                 }
             });
-                
-        // Mark committed as unmodified
-        _.chain(result.committed)
-            .filter(function(n) { return (n.status === 201 || n.status === 200); }) // Filter on success
+
+            // Mark committed as unmodified
+            _.chain(result.committed)
+            .filter(function(note) { return (note.status === 201 || note.status === 200); }) // Filter on success
             .pluck('jid') // Get ids
             .map(L.getNote) // Look up notes
-            .each(function(n) { // Set unmodified if the note exists.
-                if (!n) {
-                    debug("Note doesn't exist", note);
+            .each(function(note) { // Set unmodified if the note exists.
+                if (!note) {
+                    debug('Note doesn\'t exist', note);
                     return;
                 }
-                n.set('modified', false);
-                n.save();
+                note.set('modified', false);
+                note.save();
             });
 
-        // Add new notes
-        _.chain(result.unknownNotes)
+            // Add new notes
+            _.chain(result.unknownNotes)
             .map(this.unpackageNote)
             .each(function(n) {
-                debug("Adding new note", n);
+                debug('Adding new note', n);
                 (_.pop(n, 'deleted') ? L.deletedNotes : L.notes).add(n, {nosave: true}); // Add the note to the correct set.
             });
 
-        // Save collections
-        L.notes.save();
-        L.deletedNotes.save();
+            // Save collections
+            L.notes.save();
+            L.deletedNotes.save();
 
-        // Successful Ajax Response:
-        this.trigger("sync:success");
-    },
+            // Successful Ajax Response:
+            this.trigger('sync:success');
+        },
 
-    /**
-     * Convert a note into a package that can be sent to the server.
-     */
-    packageNote : function(note, deleted) {
-        var meta = note.get("meta")
-        // TODO: This is stupid (shouldn't need deleted, jid?).
-        // The server should be fixed.
-        var packed = {deleted: deleted ? 1 : 0};
-        _(this.transTable).each(function(trans, field) {
-            packed[field] = note.get(trans.here || field)
-            if (trans.transOut) {
-                packed[field] = trans.transOut(packed[field]);
-            }
-        });
-        return packed;
-    },
-    /**
-     * Convert a package from the server into a hash of fields that can be used to update/create a note.
-     */
-    unpackageNote : function(note) {
-        var unpacked = {modified: false, deleted: note["deleted"] !== 0};
-        _(this.transTable).each(function(trans, field) {
-            if (!note.hasOwnProperty(field)) {
-                return;
-            }
-            var myField = trans.here || field;
-            unpacked[myField] = note[field];
-            if (trans.transIn) {
-                unpacked[myField] = trans.transIn(unpacked[myField]);
-            }
-        });
-        return unpacked;
-    },
-    validateUser: function(hashPass, options) {
-        debug('logging in:', hashPass);
-        this.ajax(_.extend({
-            method: "login",
-            auth: "true",
-            cache: false,
-            authToken: hashPass
-        }, options));
-    },
-    registerUser : function(email, password, couhes, options) {
-        // Pulled from zen/tags site
-        var firstname = '';
-        var lastname = '';
+        /**
+        * Convert a note into a package that can be sent to the server.
+        */
+        packageNote : function(note, deleted) {
+            var meta = note.get('meta'),
+                packed = {deleted: deleted ? 1 : 0};
 
-        this.ajax(_.extend({
-            method: 'createuser',
-            data: {
-                username: email,
-                password: password,
-                couhes: couhes,
-                firstname: firstname,
-                lastname: lastname
-            },
-            cache: false
-        }, options));
-    }
-});
+            _(this.transTable).each(function(trans, field) {
+                packed[field] = note.get(trans.here || field);
+                if (trans.transOut) {
+                    packed[field] = trans.transOut(packed[field]);
+                }
+            });
+            return packed;
+        },
+        /**
+        * Convert a package from the server into a hash of fields that can be used to update/create a note.
+        */
+        unpackageNote : function(note) {
+            var unpacked = {modified: false, deleted: note.deleted !== 0};
+            _(this.transTable).each(function(trans, field) {
+                if (!note.hasOwnProperty(field)) {
+                    return;
+                }
+                var myField = trans.here || field;
+                unpacked[myField] = note[field];
+                if (trans.transIn) {
+                    unpacked[myField] = trans.transIn(unpacked[myField]);
+                }
+            });
+            return unpacked;
+        },
+        validateUser: function(hashPass, options) {
+            debug('logging in:', hashPass);
+            this.ajax(_.extend({
+                method: 'login',
+                auth: 'true',
+                cache: false,
+                authToken: hashPass
+            }, options));
+        },
+        registerUser : function(email, password, couhes, options) {
+            // Pulled from zen/tags site
+            var firstname = '';
+            var lastname = '';
 
-// This manages account information.
-// It doesn't have a view, it doesn't do anything but store the auth token.
-L.make.server.AuthManager = Backbone.Model.extend({
-    initialize: function() {
-        this.fetch();
-        this.on("change", this.save, this);
-    },
+            this.ajax(_.extend({
+                method: 'createuser',
+                data: {
+                    username: email,
+                    password: password,
+                    couhes: couhes,
+                    firstname: firstname,
+                    lastname: lastname
+                },
+                cache: false
+            }, options));
+        }
+    });
 
-    // Singleton
-    url: '/authmanager',
-    isNew: function() {return false;},
-    /**
-     * Call the callback with the auth token.
-     *
-     * This method must be defined.
-     */
-    getToken: function(callback) {
-        callback(this.get("hashpass", null));
-    },
-    /**
-     * Set the auth token.
-     *
-     * This method doesn't only needs to be made available to the authentication agent.
-     */
-    setToken: function(token) {
-        this.set("hashpass", token);
-    },
-    unsetToken: function() {
-        this.unset("hashpass");
-    }
-});
+    // This manages account information.
+    // It doesn't have a view, it doesn't do anything but store the auth token.
+    L.make.server.AuthManager = Backbone.Model.extend({
+        initialize: function() {
+            this.fetch();
+            this.on('change', this.save, this);
+        },
+
+        // Singleton
+        url: '/authmanager',
+        isNew: function() {return false;},
+        /**
+        * Call the callback with the auth token.
+        *
+        * This method must be defined.
+        */
+        getToken: function(callback) {
+            callback(this.get('hashpass', null));
+        },
+        /**
+        * Set the auth token.
+        *
+        * This method doesn't only needs to be made available to the authentication agent.
+        */
+        setToken: function(token) {
+            this.set('hashpass', token);
+        },
+        unsetToken: function() {
+            this.unset('hashpass');
+        }
+    });
+})(ListIt);

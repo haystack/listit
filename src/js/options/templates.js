@@ -1,7 +1,6 @@
-// Compiled templates
-// Editing is futile.
+/* Generated Template */
 
-L.templates.options.importexport = function(obj){
+ListIt.templates.options.importexport = function(obj){
 var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'')};
 with(obj||{}){
 __p+='<h3>Import/Export</h3>\n<form class="tableform">\n<fieldset>\n<legend>Import: </legend>\n  <div class="field">\n    <label for="importSelect">Format: </label>\n    '+
@@ -12,7 +11,7 @@ __p+='<h3>Import/Export</h3>\n<form class="tableform">\n<fieldset>\n<legend>Impo
 }
 return __p;
 };
-L.templates.options.info = function(obj){
+ListIt.templates.options.info = function(obj){
 var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'')};
 with(obj||{}){
 __p+='<h3>Getting started</h3>\n<span>Here are some tips to help you get going with list.it:</span>\n<ul class="list">\n    ';
@@ -35,14 +34,14 @@ __p+='\n        <li class="italic">List-it team at MIT CSAIL</li>\n    </ul>\n</
 }
 return __p;
 };
-L.templates.options.page = function(obj){
+ListIt.templates.options.page = function(obj){
 var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'')};
 with(obj||{}){
 __p+='<div id="options-header">\n    <h2 class="options-title">List.it</h2>\n    <a id="showListLink" href="#">Take me back to my notes</a>\n</div>\n<div id="options-body"></div>\n\n';
 }
 return __p;
 };
-L.templates.options.select = function(obj){
+ListIt.templates.options.select = function(obj){
 var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'')};
 with(obj||{}){
 __p+='<select id="'+
@@ -59,7 +58,7 @@ __p+='\n</select>\n';
 }
 return __p;
 };
-L.templates.options.settings = function(obj){
+ListIt.templates.options.settings = function(obj){
 var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'')};
 with(obj||{}){
 __p+='<h3>Settings</h3>\n';

@@ -149,7 +149,7 @@
         var outputFile = attributes.get("output");
 
         var filesets = elements.get("fileset");
-        var src = "// Compiled templates\n// Editing is futile.\n\n";
+        var src = "/* Generated Template */\n\n"
         for (var i = 0; i < filesets.size(); i++) {
             var fileset = filesets.get(i);
             var basedir = fileset.getDir(project);
@@ -165,6 +165,67 @@
         ]]>
     </scriptdef>
 
+    <scriptdef name="jshint" language="javascript">
+        <attribute name="fail" />
+        <element name="fileset" type="fileset"/>
+        <![CDATA[
+        importPackage(java.io);
+
+        function readFile(file) {
+            return ''+new java.lang.String(org.apache.tools.ant.util.FileUtils.readFully(new FileReader(file)));
+        }
+
+        function writeFile(file, text) {
+            var fw = new FileWriter(file);
+            fw.write(text);
+            fw.close();
+        }
+
+        function load(file) {
+            eval.call(this, readFile(file));
+        }
+
+        function echo(message, level) {
+            var task = project.createTask("echo");
+            task.setMessage(message);
+            if (level) {
+                task.setLevel(level);
+            }
+            task.perform();
+        }
+
+        load("tools/jshint.js");
+
+        var options = JSON.parse(readFile(".jshintrc"));
+        var fail = attributes.get("fail");
+
+        var filesets = elements.get("fileset");
+        var failed = false;
+        for (var i = 0; i < filesets.size(); i++) {
+            var fileset = filesets.get(i);
+            var basedir = fileset.getDir(project);
+            var files = fileset.getDirectoryScanner(project).getIncludedFiles();
+            for (var j = 0; j < files.length; j++) {
+                var filename = files[j],
+                    contents = readFile(new File(basedir, filename));
+
+                if (!JSHINT(contents, options)) {
+                    failed = true;
+                    JSHINT.errors.forEach(function(error) {
+                        if (error) {
+                            echo(filename + ':' + error.line + ':' +
+                                 error.character + ', ' + error.reason);
+                        }
+                    });
+                }
+            }
+        }
+        if (fail && failed && failed.length > 0) {
+            self.fail("JSHint failed.");
+        }
+        ]]>
+    </scriptdef>
+
     <target name="compile-templates">
         <for param="dir">
             <dirset refid="template.dirs"/>
@@ -173,12 +234,18 @@
                 <local name="name" />
                 <dirname property="dirname" file="@{dir}" />
                 <basename property="name" file="${dirname}" />
-                <compiletemplates output="${dirname}/templates.js" object="L.templates.${name}">
+                <compiletemplates output="${dirname}/templates.js" object="ListIt.templates.${name}">
                     <fileset dir="@{dir}" includes="*.html" />
                 </compiletemplates>
             </sequential>
         </for>
     </target>
 
-    <target name="-build.setup" depends="setup-platform,mkdirs,compile-templates" />
+    <target name="jshint">
+        <jshint fail="${build.is.mode.release}">
+            <fileset refid="jshint-files" />
+        </jshint>
+    </target>
+
+    <target name="-build.setup" depends="setup-platform,mkdirs,compile-templates,jshint" />
 </project>

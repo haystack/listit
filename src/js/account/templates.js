@@ -1,7 +1,6 @@
-// Compiled templates
-// Editing is futile.
+/* Generated Template */
 
-L.templates.account.options = function(obj){
+ListIt.templates.account.options = function(obj){
 var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'')};
 with(obj||{}){
 __p+='\n<h3>Account Backup Service</h3>\n<p>\n<a href="http://listit.csail.mit.edu/">List.it</a> is a\n<a href="http://code.google.com/p/list-it">free and open-source</a>\nnote-taking tool from <a href="http://www.csail.mit.edu/">MIT CSAIL</a>\nthat lets you safely, quickly, and easily write stuff down.\n</p>\n\n<ul class="list">\n    <li>Access your notes online at <a href="https://welist.it/zen/index.html">List-it Zen</a>.</li>\n\n    <li>Free backup: your notes are safe.</li>\n</ul>\n\n<form id="loginRegisterForm" class="loginForm" name=\n    "loginRegisterForm">\n    <p class="modal mode-connected bold">You are logged in as: <span id="emailDisplay">'+

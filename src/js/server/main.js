@@ -1,2 +1,1 @@
-"use strict";
-L.make.server = {};
+ListIt.initModule('server');

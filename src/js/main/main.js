@@ -1,3 +1,1 @@
-"use strict";
-L.make.main = {}
-L.templates.main = {}
+ListIt.initModule('main');

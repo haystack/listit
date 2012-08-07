@@ -1,0 +1,32 @@
+{
+    "predef": [
+        "_",
+        "Backbone",
+        "ListIt",
+        "ActionQueue",
+        "debug",
+        "wysihtml5",
+        "wysihtml5ParserRules",
+        "KeyCode",
+        "Features",
+        "BlobBuilder",
+        "saveAs"
+    ],
+    "jquery": true,
+    "browser": true,
+    "curly": true,
+    "camelcase": true,
+    "eqeqeq": true,
+    "forin": true,
+    "indent": 4,
+    "latedef": true,
+    "newcap": true,
+    "noarg": true,
+    "noempty": true,
+    "nonew": true,
+    "quotmark": "single",
+    "undef": true,
+    "strict": true,
+    "trailing": true
+}
+

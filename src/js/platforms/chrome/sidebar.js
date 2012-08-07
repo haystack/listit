@@ -1,38 +1,42 @@
-// Setup models
+/*global chrome:true, background:true */
 
-L.vent = background.L.vent;
-L.router = new L.make.Router();
+(function(L) {
+    'use strict';
 
-// First copy models
-_.each(background.L.make, function(v, k) {
-    if(_.isObject(background.L.make[k])) {
-        var here = L.make[k];
-        var there = background.L.make[k];
-        if (!here) {
-            L.make[k] = there;
-        } else if (there) {
-            for (var key in there) {
-                here[key] || (here[key] = there[key]);
+    var bgL = background.ListIt;
+
+    // Setup modules
+    L.vent = bgL.vent;
+    L.router = new L.make.Router();
+
+    // First copy models
+    _.each(bgL.make, function(v, k) {
+        if(_.isObject(bgL.make[k])) {
+            var here = L.make[k],
+                there = bgL.make[k];
+
+            if (!here) {
+                L.make[k] = there;
+            } else if (there) {
+                _.defaults(here, there);
             }
+        } else {
+            L.make[k] = L.make[k] || bgL.make[k];
         }
-    } else {
-        L.make[k] || (L.make[k] = background.L.make[k]);
-    }
-});
-// Then everything else
-for (var key in background.L) {
-    L[key] || (L[key] = background.L[key]);
-}
+    });
+    // Then everything else
+    _.defaults(L, bgL);
 
-// TODO: Report bug in chrome
-// selectors sometimes not applied (neither query not css work).
-// probably due to passing from background into sidebar.
-$(document).ready(function() {
-    // Delay till after all ready events.
-    _.delay(function() {
-        $("*").each(function() {
-            this.id = this.id;
-            this.className = this.className;
+    // TODO: Report bug in chrome
+    // selectors sometimes not applied (neither query not css work).
+    // probably due to passing from background into sidebar.
+    $(document).ready(function() {
+        // Delay till after all ready events.
+        _.delay(function() {
+            $('*').each(function() {
+                this.id = this.id;
+                this.className = this.className;
+            });
         });
     });
-});
+})(ListIt);
