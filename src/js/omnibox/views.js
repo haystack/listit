@@ -52,7 +52,7 @@
 
             this.editor.on('keydown', this._onKeyDown);
             this.editor.on('keyup', this._onKeyUp);
-            this.editor.on('change', this.onChange);
+            this.editor.on('change', this.storeText);
             return this;
         },
         events: {
