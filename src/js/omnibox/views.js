@@ -181,7 +181,6 @@
             var that = this;
             $(window).one('beforeunload', function() {
                 that.undelegateEvents();
-                that.model.off(null, null, that);
                 L.options.off(null, null, that);
             });
             L.options.on('change:toolbar', this.redraw, this);
