@@ -111,7 +111,7 @@
                     </for>
                 </sequential>
             </parallel>
-            <copy file="@{input}" tofile="@{output}" force="true">
+            <copy file="@{input}" tofile="@{output}" overwrite="true">
                 <filterchain>
                     <replacetokens>
                         <token key="scripts" value="${html_scripts}"/>
