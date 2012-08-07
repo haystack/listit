@@ -33,7 +33,7 @@
     </target>
 
     <target name="release"
-        depends="-buid.setup,img,css,js,html" />
+        depends="-build.setup,img,css,js,html" />
 
     <target name="debug" depends="-build.setup">
         <pathconvert property="deploy.js.files" refid="js.all">
