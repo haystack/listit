@@ -155,7 +155,8 @@
                     this._lastSearchedNoteId = lastNote.id;
                     this.searchQueue.add(this.trigger, 'search:paused');
                 } else {
-                    this._lastSearchedNoteId = L.notes.last().id;
+                    lastNote = L.notes.last();
+                    this._lastSearchedNoteId = lastNote ? lastNote.id : undefined;
                     this.searchQueue.add(this.trigger, 'search:completed');
                 }
             }
