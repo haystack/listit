@@ -1,8 +1,6 @@
 <project name="List.it Chrome Extension">
     <import file="../../common.xml"/>
 
-    <target name="-build.setup" depends="setup-platform,mkdirs" />
-
     <resources id="js.sidebar">
         <resources refid="js.libs" />
         <fileset file="${listit.js.platforms.dir}/chrome/sidebar-before.js" />
