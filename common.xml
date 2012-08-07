@@ -143,7 +143,9 @@
             eval.call(this, readFile(file));
         }
 
-        load("tools/underscore.js");
+        var projectDir = project.getProperty("root.dir");
+
+        load(projectDir + "/tools/underscore.js");
 
         var objectName = attributes.get("object");
         var outputFile = attributes.get("output");
@@ -185,18 +187,17 @@
             eval.call(this, readFile(file));
         }
 
-        function echo(message, level) {
+        function echo(message) {
             var task = project.createTask("echo");
             task.setMessage(message);
-            if (level) {
-                task.setLevel(level);
-            }
             task.perform();
         }
 
-        load("tools/jshint.js");
+        var projectDir = project.getProperty("root.dir");
 
-        var options = JSON.parse(readFile(".jshintrc"));
+        load(projectDir + "/tools/jshint.js");
+
+        var options = JSON.parse(readFile(projectDir + "/.jshintrc"));
         var fail = attributes.get("fail");
 
         var filesets = elements.get("fileset");
