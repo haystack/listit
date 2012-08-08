@@ -160,7 +160,7 @@
             this.collection.on('add', _.mask(this.add, 0, 2), this);
             this.collection.on('remove', _.mask(this.remove, 0, 2), this);
             this.collection.on('reset', _.mask(this.reset, 1), this);
-            this.collection.on('search:paused', this._onPause, this);
+            this.collection.on('search:paused', this.onPause, this);
             L.options.on('change:shrinkNotes', this.updateNoteShrinkState, this);
             $(window).one('beforeunload', function() {
                 that.undelegateEvents();
@@ -182,9 +182,16 @@
                 this.$el.removeClass('shrink');
             }
         },
+        checkLoadMore: function() {
+            var scrollTop = this.$el.scrollTop(),
+                containerHeight = this.$el.parent().height(),
+                listHeight = this.$el.children('#notes').height();
+
+            return (scrollTop + 2*containerHeight) > listHeight;
+        },
         onScroll: function() {
             // Load on scroll.
-            if ((this.$el.scrollTop() + 2*this.$el.parent().height()) > this.$el.children('#notes').height()) {
+            if (this.checkLoadMore()) {
                 this.collection.next();
             }
         },
@@ -212,8 +219,8 @@
             // I put this after the isVisible check so that I don't count loaded
             // notes. This could be changed.
         },
-        _onPause: function() {
-            if ((this.$el.scrollTop() + 2*this.$el.parent().height()) > this.$el.children('#notes').height()) {
+        onPause: function() {
+            if (this.checkLoadMore()) {
                 this.collection.next();
             }
         },
@@ -239,19 +246,16 @@
 
             view.remove(options);
             // This is necessary as removes are delayed.
-            if ((this.$el.scrollTop() + 2*this.$el.parent().height()) > this.$el.children('#notes').height()) {
+            if (this.checkLoadMore()) {
                 this.collection.next();
             }
         },
         reset: function() {
-            if (!this._rendered) {
-                return;
+            if (this._rendered) {
+                //this.$el.children('#notes').empty();
+                _.each(this.subViews, _.mask(this.remove, 1));
+                this.collection.each(_.mask(this.add, 0));
             }
-
-            //this.$el.children('#notes').empty();
-            _.each(this.subViews, _.mask(this.remove, 1));
-
-            this.collection.each(_.mask(this.add, 0));
         },
         render: function() {
             if (!this._rendered) {

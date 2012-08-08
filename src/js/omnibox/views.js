@@ -47,7 +47,6 @@
                 parserRules: wysihtml5ParserRules,
                 stylesheets: ['css/reset.css', 'css/wysihtml5.css']
             });
-
             this._rendered = true;
 
             this.editor.on('keydown', this._onKeyDown);
