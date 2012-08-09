@@ -14,23 +14,17 @@ return __p;
 ListIt.templates.options.info = function(obj){
 var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'')};
 with(obj||{}){
-__p+='<h3>Getting started</h3>\n<span>Here are some tips to help you get going with list.it:</span>\n<ul class="list">\n    ';
- _.each(tips, function(item) { 
-__p+='\n    <li>'+
-((__t=(item))==null?'':__t)+
-'</li>\n    ';
- }); 
-__p+='\n</ul>\n<div>\n    If you have any questions, feel free to email\n    <a href="mailto:'+
+__p+='<h3>About</h3>\n<p>\n<a href="http://listit.csail.mit.edu/">List.it</a> is a\n<a href="http://code.google.com/p/list-it">free and open-source</a>\nnote-taking tool from <a href="http://www.csail.mit.edu/">MIT CSAIL</a>\nthat lets you safely, quickly, and easily write stuff down.\n</p>\n<p>\n    If you have any questions, feel free to email\n    <a href="mailto:'+
 ((__t=(email))==null?'':__t)+
 '">'+
 ((__t=(email))==null?'':__t)+
-'</a>.\n</div>\n<br />\n<div> Looking forward to hearing from you,\n    <ul>\n        ';
+'</a>.\n</p>\n<br />\n<p> Looking forward to hearing from you,\n    <ul>\n        ';
  _.each(credits, function(credit) { 
 __p+='\n        <li>'+
 ((__t=(credit))==null?'':__t)+
 '</li>\n        ';
  }); 
-__p+='\n        <li class="italic">List-it team at MIT CSAIL</li>\n    </ul>\n</div>\n    \n';
+__p+='\n        <li class="italic">List-it team at MIT CSAIL</li>\n    </ul>\n</p>\n    \n';
 }
 return __p;
 };

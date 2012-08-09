@@ -7,7 +7,6 @@
 
     // Setup modules
     L.vent = bgL.vent;
-    L.router = new L.make.Router();
 
     // First copy models
     _.each(bgL.make, function(v, k) {

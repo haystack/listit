@@ -3,17 +3,18 @@
     'use strict';
     // Setup views
     $(document).ready(function() {
+        L.vent.trigger('setup:views:before');
         var optionsPanes = [
-            new L.make.account.AccountView({model: L.account}),
-            new L.make.options.InfoView(),
-            new L.make.options.SettingsView({model: L.options}),
-            new L.make.options.ImportExportView()
-        ];
-        var mainPanes = {
-            'controls-left': new L.make.omnibox.OmniboxView({model: L.omnibox}),
-            'controls-right': new L.make.omnibox.ControlsView(),
-            'content-container': new L.make.notes.NoteCollectionView({collection: L.sidebar})
-        };
+                new L.make.account.AccountView({model: L.account}),
+                new L.make.options.InfoView(),
+                new L.make.options.SettingsView({model: L.options}),
+                new L.make.options.ImportExportView()
+            ],
+            mainPanes = {
+                'controls-left': new L.make.omnibox.OmniboxView({model: L.omnibox}),
+                'controls-right': new L.make.omnibox.ControlsView(),
+                'content-container': new L.make.notes.NoteCollectionView({collection: L.sidebar})
+            };
 
         // Make Pages
         L.pages  = {
@@ -63,6 +64,15 @@
             e.preventDefault();
         });
 
+
+        L.router = new L.make.Router();
+
+        $(window).one('beforeunload', function() {
+            L.vent.trigger('sys:quit');
+        });
+
         Backbone.history.start();
+
+        L.vent.trigger('setup:views setup:views:after');
     });
 })(ListIt);

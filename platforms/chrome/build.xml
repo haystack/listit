@@ -35,7 +35,11 @@
             <include name="*/collections.js" />
         </fileset>
         <resources refid="js.collectors" />
-        <fileset file="${listit.js.platforms.dir}/chrome/background.js" />
+        <filelist>
+            <file name="${listit.js.dir}/upgrade.js" />
+            <file name="${listit.js.dir}/model-setup.js" />
+            <file name="${listit.js.platforms.dir}/chrome/background.js" />
+        </filelist>
     </resources>
 
     <resources id="js.content">

@@ -18,14 +18,16 @@ if (window.DEBUG_MODE && window.console) {
     };
 }
 
-window.ListIt = (function() {
+window.ListIt = {VERSION: 1};
+
+(function(L) {
     'use strict';
-    var L = {
-        'vent': _.clone(Backbone.Events),
-        'pages': {},
-        'make': {},
-        'templates': {}
-    };
+
+    L.pages = {};
+    L.make = {};
+    L.templates = {};
+
+    L.vent = _.clone(Backbone.Events),
 
     /* Notes:
     *  Views and models/collections should share the same name. This makes
@@ -40,6 +42,14 @@ window.ListIt = (function() {
 
     // Global methods (instantiate somewhere else)?
     // These should be very small convenience functions.
+
+    L.getVersion = function() {
+        return localStorage.getItem('version') || 0;
+    };
+
+    L.setVersion = function(version) {
+        localStorage.setItem('version', version);
+    };
 
     L.addNote = function(text, meta) {
         var note = new L.make.notes.NoteModel({contents: text}),
@@ -68,5 +78,4 @@ window.ListIt = (function() {
         L.make[name] = L.make[name] || {};
     };
 
-    return L;
-})();
+})(ListIt);

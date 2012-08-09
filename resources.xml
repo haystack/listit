@@ -105,6 +105,7 @@
 
 <resources id="js.setup">
     <filelist dir="${listit.js.dir}">
+        <file name="upgrade.js" />
         <file name="model-setup.js" />
         <file name="view-setup.js" />
     </filelist>
