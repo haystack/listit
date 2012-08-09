@@ -53,16 +53,16 @@
             var resizeIframe = function() {
                 var body = $(iframe).contents().find('body'); // Needs document to be loaded.
                 _.delay(function() {
-                    iframe.style.height = "auto";
-                    iframe.style.height = body.height() + "px";
+                    iframe.style.height = 'auto';
+                    iframe.style.height = body.height() + 'px';
                 });
-            }
+            };
 
 
-            this.editor.on("keydown", resizeIframe)
-            this.editor.on("blur", resizeIframe)
-            this.editor.on("focus", resizeIframe)
-            this.editor.on("change", resizeIframe)
+            this.editor.on('keydown', resizeIframe);
+            this.editor.on('blur', resizeIframe);
+            this.editor.on('focus', resizeIframe);
+            this.editor.on('change', resizeIframe);
 
             this.editor.on('keydown', this._onKeyDown);
             this.editor.on('keyup', this._onKeyUp);

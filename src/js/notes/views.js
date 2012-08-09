@@ -65,7 +65,7 @@
         },
         cleanupEditor: function() {
             if (this.editor) {
-                this.$(".editor").html('<textarea></textarea>');
+                this.$('.editor').html('<textarea></textarea>');
                 delete this.editor;
             }
         },
@@ -82,7 +82,7 @@
             'click .close-btn': 'removeNote',
             'click .contents': 'onClick',
             'keyup .contents': 'onKeyUp',
-            'blur .editor': 'onBlur',
+            'blur .editor': 'onBlur'
         },
         getNoteText: function() {
             return this.$('.contents').html();
@@ -101,8 +101,8 @@
         openEditor: function() {
             // I know that this is unreadable. But it makes a point.
 
-            var $contentsEl = this.$(".contents"),
-                $editorEl = this.$(".editor");
+            var $contentsEl = this.$('.contents'),
+                $editorEl = this.$('.editor');
             if (!this.editor) {
                 var $textareaEl = $editorEl.children('textarea'),
                     toolbar = new L.make.omnibox.ToolbarView();
@@ -118,28 +118,28 @@
                     resizeIframe = function() {
                         var body = $(iframe).contents().find('body'); // Needs document to be loaded.
                         _.delay(function() {
-                            iframe.style.height = "auto";
-                            iframe.style.height = body.height() + "px";
+                            iframe.style.height = 'auto';
+                            iframe.style.height = body.height() + 'px';
                         });
                     };
 
                 this.editor = editor;
 
-                this.editor.on("keydown", resizeIframe);
-                this.editor.on("focus", resizeIframe);
-                this.editor.on("change", resizeIframe);
-                this.editor.on("blur", this.onBlur);
+                this.editor.on('keydown', resizeIframe);
+                this.editor.on('focus', resizeIframe);
+                this.editor.on('change', resizeIframe);
+                this.editor.on('blur', this.onBlur);
 
 
                 // Maintain a dialog count so that we don't close the editor with a dialog open.
                 this.editor._dialogCount = 0;
-                this.editor.on("show:dialog", function() {
+                this.editor.on('show:dialog', function() {
                     editor._dialogCount++;
                 });
-                this.editor.on("save:dialog", function() {
+                this.editor.on('save:dialog', function() {
                     editor._dialogCount--;
                 });
-                this.editor.on("cancel:dialog", function() {
+                this.editor.on('cancel:dialog', function() {
                     editor._dialogCount--;
                 });
             }
@@ -155,7 +155,7 @@
                 return;
             }
             _.defer(function() {
-                var focusedEditor = $(document.activeElement).closest(".editor").get(0),
+                var focusedEditor = $(document.activeElement).closest('.editor').get(0),
                     myEditor = that.$('.editor').get(0);
 
                 if (focusedEditor !== myEditor) {
@@ -218,7 +218,7 @@
             });
         },
         events: {
-            'scroll': 'onScroll',
+            'scroll': 'onScroll'
         },
         updateNoteShrinkState : function(model, state) {
             if (!this._rendered) {
