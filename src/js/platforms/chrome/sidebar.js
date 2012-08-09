@@ -26,16 +26,14 @@
     // Then everything else
     _.defaults(L, bgL);
 
-    // TODO: Report bug in chrome
-    // selectors sometimes not applied (neither query not css work).
-    // probably due to passing from background into sidebar.
-    $(document).ready(function() {
-        // Delay till after all ready events.
-        _.delay(function() {
-            $('*').each(function() {
-                this.id = this.id;
-                this.className = this.className;
-            });
+    L.vent.on('setup:views:after', _.once(function() {
+        // TODO: Report bug in chrome
+        // selectors sometimes not applied (neither query not css work).
+        // probably due to passing from background into sidebar.
+        $('*').each(function() {
+            this.id = this.id;
+            this.className = this.className;
         });
-    });
+        $('[href="#/options"]').attr('target', '_new'); // Open options in new page.
+    }));
 })(ListIt);

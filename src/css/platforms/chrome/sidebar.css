@@ -2,3 +2,7 @@ body {
     min-height: 600px;
     min-width: 350px;
 }
+
+a[href="#"] {
+    display: none;
+}
