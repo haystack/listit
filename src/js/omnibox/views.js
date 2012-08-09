@@ -47,11 +47,28 @@
                 parserRules: wysihtml5ParserRules,
                 stylesheets: ['css/reset.css', 'css/wysihtml5.css']
             });
-            this._rendered = true;
+
+            var iframe = this.editor.composer.iframe;
+
+            var resizeIframe = function() {
+                var body = $(iframe).contents().find('body'); // Needs document to be loaded.
+                _.delay(function() {
+                    iframe.style.height = "auto";
+                    iframe.style.height = body.height() + "px";
+                });
+            }
+
+
+            this.editor.on("keydown", resizeIframe)
+            this.editor.on("blur", resizeIframe)
+            this.editor.on("focus", resizeIframe)
+            this.editor.on("change", resizeIframe)
 
             this.editor.on('keydown', this._onKeyDown);
             this.editor.on('keyup', this._onKeyUp);
             this.editor.on('change', this.storeText);
+
+            this._rendered = true;
             return this;
         },
         events: {
