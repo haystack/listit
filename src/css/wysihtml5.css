@@ -1,3 +1,12 @@
+html, body {
+  padding: 0px;
+  margin: 0px;
+
+  font-family: Helvetica Neue Ultralight, "Helvetica Neue", "Helvetica", sans-serif !important;
+  font-weight:110;
+  font-size: 14px;
+}
+
 .wysiwyg-color-gray {
     color: gray;
 }
@@ -85,6 +94,7 @@
 .wysihtml5-toolbar-buttons [data-wysihtml5-command-group] {
     background-position: center;
     position: relative;
+    z-index: 99;
 }
 
 .wysihtml5-toolbar-buttons [data-wysihtml5-command-group]:hover [data-wysihtml5-command="foreColor"][data-wysihtml5-command-value="red"] {
@@ -253,4 +263,13 @@ i {
     -webkit-box-flex: 1;
     -moz-box-flex: 1;
     -o-box-flex: 1;
+}
+
+.wysihtml5-editor {
+    overflow: hidden;
+    min-height: 0;
+}
+
+.omnibox-entry {
+    min-height: 3em;
 }
