@@ -35,6 +35,8 @@
     margin: 0;
     border: none; 
     resize: none;
+    width: 100%;
+    display: block;
     background: none;
     outline: none;
     padding: 6px;
@@ -82,3 +84,4 @@
 .note .editor {
     display: none;
 }
+
