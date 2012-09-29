@@ -1,1 +1,1 @@
-DEBUG=false; WYSIHTML5_CSS=["${build.wysihtml5.css.path}"];
+DEBUG=true; WYSIHTML5_CSS=["css/reset.css", "css/wysihtml5.css"];

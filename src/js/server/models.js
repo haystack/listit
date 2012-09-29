@@ -79,10 +79,10 @@
             if (this.get('synching')) {
                 return;
             }
+            debug('syncNotes::start');
 
             var that = this;
 
-            debug('performSync()');
             this.trigger('sync:start');
             this.set('syncing', true);
             this.ajax({
@@ -91,12 +91,12 @@
                 auth: true,
                 data: this.bundleNotes(),
                 error: function(xhdr, stat) {
-                    //debug('server.js - Sync Success: ' + success);
-                    //debug('results:', result);
-                    debug('server.js - Sync failed.');
-                    that.trigger('sync:success', stat);
+                    debug('syncNotes::fail', stat);
+                    that.trigger('sync:failure', stat);
                 },
                 success: function(result) {
+                    window.sync_result = result;
+                    debug('syncNotes::success', result);
                     that.unbundleNotes(result);
                     // Successful Ajax Response:
                     that.trigger('sync:success');
@@ -115,6 +115,7 @@
                 return;
             }
 
+            debug('syncLogs::start');
             var that = this;
 
             this.set('syncingLogs', true);
@@ -124,11 +125,13 @@
                 data: L.logs.toJSON(),
                 error: function() {
                     debug('FAIL: Logs not sent to server.');
+                    debug('syncLogs::failed')
                     // TODO:Do something?
                 },
                 success: function() {
                     // TODO: Clear Logs
                     debug('Implement logging.');
+                    debug('syncLogs::succeeded')
                 },
                 complete: function() {
                     that.set('syncingLogs', false);
@@ -173,18 +176,46 @@
                     }
                 };
 
+
+                /*
+            // Push magic note.
+            modifiedNotes.push({
+                'jid': -1,
+                'version': 120,
+                'created': 0,
+                'edited': 0,
+                'contents': JSON.stringify({noteorder:L.notes.getOrder()}),
+                'modified': 1,
+                'deleted': 1
+            });
+            */
             L.notes.each(function(n) { pushNote(n, false); });
             L.deletedNotes.each(function(n) { pushNote(n, true); });
-
+            
             return JSON.stringify({
                 modifiedNotes: modifiedNotes,
                 unmodifiedNotes: unmodifiedNotes
             });
         },
         unbundleNotes: function(result) {
+            var order;
+            if (result.magicNote && result.magicNote.contents) {
+                try {
+                    order = JSON.parse(result.magicNote.contents).noteorder;
+                    //version = magicNote.version;
+                    // I am ignoring the version and hoping for the best.
+                    // I need to better understand the backend or just re-write it.
+                    // I don't care about the rest.
+                } catch (e){
+                    debug("unbundleNotes::magicNote invalid");
+                }
+            }
             // Update changed
             _.chain(result.update.concat(result.updateFinal))
             .map(this.unpackageNote)
+            .filter(function(n) { // Filter out magic note.
+                return n.id >= 0;
+            })
             .each(function(n) {
                 var deleted = _.pop(n, 'deleted');
                 var note = L.getNote(n.id);
@@ -200,12 +231,17 @@
 
             // Mark committed as unmodified
             _.chain(result.committed)
-            .filter(function(note) { return (note.status === 201 || note.status === 200); }) // Filter on success
+            .filter(function(note) { // Filter out magic note.
+                return note.jid >= 0;
+            })
+            .filter(function(note) {  // Filter on success
+                return (note.status === 201 || note.status === 200);
+            })
             .pluck('jid') // Get ids
             .map(L.getNote) // Look up notes
             .each(function(note) { // Set unmodified if the note exists.
                 if (!note) {
-                    debug('Note doesn\'t exist', note);
+                    debug('Non-existant note received.');
                     return;
                 }
                 note.set('modified', false);
@@ -215,10 +251,18 @@
             // Add new notes
             _.chain(result.unknownNotes)
             .map(this.unpackageNote)
+            .filter(function(n) {
+                return n.id >= 0;
+            })
             .each(function(n) {
                 debug('Adding new note', n);
-                (_.pop(n, 'deleted') ? L.deletedNotes : L.notes).add(n, {nosave: true}); // Add the note to the correct set.
+                (_.pop(n, 'deleted') ? L.deletedNotes : L.notes).add(n, {
+                    nosave: true
+                }); // Add the note to the correct set.
             });
+
+            
+            L.notes.setOrder(order);
 
             // Save collections
             L.notes.save();
