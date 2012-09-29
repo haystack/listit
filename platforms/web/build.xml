@@ -1,54 +1,32 @@
 <project>
     <import file="../../common.xml"/>
 
-    <target name="img" depends="-build.setup">
-        <deploy-img dest="${deploy.img.dir}"/>
+    <resources id="js.index" refid="js.all"/>
+    <resources id="css.index" refid="css.all"/>
+
+    <target name="-build.img" depends="-build.setup">
+        <deploy-img dest="${build.img.dir}"/>
     </target>
 
-    <target name="css" depends="-build.setup">
-        <property name="deploy.css.main.file" value="${deploy.css.dir}/main.css" />
-        <mkdir dir="${deploy.css.dir}" />
-        <yuicompress type="css" output="${deploy.css.main.file}">
-            <resources refid="css.all" />
-        </yuicompress>
+    <target name="-build.assets" depends="-build.setup">
+        <mkdir dir="${build.css.dir}" />
+        <mkdir dir="${build.js.dir}" />
+        <deploy-resource name="index" />
     </target>
 
-    <target name="js" depends="-build.setup">
-        <property name="deploy.js.main.file" value="${deploy.js.dir}/main.js" />
-        <mkdir dir="${deploy.js.dir}" />
-        <yuicompress type="js" output="${deploy.js.main.file}">
-            <resources refid="js.all" />
-        </yuicompress>
+    <target name="-build.html" depends="-build.setup">
+        <deploy-html resource="index" />
     </target>
 
-    <target name="html" depends="-build.setup">
-        <property name="deploy.js.main.path" value="${deploy.js.main.file}" relative="true" basedir="${deploy.dir}" />
-        <property name="deploy.css.main.path" value="${deploy.css.main.file}" relative="true" basedir="${deploy.dir}" />
-        <htmltemplate
-            input="${listit.html.tmpl}"
-            output="${deploy.html.file}"
-            scripts="${deploy.js.main.path}"
-            stylesheets="${deploy.css.main.path}"
-            />
+    <target name="release" depends="-build.setup,-build.img,-build.assets,-build.html">
+        <copy todir="${deploy.dir}">
+            <fileset dir="${build.dir}" />
+        </copy>
     </target>
-
-    <target name="release"
-        depends="-build.setup,img,css,js,html" />
 
     <target name="debug" depends="-build.setup">
-        <pathconvert property="deploy.js.files" refid="js.all">
-            <globmapper from="${listit.dir}/*" to="*"/>
-        </pathconvert>
-        <pathconvert property="deploy.css.files" refid="css.all">
-            <globmapper from="${listit.dir}/*" to="*"/>
-        </pathconvert>
-
-        <htmltemplate
-            input="${listit.html.tmpl}"
-            output="${listit.dir}/index.html"
-            scripts="${deploy.js.files}"
-            stylesheets="${deploy.css.files}"
-            />
+        <deploy-resource-debug name="index" />
+        <deploy-html resource="index" />
     </target>
 
     <target name="clean" depends="setup-platform">

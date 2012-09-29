@@ -4,7 +4,9 @@
         "Backbone",
         "ListIt",
         "ActionQueue",
+        "WYSIHTML5_CSS",
         "debug",
+        "DEBUG",
         "wysihtml5",
         "wysihtml5ParserRules",
         "KeyCode",
@@ -24,7 +26,6 @@
     "noarg": true,
     "noempty": true,
     "nonew": true,
-    "quotmark": "single",
     "undef": true,
     "strict": true,
     "trailing": true

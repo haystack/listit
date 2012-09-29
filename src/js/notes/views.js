@@ -112,7 +112,7 @@
                 var editor = new wysihtml5.Editor($textareaEl.get(0), {
                         toolbar: toolbar.el,
                         parserRules: wysihtml5ParserRules,
-                        stylesheets: ['css/reset.css', 'css/wysihtml5.css']
+                        stylesheets: WYSIHTML5_CSS
                     }),
                     iframe = editor.composer.iframe,
                     resizeIframe = function() {

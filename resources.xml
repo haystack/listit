@@ -10,6 +10,13 @@
     <exclude name="libs/**" />
 </fileset>
 
+<resources id="css.wysihtml5">
+    <filelist dir="${listit.css.dir}">
+        <file name="reset.css"/>
+        <file name="wysihtml5.css"/>
+    </filelist>
+</resources>
+
 <resources id="js.libs.jquery">
     <filelist dir="${listit.js.dir}/libs">
         <file name="jquery.js" />

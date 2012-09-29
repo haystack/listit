@@ -9,7 +9,7 @@
             'Make new notes or search old ones by typing into the box at the ' +
                 'top of list.it\'s sidebar.',
             'Delete notes by clicking on <img alt="x button" src="img/x.png">.',
-            'Edit notes by clicking one and typing, when you select',
+            'Edit notes by clicking one and typing, when you select' +
             'something else, the note will automatically save.'
         ],
         upgradeFunctions = {
@@ -18,7 +18,7 @@
                     L.notes.reset(_.map(defaultNotes, function(s) {
                     return {'contents': s};
                     }));
-                    L.vent.off(cb);
+                    L.vent.off(null, cb);
                 });
                 L.vent.on('setup:models:after', cb);
             }

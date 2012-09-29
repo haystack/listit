@@ -1,12 +1,92 @@
 <!-- vim: set ft=ant : -->
 <project name="common">
-    <taskdef resource="net/sf/antcontrib/antlib.xml"/>
     <dirname property="root.dir" file="${ant.file.common}" />
 
+    <!-- Useful Functions -->
+    <taskdef resource="net/sf/antcontrib/antlib.xml"/>
+    <include file="${root.dir}/util.xml" />
 
+    <!-- Properties -->
     <property file="${root.dir}/global.properties" />
+
+    <!-- Resources -->
     <include file="${root.dir}/resources.xml" />
 
+
+    <macrodef name="deploy-resource">
+        <attribute name="name"/>
+        <sequential><parallel>
+            <if>
+                <isreference refid="js.@{name}"/>
+                <then>
+                    <property name="build.@{name}.js.file" value="${build.js.dir}/@{name}.js" />
+                    <property name="build.@{name}.js.path" basedir="${build.dir}" relative="true" value="${build.@{name}.js.file}" />
+
+                    <yuicompress type="js" output="${build.@{name}.js.file}">
+                        <resources refid="js.@{name}" />
+                        DEBUG=false;
+                        WYSIHTML5_CSS=["${build.wysihtml5.css.path}"];
+                    </yuicompress>
+                </then>
+            </if>
+            <if>
+                <isreference refid="css.@{name}"/>
+                <then>
+                    <property name="build.@{name}.css.file" value="${build.css.dir}/@{name}.css" />
+                    <property name="build.@{name}.css.path" basedir="${build.dir}" relative="true" value="${build.@{name}.css.file}" />
+
+                    <yuicompress type="css" output="${build.@{name}.css.file}">
+                        <resources refid="css.@{name}" />
+                    </yuicompress>
+                </then>
+            </if>
+        </parallel></sequential>
+    </macrodef>
+
+    <macrodef name="deploy-resource-debug">
+        <attribute name="name"/>
+        <sequential><parallel>
+            <if>
+                <isreference refid="js.@{name}"/>
+                <then>
+                    <pathconvert property="debug.@{name}.js.path">
+                        <fileset file="${listit.js.dir}/defines-debug.js"/>
+                        <resources refid="js.@{name}" />
+                        <globmapper from="${listit.dir}/*" to="*" />
+                    </pathconvert>
+                </then>
+            </if>
+            <if>
+                <isreference refid="css.@{name}"/>
+                <then>
+                    <pathconvert property="debug.@{name}.css.path">
+                        <resources refid="css.@{name}" />
+                        <globmapper from="${listit.dir}/*" to="*" />
+                    </pathconvert>
+                </then>
+            </if>
+        </parallel></sequential>
+    </macrodef>
+
+    <macrodef name="mk-defines-debug">
+        <sequential>
+            <local name="wysihtml5_json" />
+            <jsonpath path="${build.wysihtml5.css.path}" property="wysihtml5_json" />
+            <echo message="DEBUG=false; WYSIHTML5_CSS=${wysihtml5_json};" 
+                file="${listit.js.dir}/defines-debug.js" />
+        </sequential>
+    </macrodef>
+
+    <macrodef name="deploy-html">
+        <attribute name="resource"/>
+        <sequential>
+            <htmltemplate
+                input="${listit.html.tmpl}"
+                output="${build.@{resource}.html.file}"
+                scripts="${build.@{resource}.js.path}"
+                stylesheets="${build.@{resource}.css.path}" />
+        </sequential>
+    </macrodef>
 
     <target name="setup-platform">
         <condition property="build.is.mode.release">
@@ -28,21 +108,7 @@
         <mkdir dir="${build.dir}" />
     </target>
 
-
     <globmapper id="resource-mapper" from="${listit.dir}/*" to="*"/>
-
-    <macrodef name="jsonpath">
-        <attribute name="path" />
-        <attribute name="property" />
-        <sequential>
-            <local name="contents" />
-            <pathconvert property="contents" pathsep='", "'>
-                <path path="@{path}"/>
-                <globmapper from="${basedir}/*" to="*" />
-            </pathconvert>
-            <property name="@{property}" value='["${contents}"]' />
-        </sequential>
-    </macrodef>
 
     <macrodef name="deploy-img">
         <attribute name="dest" />
@@ -50,182 +116,13 @@
             <mkdir dir="@{dest}" />
             <copy todir="@{dest}">
                 <fileset dir="${listit.img.dir}">
-                    <include name="*.png"/>
-                    <include name="*.jpg"/>
-                    <include name="*.gif"/>
+                    <include name="**/*.png"/>
+                    <include name="**/*.jpg"/>
+                    <include name="**/*.gif"/>
                 </fileset>
             </copy>
         </sequential>
     </macrodef>
-
-    <macrodef name="yuicompress">
-        <attribute name="type"/>
-        <attribute name="output"/>
-        <element name="yuiel" implicit="true"/>
-        <sequential>
-            <local name="input" />
-            <loadresource property="input">
-                <concat>
-                    <yuiel />
-                </concat>
-            </loadresource>
-            <apply errorproperty="null" executable="java" parallel="true" inputstring="${input}" addsourcefile="false" output="@{output}">
-                <yuiel />
-                <arg value="-jar"/>
-                <arg value="${tools.yuicompressor}"/>
-                <arg value="--type"/>
-                <arg value="@{type}"/>
-                <mapper type="merge" to="@{output}" />
-            </apply>
-        </sequential>
-    </macrodef> 
-
-    <macrodef name="htmltemplate">
-        <attribute name="output" />
-        <attribute name="input" />
-        <attribute name="scripts" default="" />
-        <attribute name="stylesheets" default="" />
-        <element name="htmltemplate-elements" optional="true" implicit="true" />
-        <sequential>
-            <parallel>
-                <sequential>
-                    <var name="html_scripts" value=""/>
-                    <for param="src" list="@{scripts}" delimiter=":">
-                        <sequential>
-                            <var
-                                name="html_scripts"
-                                value="${html_scripts}&lt;script src='@{src}'&gt;&lt;/script&gt;${line.separator}"
-                                />
-                        </sequential>
-                    </for>
-                </sequential>
-                <sequential>
-                    <var name="html_stylesheets" value=""/>
-                    <for param="src" list="@{stylesheets}" delimiter=":">
-                        <sequential>
-                            <var
-                                name="html_stylesheets"
-                                value="${html_stylesheets}&lt;link rel='stylesheet' type='text/css' href='@{src}' /&gt;${line.separator}"
-                                />
-                        </sequential>
-                    </for>
-                </sequential>
-            </parallel>
-            <copy file="@{input}" tofile="@{output}" overwrite="true">
-                <filterchain>
-                    <replacetokens>
-                        <token key="scripts" value="${html_scripts}"/>
-                        <token key="stylesheets" value="${html_stylesheets}"/>
-                        <htmltemplate-elements />
-                    </replacetokens>
-                </filterchain>
-            </copy>
-        </sequential>
-    </macrodef>
-
-    <scriptdef name="compiletemplates" language="javascript">
-        <attribute name="output" />
-        <attribute name="object" />
-        <element name="fileset" type="fileset"/>
-        <![CDATA[
-        importPackage(java.io);
-
-        function readFile(file) {
-            return ''+new java.lang.String(org.apache.tools.ant.util.FileUtils.readFully(new FileReader(file)));
-        }
-
-        function writeFile(file, text) {
-            var fw = new FileWriter(file);
-            fw.write(text);
-            fw.close();
-        }
-        function load(file) {
-            eval.call(this, readFile(file));
-        }
-
-        var projectDir = project.getProperty("root.dir");
-
-        load(projectDir + "/tools/underscore.js");
-
-        var objectName = attributes.get("object");
-        var outputFile = attributes.get("output");
-
-        var filesets = elements.get("fileset");
-        var src = "/* Generated Template */\n\n"
-        for (var i = 0; i < filesets.size(); i++) {
-            var fileset = filesets.get(i);
-            var basedir = fileset.getDir(project);
-            var files = fileset.getDirectoryScanner(project).getIncludedFiles();
-            for (var j = 0; j < files.length; j++) {
-                var file = new File(basedir, files[j]);
-                var name = String(file.getName()).replace(/\..*$/,"");
-                var contents = readFile(file);
-                src += objectName + "." + name + " = " + _.template(contents).source + ";\n";
-            }
-        }
-        writeFile(outputFile, src);
-        ]]>
-    </scriptdef>
-
-    <scriptdef name="jshint" language="javascript">
-        <attribute name="fail" />
-        <element name="fileset" type="fileset"/>
-        <![CDATA[
-        importPackage(java.io);
-
-        function readFile(file) {
-            return ''+new java.lang.String(org.apache.tools.ant.util.FileUtils.readFully(new FileReader(file)));
-        }
-
-        function writeFile(file, text) {
-            var fw = new FileWriter(file);
-            fw.write(text);
-            fw.close();
-        }
-
-        function load(file) {
-            eval.call(this, readFile(file));
-        }
-
-        function echo(message) {
-            var task = project.createTask("echo");
-            task.setMessage(message);
-            task.perform();
-        }
-
-        var projectDir = project.getProperty("root.dir");
-
-        load(projectDir + "/tools/jshint.js");
-
-        var options = JSON.parse(readFile(projectDir + "/.jshintrc"));
-        var fail = attributes.get("fail");
-
-        var filesets = elements.get("fileset");
-        var failed = false;
-        for (var i = 0; i < filesets.size(); i++) {
-            var fileset = filesets.get(i);
-            var basedir = fileset.getDir(project);
-            var files = fileset.getDirectoryScanner(project).getIncludedFiles();
-            for (var j = 0; j < files.length; j++) {
-                var filename = files[j],
-                    contents = readFile(new File(basedir, filename));
-
-                if (!JSHINT(contents, options)) {
-                    failed = true;
-                    JSHINT.errors.forEach(function(error) {
-                        if (error) {
-                            echo(filename + ':' + error.line + ':' +
-                                 error.character + ', ' + error.reason);
-                        }
-                    });
-                }
-            }
-        }
-        if (fail && failed && failed.length > 0) {
-            self.fail("JSHint failed.");
-        }
-        ]]>
-    </scriptdef>
 
     <target name="compile-templates">
         <for param="dir">

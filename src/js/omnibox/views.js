@@ -45,7 +45,7 @@
             this.editor = new wysihtml5.Editor(this.$el.find('#omnibox-entry').get()[0], {
                 toolbar: this.toolbar.el,
                 parserRules: wysihtml5ParserRules,
-                stylesheets: ['css/reset.css', 'css/wysihtml5.css']
+                stylesheets: WYSIHTML5_CSS
             });
 
             var iframe = this.editor.composer.iframe;
