@@ -4,7 +4,7 @@
     // Do not persist
     L.make.server.ServerModel = Backbone.Model.extend({
         defaults : {
-            url: 'http://welist.it/listit/jv3/',
+            url: 'https://welist.it/listit/jv3/',
             syncing: false,
             syncingLogs: false,
 
