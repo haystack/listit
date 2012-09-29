@@ -49,7 +49,7 @@
             <if>
                 <isreference refid="js.@{name}"/>
                 <then>
-                    <pathconvert property="debug.@{name}.js.path">
+                    <pathconvert property="build.@{name}.js.path">
                         <fileset file="${listit.js.dir}/defines-debug.js"/>
                         <resources refid="js.@{name}" />
                         <globmapper from="${listit.dir}/*" to="*" />
@@ -59,7 +59,7 @@
             <if>
                 <isreference refid="css.@{name}"/>
                 <then>
-                    <pathconvert property="debug.@{name}.css.path">
+                    <pathconvert property="build.@{name}.css.path">
                         <resources refid="css.@{name}" />
                         <globmapper from="${listit.dir}/*" to="*" />
                     </pathconvert>
