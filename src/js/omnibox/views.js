@@ -92,6 +92,7 @@
                     this.reset();
                     break;
             }
+            L.fixSize();
         },
         // Store text on change.
         _onKeyUp: function(event) {

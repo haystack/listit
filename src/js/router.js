@@ -36,6 +36,7 @@
             }
 
             this._loaded = true;
+            L.fixSize();
         },
         main: function() {this.go('main');}
     });
