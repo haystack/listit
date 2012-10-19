@@ -90,7 +90,7 @@
         importPackage(java.io);
 
         function readFile(file) {
-            return ''+new java.lang.String(org.apache.tools.ant.util.FileUtils.readFully(new FileReader(file)));
+            return String(new java.lang.String(org.apache.tools.ant.util.FileUtils.readFully(new FileReader(file))));
         }
 
         function writeFile(file, text) {
@@ -106,7 +106,7 @@
 
         load(projectDir + "/tools/underscore.js");
 
-        var objectName = attributes.get("object");
+        var objectName = String(attributes.get("object"));
         var outputFile = attributes.get("output");
 
         var filesets = elements.get("fileset");
@@ -133,7 +133,7 @@
         importPackage(java.io);
 
         function readFile(file) {
-            return ''+new java.lang.String(org.apache.tools.ant.util.FileUtils.readFully(new FileReader(file)));
+            return String(new java.lang.String(org.apache.tools.ant.util.FileUtils.readFully(new FileReader(file))));
         }
 
         function writeFile(file, text) {
