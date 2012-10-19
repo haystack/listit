@@ -38,7 +38,8 @@
             }
 
             this.toolbar = new L.make.omnibox.ToolbarView({
-                'id': 'omnibox-toolbar'
+                'id': 'omnibox-toolbar',
+                'className': 'flex'
             });
             this.$el.html(L.templates.omnibox.input({ text: this.model.get('text') || '' }));
             this.$('#omnibox-bottombar').prepend(this.toolbar.render().el);
@@ -91,7 +92,6 @@
                     this.reset();
                     break;
             }
-            setTimeout(L.fixSize, 1);
         },
         // Store text on change.
         _onKeyUp: function(event) {

@@ -151,33 +151,28 @@ html, body {
 
 
 /* CSS3 Box Model */
-.hbox {
+.hbox, .vbox, .box {
   display: -webkit-box;
-  -webkit-box-orient: horizontal;
-  -webkit-box-align: stretch;
   display: -moz-box;
-  -moz-box-orient: horizontal;
-  -moz-box-align: stretch;
   display: box;
-  box-orient: horizontal;
+}
+
+.hbox, .vbox {
+  -webkit-box-align: stretch;
+  -moz-box-align: stretch;
   box-align: stretch;
 }
 
-.vbox {
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-box-align: stretch;
-  display: -moz-box;
-  -moz-box-orient: vertical;
-  -moz-box-align: stretch;
-  display: box;
-  box-orient: vertical;
-  box-align: stretch;
+.hbox {
+  -webkit-box-orient: horizontal;
+  -moz-box-orient: horizontal;
+  box-orient: horizontal;
 }
-.box {
-  display: box;
-  display: -webkit-box;
-  display: -moz-box;
+
+.vbox {
+  -webkit-box-orient: vertical;
+  -moz-box-orient: vertical;
+  box-orient: vertical;
 }
 
 .flex {
@@ -186,21 +181,21 @@ html, body {
   box-flex: 1;
 }
 
-.center_box {
+.center_box, .justified_box {
   -webkit-box-align: center;
-  -webkit-box-pack: center;
   -moz-box-align: center;
-  -moz-box-pack: center;
   box-align: center;
+}
+
+.center_box {
+  -webkit-box-pack: center;
+  -moz-box-pack: center;
   box-pack: center;
 }
 
 .justified_box {
-  -webkit-box-align: center;
   -webkit-box-pack: justify;
-  -moz-box-align: center;
   -moz-box-pack: justify;
-  box-align: center;
   box-pack: justify;
 }
 

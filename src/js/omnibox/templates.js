@@ -5,7 +5,7 @@ var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments
 with(obj||{}){
 __p+='<textarea id="omnibox-entry" class="omnibox-entry input-div flex editable" placeholder="Search or Create Note">'+
 ((__t=(text))==null?'':__t)+
-'</textarea>\n<div id="omnibox-bottombar">\n    <div id="omnibox-icons" class="hbox">\n        <div class="iconTab box center_box clickable">\n            <img id="pinIconPlus" src="img/pin_plus.png" title="Keep this note at the top of my list.">\n        </div>\n        <div id="save-icon" class="clickable iconTab box center_box">\n            <img src="img/plus.png" title="Save this note!">\n        </div>\n    </div>\n</div>\n\n';
+'</textarea>\n<div id="omnibox-bottombar" class="hbox">\n    <div id="omnibox-icons" class="hbox">\n        <div class="iconTab box center_box clickable">\n            <img id="pinIconPlus" src="img/pin_plus.png" title="Keep this note at the top of my list.">\n        </div>\n        <div id="save-icon" class="clickable iconTab box center_box">\n            <img src="img/plus.png" title="Save this note!">\n        </div>\n    </div>\n</div>\n\n';
 }
 return __p;
 };

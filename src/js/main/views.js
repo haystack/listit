@@ -5,7 +5,7 @@
     'use strict';
     L.make.main.MainPageView = Backbone.View.extend({
         id: 'page-main',
-        className: 'page',
+        className: 'page vbox',
         initialize: function(options) {
             _(this).bindAll();
             $(window).one('beforeunload', this.undelegateEvents);

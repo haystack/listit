@@ -25,16 +25,6 @@
         // Render Pages
         $('body').append(_.map(L.pages, function(p) {return p.render().el;}));
 
-        // Why can't we have a css `height: fill;` attribute.
-        // Don't need to debounce (cost(debounce) ~ cost(fix_size)).
-        L.fixSize = function() {
-            $('.page:visible').each(function() {
-                $(this).children('.contents').height($(window).height() - $(this).children('.header').height());
-            });
-        };
-        $(window).resize(L.fixSize);
-        // Put at the bottom of the call stack to wait for rendering.
-        setTimeout(L.fixSize, 1);
         $(window).one('beforeunload', function() {
             window.beforeunloadfired = true;
         });

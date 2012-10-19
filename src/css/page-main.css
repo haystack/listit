@@ -1,16 +1,6 @@
 #controls-container {
-    width: 100%;
-    display: block;
-}
-
-#controls-left {
-    margin-right: 55px;
-}
-
-#controls-right { }
-#controls-bottom {
-    clear: both;
     border-bottom: 1px solid silver;
+    padding: 10px 0px;
 }
 
 /* Note List Styles*/

@@ -1,19 +1,17 @@
 
 #omnibox {
-  float: left;
   border: 1px solid rgba(128,128,128,.5);   
   border-top-right-radius: 3px;
   border-bottom-left-radius: 3px;
   background: #FFF;
   padding: 7px 7px 0px 7px;
   cursor: text;
-  width: 100%;
-  margin: 14px 7px !important;
+  margin: 0px 7px;
 }
 
 #omnibox.focus {
-  border: 1px solid #d36c00 !important;
-  box-shadow:0px 0px 0px 0px !important;
+  border: 1px solid #d36c00;
+  box-shadow:0px 0px 0px 0px;
 }
 #omnibox.focus #omnibox-desc {
     display: none;
@@ -39,8 +37,6 @@
 
 #optionsCol {
   position: relative;
-  top: 15px;
-  float: right;
   font-size: 1.01em;
   color: rgb(120,120,120);
   padding: 1px 3px;
@@ -65,20 +61,9 @@
 }
 
 #omnibox-icons {
-  position: relative;
-  left: auto;
-  bottom: 0px;
   font-size: 1.01em;
   padding: 0px;
   margin: 0;
-  float:right;
-}
-
-#omnibox-toolbar {
-  position: relative;
-  left: auto;
-  bottom: 0px;
-  float: left;
 }
 
 /* Icon Tab Icon Containers! */
