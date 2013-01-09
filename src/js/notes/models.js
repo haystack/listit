@@ -6,14 +6,13 @@
     L.make.notes.NoteModel = Backbone.Model.extend({
         urlRoot: '/note',
         defaults: function() {
-            var now = Date.now();
             return {
                 contents: '',
                 meta: {},
                 version: 0,
                 modified: true,
-                id: now,
-                created: now
+                id: Math.ceil(Math.random()*2147483647), // must be an int32.
+                created: Date.now()
             };
         },
         initialize: function() {
@@ -33,6 +32,27 @@
             L.vent.trigger('note:request:parse:changed', note, window);
             this.set(note);
             this.save();
+        },
+        merge: function(attrs) {
+          // Merge metadata
+          this.set("meta", _.defaults(_.clone(this.get('meta')), attrs.meta), {silent: true});
+
+          // Merge contents
+          var new_contents;
+          var old_contents = this.get('contents');
+          if (old_contents && _.str.trim(old_contents).length > 0) {
+            if (attrs.contents && _.str.trim(attrs.contents).length > 0) {
+              new_contents = attrs.contents + '\n--\n' + old_contents;
+            } else {
+              new_contents = old_contents;
+            }
+          } else {
+            new_contents = old_contents;
+          }
+          this.set('contents', new_contents, {silent: true});
+          this.set('edited', Math.max(attrs.edited, this.get('edited')), {silent: true});
+          this.set('version', attrs.version, {silent: true});
+          this.change();
         },
         moveTo: function(collection, options) {
             if (collection === this.collection) {

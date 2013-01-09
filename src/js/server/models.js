@@ -66,49 +66,84 @@
                 options.type = options.data ? 'POST' : 'GET';
             }
 
-            options.url = this.get('url') + options.method + (options.type === 'POST' ? '/' : '') +
+            options.url = this.get('url') + options.method + '/' +
                 (options.auth ? ('?HTTP_AUTHORIZATION=' + options.authToken) : '');
 
             options.crossDomain = true;
             $.ajax(options);
         },
         syncNotes : function() {
-            clearTimeout(this.get('noteSyncTimer'));
-
-            // Don't sync if waiting for a past sync.
-            if (this.get('synching')) {
-                return;
-            }
-            debug('syncNotes::start');
-
+          if (this._syncNotesEnter()) {
             var that = this;
-
-            this.trigger('sync:start');
-            this.set('syncing', true);
-            this.ajax({
-                method: 'post_json_get_updates',
-                dataType: 'json',
-                auth: true,
-                data: this.bundleNotes(),
-                error: function(xhdr, stat) {
-                    debug('syncNotes::fail', stat);
-                    that.trigger('sync:failure', stat);
+            this.pullNotes({
+                error: that._syncNotesFailure,
+                success: function() {
+                  that.pushNotes({
+                    error: that._syncNotesFailure,
+                    success: that._syncNotesSuccess
+                  });
                 },
-                success: function(result) {
-                    window.sync_result = result;
-                    debug('syncNotes::success', result);
-                    that.unbundleNotes(result);
-                    // Successful Ajax Response:
-                    that.trigger('sync:success');
-                },
-                complete: function() {
-                    that.set('syncing', false);
-                    var interval = that.get('noteSyncInterval');
-                    if (interval > 0) {
-                        that.set('noteSyncTimer', setTimeout(that.syncNotes, interval));
-                    }
-                }
             });
+          }
+        },
+        _syncNotesEnter: function() {
+          // Don't sync if waiting for a past sync.
+          if (this.get('synching')) {
+            return false;
+          }
+          clearTimeout(this.get('noteSyncTimer'));
+          debug('syncNotes::start');
+
+          this.trigger('sync:start');
+          this.set('syncing', true);
+          return true;
+        },
+        _syncNotesExit: function() {
+          this.set('syncing', false);
+          var interval = this.get('noteSyncInterval');
+          if (interval > 0) {
+            this.set('noteSyncTimer', window.setTimeout(this.syncNotes, interval));
+          }
+        },
+        _syncNotesFailure: function(xhdr, stat) {
+          console.log("failure");
+          debug('syncNotes::fail', stat);
+          this.trigger('sync:failure', stat);
+          this._syncNotesExit();
+        },
+        _syncNotesSuccess: function() {
+          // Successful Ajax Response:
+          this.trigger('sync:success');
+          this._syncNotesExit();
+        },
+        pullNotes : function(options) {
+          var that = this;
+          this.ajax({
+            method: 'notes',
+            dataType: 'json',
+            auth: true,
+            success: function(results) {
+              that.unbundleNotes(results);
+              if (options.success) options.success(results);
+            },
+            error: options.error,
+            complete: options.complete
+          });
+        },
+        pushNotes : function(options) {
+          var that = this;
+          this.ajax({
+              method: 'notespostmulti',
+              dataType: 'json',
+              auth: true,
+              data: JSON.stringify(this.bundleNotes()),
+              success: function(response) {
+                that.commitNotes(response.committed);
+                if (options.success) options.success();
+              },
+              error: options.error,
+              complete: options.complete,
+          });
         },
         syncLogs : function() {
             if (this.get('syncingLogs')) {
@@ -165,23 +200,20 @@
         */
         bundleNotes : function() {
             var that = this,
-                unmodifiedNotes = {},
-                modifiedNotes = [],
-                pushNote = function(note, deleted) {
+                bundle = [],
+                bundleNote = function(note, deleted) {
                     // TODO: Insert Magic note hack
                     if (note.get('modified')) {
-                        modifiedNotes.push(that.packageNote(note, deleted));
-                    } else {
-                        unmodifiedNotes[note.get('id')] = note.get('version');
+                        bundle.push(that.packageNote(note, deleted));
                     }
                 };
 
 
-                /*
             // Push magic note.
-            modifiedNotes.push({
+            /*
+            bundle.push({
                 'jid': -1,
-                'version': 120,
+                'version': 120, // XXX TODO FIXME
                 'created': 0,
                 'edited': 0,
                 'contents': JSON.stringify({noteorder:L.notes.getOrder()}),
@@ -189,80 +221,74 @@
                 'deleted': 1
             });
             */
-            L.notes.each(function(n) { pushNote(n, false); });
-            L.deletedNotes.each(function(n) { pushNote(n, true); });
+            L.notes.each(function(n) { bundleNote(n, false); });
+            L.deletedNotes.each(function(n) { bundleNote(n, true); });
             
-            return JSON.stringify({
-                modifiedNotes: modifiedNotes,
-                unmodifiedNotes: unmodifiedNotes
+            return bundle;
+        },
+        commitNotes: function(committed) {
+          // For each
+          _.chain(committed)
+          // Ignore magic note
+          .filter(function(note) {
+            return note.jid >= 0;
+          })
+          // Check status
+          .filter(function(note) {
+            return (note.status === 201 || note.status === 200);
+          })
+          // Lookup note
+          .pluck('jid')
+          .map(L.getNote)
+          .reject(_.isUndefined)
+          .each(function(note) {
+            // Set unmodified and increment version (server does the same).
+            note.set({
+              modified: false,
+              version: note.get('version') + 1,
             });
+            note.save();
+          });
         },
         unbundleNotes: function(result) {
             var order;
-            if (result.magicNote && result.magicNote.contents) {
-                try {
-                    order = JSON.parse(result.magicNote.contents).noteorder;
-                    //version = magicNote.version;
-                    // I am ignoring the version and hoping for the best.
-                    // I need to better understand the backend or just re-write it.
-                    // I don't care about the rest.
-                } catch (e){
-                    debug("unbundleNotes::magicNote invalid");
-                }
-            }
             // Update changed
-            _.chain(result.update.concat(result.updateFinal))
+            _.chain(result)
+            .pluck("fields")
             .map(this.unpackageNote)
             .filter(function(n) { // Filter out magic note.
-                return n.id >= 0;
-            })
-            .each(function(n) {
-                var deleted = _.pop(n, 'deleted');
-                var note = L.getNote(n.id);
-                if (note) {
-                    note.moveTo(deleted ? L.deletedNotes : L.notes, {nosave: true}); // Noop if note in collection.
-                    note.set(n);
-                    note.save();
+                if (n.id < 0) {
+                    order = JSON.parse(n.contents);
+                    return false;
                 } else {
-                    debug('Updated note doesn\'t exist, creating', n);
-                    (deleted ? L.deletedNotes : L.notes).add(n, {nosave: true});
+                    return true;
                 }
-            });
-
-            // Mark committed as unmodified
-            _.chain(result.committed)
-            .filter(function(note) { // Filter out magic note.
-                return note.jid >= 0;
-            })
-            .filter(function(note) {  // Filter on success
-                return (note.status === 201 || note.status === 200);
-            })
-            .pluck('jid') // Get ids
-            .map(L.getNote) // Look up notes
-            .each(function(note) { // Set unmodified if the note exists.
-                if (!note) {
-                    debug('Non-existant note received.');
-                    return;
-                }
-                note.set('modified', false);
-                note.save();
-            });
-
-            // Add new notes
-            _.chain(result.unknownNotes)
-            .map(this.unpackageNote)
-            .filter(function(n) {
-                return n.id >= 0;
             })
             .each(function(n) {
-                debug('Adding new note', n);
-                (_.pop(n, 'deleted') ? L.deletedNotes : L.notes).add(n, {
-                    nosave: true
-                }); // Add the note to the correct set.
+              var deleted = _.pop(n, 'deleted');
+              var note = L.getNote(n.id);
+              if (note) {
+                if (note.get('version') < n.version) {
+                  if (note.get('modified')) {
+                    note.merge(n);
+                    // On merge, only undelete (safest)
+                    if (!deleted) {
+                      note.moveTo(L.notes, {nosave: true});
+                    }
+                  } else {
+                    note.set(n);
+                    // delete/undelete based on latest version.
+                    note.moveTo(deleted ? L.deletedNotes : L.notes, {nosave: true});
+                  }
+                  note.save();
+                }
+              } else {
+                (deleted ? L.deletedNotes : L.notes).add(n, {nosave: true});
+              }
             });
-
             
-            L.notes.setOrder(order);
+            // FIXME: don't necessarily clobber order.
+            if (order) L.notes.setOrder(order);
 
             // Save collections
             L.notes.save();
