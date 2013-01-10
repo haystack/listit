@@ -40,7 +40,7 @@
 <resources id="js.libs.wysihtml5">
     <filelist dir="${listit.js.dir}/libs/wysihtml5">
         <file name="parser_rules/advanced.js" />
-        <file name="dist/wysihtml5-0.3.0.js" />
+        <file name="dist/wysihtml5-0.4.0pre.js" />
     </filelist>
 </resources>
 
