@@ -216,13 +216,13 @@
                 'version': 120, // XXX TODO FIXME
                 'created': 0,
                 'edited': 0,
-                'contents': JSON.stringify({noteorder:L.notes.getOrder()}),
+                'contents': JSON.stringify({noteorder:L.notebook.get('notes').getOrder()}),
                 'modified': 1,
                 'deleted': 1
             });
             */
-            L.notes.each(function(n) { bundleNote(n, false); });
-            L.deletedNotes.each(function(n) { bundleNote(n, true); });
+            L.notebook.get('notes').each(function(n) { bundleNote(n, false); });
+            L.notebook.get('deletedNotes').each(function(n) { bundleNote(n, true); });
             
             return bundle;
         },
@@ -273,26 +273,25 @@
                     note.merge(n);
                     // On merge, only undelete (safest)
                     if (!deleted) {
-                      note.moveTo(L.notes, {nosave: true});
+                      note.moveTo(L.notebook.get('notes'), {nosave: true});
                     }
                   } else {
                     note.set(n);
                     // delete/undelete based on latest version.
-                    note.moveTo(deleted ? L.deletedNotes : L.notes, {nosave: true});
+                    note.moveTo(L.notebook.get(deleted ? 'deletedNotes' : 'notes'), {nosave: true});
                   }
                   note.save();
                 }
               } else {
-                (deleted ? L.deletedNotes : L.notes).add(n, {nosave: true});
+                L.notebook.get(deleted ? 'deletedNotes' : 'notes').create(n, {nosave: true});
               }
             });
             
             // FIXME: don't necessarily clobber order.
-            if (order) L.notes.setOrder(order);
+            if (order) L.notebook.get('notes').setOrder(order);
 
             // Save collections
-            L.notes.save();
-            L.deletedNotes.save();
+            L.notebook.save();
 
             // Successful Ajax Response:
             this.trigger('sync:success');

@@ -3,7 +3,7 @@
 
 (function(L) {
     'use strict';
-    L.make.notes.NoteModel = Backbone.Model.extend({
+    L.make.notes.NoteModel = Backbone.RelationalModel.extend({
         urlRoot: '/note',
         defaults: function() {
             return {
@@ -16,8 +16,7 @@
             };
         },
         initialize: function() {
-            _(this).bindAll();
-            this.on('change:contents change:meta', this._onChange, this);
+            this.on('change:contents change:meta', _.bind(this._onChange, this), this);
         },
         _onChange: function() {
             this.set({
@@ -66,5 +65,60 @@
                 this.save();
             }
         }
+    });
+
+    L.make.notes.NoteBook = Backbone.RelationalModel.extend({
+      url: '/notebook',
+      defaults : {
+        version: 0
+      },
+      isNew: function() {
+        return false;
+      },
+      initialize: function() {
+        var that = this;
+        this.on('add remove', function(model, col, options) {
+            if (!(options && options.nosave)) {
+                that.save();
+            }
+        });
+        // FIXME: Get rid of this with magic note?
+        this.get('notes').comparator = function(note) {
+          return -((note.get('meta').pinned ? Number.MAX_VALUE : 0) + note.get('created'));
+        };
+
+        // Fetch contents.
+        this.fetch();
+        _.each(this.getRelations(), function(r) {
+         that.fetchRelated(r.key);
+        });
+      },
+      relations: [{
+        type: Backbone.HasMany,
+        key: 'deletedNotes',
+        relatedModel: L.make.notes.NoteModel,
+        collectionType: 'ListIt.make.notes.NoteCollection',
+        includeInJSON: 'id'
+      }, {
+        type: Backbone.HasMany,
+        key: 'notes',
+        collectionType: 'ListIt.make.notes.NoteCollection',
+        relatedModel: L.make.notes.NoteModel,
+        includeInJSON: 'id'
+      }],
+      addNote: function(text, meta, window) {
+          var note = new L.make.notes.NoteModel({contents: text}),
+          noteJSON = note.toJSON();
+
+          noteJSON.meta = meta || {};
+          window.ListIt.vent.trigger('note:request:parse', noteJSON, window);
+          window.ListIt.vent.trigger('note:request:parse:new', noteJSON, window);
+          note.set(noteJSON);
+          this.get('notes').add(note, {action: 'add'});
+          note.save();
+      },
+      getNote: function(id) {
+          return (this.get('deletedNotes').get(id) || this.get('notes').get(id));
+      }
     });
 })(ListIt);

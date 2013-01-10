@@ -2,8 +2,7 @@
     'use strict';
     // Setup Models
     L.vent.trigger('setup:models:before');
-    L.notes = new L.make.notes.StoredNoteCollection(null, {url: '/notes'});
-    L.deletedNotes = new L.make.notes.StoredNoteCollection(null, {url: '/deleted-notes'});
+    L.notebook = new L.make.notes.NoteBook();
 
     L.server = new L.make.server.ServerModel();
     L.sidebar = new L.make.notes.FilterableNoteCollection();

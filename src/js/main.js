@@ -51,31 +51,24 @@ window.ListIt = {VERSION: 1};
         localStorage.setItem('version', version);
     };
 
-    L.addNote = function(text, meta) {
-        var note = new L.make.notes.NoteModel({contents: text}),
-        noteJSON = note.toJSON();
-
-        noteJSON.meta = meta || {};
-        L.vent.trigger('note:request:parse', noteJSON, window);
-        L.vent.trigger('note:request:parse:new', noteJSON, window);
-        note.set(noteJSON);
-        L.notes.add(note, {action: 'add'});
-        note.save();
-    };
-
     L.log = function(action, info) {
         var e = {action: action, info: info};
         L.vent.trigger('log', e);
         L.vent.trigger('log:' + e.action, e);
     };
 
+    L.addNote = function(text, meta) {
+      return L.notebook.addNote(text, meta, window);
+    };
+
     L.getNote = function(id) {
-        return (L.deletedNotes.get(id) || L.notes.get(id));
+        return L.notebook.getNote(id);
     };
 
     L.initModule = function(name) {
         L.templates[name] = L.templates[name] || {};
         L.make[name] = L.make[name] || {};
     };
+
 
 })(ListIt);

@@ -89,7 +89,7 @@
         },
 
         removeNote: function() {
-            this.model.moveTo(L.deletedNotes, {action: 'delete'});
+            this.model.moveTo(L.notebook.get('deletedNotes'), {action: 'delete'});
             return false;
         },
         expand: function() {

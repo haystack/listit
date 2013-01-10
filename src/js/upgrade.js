@@ -15,7 +15,7 @@
         upgradeFunctions = {
             1: function(from, to) {
                 var cb = _.once(function() {
-                    L.notes.reset(_.map(defaultNotes, function(s) {
+                    L.notebook.get('notes').reset(_.map(defaultNotes, function(s) {
                     return {'contents': s};
                     }));
                     L.vent.off(null, cb);

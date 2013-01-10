@@ -160,18 +160,16 @@
                 fname : 'listit-notes.json',
                 display : 'JSON',
                 exporter: function() {
-                    return JSON.stringify({
-                        notes: L.notes.toJSON(),
-                        deleted: L.deletedNotes.toJSON()
-                    });
+                    return JSON.stringify(L.notebook.toJSON({includeInJSON: true}));
                 },
                 importer : function(string) {
                     var obj = JSON.parse(string);
                     if (obj.notes) {
-                        L.notes.add(obj.notes);
+                      // FIXME (BUG!): Save notes on add
+                      L.notebook.get('notes').add(obj.notes);
                     }
                     if (obj.deleted) {
-                        L.deletedNotes.add(obj.deleted);
+                      L.notebook.get('deletedNotes').add(obj.notes);
                     }
                 }
             },
@@ -179,7 +177,7 @@
                 fname : 'listit-notes.txt',
                 display : 'Text',
                 exporter: function() {
-                    return L.notes.reduce(function(txt, n) {
+                    return L.notebook.get('notes').reduce(function(txt, n) {
                         return txt + '* ' + L.util.clean(n.get('contents')).replace(/\n/g, '\n  ') + '\n';
                     }, '');
                 }

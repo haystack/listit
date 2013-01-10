@@ -1,6 +1,6 @@
 (function(L) {
     'use strict';
-    L.make.notes.BaseNoteCollection = Backbone.Collection.extend({
+    L.make.notes.NoteCollection = Backbone.Collection.extend({
         model: L.make.notes.NoteModel,
         slice: function(a, b) {
             return this.models.slice(a, b);
@@ -30,64 +30,27 @@
         },
         getOrder: function() {
             return this.pluck("id");
-        }
-
+        },
     });
 
-    L.make.notes.StoredNoteCollection = L.make.notes.BaseNoteCollection.extend({
-        initialize: function(models, options) {
-            if (options.url) {
-                this.url = options.url;
-            }
-            this.fetch();
-            this.on('add', this.saveOnAdd, this);
-            this.on('add remove', function(model, col, options) {
-                if (!(options && options.nosave)) {
-                    col.save();
-                }
-            });
-        },
-        comparator : function(note) {
-            return -((note.get('meta').pinned ? Number.MAX_VALUE : 0) + note.get('created'));
-        },
-        saveOnAdd : function(note) {
-            // Ignore nosave (that only applies to the collection
-                note.save();
-        },
-        update: function(notes) {
-            var that = this;
-            _.each(notes, function(note) {
-                var myNote = that.get(note.id);
-                if (!myNote) {
-                    throw new Error('Can\'t update non-existant note.', note);
-                }
-
-                if (!myNote.set(note)) {
-                    throw new Error('Note failed to validate', myNote, note);
-                }
-
-                myNote.save();
-            });
-        }
-    });
-
-    // Note. This collection must never contain notes that don't exist in L.notes.
-    // This shouldn't be a problem in bug-free code but search assumes this (to
-    // reduce flickering).
-    L.make.notes.FilterableNoteCollection = L.make.notes.BaseNoteCollection.extend({
+    // Note. This collection must never contain notes that don't exist in in
+    // the notebook.  This shouldn't be a problem in bug-free code but search
+    // assumes this (to reduce flickering).
+    L.make.notes.FilterableNoteCollection = L.make.notes.NoteCollection.extend({
         initialize : function() {
             _(this).bindAll();
             this.searchQueue = new ActionQueue(50);
             this.searchQueue.start();
-            L.notes.on('add', this.maybeAddNew, this);
-            L.notes.on('remove', this._onRemove, this);
-            L.notes.on('reset', _.mask(this.reset), this);
+            this.backingCollection = L.notebook.get('notes');
+            this.backingCollection.on('add', this.maybeAddNew, this);
+            this.backingCollection.on('remove', this._onRemove, this);
+            this.backingCollection.on('reset', _.mask(this.reset), this);
             this.on('reset', this._onReset, this);
         },
         _offset: 10,
         _onRemove: function(note, notes, options) {
             if (note.id === this._lastSearchedNoteId) {
-                var n = L.notes.at(L.notes.indexOf(this._lastSearchedNoteId)-1);
+                var n = this.backingCollection.at(this.backingCollection.indexOf(this._lastSearchedNoteId)-1);
                 this._lastSearchedNoteId = n ? n.id : undefined;
             }
             this.remove(note, options);
@@ -137,21 +100,21 @@
             num = num ? num : this._offset;
 
             if (this._lastSearchedNoteId) {
-                lastNote = L.notes.last();
+                lastNote = this.backingCollection.last();
 
                 // Return if there are no notes to search or at end
                 if (!lastNote || this._lastSearchedNoteId === lastNote.id) {
                     return;
                 }
 
-                start = L.notes.indexOf(L.notes.get(this._lastSearchedNoteId));
+                start = this.backingCollection.indexOf(this.backingCollection.get(this._lastSearchedNoteId));
             } else {
                 start = 0;
             }
 
             end = start+num;
 
-            _.each(L.notes.slice(start, end), function(n) {
+            _.each(this.backingCollection.slice(start, end), function(n) {
                 that.searchQueue.add(function() {
                     if (that.matcher(n)) {
                         that.add(n);
@@ -162,12 +125,12 @@
                 that.searching = false;
             });
 
-            lastNote = L.notes.at(end);
+            lastNote = this.backingCollection.at(end);
             if (lastNote) {
                 this._lastSearchedNoteId = lastNote.id;
                 this.searchQueue.add(this.trigger, 'search:paused');
             } else {
-                lastNote = L.notes.last();
+                lastNote = this.backingCollection.last();
                 this._lastSearchedNoteId = lastNote ? lastNote.id : undefined;
                 this.searchQueue.add(this.trigger, 'search:completed');
             }
