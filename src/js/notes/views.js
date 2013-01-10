@@ -206,8 +206,8 @@
             var that = this;
             this.subViews = {}; // Note views
             this.delayedRemove = {}; // Delay removes to prevent flickering.
-            this.collection.on('add', _.mask(this.add, 0, 2), this);
-            this.collection.on('remove', _.mask(this.remove, 0, 2), this);
+            this.collection.on('add', _.mask(this.addNote, 0, 2), this);
+            this.collection.on('remove', _.mask(this.removeNote, 0, 2), this);
             this.collection.on('reset', _.mask(this.reset, 1), this);
             this.collection.on('search:paused', this.onPause, this);
             L.options.on('change:shrinkNotes', this.updateNoteShrinkState, this);
@@ -243,7 +243,7 @@
                 this.collection.next();
             }
         },
-        add: function(note, options) {
+        addNote: function(note, options) {
             clearTimeout(this.delayedRemove[note.id]);
             // Create the view iff it doesn't exist.
             var view = this.subViews[note.id];
@@ -302,7 +302,7 @@
             if (this._rendered) {
                 //this.$el.children('#notes').empty();
                 _.each(this.subViews, _.mask(this.removeNote, 1));
-                this.collection.each(_.mask(this.add, 0));
+                this.collection.each(_.mask(this.addNote, 0));
             }
         },
         render: function() {

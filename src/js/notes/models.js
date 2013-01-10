@@ -77,20 +77,26 @@
       },
       initialize: function() {
         var that = this;
-        this.on('add remove', function(model, col, options) {
-            if (!(options && options.nosave)) {
-                that.save();
-            }
-        });
         // FIXME: Get rid of this with magic note?
         this.get('notes').comparator = function(note) {
           return -((note.get('meta').pinned ? Number.MAX_VALUE : 0) + note.get('created'));
         };
 
         // Fetch contents.
-        this.fetch();
+        var debounced_save = _.debounce(_.bind(this.save, this), 100);
         _.each(this.getRelations(), function(r) {
-         that.fetchRelated(r.key);
+          that.get(r.key).on('add remove', function(model, collection, options) {
+            if (!(options && options.nosave)) {
+              debounced_save();
+            }
+          });
+        });
+        this.fetch({
+          success: function() {
+            _.each(that.getRelations(), function(r) {
+              that.fetchRelated(r.key);
+            });
+          }
         });
       },
       relations: [{
