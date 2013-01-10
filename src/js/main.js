@@ -13,8 +13,9 @@ window.DEBUG_MODE = true;
 window.debug = function() {};
 if (window.DEBUG_MODE && window.console) {
     window.debug = function() {
-        Array.prototype.unshift.call(arguments, "DEBUG:");
-        window.console.log.apply(window.console, arguments);
+      'use strict';
+      Array.prototype.unshift.call(arguments, "DEBUG:");
+      window.console.log.apply(window.console, arguments);
     };
 }
 

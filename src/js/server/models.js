@@ -82,7 +82,7 @@
                     error: that._syncNotesFailure,
                     success: that._syncNotesSuccess
                   });
-                },
+                }
             });
           }
         },
@@ -106,7 +106,6 @@
           }
         },
         _syncNotesFailure: function(xhdr, stat) {
-          console.log("failure");
           debug('syncNotes::fail', stat);
           this.trigger('sync:failure', stat);
           this._syncNotesExit();
@@ -124,7 +123,9 @@
             auth: true,
             success: function(results) {
               that.unbundleNotes(results);
-              if (options.success) options.success(results);
+              if (options.success) {
+                options.success(results);
+              }
             },
             error: options.error,
             complete: options.complete
@@ -139,10 +140,12 @@
               data: JSON.stringify(this.bundleNotes()),
               success: function(response) {
                 that.commitNotes(response.committed);
-                if (options.success) options.success();
+                if (options.success) {
+                  options.success();
+                }
               },
               error: options.error,
-              complete: options.complete,
+              complete: options.complete
           });
         },
         syncLogs : function() {
@@ -160,13 +163,13 @@
                 data: L.logs.toJSON(),
                 error: function() {
                     debug('FAIL: Logs not sent to server.');
-                    debug('syncLogs::failed')
+                    debug('syncLogs::failed');
                     // TODO:Do something?
                 },
                 success: function() {
                     // TODO: Clear Logs
                     debug('Implement logging.');
-                    debug('syncLogs::succeeded')
+                    debug('syncLogs::succeeded');
                 },
                 complete: function() {
                     that.set('syncingLogs', false);
@@ -242,7 +245,7 @@
             // Set unmodified and increment version (server does the same).
             note.set({
               modified: false,
-              version: note.get('version') + 1,
+              version: note.get('version') + 1
             });
             note.save();
           });

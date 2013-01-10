@@ -6,31 +6,33 @@
             return this.models.slice(a, b);
         },
         // Reorder contents by list of ids
-        setOrder: function(new_order, options) {
-            options || (options = {});
-            var order_map = {},
+        setOrder: function(newOrder, options) {
+            options = options || {};
+            var orderMap = {},
                 that = this;
 
-            _.each(new_order, function(v,i) {
-                order_map[v] = i;
+            _.each(newOrder, function(v,i) {
+                orderMap[v] = i;
             });
-            var pos_counter = 0;
-            var append_offset = this.models.length;
+            var posCounter = 0;
+            var appendOffset = this.models.length;
             this.models = this.sortBy(function(note) {
-                var pos = order_map[note.id];
+                var pos = orderMap[note.id];
                 // Put the note at the beginning if position unknown.
                 if (pos === undefined) {
-                    return pos_counter++;
+                    return posCounter++;
                 } else {
-                    return pos + append_offset;
+                    return pos + appendOffset;
                 }
             });
 
-          if (!options.silent) this.trigger('reset', this, options);
+          if (!options.silent) {
+            this.trigger('reset', this, options);
+          }
         },
         getOrder: function() {
             return this.pluck("id");
-        },
+        }
     });
 
     // Note. This collection must never contain notes that don't exist in in
