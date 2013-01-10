@@ -14,7 +14,7 @@
             _(this).bindAll();
             $(window).one('beforeunload', function() {
                 that.undelegateEvents();
-                that.model.off(null, null, that);
+                that.stopListening();
                 //that.model.set('selection', rangy.saveSelection().rangeInfos);
                 that.storeText();
             });

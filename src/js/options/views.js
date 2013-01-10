@@ -10,8 +10,8 @@
             _(this).bindAll();
             var that = this;
             $(window).one('beforeunload', function() {
-                that.model.off(null, null, that);
                 that.undelegateEvents();
+                that.stopListening();
             });
             _.each(this.model.options, function(o,n) {
                 var setView, setModel;

@@ -12,7 +12,7 @@
             this.editor = options.editor;
             $(window).one('beforeunload', function() {
                 that.undelegateEvents();
-                that.model.off(null, null, that);
+                that.stopListening();
             });
             this.template = L.templates.notes.note;
             this.model.on('change:contents', _.mask(this.updateContents, 2), this);
@@ -79,7 +79,7 @@
             this.$el.html(this.template(this.model.toJSON()));
         },
         events: {
-            'click .close-btn': 'removeNote',
+            'click .close-btn': 'onRemove',
             'click .contents': 'onClick',
             'keyup .contents': 'onKeyUp',
             'blur .editor': 'onBlur'
@@ -88,7 +88,7 @@
             return this.$('.contents').html();
         },
 
-        removeNote: function() {
+        onRemove: function() {
             this.model.moveTo(L.notebook.get('deletedNotes'), {action: 'delete'});
             return false;
         },
@@ -213,8 +213,7 @@
             L.options.on('change:shrinkNotes', this.updateNoteShrinkState, this);
             $(window).one('beforeunload', function() {
                 that.undelegateEvents();
-                that.collection.off(null, null, that);
-                L.options.off(null, null, that);
+                that.stopListening();
             });
         },
         events: {
@@ -274,18 +273,18 @@
             }
         },
         // Delay removes just in case we are re-adding the note.
-        remove: function(note, options) {
+        removeNote: function(note, options) {
             var id = note.id || note;
 
             clearTimeout(this.delayedRemove[id]);
 
             try {
-                this.delayedRemove[id] = setTimeout(_.bind(this._remove, this, note, options), 50);
+                this.delayedRemove[id] = setTimeout(_.bind(this._removeNote, this, note, options), 50);
             } catch (e) {
-                this._remove(note, options);
+                this._removeNote(note, options);
             }
         },
-        _remove: function(note, options) {
+        _removeNote: function(note, options) {
             var id = note.id || note,
                 view = this.subViews[id];
 
@@ -302,7 +301,7 @@
         reset: function() {
             if (this._rendered) {
                 //this.$el.children('#notes').empty();
-                _.each(this.subViews, _.mask(this.remove, 1));
+                _.each(this.subViews, _.mask(this.removeNote, 1));
                 this.collection.each(_.mask(this.add, 0));
             }
         },
