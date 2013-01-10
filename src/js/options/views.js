@@ -160,7 +160,14 @@
                 fname : 'listit-notes.json',
                 display : 'JSON',
                 exporter: function() {
-                    return JSON.stringify(L.notebook.toJSON({includeInJSON: true}));
+                    var nb = L.notebook.toJSON();
+                    // FIXME: The next version of backbone relational should
+                    // have a recursive export.
+                    nb.notes = L.notebook.get('notes').toJSON();
+                    _.each(L.notebook.getRelations(), function(r) {
+                      nb[r.key] = L.notebook.get(r.key).toJSON();
+                    });
+                    return JSON.stringify(nb);
                 },
                 importer : function(string) {
                     var obj = JSON.parse(string);
