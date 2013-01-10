@@ -202,7 +202,6 @@
             var that = this,
                 bundle = [],
                 bundleNote = function(note, deleted) {
-                    // TODO: Insert Magic note hack
                     if (note.get('modified')) {
                         bundle.push(that.packageNote(note, deleted));
                     }
@@ -210,17 +209,15 @@
 
 
             // Push magic note.
-            /*
+            //TODO: Avoid sending every time?
             bundle.push({
                 'jid': -1,
-                'version': 120, // XXX TODO FIXME
+                'version': L.notebook.get('version'),
                 'created': 0,
                 'edited': 0,
                 'contents': JSON.stringify({noteorder:L.notebook.get('notes').getOrder()}),
-                'modified': 1,
                 'deleted': 1
             });
-            */
             L.notebook.get('notes').each(function(n) { bundleNote(n, false); });
             L.notebook.get('deletedNotes').each(function(n) { bundleNote(n, true); });
             
@@ -249,6 +246,8 @@
             });
             note.save();
           });
+          // Update note collection version.
+          L.notebook.set('version', L.notebook.get('version') + 1);
         },
         unbundleNotes: function(result) {
             var order;
@@ -258,8 +257,10 @@
             .map(this.unpackageNote)
             .filter(function(n) { // Filter out magic note.
                 if (n.id < 0) {
+                  if (L.notebook.get('version') < n.version) {
                     order = JSON.parse(n.contents);
-                    return false;
+                  }
+                  return false;
                 } else {
                     return true;
                 }
@@ -288,7 +289,9 @@
             });
             
             // FIXME: don't necessarily clobber order.
-            if (order) L.notebook.get('notes').setOrder(order);
+            if (order) {
+              L.notebook.get('notes').setOrder(order);
+            }
 
             // Save collections
             L.notebook.save();
