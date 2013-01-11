@@ -125,18 +125,9 @@
     </macrodef>
 
     <target name="compile-templates">
-        <for param="dir">
-            <dirset refid="template.dirs"/>
-            <sequential>
-                <local name="dirname" />
-                <local name="name" />
-                <dirname property="dirname" file="@{dir}" />
-                <basename property="name" file="${dirname}" />
-                <compiletemplates output="${dirname}/templates.js" object="ListIt.templates.${name}">
-                    <fileset dir="@{dir}" includes="*.html" />
-                </compiletemplates>
-            </sequential>
-        </for>
+        <compiletemplates output="${listit.js.templates.file}" object="ListIt.templates">
+            <fileset dir="${listit.js.templates.dir}" includes="**/*.html" />
+        </compiletemplates>
     </target>
 
     <target name="jshint">

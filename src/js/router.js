@@ -1,6 +1,6 @@
 (function(L) {
     'use strict';
-    L.make.Router = Backbone.Router.extend({
+    L.Router = Backbone.Router.extend({
         routes: {
             ':action': 'go',
             '': 'main'

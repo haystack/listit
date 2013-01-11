@@ -1,7 +1,74 @@
+/*jshint jquery: true, browser: true*/
+/*global _: false, Backbone: false, ActionQueue: true*/
+
 (function(L) {
     'use strict';
-    L.make.notes.NoteCollection = Backbone.Collection.extend({
-        model: L.make.notes.NoteModel,
+    L.models.Note = Backbone.RelationalModel.extend({
+        urlRoot: '/note',
+        defaults: function() {
+            return {
+                contents: '',
+                meta: {},
+                version: 0,
+                modified: true,
+                id: Math.ceil(Math.random()*2147483647), // must be an int32.
+                created: Date.now()
+            };
+        },
+        initialize: function() {
+            this.on('change:contents change:meta', _.bind(this._onChange, this), this);
+        },
+        _onChange: function() {
+            this.set({
+                'edited': Date.now(),
+                'modified': true
+            });
+        },
+        changeContents: function(newContents) {
+            var note = this.toJSON();
+            note.contents = newContents;
+            L.vent.trigger('note:request:parse', note, window);
+            L.vent.trigger('note:request:parse:changed', note, window);
+            this.set(note);
+            this.save();
+        },
+        merge: function(attrs) {
+          // Merge metadata
+          this.set("meta", _.defaults(_.clone(this.get('meta')), attrs.meta), {silent: true});
+
+          // Merge contents
+          var newContents;
+          var oldContents = this.get('contents');
+          if (oldContents && _.str.trim(oldContents).length > 0) {
+            if (attrs.contents && _.str.trim(attrs.contents).length > 0) {
+              newContents = attrs.contents + '\n--\n' + oldContents;
+            } else {
+              newContents = oldContents;
+            }
+          } else {
+            newContents = oldContents;
+          }
+          this.set('contents', newContents, {silent: true});
+          this.set('edited', Math.max(attrs.edited, this.get('edited')), {silent: true});
+          this.set('version', attrs.version, {silent: true});
+          this.change();
+        },
+        moveTo: function(collection, options) {
+            if (collection === this.collection) {
+                return;
+            }
+
+            this.collection.remove(this, options);
+            collection.add(this, options);
+            this.set('modified', true, options);
+            if (!(options && options.nosave)) {
+                this.save();
+            }
+        }
+    });
+
+    L.models.NoteCollection = Backbone.Collection.extend({
+        model: L.models.Note,
         slice: function(a, b) {
             return this.models.slice(a, b);
         },
@@ -38,7 +105,7 @@
     // Note. This collection must never contain notes that don't exist in in
     // the notebook.  This shouldn't be a problem in bug-free code but search
     // assumes this (to reduce flickering).
-    L.make.notes.FilterableNoteCollection = L.make.notes.NoteCollection.extend({
+    L.models.FilterableNoteCollection = L.models.NoteCollection.extend({
         initialize : function() {
             _(this).bindAll();
             this.searchQueue = new ActionQueue(50);
@@ -137,5 +204,66 @@
                 this.searchQueue.add(this.trigger, 'search:completed');
             }
         }
+    });
+
+    L.models.NoteBook = Backbone.RelationalModel.extend({
+      url: '/notebook',
+      defaults : {
+        version: 0
+      },
+      isNew: function() {
+        return false;
+      },
+      initialize: function() {
+        var that = this;
+        // FIXME: Get rid of this with magic note?
+        this.get('notes').comparator = function(note) {
+          return -((note.get('meta').pinned ? Number.MAX_VALUE : 0) + note.get('created'));
+        };
+
+        // Fetch contents.
+        var debounced_save = _.debounce(_.bind(this.save, this), 100);
+        _.each(this.getRelations(), function(r) {
+          that.get(r.key).on('add remove', function(model, collection, options) {
+            if (!(options && options.nosave)) {
+              debounced_save();
+            }
+          });
+        });
+        this.fetch({
+          success: function() {
+            _.each(that.getRelations(), function(r) {
+              that.fetchRelated(r.key);
+            });
+          }
+        });
+      },
+      relations: [{
+        type: Backbone.HasMany,
+        key: 'deletedNotes',
+        relatedModel: L.models.Note,
+        collectionType: L.models.NoteCollection,
+        includeInJSON: 'id'
+      }, {
+        type: Backbone.HasMany,
+        key: 'notes',
+        collectionType: L.models.NoteCollection,
+        relatedModel: L.models.Note,
+        includeInJSON: 'id'
+      }],
+      addNote: function(text, meta, window) {
+          var note = new L.models.Note({contents: text}),
+          noteJSON = note.toJSON();
+
+          noteJSON.meta = meta || {};
+          window.ListIt.vent.trigger('note:request:parse', noteJSON, window);
+          window.ListIt.vent.trigger('note:request:parse:new', noteJSON, window);
+          note.set(noteJSON);
+          this.get('notes').add(note, {action: 'add'});
+          note.save();
+      },
+      getNote: function(id) {
+          return (this.get('deletedNotes').get(id) || this.get('notes').get(id));
+      }
     });
 })(ListIt);

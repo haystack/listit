@@ -8,22 +8,10 @@
     // Setup modules
     L.vent = bgL.vent;
 
-    // First copy models
-    _.each(bgL.make, function(v, k) {
-        if(_.isObject(bgL.make[k])) {
-            var here = L.make[k],
-                there = bgL.make[k];
+    // Copy models.
+    _.defaults(L.models, bgL.models);
 
-            if (!here) {
-                L.make[k] = there;
-            } else if (there) {
-                _.defaults(here, there);
-            }
-        } else {
-            L.make[k] = L.make[k] || bgL.make[k];
-        }
-    });
-    // Then everything else
+    // Then everything else (doesn't include templates, etc)
     _.defaults(L, bgL);
 
     L.vent.on('setup:views:after', _.once(function() {

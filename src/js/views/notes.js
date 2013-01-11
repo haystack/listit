@@ -3,7 +3,7 @@
 (function(L) {
     'use strict';
 
-    L.make.notes.NoteView = Backbone.View.extend({
+    L.views.NoteView = Backbone.View.extend({
         tagName: 'li',
         className: 'note hbox justified_box',
         initialize: function(options) {
@@ -14,7 +14,7 @@
                 that.undelegateEvents();
                 that.stopListening();
             });
-            this.template = L.templates.notes.note;
+            this.template = L.templates["note"];
             this.model.on('change:contents', _.mask(this.updateContents, 2), this);
             this.model.on('change:meta', _.mask(this.updateMeta, 2), this);
         },
@@ -105,7 +105,7 @@
                 $editorEl = this.$('.editor');
             if (!this.editor) {
                 var $textareaEl = $editorEl.children('textarea'),
-                    toolbar = new L.make.omnibox.ToolbarView();
+                    toolbar = new L.views.Toolbar();
 
                 $editorEl.append(toolbar.render().el);
 
@@ -193,7 +193,7 @@
         }
     });
 
-    L.make.notes.NoteCollectionView = Backbone.View.extend({
+    L.views.NoteCollectionView = Backbone.View.extend({
         tagName: 'div',
         id: 'notes-container',
         className: 'container scroll',
@@ -248,7 +248,7 @@
             // Create the view iff it doesn't exist.
             var view = this.subViews[note.id];
             if (!view) {
-                view = this.subViews[note.id] = new L.make.notes.NoteView({model: note});
+                view = this.subViews[note.id] = new L.views.NoteView({model: note});
             }
 
             if (!this._rendered || view.isVisible()) {

@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <project>
-<dirset id="template.dirs" dir="${listit.js.dir}" includes="*/templates/" />
-
 
 <fileset id="jshint-files" dir="${listit.js.dir}">
     <include name="**/*.js" />
@@ -79,21 +77,17 @@
     <resources refid="js.libs.wysihtml5" />
 </resources>
 
-<resources id="js.modules">
-    <fileset dir="${listit.js.dir}">
-        <include name="*/main.js" />
+<resources id="js.templates">
+    <fileset file="${listit.js.templates.file}" />
+</resources>
+<resources id="js.models">
+    <fileset dir="${listit.js.models.dir}">
+        <include name="*.js" />
     </fileset>
-    <fileset dir="${listit.js.dir}">
-        <include name="*/templates.js" />
-    </fileset>
-    <fileset dir="${listit.js.dir}">
-        <include name="*/models.js" />
-    </fileset>
-    <fileset dir="${listit.js.dir}">
-        <include name="*/collections.js" />
-    </fileset>
-    <fileset dir="${listit.js.dir}">
-        <include name="*/views.js" />
+</resources>
+<resources id="js.views">
+    <fileset dir="${listit.js.views.dir}">
+        <include name="*.js" />
     </fileset>
 </resources>
 
@@ -128,7 +122,9 @@
     <resources refid="js.libs" />
     <resources refid="js.common" />
     <resources refid="js.router" />
-    <resources refid="js.modules" />
+    <resources refid="js.templates" />
+    <resources refid="js.models" />
+    <resources refid="js.views" />
     <resources refid="js.collectors" />
     <resources refid="js.setup" />
 </resources>

@@ -1,6 +1,6 @@
 (function(L) {
     'use strict';
-    L.make.options.OptionsModel = Backbone.Model.extend({
+    L.models.Options = Backbone.Model.extend({
         defaults: {
             shrinkNotes: true,
             expandVariables: true,

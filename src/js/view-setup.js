@@ -5,21 +5,21 @@
     $(document).ready(function() {
         L.vent.trigger('setup:views:before');
         var optionsPanes = [
-                new L.make.account.AccountView({model: L.account}),
-                new L.make.options.InfoView(),
-                new L.make.options.SettingsView({model: L.options}),
-                new L.make.options.ImportExportView()
+                new L.views.AccountView({model: L.account}),
+                new L.views.InfoView(),
+                new L.views.SettingsView({model: L.options}),
+                new L.views.ImportExportView()
             ],
             mainPanes = {
-                'controls-left': new L.make.omnibox.OmniboxView({model: L.omnibox}),
-                'controls-right': new L.make.omnibox.ControlsView(),
-                'content-container': new L.make.notes.NoteCollectionView({collection: L.sidebar})
+                'controls-left':      new L.views.OmniboxView({model: L.omnibox}),
+                'controls-right':     new L.views.ControlsView(),
+                'content-container':  new L.views.NoteCollectionView({collection: L.sidebar})
             };
 
         // Make Pages
         L.pages  = {
-            main : new L.make.main.MainPageView({panels: mainPanes}),
-            options : new L.make.options.OptionsPageView({panels: optionsPanes})
+            main : new L.views.MainPage({panels: mainPanes}),
+            options : new L.views.OptionsPage({panels: optionsPanes})
         };
 
         // Render Pages
@@ -68,7 +68,7 @@
         });
 
 
-        L.router = new L.make.Router();
+        L.router = new L.Router();
 
         $(window).one('beforeunload', function() {
             L.vent.trigger('sys:quit');

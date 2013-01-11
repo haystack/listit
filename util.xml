@@ -116,10 +116,11 @@
             var basedir = fileset.getDir(project);
             var files = fileset.getDirectoryScanner(project).getIncludedFiles();
             for (var j = 0; j < files.length; j++) {
-                var file = new File(basedir, files[j]);
-                var name = String(file.getName()).replace(/\..*$/,"");
+                var filename = files[j];
+                var file = new File(basedir, filename);
                 var contents = readFile(file);
-                src += objectName + "." + name + " = " + _.template(contents).source + ";\n";
+                var basename = filename.slice(0, -5);
+                src += objectName + "['" + basename + "'] = " + _.template(contents).source + ";\n";
             }
         }
         writeFile(outputFile, src);

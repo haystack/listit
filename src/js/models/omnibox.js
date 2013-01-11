@@ -1,6 +1,6 @@
 (function(L) {
     'use strict';
-    L.make.omnibox.OmniboxModel = Backbone.Model.extend({
+    L.models.Omnibox = Backbone.Model.extend({
         // Singleton
         url : '/omnibox',
         isNew: function() {

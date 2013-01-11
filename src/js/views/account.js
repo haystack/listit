@@ -1,6 +1,6 @@
 (function(L) {
     'use strict';
-    L.make.account.AccountView = Backbone.View.extend({
+    L.views.AccountView = Backbone.View.extend({
         // View constants to be passed to the template.
         constants: {
             passwordValidationPattern : '(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,}'
@@ -33,7 +33,7 @@
             this.model.on('change:email', _.mask(this.updateEmail, 1), this);
         },
         render: function() {
-            this.$el.html(L.templates.account.options(_.defaults(this.model.toJSON(), this.constants)));
+            this.$el.html(L.templates["options/account"](_.defaults(this.model.toJSON(), this.constants)));
             this.setMode(this.model.get('mode'));
             this._rendered = true;
 

@@ -2,7 +2,7 @@
 (function(L) {
     'use strict';
 
-    L.make.options.SettingsView = Backbone.View.extend({
+    L.views.SettingsView = Backbone.View.extend({
         id: 'options-settings',
         className: 'options-item',
         events: { },
@@ -71,7 +71,7 @@
                     }, '')
                 };
             });
-            this.$el.html(L.templates.options.settings({options: opts}));
+            this.$el.html(L.templates["options/settings"]({options: opts}));
             return this;
         },
         openHotkeyChanged: function(evt) {
@@ -88,14 +88,14 @@
     * @author: wstyke@gmail.com - Wolfe Styke
     */
 
-    L.make.options.OptionsPageView = Backbone.View.extend({
+    L.views.OptionsPage = Backbone.View.extend({
         id: 'page-options',
         className: 'page',
         initialize: function(options) {
             this.panels = _.isArray(options.panels) ? options.panels : [];
         },
         render: function() {
-            this.$el.html(L.templates.options.page());
+            this.$el.html(L.templates["pages/options"]());
             var body = this.$('#options-body');
 
             _(this.panels).each(function(panel) {
@@ -105,11 +105,11 @@
         }
     });
 
-    L.make.options.InfoView = Backbone.View.extend({
+    L.views.InfoView = Backbone.View.extend({
         id: 'options-info',
         className: 'options-item', // TODO:Change
         render: function() {
-            this.$el.html(L.templates.options.info(this.info));
+            this.$el.html(L.templates["options/info"](this.info));
             return this;
         },
         info : {
@@ -122,12 +122,12 @@
         }
     });
 
-    L.make.options.ImportExportView = Backbone.View.extend({
+    L.views.ImportExportView = Backbone.View.extend({
         id: 'importexport-info',
         className: 'options-item', // TODO:Change
         render: function() {
-            this.$el.html(L.templates.options.importexport({
-                exportSelect: L.templates.options.select({
+            this.$el.html(L.templates["options/importexport"]({
+                exportSelect: L.templates["forms/select"]({
                     id: 'exportSelect',
                     options: _.chain(this.types)
                     .filter(function(t) {
@@ -137,7 +137,7 @@
                         return t.display;
                     }).value()
                 }),
-                importSelect: L.templates.options.select({
+                importSelect: L.templates["forms/select"]({
                     id: 'importSelect',
                     options: _.chain(this.types)
                     .filter(function(t) {

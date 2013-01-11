@@ -1,1 +1,0 @@
-ListIt.initModule('server');

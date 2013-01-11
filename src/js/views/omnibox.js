@@ -6,7 +6,7 @@
     * @author: wstyke@gmail.com - Wolfe Styke
     */
 
-    L.make.omnibox.OmniboxView = Backbone.View.extend({
+    L.views.OmniboxView = Backbone.View.extend({
         id: 'omnibox',
         className: 'flex',
         initialize: function() {
@@ -37,11 +37,11 @@
                 return this;
             }
 
-            this.toolbar = new L.make.omnibox.ToolbarView({
+            this.toolbar = new L.views.Toolbar({
                 'id': 'omnibox-toolbar',
                 'className': 'flex'
             });
-            this.$el.html(L.templates.omnibox.input({ text: this.model.get('text') || '' }));
+            this.$el.html(L.templates["omnibox/input"]({ text: this.model.get('text') || '' }));
             this.$('#omnibox-bottombar').prepend(this.toolbar.render().el);
             this.editor = new wysihtml5.Editor(this.$el.find('#omnibox-entry').get()[0], {
                 toolbar: this.toolbar.el,
@@ -156,7 +156,7 @@
     // This view does not have a model
     // (Technically it has several).
     // TODO: Go all out MVVM? (make viewmodel)
-    L.make.omnibox.ControlsView = Backbone.View.extend({
+    L.views.ControlsView = Backbone.View.extend({
         id: 'optionsCol',
         initialize: function() {
             var that = this;
@@ -170,7 +170,7 @@
         },
         render: function() {
             var shrink = L.options.get('shrinkNotes');
-            this.$el.html(L.templates.omnibox.optioncol({
+            this.$el.html(L.templates["omnibox/controls"]({
                 sizeIcon: shrink ?  'img/p-arrow-left.png': 'img/p-arrow-down.png',
                 sizeTitle: shrink ?  'Expand Notes': 'Minimize Notes',
                 syncState: L.server.get('syncing')
@@ -190,29 +190,4 @@
     });
 
 
-    L.make.omnibox.ToolbarView = Backbone.View.extend({
-        className: 'wysihtml5-toolbar',
-        tagName: 'div',
-        attributes: {'style': 'display: none;'}, // css isn't working for some reason
-        initialize: function() {
-            var that = this;
-            $(window).one('beforeunload', function() {
-                that.undelegateEvents();
-                L.options.off(null, null, that);
-            });
-            L.options.on('change:toolbar', this.redraw, this);
-        },
-        redraw: function() {
-            if (this._rendered) {
-                this.render();
-            }
-        },
-        render: function() {
-            this.$el.html(L.templates.omnibox.toolbar({
-                'items': L.options.get('toolbarItems')
-            }));
-            this._rendered = true;
-            return this;
-        }
-    });
 })(ListIt);

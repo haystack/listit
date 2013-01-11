@@ -1,6 +1,6 @@
 (function(L) {
     'use strict';
-    L.make.account.AccountModel = Backbone.Model.extend({
+    L.models.Account = Backbone.Model.extend({
         initialize: function() {
             this.fetch();
             this.on('change', this.save, this);

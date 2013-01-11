@@ -7,10 +7,12 @@
     $(window).one('beforeunload', function() {
         L.vent.trigger('sys:quit');
     });
-    L.make.chrome = {};
-    L.chrome = {};
-    L.make.chrome.OmniboxView = Backbone.ChromeOmniboxView.extend({
-        collection: L.chromeOmnibox,
+    L.chrome = {
+      views: {},
+      models: {}
+    };
+    L.chrome.views.ChromeOmniboxView = Backbone.ChromeOmniboxView.extend({
+        collection: L.chrome.omnibox,
         initialize: function() {
             this.collection.on('add remove reset', _.debounce(this.update, 100), this);
         },
@@ -86,10 +88,10 @@
         }
     });
 
-    L.chrome.omnibox = new L.make.notes.FilterableNoteCollection();
-    var omniboxView = new L.make.chrome.OmniboxView({collection: L.chrome.omnibox});
+    L.chrome.omnibox = new L.models.FilterableNoteCollection();
+    L.chrome.omniboxView = new L.chrome.views.ChromeOmniboxView({collection: L.chrome.omnibox});
 
-    L.make.chrome.ContextMenu = function() {
+    L.chrome.ContextMenu = function() {
         var that = this;
         this.menuIds = _.kmap(this.menus, function(m) {
             m = _.clone(m);
@@ -99,7 +101,7 @@
             return chrome.contextMenus.create(m);
         });
     };
-    L.make.chrome.ContextMenu.prototype = {
+    L.chrome.ContextMenu.prototype = {
         menus: {
             page: {
                 title: 'Add to List.it (page)',
@@ -162,5 +164,5 @@
         }
     };
 
-    L.chrome.contextMenu = new L.make.chrome.ContextMenu();
+    L.chrome.contextMenu = new L.chrome.ContextMenu();
 })(ListIt);

@@ -3,7 +3,7 @@
 
 (function(L) {
     'use strict';
-    L.make.main.MainPageView = Backbone.View.extend({
+    L.views.MainPage = Backbone.View.extend({
         id: 'page-main',
         className: 'page vbox',
         initialize: function(options) {
@@ -12,7 +12,7 @@
             this.panels = options.panels;
         },
         render: function() {
-            this.$el.html(L.templates.main.page());
+            this.$el.html(L.templates["pages/main"]());
 
             var that = this;
             _.each(this.panels, function(view, id) {

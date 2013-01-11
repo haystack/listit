@@ -25,21 +25,11 @@ window.ListIt = {VERSION: 1};
     'use strict';
 
     L.pages = {};
-    L.make = {};
+    L.views = {};
+    L.models = {};
     L.templates = {};
 
     L.vent = _.clone(Backbone.Events),
-
-    /* Notes:
-    *  Views and models/collections should share the same name. This makes
-    *  overriding easier (independent).
-    *
-    *  All uninstantiated datatypes should go in L.make.
-    *
-    *  All global notifications (user, etc) should be handled by events through
-    *  vent.
-    *
-    */
 
     // Global methods (instantiate somewhere else)?
     // These should be very small convenience functions.
@@ -61,15 +51,4 @@ window.ListIt = {VERSION: 1};
     L.addNote = function(text, meta) {
       return L.notebook.addNote(text, meta, window);
     };
-
-    L.getNote = function(id) {
-        return L.notebook.getNote(id);
-    };
-
-    L.initModule = function(name) {
-        L.templates[name] = L.templates[name] || {};
-        L.make[name] = L.make[name] || {};
-    };
-
-
 })(ListIt);

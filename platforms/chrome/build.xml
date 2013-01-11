@@ -6,15 +6,8 @@
         <fileset file="${listit.js.platforms.dir}/chrome/sidebar-before.js" />
         <resources refid="js.common" />
         <resources refid="js.router" />
-        <fileset dir="${listit.js.dir}">
-            <include name="*/main.js" />
-        </fileset>
-        <fileset dir="${listit.js.dir}">
-            <include name="*/templates.js" />
-        </fileset>
-        <fileset dir="${listit.js.dir}">
-            <include name="*/views.js" />
-        </fileset>
+        <resources refid="js.templates" />
+        <resources refid="js.views" />
         <filelist>
             <file name="${listit.js.platforms.dir}/chrome/sidebar.js" />
             <file name="${listit.js.dir}/view-setup.js" />
@@ -25,15 +18,7 @@
         <resources refid="js.libs" />
         <fileset file="${listit.js.platforms.dir}/chrome/backbone.omnibox.js" />
         <resources refid="js.common" />
-        <fileset dir="${listit.js.dir}">
-            <include name="*/main.js" />
-        </fileset>
-        <fileset dir="${listit.js.dir}">
-            <include name="*/models.js" />
-        </fileset>
-        <fileset dir="${listit.js.dir}">
-            <include name="*/collections.js" />
-        </fileset>
+        <resources refid="js.models" />
         <resources refid="js.collectors" />
         <filelist>
             <file name="${listit.js.dir}/upgrade.js" />

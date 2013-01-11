@@ -2,7 +2,7 @@
     'use strict';
     // Handles syncing notes with the server.
     // Do not persist
-    L.make.server.ServerModel = Backbone.Model.extend({
+    L.models.Server = Backbone.Model.extend({
         defaults : {
             url: 'https://welist.it/listit/jv3/',
             syncing: false,
@@ -239,7 +239,7 @@
           })
           // Lookup note
           .pluck('jid')
-          .map(L.getNote)
+          .map(L.notebook.getNote)
           .reject(_.isUndefined)
           .each(function(note) {
             // Set unmodified and increment version (server does the same).
@@ -270,7 +270,7 @@
             })
             .each(function(n) {
               var deleted = _.pop(n, 'deleted');
-              var note = L.getNote(n.id);
+              var note = L.notebook.getNote(n.id);
               if (note) {
                 if (note.get('version') < n.version) {
                   if (note.get('modified')) {
@@ -365,7 +365,7 @@
 
     // This manages account information.
     // It doesn't have a view, it doesn't do anything but store the auth token.
-    L.make.server.AuthManager = Backbone.Model.extend({
+    L.models.AuthManager = Backbone.Model.extend({
         initialize: function() {
             this.fetch();
             this.on('change', this.save, this);
