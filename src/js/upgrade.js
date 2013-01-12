@@ -13,15 +13,16 @@
             'something else, the note will automatically save.'
         ],
         upgradeFunctions = {
-            1: function(from, to) {
-                var cb = _.once(function() {
-                    L.notebook.get('notes').reset(_.map(defaultNotes, function(s) {
-                    return {'contents': s};
-                    }));
-                    L.vent.off(null, cb);
-                });
-                L.vent.on('setup:models:after', cb);
-            }
+          1: function(from, to) {
+            var cb = _.once(function() {
+              L.notebook.get('notes').reset(_.map(defaultNotes, function(s) {
+                return {'contents': s};
+                L.notebook.save();
+              }));
+              L.vent.off(null, cb);
+            });
+            L.vent.on('setup:models:after', cb);
+          }
         };
 
     if (configVersion > programVersion) {
