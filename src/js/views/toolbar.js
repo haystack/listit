@@ -1,4 +1,5 @@
 (function(L) {
+  'use strict';
   L.views.Toolbar = Backbone.View.extend({
     className: 'wysihtml5-toolbar',
     tagName: 'div',

@@ -3,7 +3,7 @@
 
 (function(L) {
     'use strict';
-    L.models.Note = Backbone.RelationalModel.extend({
+    L.models.Note = Backbone.Model.extend({
         urlRoot: '/note',
         defaults: function() {
             return {
@@ -206,7 +206,7 @@
         }
     });
 
-    L.models.NoteBook = Backbone.RelationalModel.extend({
+    L.models.NoteBook = Backbone.RelModel.extend({
       url: '/notebook',
       defaults : {
         version: 0
@@ -217,40 +217,34 @@
       initialize: function() {
         var that = this;
         // FIXME: Get rid of this with magic note?
+        this.fetch();
+
         this.get('notes').comparator = function(note) {
           return -((note.get('meta').pinned ? Number.MAX_VALUE : 0) + note.get('created'));
         };
 
         // Fetch contents.
+        _.each(that.relations, _.mask(_.bind(that.fetchRelated, this), 1));
+
         var debounced_save = _.debounce(_.bind(this.save, this), 100);
-        _.each(this.getRelations(), function(r) {
-          that.get(r.key).on('add remove', function(model, collection, options) {
+        _.each(that.relations, function(v, k) {
+          that.get(k).on('add remove', function(model, collection, options) {
             if (!(options && options.nosave)) {
               debounced_save();
             }
           });
         });
-        this.fetch({
-          success: function() {
-            _.each(that.getRelations(), function(r) {
-              that.fetchRelated(r.key);
-            });
-          }
-        });
       },
-      relations: [{
-        type: Backbone.HasMany,
-        key: 'deletedNotes',
-        relatedModel: L.models.Note,
-        collectionType: L.models.NoteCollection,
-        includeInJSON: 'id'
-      }, {
-        type: Backbone.HasMany,
-        key: 'notes',
-        collectionType: L.models.NoteCollection,
-        relatedModel: L.models.Note,
-        includeInJSON: 'id'
-      }],
+      relations: {
+        notes: {
+          type: L.models.NoteCollection,
+          includeInJSON: "id"
+        },
+        deletedNotes: {
+          type: L.models.NoteCollection,
+          includeInJSON: "id"
+        }
+      },
       addNote: function(text, meta, window) {
           var note = new L.models.Note({contents: text}),
           noteJSON = note.toJSON();
