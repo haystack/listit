@@ -24,12 +24,27 @@ window.ListIt = {VERSION: 1};
 (function(L) {
     'use strict';
 
+    // Base Objects
     L.pages = {};
     L.views = {};
     L.models = {};
     L.templates = {};
 
-    L.vent = _.clone(Backbone.Events),
+    // Main event handler
+    L.vent = _.clone(Backbone.Events);
+
+    // Attach unload event.
+    var beforeunloadFired = false;
+    $(window).one('beforeunload', function() {
+      beforeunloadFired = true;
+      L.vent.trigger('sys:window-closed', window);
+    }).one('unload', function() {
+      // Fake beforeunload for browsers that don't support it.
+      if (!beforeunloadFired) {
+        $(window).trigger('beforeunload');
+        window.beforeunloadfired = true;
+      }
+    });
 
     // Global methods (instantiate somewhere else)?
     // These should be very small convenience functions.

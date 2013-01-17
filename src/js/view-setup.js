@@ -1,81 +1,62 @@
 
 (function(L) {
-    'use strict';
-    // Setup views
-    $(document).ready(function() {
-        L.vent.trigger('setup:views:before');
-        var optionsPanes = [
-                new L.views.AccountView({model: L.account}),
-                new L.views.InfoView(),
-                new L.views.SettingsView({model: L.options}),
-                new L.views.ImportExportView()
-            ],
-            mainPanes = {
-                'controls-left':      new L.views.OmniboxView({model: L.omnibox}),
-                'controls-right':     new L.views.ControlsView(),
-                'content-container':  new L.views.NoteCollectionView({collection: L.sidebar})
-            };
+  'use strict';
+  // Setup views
+  $(document).ready(function() {
 
-        // Make Pages
-        L.pages  = {
-            main : new L.views.MainPage({panels: mainPanes}),
-            options : new L.views.OptionsPage({panels: optionsPanes})
-        };
+    // Bind unload events.
+    L.pages = {}
+    L.addPage = function(name, view) {
+      $('body').append(view.render().el);
+      if (_.keys(L.pages).length === 0) {
+        view.$el.show();
+      } else {
+        view.$el.hide();
+      }
+      L.pages[name] = view
+    };
+    L.removePage = function(name) {
+      L.pages[name].remove();
+      delete L.pages[name];
+    }
 
-        // Render Pages
-        $('body').append(_.map(L.pages, function(p) {return p.render().el;}));
- 
-        // Why can't we have a css `height: fill;` attribute.
-        // Don't need to debounce (cost(debounce) ~ cost(fixSize)).
-        L.fixSize = function() {
-            // Always run after render complete.
-            setTimeout(function() {
-                $('.page:visible').each(function() {
-                    $(this).children('.contents').height($(window).height() - $(this).children('.header').outerHeight());
-                });
-            }, 1);
-        };
-        $(window).resize(L.fixSize);
-        L.fixSize();
+    L.vent.trigger('setup:views:before setup:views', window);
 
-        $(window).one('beforeunload', function() {
-            window.beforeunloadfired = true;
+    // FIXME: Put in main view (not needed for options)?
+    // Why can't we have a css `height: fill;` attribute.
+    // Don't need to debounce (cost(debounce) ~ cost(fixSize)).
+    L.fixSize = function() {
+      // Always run after render complete.
+      setTimeout(function() {
+        $('.page:visible').each(function() {
+          $(this).children('.contents').height($(window).height() - $(this).children('.header').outerHeight());
         });
-        $(window).one('unload', function() {
-            // Fake beforeunload for browsers that don't support it.
-            if (!window.beforeunloadfired) {
-                $(window).trigger('beforeunload');
-                window.beforeunloadfired = true;
-            }
-            L.vent.trigger('sys:window-closed', window);
-        });
+      }, 1);
+    };
+    $(window).resize(L.fixSize);
+    L.fixSize();
 
-        // Open links in a new tab without accidentally modifying notes.
-        $(document).on('click', 'a', function(e) {
-            var $el = $(this),
-            href = $el.attr('href');
+    // Open links in a new tab without accidentally modifying notes.
+    $(document).on('click', 'a', function(e) {
+      var $el = $(this),
+      href = $el.attr('href');
 
-            if (!href ||
-                href === '' ||
-                href[0] === '#' ||
-                $el.attr('target') ||
+      if (!href ||
+          href === '' ||
+            href[0] === '#' ||
+              $el.attr('target') ||
                 _.str.startsWith(href, 'javascript')) {
-                return;
-            }
+        return;
+      }
 
-            window.open(href, '_blank');
-            e.preventDefault();
-        });
-
-
-        L.router = new L.Router();
-
-        $(window).one('beforeunload', function() {
-            L.vent.trigger('sys:quit');
-        });
-
-        Backbone.history.start();
-
-        L.vent.trigger('setup:views setup:views:after');
+      window.open(href, '_blank');
+      e.preventDefault();
     });
+
+    L.vent.trigger('setup:views:after', window);
+
+    L.router = new L.Router();
+
+    Backbone.history.start();
+  });
 })(ListIt);

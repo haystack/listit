@@ -81,7 +81,7 @@
         <attribute name="resource"/>
         <sequential>
             <htmltemplate
-                input="${listit.html.tmpl}"
+                input="${build.@{resource}.tmpl.file}"
                 output="${build.@{resource}.html.file}"
                 scripts="${build.@{resource}.js.path}"
                 stylesheets="${build.@{resource}.css.path}" />

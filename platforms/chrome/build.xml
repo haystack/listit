@@ -3,15 +3,33 @@
 
     <resources id="js.sidebar">
         <resources refid="js.libs" />
-        <fileset file="${listit.js.platforms.dir}/chrome/sidebar-before.js" />
+        <fileset file="${listit.js.platforms.dir}/chrome/client-pre.js" />
         <resources refid="js.common" />
         <resources refid="js.router" />
         <resources refid="js.templates" />
         <resources refid="js.views" />
         <filelist>
-            <file name="${listit.js.platforms.dir}/chrome/sidebar.js" />
-            <file name="${listit.js.dir}/view-setup.js" />
+            <file name="${listit.js.platforms.dir}/chrome/client-post.js" />
+            <file name="${listit.js.platforms.dir}/chrome/sidebar-setup.js" />
         </filelist>
+        <resources refid="js.setup.views"/>
+    </resources>
+
+    <resources id="js.options">
+        <resources refid="js.libs" />
+        <fileset file="${listit.js.platforms.dir}/chrome/client-pre.js" />
+        <resources refid="js.common" />
+        <resources refid="js.router" />
+        <resources refid="js.templates" />
+        <resources refid="js.views" />
+        <filelist>
+            <file name="${listit.js.platforms.dir}/chrome/client-post.js" />
+            <file name="${listit.js.platforms.dir}/chrome/options-setup.js" />
+        </filelist>
+        <resources refid="js.setup.views"/>
+    </resources>
+    <resources id="css.options">
+        <resources refid="css.all" />
     </resources>
 
     <resources id="js.background">
@@ -20,11 +38,9 @@
         <resources refid="js.common" />
         <resources refid="js.models" />
         <resources refid="js.collectors" />
-        <filelist>
-            <file name="${listit.js.dir}/upgrade.js" />
-            <file name="${listit.js.dir}/model-setup.js" />
-            <file name="${listit.js.platforms.dir}/chrome/background.js" />
-        </filelist>
+        <resources refid="js.setup.upgrade"/>
+        <resources refid="js.setup.models"/>
+        <fileset file="${listit.js.platforms.dir}/chrome/background.js" />
     </resources>
 
     <resources id="js.content">
@@ -48,6 +64,7 @@
         <mk-defines-debug />
 
         <deploy-resource-debug name="sidebar" />
+        <deploy-resource-debug name="options" />
         <deploy-resource-debug name="background" />
     </target>
 
@@ -63,6 +80,7 @@
             <filelist dir="${build.dir}">
                 <file name="manifest.json" />
                 <file name="index.html" />
+                <file name="options.html" />
             </filelist>
         </copy>
     </target>
@@ -75,12 +93,15 @@
         <parallel>
             <deploy-resource name="sidebar" />
             <deploy-resource name="background" />
+            <deploy-resource name="options" />
             <deploy-resource name="wysihtml5" />
         </parallel>
     </target>
 
     <target name="build.html" depends="-build.setup">
         <deploy-html resource="sidebar" />
+        <deploy-html resource="options" />
+        <!--<deploy-html resource="add_dialog" />-->
     </target>
 
     <target name="build.manifest" depends="-build.setup">

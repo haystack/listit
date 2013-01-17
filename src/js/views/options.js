@@ -92,7 +92,17 @@
         id: 'page-options',
         className: 'page',
         initialize: function(options) {
-            this.panels = _.isArray(options.panels) ? options.panels : [];
+          if (options && options.panels) {
+            this.panels = options.panels
+          } else {
+            // Default options panels
+            this.panels = [
+                new L.views.AccountView({model: L.account}),
+                new L.views.InfoView(),
+                new L.views.SettingsView({model: L.options}),
+                new L.views.ImportExportView()
+            ];
+          }
         },
         render: function() {
             this.$el.html(L.templates["pages/options"]());

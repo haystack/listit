@@ -8,7 +8,7 @@
       var that = this;
       $(window).one('beforeunload', function() {
         that.undelegateEvents();
-        L.options.off(null, null, that);
+        that.stopListening();
       });
       L.options.on('change:toolbar', this.redraw, this);
     },

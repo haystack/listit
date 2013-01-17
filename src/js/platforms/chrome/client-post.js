@@ -22,6 +22,5 @@
             this.id = this.id;
             this.className = this.className;
         });
-        $('[href="#/options"]').attr('target', '_new'); // Open options in new page.
     }));
 })(ListIt);

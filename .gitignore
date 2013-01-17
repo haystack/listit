@@ -5,4 +5,4 @@
 /platforms/android/assets/
 /platforms/android/gen/
 /src/manifest.json
-/src/index.html
+/src/*.html

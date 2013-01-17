@@ -104,12 +104,22 @@
     <fileset file="${listit.js.dir}/router.js" />
 </resources>
 
+<resources id="js.setup.models">
+    <fileset file="${listit.js.dir}/model-setup.js" />
+</resources>
+
+<resources id="js.setup.views">
+    <fileset file="${listit.js.dir}/view-setup.js" />
+</resources>
+
+<resources id="js.setup.upgrade">
+    <fileset file="${listit.js.dir}/upgrade.js" />
+</resources>
+
 <resources id="js.setup">
-    <filelist dir="${listit.js.dir}">
-        <file name="upgrade.js" />
-        <file name="model-setup.js" />
-        <file name="view-setup.js" />
-    </filelist>
+    <resources refid="js.setup.upgrade"/>
+    <resources refid="js.setup.models"/>
+    <resources refid="js.setup.views"/>
 </resources>
 
 <resources id="js.collectors">
