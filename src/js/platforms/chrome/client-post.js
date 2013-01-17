@@ -7,6 +7,9 @@
 
     // Setup modules
     L.vent = bgL.vent;
+    $(window).one('beforeunload', function() {
+      L.vent.off(null, null, window);
+    });
 
     // Copy models.
     _.defaults(L.models, bgL.models);
@@ -14,7 +17,7 @@
     // Then everything else (doesn't include templates, etc)
     _.defaults(L, bgL);
 
-    L.vent.on('setup:views:after', _.once(function() {
+    L.vent.once('setup:views:after', function() {
         // TODO: Report bug in chrome
         // selectors sometimes not applied (neither query not css work).
         // probably due to passing from background into sidebar.
@@ -22,5 +25,5 @@
             this.id = this.id;
             this.className = this.className;
         });
-    }));
+    }, window);
 })(ListIt);

@@ -7,6 +7,32 @@
     $(window).one('beforeunload', function() {
         L.vent.trigger('sys:quit');
     });
+
+    // I can't find the memory leak so, for now, shred stuff.
+    var shred = function(o) {
+      for (var k in o) {
+        try {
+          delete o[k];
+        } catch (e) {}
+      }
+    };
+
+    L.vent.on('sys:window-closed', function(win) {
+      _.defer(function() {
+        // Remove reference to background.
+        //delete win['background'];
+        // Shred attached objects
+        shred(win.ListIt);
+        delete win.ListIt;
+        /*
+        for (var k in win) {
+          shred(win[k]);
+        }
+        */
+        // Shred window
+        //shred(win);
+      });
+    });
     L.chrome = {
       views: {},
       models: {}
