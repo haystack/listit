@@ -20,12 +20,12 @@
             });
 
             this.model.set('untouched', true); // View untouched by user.
-            this.model.on('change:text', function(m, t, o) {
+            this.listenTo(this.model, 'change:text', function(m, t, o) {
                 // Don't update on own event.
                 if (o.source !== this) {
                     this.setText(t);
                 }
-            }, this);
+            });
         },
         assertRendered: function() {
             if (!this._rendered) {
@@ -165,8 +165,8 @@
                 L.options.off(null, null, that);
                 L.server.off(null, null, that);
             });
-            L.options.on('change:shrinkNotes', this.render, this);
-            L.server.on('change:syncing', this.render, this);
+            this.listenTo(L.options, 'change:shrinkNotes', this.render);
+            this.listenTo(L.server, 'change:syncing', this.render);
         },
         render: function() {
             var shrink = L.options.get('shrinkNotes');

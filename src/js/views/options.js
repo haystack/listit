@@ -53,7 +53,7 @@
                 }
 
                 that.events[evt+' '+sel] = setModel;
-                that.model.on('change:'+n, setView);
+                that.listenTo(that.model, 'change:'+n, setView);
             });
             this.delegateEvents();
             $('.hotkey-field').hotkeyinput();

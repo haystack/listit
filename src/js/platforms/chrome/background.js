@@ -20,17 +20,13 @@
     L.vent.on('sys:window-closed', function(win) {
       _.defer(function() {
         // Remove reference to background.
-        //delete win['background'];
+        delete win['background'];
         // Shred attached objects
-        shred(win.ListIt);
-        delete win.ListIt;
-        /*
         for (var k in win) {
           shred(win[k]);
         }
-        */
         // Shred window
-        //shred(win);
+        shred(win);
       });
     });
     L.chrome = {

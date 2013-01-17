@@ -28,9 +28,9 @@
                 that.undelegateEvents();
                 that.stopListening();
             });
-            this.model.on('change:mode', _.mask(this.setMode, 1), this);
-            this.model.on('change:error', _.mask(this.setError, 1), this);
-            this.model.on('change:email', _.mask(this.updateEmail, 1), this);
+            this.listenTo(this.model, 'change:mode', _.mask(this.setMode, 1));
+            this.listenTo(this.model, 'change:error', _.mask(this.setError, 1));
+            this.listenTo(this.model, 'change:email', _.mask(this.updateEmail, 1));
         },
         render: function() {
             this.$el.html(L.templates["options/account"](_.defaults(this.model.toJSON(), this.constants)));

@@ -10,7 +10,7 @@
         that.undelegateEvents();
         that.stopListening();
       });
-      L.options.on('change:toolbar', this.redraw, this);
+      this.listenTo(L.options, 'change:toolbar', this.redraw);
     },
     redraw: function() {
       if (this._rendered) {

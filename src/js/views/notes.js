@@ -15,8 +15,8 @@
                 that.stopListening();
             });
             this.template = L.templates["note"];
-            this.model.on('change:contents', _.mask(this.updateContents, 2), this);
-            this.model.on('change:meta', _.mask(this.updateMeta, 2), this);
+            this.listenTo(this.model, 'change:contents', _.mask(this.updateContents, 2));
+            this.listenTo(this.model, 'change:meta', _.mask(this.updateMeta, 2));
         },
         remove : function(options) {
             if (this._rendered) {
@@ -125,21 +125,21 @@
 
                 this.editor = editor;
 
-                this.editor.on('keydown', resizeIframe);
-                this.editor.on('focus', resizeIframe);
-                this.editor.on('change', resizeIframe);
-                this.editor.on('blur', this.onBlur);
+                this.listenTo(this.editor, 'keydown', resizeIframe);
+                this.listenTo(this.editor, 'focus', resizeIframe);
+                this.listenTo(this.editor, 'change', resizeIframe);
+                this.listenTo(this.editor, 'blur', this.onBlur);
 
 
                 // Maintain a dialog count so that we don't close the editor with a dialog open.
                 this.editor._dialogCount = 0;
-                this.editor.on('show:dialog', function() {
+                this.listenTo(this.editor, 'show:dialog', function() {
                     editor._dialogCount++;
                 });
-                this.editor.on('save:dialog', function() {
+                this.listenTo(this.editor, 'save:dialog', function() {
                     editor._dialogCount--;
                 });
-                this.editor.on('cancel:dialog', function() {
+                this.listenTo(this.editor, 'cancel:dialog', function() {
                     editor._dialogCount--;
                 });
             }
@@ -206,11 +206,11 @@
             var that = this;
             this.subViews = {}; // Note views
             this.delayedRemove = {}; // Delay removes to prevent flickering.
-            this.collection.on('add', _.mask(this.addNote, 0, 2), this);
-            this.collection.on('remove', _.mask(this.removeNote, 0, 2), this);
-            this.collection.on('reset', _.mask(this.reset, 1), this);
-            this.collection.on('search:paused', this.onPause, this);
-            L.options.on('change:shrinkNotes', this.updateNoteShrinkState, this);
+            this.listenTo(this.collection, 'add', _.mask(this.addNote, 0, 2));
+            this.listenTo(this.collection, 'remove', _.mask(this.removeNote, 0, 2));
+            this.listenTo(this.collection, 'reset', _.mask(this.reset, 1));
+            this.listenTo(this.collection, 'search:paused', this.onPause);
+            this.listenTo(L.options, 'change:shrinkNotes', this.updateNoteShrinkState);
             $(window).one('beforeunload', function() {
                 that.undelegateEvents();
                 that.stopListening();
