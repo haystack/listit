@@ -17,8 +17,8 @@
             var cb = _.once(function() {
               L.notebook.get('notes').reset(_.map(defaultNotes, function(s) {
                 return {'contents': s};
-                L.notebook.save();
               }));
+              L.notebook.save();
               L.vent.off(null, cb);
             });
             L.vent.on('setup:models:after', cb);
