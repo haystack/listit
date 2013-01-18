@@ -65,25 +65,25 @@
             return;
           } else if (_.isString(relation.includeInJSON)) {
             if (value instanceof Backbone.Collection) {
-              json[key] = value.map(function(m) { return m.get(relation.includeInJSON);});
+              json[name] = value.map(function(m) { return m.get(relation.includeInJSON);});
             } else if (value instanceof Backbone.Model) {
-              json[key] = value.get(relation.includeInJSON);
+              json[name] = value.get(relation.includeInJSON);
             } else {
               null;
             }
           } else if (_.isArray(value.includeInJSON)) {
             if (value instanceof Backbone.Collection) {
-              json[key] = value.map(function(m) {
+              json[name] = value.map(function(m) {
                 return _.kmap(value.includeInJSON, function(k) {
                   return m.get(k);
                 });
               });
             } else if (value instanceof Backbone.Model) {
-              json[key] = _.kmap(value.includeInJSON, function(k) {
+              json[name] = _.kmap(value.includeInJSON, function(k) {
                 return m.get(k);
               });
             } else {
-              json[key] = null;
+              json[name] = null;
             }
           }
         });
