@@ -1,29 +1,29 @@
 {
-	"name": "@name@",
-	"version": "@version@",
-	"description": "@description@",
+    "name": "@name@",
+    "version": "@version@",
+    "description": "@description@",
     "manifest_version": 2,
-	"browser_action": {
-		"default_icon": "@icon@",
-		"default_title": "@title@",
+    "browser_action": {
+        "default_icon": "@icon@",
+        "default_title": "@title@",
         "default_popup": "index.html"
-	},
-	"background": {
+    },
+    "background": {
         "scripts": @background_js@
     },
-	"permissions": [
-		"background",
-		"notifications",
-		"http://*.welist.it/*",
-		"https://*.welist.it/*",
+    "permissions": [
+        "background",
+        "notifications",
+        "http://*.welist.it/*",
+        "https://*.welist.it/*",
         "unlimitedStorage",
         "contextMenus",
         "tabs"
-	],
-	"icons": {
-	    "16": "@icon@"
+    ],
+    "icons": {
+        "16": "@icon@"
     },
-	"omnibox": {"keyword":"listit"},
-	"options_page": "options.html",
-	"update_url": "@update_url@"
+    "omnibox": {"keyword":"listit"},
+    "options_page": "options.html",
+    "update_url": "@update_url@"
 }
