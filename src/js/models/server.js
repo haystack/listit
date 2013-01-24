@@ -368,7 +368,7 @@
     L.models.AuthManager = Backbone.Model.extend({
         initialize: function() {
             this.fetch();
-            this.on('change', this.save, this);
+            this.listenTo(this, 'change', _.mask(this.save));
         },
 
         // Singleton
