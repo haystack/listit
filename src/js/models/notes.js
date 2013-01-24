@@ -215,6 +215,7 @@
         return false;
       },
       initialize: function() {
+        _(this).bindAll();
         var that = this;
         // FIXME: Get rid of this with magic note?
         this.fetch();
