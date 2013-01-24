@@ -66,7 +66,8 @@
                 options.type = options.data ? 'POST' : 'GET';
             }
 
-            options.url = this.get('url') + options.method + '/' +
+            options.url = this.get('url') + options.method +
+              (options.type === 'POST' ? '/' : '') +
                 (options.auth ? ('?HTTP_AUTHORIZATION=' + options.authToken) : '');
 
             options.crossDomain = true;
