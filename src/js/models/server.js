@@ -216,7 +216,7 @@
             //TODO: Avoid sending every time?
             bundle.push({
                 'jid': -1,
-                'version': L.notebook.get('version'),
+                'version': L.notebook.get('version') || 0,
                 'created': 0,
                 'edited': 0,
                 'contents': JSON.stringify({noteorder:L.notebook.get('notes').getOrder()}),
