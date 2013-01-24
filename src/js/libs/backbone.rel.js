@@ -35,7 +35,7 @@
         }
       });
 
-      return Backbone.Model.prototype.set.call(this, _.omit(_.keys(attributes), this.relations), options);
+      return Backbone.Model.prototype.set.call(this, _.omit(attributes, _.keys(this.relations)), options);
     },
     _initRelObject: function(key, o) {
       var result;
