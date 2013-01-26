@@ -21,9 +21,10 @@
     // calling f(3,1).
     mask: function(func) {
       var args = Array.prototype.slice.call(arguments, 1);
+      var underscore = _;
       return function() {
         var callargs = arguments;
-        return func.apply(this, _.map(args, function(i) { return callargs[i]; }));
+        return func.apply(this, underscore.map(args, function(i) { return callargs[i]; }));
       };
     }
   });
