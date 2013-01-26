@@ -307,7 +307,11 @@
         },
         render: function() {
             if (!this._rendered) {
-                this.$el.html(this.make('ul', {'class': 'notelist', 'id': 'notes'}));
+                var ul = $('<ul>');
+                ul.attr({
+                  'class': 'notelist', 'id': 'notes'
+                });
+                this.$el.html(ul);
                 this.updateNoteShrinkState(L.options, L.options.get('shrinkNotes'));
 
                 this._rendered = true;

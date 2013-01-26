@@ -33,9 +33,6 @@
             this.save();
         },
         merge: function(attrs) {
-          // Merge metadata
-          this.set("meta", _.defaults(_.clone(this.get('meta')), attrs.meta), {silent: true});
-
           // Merge contents
           var newContents;
           var oldContents = this.get('contents');
@@ -48,10 +45,12 @@
           } else {
             newContents = oldContents;
           }
-          this.set('contents', newContents, {silent: true});
-          this.set('edited', Math.max(attrs.edited, this.get('edited')), {silent: true});
-          this.set('version', attrs.version, {silent: true});
-          this.change();
+          this.set({
+            'meta': _.defaults({}, this.get('meta'), attrs.meta),
+            'contents': newContents,
+            'edited': Math.max(attrs.edited, this.get('edited')),
+            'version': attrs.version
+          });
         },
         moveTo: function(collection, options) {
             if (collection === this.collection) {
@@ -59,7 +58,7 @@
             }
 
             this.collection.remove(this, options);
-            collection.add(this, options);
+            collection.unshift(this, options);
             this.set('modified', true, options);
             if (!(options && options.nosave)) {
                 this.save();
@@ -107,13 +106,12 @@
     // assumes this (to reduce flickering).
     L.models.FilterableNoteCollection = L.models.NoteCollection.extend({
         initialize : function() {
-            _(this).bindAll();
             this.searchQueue = new ActionQueue(50);
             this.searchQueue.start();
             this.backingCollection = L.notebook.get('notes');
-            this.backingCollection.on('add', this.maybeAddNew, this);
-            this.backingCollection.on('remove', this._onRemove, this);
-            this.backingCollection.on('reset', _.mask(this.reset), this);
+            this.listenTo(this.backingCollection, 'add', this.maybeAddNew);
+            this.listenTo(this.backingCollection, 'remove', this._onRemove);
+            this.listenTo(this.backingCollection, 'reset', _.mask(this.reset));
             this.on('reset', this._onReset, this);
         },
         _offset: 10,
@@ -215,25 +213,22 @@
         return false;
       },
       initialize: function() {
-        _(this).bindAll();
         var that = this;
-        // FIXME: Get rid of this with magic note?
-        this.fetch();
+        this.fetch({
+          success: function() {
 
-        this.get('notes').comparator = function(note) {
-          return -((note.get('meta').pinned ? Number.MAX_VALUE : 0) + note.get('created'));
-        };
+            // Fetch contents.
+            _.each(that.relations, _.mask(_.bind(that.fetchRelated, that), 1));
 
-        // Fetch contents.
-        _.each(that.relations, _.mask(_.bind(that.fetchRelated, this), 1));
-
-        var debounced_save = _.debounce(_.bind(this.save, this), 100);
-        _.each(that.relations, function(v, k) {
-          that.get(k).on('add remove', function(model, collection, options) {
-            if (!(options && options.nosave)) {
-              debounced_save();
-            }
-          });
+            var debounced_save = _.debounce(_.bind(that.save, that), 100);
+            _.each(that.relations, function(v, k) {
+              that.get(k).on('add remove', function(model, collection, options) {
+                if (!(options && options.nosave)) {
+                  debounced_save();
+                }
+              });
+            });
+          }
         });
       },
       relations: {
@@ -254,7 +249,7 @@
           window.ListIt.vent.trigger('note:request:parse', noteJSON, window);
           window.ListIt.vent.trigger('note:request:parse:new', noteJSON, window);
           note.set(noteJSON);
-          this.get('notes').add(note, {action: 'add'});
+          this.get('notes').unshift(note, {action: 'add'});
           note.save();
       },
       getNote: function(id) {

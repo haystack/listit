@@ -13,16 +13,17 @@
             var slowSearch = _.debounce(this.requestSearch, 100);
             var that = this;
             // Stop search when typing but don't start next search until stop.
-            this.on('change:text', function() {
+            this.listenTo(this, 'change:text', function() {
                 slowSearch.apply(that);
-            }, this);
-            L.vent.on('user:search', this.requestSearch, this);
-            L.vent.on('user:save-note', this.saveNote, this);
-            this.on('change', this.throttledSave, this);
+            });
+            this.listenTo(L.vent, 'user:search', this.requestSearch);
+            this.listenTo(L.vent, 'user:save-note', this.saveNote);
+            this.listenTo(this, 'change', _.mask(this.throttledSave));
+
             this.fetch();
             this.requestSearch();
         },
-        throttledSave: _.debounce(function() { this.save(); }, 500),
+        throttledSave: _.debounce(function() { this.save.apply(this, arguments); }, 500),
         requestSearch: function() {
             var text = L.util.clean(this.get('text') || '');
             L.sidebar.search(text);

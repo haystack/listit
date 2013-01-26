@@ -49,12 +49,19 @@ window.ListIt = {VERSION: 1};
     // Global methods (instantiate somewhere else)?
     // These should be very small convenience functions.
 
-    L.getVersion = function() {
-        return localStorage.getItem('version') || 0;
+    L.getVersion = function(callback) {
+      if (callback) {
+        L.store.get('version', {
+          success: callback,
+          error: function() {
+            callback(0);
+          }
+        });
+      }
     };
 
     L.setVersion = function(version) {
-        localStorage.setItem('version', version);
+        L.store.set('version', version);
     };
 
     L.log = function(action, info) {

@@ -240,7 +240,7 @@
           })
           // Lookup note
           .pluck('jid')
-          .map(L.notebook.getNote)
+          .map(_.bind(L.notebook.getNote, L.notebook))
           .reject(_.isUndefined)
           .each(function(note) {
             // Set unmodified and increment version (server does the same).

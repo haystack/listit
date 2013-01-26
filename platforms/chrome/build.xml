@@ -36,6 +36,8 @@
         <resources refid="js.libs" />
         <fileset file="${listit.js.platforms.dir}/chrome/backbone.omnibox.js" />
         <resources refid="js.common" />
+        <resources refid="js.storage" />
+        <fileset file="${listit.js.platforms.dir}/chrome/chromeStorage.js" />
         <resources refid="js.models" />
         <resources refid="js.collectors" />
         <resources refid="js.setup.upgrade"/>
@@ -117,6 +119,10 @@
                     <param type="propertiesfile" value="manifest.properties" />
                     <!--<token key="content_js" value="${content_path}"/>-->
                     <param type="token" name="background_js" value="${background_path}" />
+                    <param type="token" name="version" value="${listit.version}" />
+                    <param type="token" name="name" value="${listit.name}" />
+                    <param type="token" name="title" value="${listit.title}" />
+                    <param type="token" name="description" value="${listit.description}" />
                 </filterreader>
             </filterchain>
         </copy>
