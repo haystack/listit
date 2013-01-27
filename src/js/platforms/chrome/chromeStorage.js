@@ -1,5 +1,5 @@
 (function(L) {
-  var ChromeStorage =  {
+  var ChromeStorage = L.stores['chrome'] = {
     storage: chrome.storage.local,
     get: function(key, options) {
       ChromeStorage.storage.get(key, function(vals) {

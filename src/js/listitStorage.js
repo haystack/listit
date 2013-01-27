@@ -1,6 +1,7 @@
 (function(L) {
   var _ = this._;
   var Backbone = this.Backbone;
+  L.stores = [];
 
   // Helper functions from Backbone
   var getValue = function(object, prop) {
@@ -13,48 +14,50 @@
     throw new Error('A "url" property or function must be specified');
   };
 
-  var LocalStorage = {
-    store: window.localStorage,
-    set: function(key, object, options) {
-      try {
-        LocalStorage.store.setItem(key, JSON.stringify(object));
-        if (options && options.success) options.success(object);
-      } catch (e) {
-        if (options && options.error) options.error(e);
-      }
-    },
-    get: function(key, options) {
-      var error, object;
-      try {
-        var json = LocalStorage.store.getItem(key);
-        if (json === null) {
-          error = "Not Found";
-        } else {
-          object = JSON.parse(json);
+  if (Modernizr.localStorage) {
+    var LocalStorage = L.stores['local'] = {
+      store: window.localStorage,
+      set: function(key, object, options) {
+        try {
+          LocalStorage.store.setItem(key, JSON.stringify(object));
+          if (options && options.success) options.success(object);
+        } catch (e) {
+          if (options && options.error) options.error(e);
         }
-      } catch (e) {
-        error = e;
-      }
+      },
+      get: function(key, options) {
+        var error, object;
+        try {
+          var json = LocalStorage.store.getItem(key);
+          if (json === null) {
+            error = "Not Found";
+          } else {
+            object = JSON.parse(json);
+          }
+        } catch (e) {
+          error = e;
+        }
 
-      if (options) {
-        if (error !== undefined) {
-          if (options.error) options.error(error);
-        } else {
-          if (options.success) options.success(object);
+        if (options) {
+          if (error !== undefined) {
+            if (options.error) options.error(error);
+          } else {
+            if (options.success) options.success(object);
+          }
+        }
+      },
+      remove: function(key, object, options) {
+        try {
+          LocalStorage.store.removeItem(key);
+          if (options && options.success) options.success();
+        } catch (e) {
+          if (options && options.error) options.error(e);
         }
       }
-    },
-    remove: function(key, object, options) {
-      try {
-        LocalStorage.store.removeItem(key);
-        if (options && options.success) options.success();
-      } catch (e) {
-        if (options && options.error) options.error(e);
-      }
-    }
-  };
+    };
 
-  L.store = LocalStorage;
+    L.store = LocalStorage;
+  }
 
   Backbone.sync = function(method, model, options) {
     options || (options = {});
