@@ -30,8 +30,6 @@
     <filelist dir="${listit.js.dir}/libs/">
         <file name="BlobBuilder.js" />
         <file name="FileSaver.js" />
-        <file name="html5notifications.js" />
-        <file name="modernizr.js" />
     </filelist>
 </resources>
 

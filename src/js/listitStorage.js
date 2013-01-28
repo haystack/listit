@@ -14,7 +14,7 @@
     throw new Error('A "url" property or function must be specified');
   };
 
-  if (Modernizr.localStorage) {
+  try {
     var LocalStorage = L.stores['local'] = {
       store: window.localStorage,
       set: function(key, object, options) {
@@ -57,7 +57,7 @@
     };
 
     L.store = LocalStorage;
-  }
+  } catch (e) { }
 
   Backbone.sync = function(method, model, options) {
     options || (options = {});
