@@ -1,0 +1,4 @@
+content	listit	chrome/content/
+locale	listit	en-US	chrome/locale/en-US/
+skin	listit	classic/1.0	chrome/skin/
+overlay	chrome://browser/content/browser.xul	chrome://listit/content/extension/firefoxOverlay.xul

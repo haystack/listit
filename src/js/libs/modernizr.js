@@ -340,7 +340,10 @@ window.Modernizr = (function( window, document, undefined ) {
      */
     function testDOMProps( props, obj, elem ) {
         for ( var i in props ) {
-            var item = obj[props[i]];
+            var item;
+            try {
+                item = obj[props[i]];
+            } catch(e) { }
             if ( item !== undefined) {
 
                 // return the property name as a string

@@ -1,0 +1,105 @@
+<project name="List.it Firefox Extension">
+    <import file="../../common.xml"/>
+
+    <resources id="js.sidebar">
+        <resources refid="js.libs" />
+        <fileset file="${listit.js.platforms.dir}/firefox/firefox-pre.js" />
+        <resources refid="js.common" />
+        <resources refid="js.storage" />
+        <fileset file="${listit.js.platforms.dir}/firefox/firefoxStorage.js" />
+        <resources refid="js.router" />
+        <resources refid="js.templates" />
+        <resources refid="js.models" />
+        <resources refid="js.views" />
+        <filelist>
+            <file name="${listit.js.platforms.dir}/firefox/sidebar-setup.js" />
+        </filelist>
+        <resources refid="js.collectors" />
+        <resources refid="js.setup" />
+    </resources>
+
+    <resources id="css.sidebar" refid="css.all"/>
+
+    <target name="-build.img" depends="-build.setup">
+        <deploy-img dest="${build.img.dir}"/>
+    </target>
+
+    <target name="-build.assets-debug" depends="-build.setup">
+        <deploy-resource-debug name="wysihtml5" />
+        <mk-defines-debug />
+        <deploy-resource name="sidebar" />
+        <deploy-resource name="wysihtml5" />
+    </target>
+
+    <target name="-build.assets" depends="-build.setup">
+        <mkdir dir="${build.css.dir}" />
+        <mkdir dir="${build.js.dir}" />
+        <parallel>
+            <deploy-resource name="sidebar" />
+            <deploy-resource name="wysihtml5" />
+        </parallel>
+    </target>
+
+    <target name="-build.html" depends="-build.setup">
+        <deploy-html resource="sidebar" />
+    </target>
+
+    <target name="release" depends="-build.setup,-build.img,-build.assets,-build.html">
+        <copy todir="${deploy.dir}">
+            <fileset dir="${build.dir}" />
+        </copy>
+    </target>
+
+    <target name="build.install" depends="-build.setup">
+        <copy file="${platform.dir}/install.rdf.tmpl" tofile="${build.dir}/install.rdf">
+            <filterchain>
+                <filterreader classname="org.apache.tools.ant.filters.ReplaceTokens">
+                    <param type="propertiesfile" value="install.properties" />
+                    <param type="token" name="version" value="${listit.version}" />
+                    <param type="token" name="id" value="${extension.id}" />
+                    <param type="token" name="authors" value="${listit.authors}" />
+                    <param type="token" name="name" value="${listit.name}" />
+                    <param type="token" name="description" value="${listit.description}" />
+                </filterreader>
+            </filterchain>
+        </copy>
+    </target>
+
+    <target name="build.manifest" depends="-build.setup">
+        <copy file="${platform.dir}/chrome.manifest" tofile="${build.dir}/chrome.manifest" />
+    </target>
+
+    <target name="-build.framework" depends="-build.setup">
+        <mkdir dir="${build.dir}/chrome" />
+        <mkdir dir="${build.dir}/chrome/content" />
+        <parallel>
+            <copydir dest="${build.dir}/chrome/content/extension" src="${platform.dir}/resources/content" />
+            <copydir dest="${build.dir}/chrome/content/webapp" src="${listit.dir}" />
+            <copydir dest="${build.dir}/chrome/skin" src="${platform.dir}/resources/skin" />
+            <copydir dest="${build.dir}/chrome/locale" src="${platform.dir}/resources/locale" />
+        </parallel>
+    </target>
+
+    <target name="-build.framework-debug" depends="-build.setup">
+        <mkdir dir="${build.dir}/chrome" />
+        <mkdir dir="${build.dir}/chrome/content" />
+        <symlink overwrite="yes" link="${build.dir}/chrome/content/extension" resource="${platform.dir}/resources/content" />
+        <symlink overwrite="yes" link="${build.dir}/chrome/content/webapp" resource="${listit.dir}" />
+        <symlink overwrite="yes" link="${build.dir}/chrome/skin" resource="${platform.dir}/resources/skin" />
+        <symlink overwrite="yes" link="${build.dir}/chrome/locale" resource="${platform.dir}/resources/locale" />
+    </target>
+
+    <target name="debug"
+        depends="-build.setup,-build.framework-debug,build.install,build.manifest">
+        <deploy-resource-debug name="sidebar" />
+        <deploy-html resource="sidebar" />
+    </target>
+
+    <target name="clean" depends="setup-platform">
+        <delete file="${deploy.dir}" />
+        <delete file="${build.dir}" />
+    </target>
+
+</project>
+
+
