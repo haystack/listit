@@ -209,6 +209,7 @@
             this.listenTo(this.collection, 'add', _.mask(this.addNote, 0, 2));
             this.listenTo(this.collection, 'remove', _.mask(this.removeNote, 0, 2));
             this.listenTo(this.collection, 'reset', _.mask(this.reset, 1));
+            this.listenTo(this.collection, 'sort', _.mask(this.sort));
             this.listenTo(this.collection, 'search:paused', this.onPause);
             this.listenTo(L.options, 'change:shrinkNotes', this.updateNoteShrinkState);
             $(window).one('beforeunload', function() {
@@ -254,18 +255,17 @@
             if (!this._rendered || view.isVisible()) {
                 return;
             }
-
-            // XXX: BUG: options.index incorrect. Calculate manually.
             var index = this.collection.indexOf(note);
+            this.insertAt(index, view);
+        },
+        insertAt: function(index, view) {
+            // XXX: BUG: options.index incorrect. Calculate manually.
             var otherEl = this.$el.children('#notes').find('.note').eq(index);
             if (otherEl.length === 0) {
                 this.$el.children('#notes').append(view.render().$el);
             } else {
                 otherEl.before(view.render().$el);
             }
-            // Stop loading if we have enough notes.
-            // I put this after the isVisible check so that I don't count loaded
-            // notes. This could be changed.
         },
         onPause: function() {
             if (this.checkLoadMore()) {
@@ -297,6 +297,14 @@
             if (this.checkLoadMore()) {
                 this.collection.next();
             }
+        },
+        sort: function() {
+          var that = this;
+          this.collection.each(function(note, i) {
+            var view = that.subViews[note.id];
+            view.remove();
+            that.insertAt(i, view);
+          });
         },
         reset: function() {
             if (this._rendered) {

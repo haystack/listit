@@ -74,15 +74,12 @@
         // Reorder contents by list of ids
         setOrder: function(newOrder, options) {
             options = options || {};
-            var orderMap = {},
-                that = this;
+            var orderMap = _.invert(newOrder),
+                that = this,
+                posCounter = 0,
+                appendOffset = this.models.length;
 
-            _.each(newOrder, function(v,i) {
-                orderMap[v] = i;
-            });
-            var posCounter = 0;
-            var appendOffset = this.models.length;
-            this.models = this.sortBy(function(note) {
+            this.models.sort(function(note) {
                 var pos = orderMap[note.id];
                 // Put the note at the beginning if position unknown.
                 if (pos === undefined) {
@@ -93,7 +90,7 @@
             });
 
           if (!options.silent) {
-            this.trigger('reset', this, options);
+            this.trigger('sort', this, options);
           }
         },
         getOrder: function() {
@@ -112,6 +109,7 @@
             this.listenTo(this.backingCollection, 'add', this.maybeAddNew);
             this.listenTo(this.backingCollection, 'remove', this._onRemove);
             this.listenTo(this.backingCollection, 'reset', _.mask(this.reset));
+            this.listenTo(this.backingCollection, 'sort', _.mask(this.sort));
             this.on('reset', this._onReset, this);
         },
         _offset: 10,
@@ -121,6 +119,9 @@
                 this._lastSearchedNoteId = n ? n.id : undefined;
             }
             this.remove(note, options);
+        },
+        comparator: function(note) {
+          return this.backingCollection.indexOf(note);
         },
         maybeAddNew: function(note) {
             if (this.matcher(note)) {
