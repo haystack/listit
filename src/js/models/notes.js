@@ -121,7 +121,7 @@
             this.remove(note, options);
         },
         comparator: function(note) {
-          return this.backingCollection.indexOf(note);
+          return (note.get('meta').pinned ? window.Constants.MAX_VALUE : 0) + this.backingCollection.indexOf(note);
         },
         maybeAddNew: function(note) {
             if (this.matcher(note)) {

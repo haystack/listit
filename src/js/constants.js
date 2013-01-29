@@ -43,6 +43,10 @@
         META_LOCATION: 304      // Near where the note was taken.
     };
 
+    window.Constants = {
+      MAX_VALUE: -Number.MAX_VALUE.toFixed(0) // toFixed makes this work with floats... Probabbly buggy
+    };
+
 
     window.KeyCode = {
         ENTER : 13,
