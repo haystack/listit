@@ -137,7 +137,7 @@
         </jshint>
     </target>
 
-    <target name="-build.setup" depends="setup-platform,mkdirs,compile-templates,jshint" />
+    <target name="-build.setup" depends="setup-platform,clean,mkdirs,compile-templates,jshint" />
 
     <target name="clean" depends="setup-platform">
         <delete includeemptydirs="true">

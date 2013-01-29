@@ -70,7 +70,7 @@
     </target>
 
     <target name="release"
-        depends="clean,-build.setup,-build.framework,-build.img,-build.assets,-build.html,build.install,build.manifest">
+        depends="-build.setup,-build.framework,-build.img,-build.assets,-build.html,build.install,build.manifest">
         <parallel>
             <copy todir="${build.dir}/chrome/content/extension">
                 <fileset dir="${platform.dir}/resources/content" />
@@ -83,7 +83,7 @@
     </target>
 
     <target name="debug"
-        depends="clean,-build.setup,-build.framework,build.install,build.manifest">
+        depends="-build.setup,-build.framework,build.install,build.manifest">
         <deploy-resource-debug name="sidebar" />
         <deploy-html resource="sidebar" />
         <copy todir="${debug.dir}">

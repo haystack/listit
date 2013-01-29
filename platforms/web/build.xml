@@ -39,11 +39,16 @@
     <target name="debug" depends="-build.setup">
         <deploy-resource-debug name="index" />
         <deploy-html resource="index" />
-    </target>
 
-    <target name="clean" depends="setup-platform">
-        <delete file="${deploy.dir}" />
-        <delete file="${build.dir}" />
+        <mkdir dir="${debug.dir}" />
+        <copy todir="${debug.dir}" overwrite="true" flatten="true">
+            <filelist dir="${build.dir}">
+                <file name="index.html" />
+            </filelist>
+        </copy>
+        <symlink overwrite="yes" link="${debug.dir}/js" resource="${listit.dir}/js" />
+        <symlink overwrite="yes" link="${debug.dir}/css" resource="${listit.dir}/css" />
+        <symlink overwrite="yes" link="${debug.dir}/img" resource="${listit.dir}/img" />
     </target>
 
 </project>

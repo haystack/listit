@@ -146,9 +146,4 @@
             <arg value="--install-extension=${build.dir}/../chrome.crx" />
         </exec>
     </target>
-
-    <target name="clean" depends="setup-platform">
-        <delete dir="${build.dir}" />
-        <delete dir="${deploy.dir}" />
-    </target>
 </project>
