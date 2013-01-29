@@ -121,7 +121,11 @@
             this.remove(note, options);
         },
         comparator: function(note) {
-          return (note.get('meta').pinned ? window.Constants.MAX_VALUE : 0) + this.backingCollection.indexOf(note);
+          // Backbone checks the number of arguments (1 = absolute, 2 = compare)
+          // Underscore passes an extra argument (the index in the underlying
+          // list). This is probabbly a good guess for indexOf.
+          var i = arguments[1];
+          return this.backingCollection.indexOf(note, typeof(i) === "number" ? i : undefined);
         },
         maybeAddNew: function(note) {
             if (this.matcher(note)) {

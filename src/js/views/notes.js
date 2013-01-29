@@ -255,7 +255,7 @@
             if (!this._rendered || view.isVisible()) {
                 return;
             }
-            var index = this.collection.indexOf(note);
+            var index = this.collection.indexOf(note, options && options.index);
             this.insertAt(index, view);
         },
         insertAt: function(index, view) {
