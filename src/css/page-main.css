@@ -9,6 +9,11 @@
   background-color: #fff;
   background-color: hsl(60, 100%, 98%); /*(240, 100%, 99%);*/
 }
+
+#notes-container {
+  height: 100%;
+}
+
 .scroll {
     overflow-x: none;
     overflow-y: auto;
