@@ -216,19 +216,17 @@
         var that = this;
         this.fetch({
           success: function() {
-
             // Fetch contents.
             _.each(that.relations, _.mask(_.bind(that.fetchRelated, that), 1));
-
-            var debounced_save = _.debounce(_.bind(that.save, that), 100);
-            _.each(that.relations, function(v, k) {
-              that.get(k).on('add remove', function(model, collection, options) {
-                if (!(options && options.nosave)) {
-                  debounced_save();
-                }
-              });
-            });
           }
+        });
+        var debounced_save = _.debounce(_.bind(that.save, that), 100);
+        _.each(that.relations, function(v, k) {
+          that.get(k).on('add remove', function(model, collection, options) {
+            if (!(options && options.nosave)) {
+              debounced_save();
+            }
+          });
         });
       },
       relations: {

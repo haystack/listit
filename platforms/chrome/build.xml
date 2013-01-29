@@ -85,6 +85,19 @@
                 <file name="options.html" />
             </filelist>
         </copy>
+        <!--
+        <mkdir dir="${debug.dir}" />
+        <copy todir="${debug.dir}" overwrite="true" flatten="true">
+            <filelist dir="${build.dir}">
+                <file name="manifest.json" />
+                <file name="index.html" />
+                <file name="options.html" />
+            </filelist>
+        </copy>
+        <symlink overwrite="yes" link="${debug.dir}/js" resource="${listit.dir}/js" />
+        <symlink overwrite="yes" link="${debug.dir}/css" resource="${listit.dir}/css" />
+        <symlink overwrite="yes" link="${debug.dir}/img" resource="${listit.dir}/img" />
+        -->
     </target>
 
     <target name="build.assets" depends="-build.setup">

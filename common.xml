@@ -100,6 +100,7 @@
         <property name="platform.dir" value="${base-platform.dir}/${platform}" />
         <property name="deploy.dir" value="${base-deploy.dir}/${platform}" />
         <property name="build.dir" value="${base-build.dir}/${platform}" />
+        <property name="debug.dir" value="${base-debug.dir}/${platform}" />
         <property file="${platform.dir}/platform.properties" />
     </target>
 
@@ -137,4 +138,11 @@
     </target>
 
     <target name="-build.setup" depends="setup-platform,mkdirs,compile-templates,jshint" />
+
+    <target name="clean" depends="setup-platform">
+        <delete includeemptydirs="true">
+            <fileset erroronmissingdir="false" followsymlinks="false" dir="${debug.dir}" includes="**" />
+            <fileset erroronmissingdir="false" followsymlinks="false" dir="${build.dir}" includes="**" />
+        </delete>
+    </target>
 </project>

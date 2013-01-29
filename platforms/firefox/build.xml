@@ -44,12 +44,6 @@
         <deploy-html resource="sidebar" />
     </target>
 
-    <target name="release" depends="-build.setup,-build.img,-build.assets,-build.html">
-        <copy todir="${deploy.dir}">
-            <fileset dir="${build.dir}" />
-        </copy>
-    </target>
-
     <target name="build.install" depends="-build.setup">
         <copy file="${platform.dir}/install.rdf.tmpl" tofile="${build.dir}/install.rdf">
             <filterchain>
@@ -72,34 +66,36 @@
     <target name="-build.framework" depends="-build.setup">
         <mkdir dir="${build.dir}/chrome" />
         <mkdir dir="${build.dir}/chrome/content" />
+        <mkdir dir="${build.dir}/chrome/content/webapp" />
+    </target>
+
+    <target name="release"
+        depends="clean,-build.setup,-build.framework,-build.img,-build.assets,-build.html,build.install,build.manifest">
         <parallel>
-            <copydir dest="${build.dir}/chrome/content/extension" src="${platform.dir}/resources/content" />
-            <copydir dest="${build.dir}/chrome/content/webapp" src="${listit.dir}" />
-            <copydir dest="${build.dir}/chrome/skin" src="${platform.dir}/resources/skin" />
-            <copydir dest="${build.dir}/chrome/locale" src="${platform.dir}/resources/locale" />
+            <copy todir="${build.dir}/chrome/content/extension">
+                <fileset dir="${platform.dir}/resources/content" />
+            </copy>
+            <copy todir="${build.dir}/chrome/">
+                <fileset dir="${platform.dir}/resources/skin" />
+                <fileset dir="${platform.dir}/resources/locale" />
+            </copy>
         </parallel>
     </target>
 
-    <target name="-build.framework-debug" depends="-build.setup">
-        <mkdir dir="${build.dir}/chrome" />
-        <mkdir dir="${build.dir}/chrome/content" />
-        <symlink overwrite="yes" link="${build.dir}/chrome/content/extension" resource="${platform.dir}/resources/content" />
-        <symlink overwrite="yes" link="${build.dir}/chrome/content/webapp" resource="${listit.dir}" />
-        <symlink overwrite="yes" link="${build.dir}/chrome/skin" resource="${platform.dir}/resources/skin" />
-        <symlink overwrite="yes" link="${build.dir}/chrome/locale" resource="${platform.dir}/resources/locale" />
-    </target>
-
     <target name="debug"
-        depends="-build.setup,-build.framework-debug,build.install,build.manifest">
+        depends="clean,-build.setup,-build.framework,build.install,build.manifest">
         <deploy-resource-debug name="sidebar" />
         <deploy-html resource="sidebar" />
+        <copy todir="${debug.dir}">
+            <fileset dir="${build.dir}" includes="**"/>
+        </copy>
+        <symlink overwrite="yes" link="${debug.dir}/chrome/content/extension" resource="${platform.dir}/resources/content" />
+        <symlink overwrite="yes" link="${debug.dir}/chrome/content/webapp/js" resource="${listit.js.dir}" />
+        <symlink overwrite="yes" link="${debug.dir}/chrome/content/webapp/img" resource="${listit.img.dir}" />
+        <symlink overwrite="yes" link="${debug.dir}/chrome/content/webapp/css" resource="${listit.css.dir}" />
+        <symlink overwrite="yes" link="${debug.dir}/chrome/skin" resource="${platform.dir}/resources/skin" />
+        <symlink overwrite="yes" link="${debug.dir}/chrome/locale" resource="${platform.dir}/resources/locale" />
     </target>
-
-    <target name="clean" depends="setup-platform">
-        <delete file="${deploy.dir}" />
-        <delete file="${build.dir}" />
-    </target>
-
 </project>
 
 
