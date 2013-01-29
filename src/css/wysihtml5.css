@@ -172,12 +172,12 @@ html, body {
 
 .wysihtml5-toolbar-buttons [data-wysihtml5-command-group] > * {
     border-radius: 2px;
-    position: relative;
+    position: absolute;
     background: #f5f5f5;
     line-height: 0;
     width: 24px;
-    top: -4px;
-    left: -4px;
+    top: -2px;
+    left: -2px;
 }
 .wysihtml5-toolbar-buttons [data-wysihtml5-command-group]:hover > * {
     padding: 1px;
