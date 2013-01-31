@@ -186,7 +186,7 @@
 
             end = start+num;
 
-            _.each(this.backingCollection.slice(start, end), function(n) {
+            _.each(this.backingCollection.slice(start, end+1), function(n) {
                 that.searchQueue.add(function() {
                     if (that.matcher(n)) {
                         // In order (or close enough), don't sort.
