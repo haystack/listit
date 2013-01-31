@@ -189,7 +189,8 @@
             _.each(this.backingCollection.slice(start, end), function(n) {
                 that.searchQueue.add(function() {
                     if (that.matcher(n)) {
-                        that.add(n);
+                        // In order (or close enough), don't sort.
+                        that.add(n, {sort: false});
                     }
                 });
             });
