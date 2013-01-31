@@ -22,20 +22,6 @@
 
     L.vent.trigger('setup:views:before setup:views', window);
 
-    // FIXME: Put in main view (not needed for options)?
-    // Why can't we have a css `height: fill;` attribute.
-    // Don't need to debounce (cost(debounce) ~ cost(fixSize)).
-    L.fixSize = function() {
-      // Always run after render complete.
-      setTimeout(function() {
-        $('.page:visible').each(function() {
-          $(this).children('.contents').height($(window).height() - $(this).children('.header').outerHeight());
-        });
-      }, 1);
-    };
-    $(window).resize(L.fixSize);
-    L.fixSize();
-
     // Open links in a new tab without accidentally modifying notes.
     $(document).on('click', 'a', function(e) {
       var $el = $(this),

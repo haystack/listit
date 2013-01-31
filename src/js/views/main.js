@@ -19,9 +19,9 @@
             } else {
               // Default panels
               this.panels  = {
-                'controls-left':      new L.views.OmniboxView({model: L.omnibox}),
-                'controls-right':     new L.views.ControlsView(),
-                'content-container':  new L.views.NoteCollectionView({collection: L.sidebar})
+                'omnibox':      new L.views.OmniboxView({model: L.omnibox}),
+                'controls':     new L.views.ControlsView(),
+                'notes':  new L.views.NoteCollectionView({collection: L.sidebar})
               };
             }
         },
@@ -30,7 +30,8 @@
 
             var that = this;
             _.each(this.panels, function(view, id) {
-                that.$('#'+id).html(view.render().el);
+              view.setElement(that.$("#"+id));
+              view.render();
             });
             return this;
         }

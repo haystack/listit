@@ -201,11 +201,11 @@
             lastNote = this.backingCollection.at(end);
             if (lastNote) {
                 this._lastSearchedNoteId = lastNote.id;
-                this.searchQueue.add(this.trigger, 'search:paused');
+                this.searchQueue.add(_.bind(this.trigger, this, 'search:paused'));
             } else {
                 lastNote = this.backingCollection.last();
                 this._lastSearchedNoteId = lastNote ? lastNote.id : undefined;
-                this.searchQueue.add(this.trigger, 'search:completed');
+                this.searchQueue.add(_.bind(this.trigger, this, 'search:completed'));
             }
         }
     });

@@ -1,4 +1,4 @@
-#notes { 
+#notes-container { 
     padding:10px;
 }
 
@@ -20,7 +20,7 @@
     display: block;
 }
 
-#notes-container.shrink .note {
+#notes.shrink .note {
     /*height: 1.4em;*/
     white-space: nowrap;
     height: 2.4em;

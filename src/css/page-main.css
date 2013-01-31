@@ -4,23 +4,53 @@
 }
 
 /* Note List Styles*/
-#content-container {
-  background-color: #ddd;
-  background-color: #fff;
+#notes {
   background-color: hsl(60, 100%, 98%); /*(240, 100%, 99%);*/
 }
 
-#notes-container {
-  height: 100%;
-}
-
 .scroll {
-    overflow-x: none;
-    overflow-y: auto;
-    max-height: 100%;
+  overflow-x: none;
+  overflow-y: auto;
+  max-height: 100%;
 }
 
 #page-main {
-    background: #F5F5F5;
-    overflow: hidden;
+  background: #F5F5F5;
+  overflow: hidden;
+  top: 0;
+  bottom: 0;
+  position: fixed;
+
+
+  display: box;
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-box;
+  display: -o-box;
+
+  box-orient: vertical;
+  -webkit-box-orient: vertical;
+  -moz-box-orient: vertical;
+  -ms-box-orient: vertical;
+  -o-box-orient: vertical;
 }
+
+#page-main > .header {
+  box-flex: 0;
+  -webkit-box-flex: 0;
+  -moz-box-flex: 0;
+  -ms-box-flex: 0;
+  -o-box-flex: 0;
+}
+
+
+#page-main > .contents {
+  box-flex: 1;
+  -webkit-box-flex: 1;
+  -moz-box-flex: 1;
+  -ms-box-flex: 1;
+  -o-box-flex: 1;
+  overflow-x: auto;
+}
+
+

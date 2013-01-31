@@ -181,7 +181,7 @@
         onKeyUp: function(event) {
             if (event.keyCode === 9) { // TAB
                 event.target.scrollIntoView();
-                $('#notes-container')[0].scrollTop -= 4;
+                $('#notes')[0].scrollTop -= 4;
             }
         },
         openLink: function() {
@@ -194,9 +194,6 @@
     });
 
     L.views.NoteCollectionView = Backbone.View.extend({
-        tagName: 'div',
-        id: 'notes-container',
-        className: 'container scroll',
         defaults: {
             noteHeight: '1.3em', //L.base.oneLineHeight, //'1.2em',
             lastFocusedNote: null
@@ -234,7 +231,7 @@
         checkLoadMore: function() {
             var scrollTop = this.$el.scrollTop(),
                 containerHeight = this.$el.parent().height(),
-                listHeight = this.$el.children('#notes').height();
+                listHeight = this.$el.children('#notes-container').height();
 
             return (scrollTop + 2*containerHeight) > listHeight;
         },
@@ -260,9 +257,9 @@
         },
         insertAt: function(index, view) {
             // XXX: BUG: options.index incorrect. Calculate manually.
-            var otherEl = this.$el.children('#notes').find('.note').eq(index);
+            var otherEl = this.$el.children('#notes-container').find('.note').eq(index);
             if (otherEl.length === 0) {
-                this.$el.children('#notes').append(view.render().$el);
+                this.$el.children('#notes-container').append(view.render().$el);
             } else {
                 otherEl.before(view.render().$el);
             }
@@ -308,7 +305,7 @@
         },
         reset: function() {
             if (this._rendered) {
-                //this.$el.children('#notes').empty();
+                //this.$el.children('#notes-container').empty();
                 _.each(this.subViews, _.mask(this.removeNote, 1));
                 this.collection.each(_.mask(this.addNote, 0));
             }
@@ -317,7 +314,7 @@
             if (!this._rendered) {
                 var ul = $('<ul>');
                 ul.attr({
-                  'class': 'notelist', 'id': 'notes'
+                  'class': 'notelist', 'id': 'notes-container'
                 });
                 this.$el.html(ul);
                 this.updateNoteShrinkState(L.options, L.options.get('shrinkNotes'));

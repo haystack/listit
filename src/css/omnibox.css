@@ -35,7 +35,7 @@
   width: 100%;
 }
 
-#optionsCol {
+#controls {
   position: relative;
   font-size: 1.01em;
   color: rgb(120,120,120);
@@ -52,11 +52,11 @@
   margin-bottom: 2px;
 }
 
-#optionsCol > a {
+#controls > a {
   display: block;
 }
 
-#optionsCol > img:hover {
+#controls > img:hover {
   background-color: rgba(128,128,128,.5);
 }
 

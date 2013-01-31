@@ -92,7 +92,6 @@
                     this.reset();
                     break;
             }
-            L.fixSize();
         },
         // Store text on change.
         _onKeyUp: function(event) {
@@ -157,7 +156,7 @@
     // (Technically it has several).
     // TODO: Go all out MVVM? (make viewmodel)
     L.views.ControlsView = Backbone.View.extend({
-        id: 'optionsCol',
+        id: 'controls',
         initialize: function() {
             var that = this;
             $(window).one('beforeunload', function() {
