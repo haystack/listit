@@ -196,12 +196,22 @@
                 return text.indexOf(term) >= 0;
             });
         },
-
+        /**
+         * Remove html from text.
+         **/
         clean: function(text) {
-            text = text.replace(/<[^>]*>?/g, '');
-            text = text.replace('&nbsp;', ' ');
-            text = _.str.unescapeHTML(text);
-            return text;
+          text = _.str.stripTags();
+          text = text.replace('&nbsp;', ' ');
+          text = _.str.unescapeHTML(text);
+          return text;
+        },
+        /**
+         * Strip breaks/spaces/etc. from the ends of a string.
+         **/
+        strip: function(text) {
+          text = text.replace(/^(<\/?br\s*>|<br\s*\/?>|&nbsp;|\s)+/, '');
+          text = text.replace(/(<\/?br\s*>|<br\s*\/?>|&nbsp;|\s)+$/, '');
+          return text;
         }
     };
 })(ListIt);

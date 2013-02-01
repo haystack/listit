@@ -246,6 +246,9 @@
         }
       },
       addNote: function(text, meta, window) {
+          // Strip extra whitespace/cruft.
+          text = L.util.strip(text);
+
           var note = new L.models.Note({contents: text}),
           noteJSON = note.toJSON();
 
