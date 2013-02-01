@@ -1,11 +1,13 @@
 #controls-container {
     border-bottom: 1px solid silver;
     padding: 10px 0px;
+    width: 100%;
+    background: #F5F5F5;
 }
 
 /* Note List Styles*/
 #notes {
-  background-color: hsl(60, 100%, 98%); /*(240, 100%, 99%);*/
+  height: 100%;
 }
 
 .scroll {
@@ -15,7 +17,7 @@
 }
 
 #page-main {
-  background: #F5F5F5;
+  background-color: hsl(60, 100%, 98%); /*(240, 100%, 99%);*/
   overflow: hidden;
   top: 0;
   bottom: 0;
