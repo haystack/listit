@@ -32,14 +32,16 @@
 
 .note .contents, .note .editor textarea {
     height: auto;
-    margin: 0;
     border: none; 
     resize: none;
     width: 100%;
     display: block;
     background: none;
     outline: none;
-    padding: 6px;
+    margin-top: 8px;
+    margin-bottom: 6px;
+    margin-right: 10px;
+    margin-left: 0;
     color:#000;
 
     white-space: pre-wrap; /* css-3 */
@@ -47,8 +49,14 @@
     white-space: -pre-wrap; /* Opera 4-6 */
     white-space: -o-pre-wrap; /* Opera 7 */
     word-wrap: break-word; /* Internet Explorer 5.5+ */ 
-    font-size: 16px;
-    line-height: 1.4em;
+
+    hyphens: auto;
+    -webkit-hyphens: auto;
+    -moz-hyphens: auto;
+    -ms-hyphens: auto;
+    -o-hyphens: auto;
+
+    line-height: 1.2em;
     text-overflow:ellipsis;
     overflow: hidden;
 }
