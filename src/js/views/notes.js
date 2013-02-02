@@ -108,37 +108,43 @@
 
                 $editorEl.append(toolbar.render().el);
 
-                var editor = new wysihtml5.Editor($textareaEl.get(0), {
-                        toolbar: toolbar.el,
-                        parserRules: wysihtml5ParserRules,
-                        stylesheets: WYSIHTML5_CSS
-                    }),
-                    iframe = editor.composer.iframe,
-                    resizeIframe = function() {
-                        var body = $(iframe).contents().find('body'); // Needs document to be loaded.
-                        _.delay(function() {
-                            iframe.style.height = 'auto';
-                            iframe.style.height = body.height() + 'px';
-                        });
-                    };
+                var txtbox = $textareaEl.get(0);
+                var editor = new wysihtml5.Editor(txtbox, {
+                  toolbar: toolbar.el,
+                  parserRules: wysihtml5ParserRules,
+                  style: false,
+                  stylesheets: WYSIHTML5_CSS
+                });
+
+                var iframe = editor.composer.iframe;
+
+                var resizeEditor = function() {
+                  var body = $(iframe).contents().find('body'); // Needs document to be loaded.
+                  _.delay(function() {
+                    iframe.style.height = 'auto';
+                    iframe.style.height = body.height() + 'px';
+                    txtbox.style.height = iframe.style.height;
+                  });
+                };
 
                 this.editor = editor;
 
-                this.listenTo(this.editor, 'keydown', resizeIframe);
-                this.listenTo(this.editor, 'focus', resizeIframe);
-                this.listenTo(this.editor, 'change', resizeIframe);
-                this.listenTo(this.editor, 'blur', this.onBlur);
+                this.editor.on('keydown', resizeEditor);
+                this.editor.on('change', resizeEditor);
+                this.editor.on('load', resizeEditor);
+
+                this.editor.on('blur', _.bind(this.onBlur, this));
 
 
                 // Maintain a dialog count so that we don't close the editor with a dialog open.
                 this.editor._dialogCount = 0;
-                this.listenTo(this.editor, 'show:dialog', function() {
+                this.editor.on('show:dialog', function() {
                     editor._dialogCount++;
                 });
-                this.listenTo(this.editor, 'save:dialog', function() {
+                this.editor.on('save:dialog', function() {
                     editor._dialogCount--;
                 });
-                this.listenTo(this.editor, 'cancel:dialog', function() {
+                this.editor.on('cancel:dialog', function() {
                     editor._dialogCount--;
                 });
             }

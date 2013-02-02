@@ -30,7 +30,7 @@
     background-color:  hsl(240, 40%, 97%) !important; /*hsl(270, 100%, 95%);*/
 }
 
-.note .contents, .note .editor textarea {
+.note .contents, .note .editor textarea, .note .editor textarea + .wysihtml5-sandbox {
     height: auto;
     border: none; 
     resize: none;
@@ -38,10 +38,11 @@
     display: block;
     background: none;
     outline: none;
-    margin-top: 8px;
-    margin-bottom: 6px;
-    margin-right: 10px;
-    margin-left: 0;
+    padding-top: 8px;
+    padding-bottom: 6px;
+    padding-right: 10px;
+    padding-left: 0;
+    margin: 0;
     color:#000;
 
     white-space: pre-wrap; /* css-3 */
