@@ -200,7 +200,7 @@
          * Remove html from text.
          **/
         clean: function(text) {
-          text = _.str.stripTags();
+          text = _.str.stripTags(text);
           text = text.replace('&nbsp;', ' ');
           text = _.str.unescapeHTML(text);
           return text;
