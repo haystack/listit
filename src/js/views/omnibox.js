@@ -11,7 +11,6 @@
         className: 'flex',
         initialize: function() {
             var that = this;
-            _(this).bindAll();
             $(window).one('beforeunload', function() {
                 that.undelegateEvents();
                 that.stopListening();
@@ -65,9 +64,9 @@
             this.editor.on('focus', resizeIframe);
             this.editor.on('change', resizeIframe);
 
-            this.editor.on('keydown', this._onKeyDown);
-            this.editor.on('keyup', this._onKeyUp);
-            this.editor.on('change', this.storeText);
+            this.editor.on('keydown', _.bind(this._onKeyDown, this));
+            this.editor.on('keyup', _.bind(this._onKeyUp, this));
+            this.editor.on('change', _.bind(this.storeText, this));
 
             this._rendered = true;
             return this;

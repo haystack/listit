@@ -7,7 +7,6 @@
         tagName: 'li',
         className: 'note hbox justified_box',
         initialize: function(options) {
-            _(this).bindAll();
             var that = this;
             this.editor = options.editor;
             $(window).one('beforeunload', function() {
@@ -48,7 +47,7 @@
                 });
             }
 
-            this.$el.bind('DOMNodeRemoved', this.cleanupEditor);
+            this.$el.on('DOMNodeRemoved', _.bind(this.cleanupEditor, this));
 
             if (this._rendered) {
                 this.cleanupEditor();
@@ -199,7 +198,6 @@
             lastFocusedNote: null
         },
         initialize: function() {
-            _(this).bindAll(); // Maintain ref to this.
             var that = this;
             this.subViews = {}; // Note views
             this.delayedRemove = {}; // Delay removes to prevent flickering.
@@ -306,8 +304,8 @@
         reset: function() {
             if (this._rendered) {
                 //this.$el.children('#notes-container').empty();
-                _.each(this.subViews, _.mask(this.removeNote, 1));
-                this.collection.each(_.mask(this.addNote, 0));
+                _.each(this.subViews, _.mask(_.bind(this.removeNote, this), 1));
+                this.collection.each(_.mask(_.bind(this.addNote, this), 0));
             }
         },
         render: function() {

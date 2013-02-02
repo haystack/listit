@@ -7,7 +7,6 @@
         className: 'options-item',
         events: { },
         initialize: function() {
-            _(this).bindAll();
             var that = this;
             $(window).one('beforeunload', function() {
                 that.undelegateEvents();

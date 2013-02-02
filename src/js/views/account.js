@@ -22,7 +22,6 @@
             this._focused = $(ev.target);
         },
         initialize: function() {
-            _(this).bindAll();
             var that = this;
             $(window).one('beforeunload', function() {
                 that.undelegateEvents();
@@ -89,23 +88,24 @@
             // modal fields are toggled based on their mode-* fields
             var shown = this.$el.find('.modal.mode-'+mode);
             var hidden = this.$el.find('.modal:not(.mode-'+mode+')');
+            var that = this;
 
             // Slide
             // Disable/enable fields to disable validation.
             if (this._rendered) {
                 shown.enableFields();
-                L.util.slideSwitch(hidden, shown, _.bind(function() {
+                L.util.slideSwitch(hidden, shown, function() {
                     hidden.disableFields();
                     //Refocus
-                    if (this._focused) {
-                        if (this._focused.is(':visible')) {
-                            this._focused.focus();
+                    if (that._focused) {
+                        if (that._focused.is(':visible')) {
+                            that._focused.focus();
                         } else {
-                            this._focused = this.$el.find('.field:first:visible');
-                            this._focused.focus();
+                            that._focused = that.$el.find('.field:first:visible');
+                            that._focused.focus();
                         }
                     }
-                }, this));
+                });
             } else {
                 shown.enableFields().show();
                 hidden.disableFields().hide();

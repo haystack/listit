@@ -2,7 +2,7 @@ window.ActionQueue = (function() {
     'use strict';
 
     var ActionQueue = function(timeSlice) {
-        _.bindAll(this);
+        _(this).bindAll('_exec');
         this.timeSlice = (typeof(timeSlice) === 'undefined') ? 50 : timeSlice;
     };
 
