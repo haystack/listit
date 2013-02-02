@@ -21,10 +21,10 @@
   min-height: 1.1em; 
 }
 
-#omnibox-entry {
+#omnibox-entry, #omnibox-entry + .wysihtml5-sandbox {
   text-align:left;
-  height: auto;
-  min-height: 19px;
+  height: 20px;
+  min-height: 40px;
   resize: none;
   background: none;
   border: 0px;

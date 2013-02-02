@@ -45,24 +45,26 @@
             this.editor = new wysihtml5.Editor(this.$el.find('#omnibox-entry').get()[0], {
                 toolbar: this.toolbar.el,
                 parserRules: wysihtml5ParserRules,
+                style: false,
                 stylesheets: WYSIHTML5_CSS
             });
 
             var iframe = this.editor.composer.iframe;
+            var txtbox = this.$("#omnibox-entry").get(0);
 
-            var resizeIframe = function() {
+            var resizeEditor = function() {
                 var body = $(iframe).contents().find('body'); // Needs document to be loaded.
                 _.delay(function() {
                     iframe.style.height = 'auto';
                     iframe.style.height = body.height() + 'px';
+                    txtbox.style.height = iframe.style.height;
                 });
             };
 
 
-            this.editor.on('keydown', resizeIframe);
-            this.editor.on('blur', resizeIframe);
-            this.editor.on('focus', resizeIframe);
-            this.editor.on('change', resizeIframe);
+            this.editor.on('keydown', resizeEditor);
+            this.editor.on('change', resizeEditor);
+            this.editor.on('load', resizeEditor);
 
             this.editor.on('keydown', _.bind(this._onKeyDown, this));
             this.editor.on('keyup', _.bind(this._onKeyUp, this));
