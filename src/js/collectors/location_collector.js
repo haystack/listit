@@ -9,14 +9,14 @@
             this.beginWatching();
 
             // Meta generator
-            L.vent.on('note:request:parse:new', function(note) {
+            L.gvent.on('note:request:parse:new', function(note) {
                 if (this.get('location_watcher')) {
                     note.meta.location = this.get('last_location');
                 }
             });
 
             // Feature Recognizer
-            L.vent.on('note:request:features', function(note) {
+            L.gvent.on('note:request:features', function(note) {
                 var noteLocation = note.get('meta').location;
                 var lastLocation = this.get('last_location');
                 if (noteLocation && lastLocation) {

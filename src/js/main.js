@@ -22,55 +22,142 @@ if (window.DEBUG_MODE && window.console) {
 window.ListIt = {VERSION: 1};
 
 (function(L) {
-    'use strict';
+  'use strict';
 
-    // Base Objects
-    L.pages = {};
-    L.views = {};
-    L.models = {};
-    L.templates = {};
+  /***********************
+   *  Setup Environment  *
+   ***********************/
+  
+  L.pages = {};
+  L.views = {};
+  L.models = {};
+  L.templates = {};
 
-    // Main event handler
-    L.vent = _.clone(Backbone.Events);
+  /*******************
+   *  Event Objects  *
+   *******************/
+  
+  L.gvent = _.clone(Backbone.Events);
+  L.lvent = _.clone(Backbone.Events);
 
-    // Attach unload event.
-    var beforeunloadFired = false;
-    $(window).one('beforeunload', function() {
-      beforeunloadFired = true;
-      L.vent.trigger('sys:window-closed', window);
-    }).one('unload', function() {
-      // Fake beforeunload for browsers that don't support it.
-      if (!beforeunloadFired) {
-        $(window).trigger('beforeunload');
-        window.beforeunloadfired = true;
-      }
-    });
+  /*************
+   *  Cleanup  *
+   *************/
+  
+  var beforeunloadFired = false;
+  $(window).one('beforeunload', function() {
+    beforeunloadFired = true;
+    L.gvent.trigger('sys:window-closed', window);
+  }).one('unload', function() {
+    // Fake beforeunload for browsers that don't support it.
+    if (!beforeunloadFired) {
+      $(window).trigger('beforeunload');
+      window.beforeunloadfired = true;
+    }
+  });
 
-    // Global methods (instantiate somewhere else)?
-    // These should be very small convenience functions.
+  
+  /*************
+   *  Helpers  *
+   *************/
+  
 
-    L.getVersion = function(callback) {
-      if (callback) {
-        L.store.get('version', {
-          success: callback,
-          error: function() {
-            callback(0);
-          }
-        });
-      }
-    };
+  // Global methods (instantiate somewhere else)?
+  // These should be very small convenience functions.
 
-    L.setVersion = function(version) {
-        L.store.set('version', version);
-    };
+  L.getVersion = function(callback) {
+    if (callback) {
+      L.store.get('version', {
+        success: callback,
+        error: function() {
+          callback(0);
+        }
+      });
+    }
+  };
 
-    L.log = function(action, info) {
-        var e = {action: action, info: info};
-        L.vent.trigger('log', e);
-        L.vent.trigger('log:' + e.action, e);
-    };
+  // Add page adding/removing functions.
+  L.addPage = function(name, view) {
+    $('body').append(view.render().el);
+    if (_.keys(L.pages).length === 0) {
+      view.$el.show();
+    } else {
+      view.$el.hide();
+    }
+    L.pages[name] = view
+  };
 
-    L.addNote = function(text, meta) {
-      return L.notebook.addNote(text, meta, window);
-    };
+  L.removePage = function(name) {
+    L.pages[name].remove();
+    delete L.pages[name];
+  }
+
+  L.setVersion = function(version) {
+    L.store.set('version', version);
+  };
+
+  L.log = function(action, info) {
+    var e = {action: action, info: info};
+    L.gvent.trigger('log', e);
+    L.gvent.trigger('log:' + e.action, e);
+  };
+
+  L.addNote = function(text, meta) {
+    return L.notebook.addNote(text, meta, window);
+  };
+
+  /***********
+   *  Setup  *
+   ***********/
+  
+  var setupActions = [
+    function(lock) {
+      L.lvent.trigger('setup:before', L, lock);
+    },
+    function(lock) {
+      L.lvent.trigger('setup:upgrade:before', L, lock);
+    },
+    function(lock) {
+      L.lvent.trigger('setup:upgrade', L, lock);
+    },
+    function(lock) {
+      L.lvent.trigger('setup:upgrade:after', L, lock);
+    },
+    function(lock) {
+      L.lvent.trigger('setup:models:before', L, lock);
+    },
+    function(lock) {
+      L.lvent.trigger('setup:models', L, lock);
+    },
+    function(lock) {
+      L.lvent.trigger('setup:models:after', L, lock);
+    },
+    function(lock) {
+      lock.aquire();
+      $(function() {
+        L.lvent.trigger('setup:views:before', L, lock);
+        lock.release();
+      });
+    },
+    function(lock) {
+      L.lvent.trigger('setup:views', L, lock);
+    },
+    function(lock) {
+      L.lvent.trigger('setup:views:after', L, lock);
+    },
+    function(lock) {
+      L.lvent.trigger('setup:after', L, lock);
+    }
+  ];
+
+  var callSetupAction = function(i) {
+    if (setupActions.length <= i) return;
+
+    var lock = new Lock();
+    setupActions[i](lock);
+    lock.wait(callSetupAction, i+1);
+  };
+
+  // Must defer (call after all scripts loaded).
+  _.defer(callSetupAction, 0);
 })(ListIt);

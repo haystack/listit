@@ -1,6 +1,6 @@
-(function(L) {
+ListIt.lvent.once('setup:upgrade', function(L, lock) {
     'use strict';
-    //FIXME: This is currently asynchrounous. This should be fixed.
+    lock.aquire();
     L.getVersion(function(configVersion) {
       var programVersion = L.VERSION,
           defaultNotes = [
@@ -15,14 +15,14 @@
           ],
           upgradeFunctions = {
             1: function(from, to) {
-              var cb = _.once(function() {
-                L.notebook.get('notes').reset(_.map(defaultNotes, function(s) {
-                  return {'contents': s};
-                }));
+              console.log("Here?");
+              L.lvent.once('setup:models:after', function(L, lock) {
+
+                _.each(defaultNotes, function(s) {
+                  L.notebook.get('notes').create({'contents': s});
+                });
                 L.notebook.save();
-                L.vent.off(null, cb);
               });
-              L.vent.on('setup:models:after', cb);
             }
           };
 
@@ -34,5 +34,6 @@
         upgradeFunctions[ver](configVersion, programVersion);
         L.setVersion(ver);
       }
+      lock.release();
     });
-})(ListIt);
+});

@@ -1,17 +1,13 @@
-
-(function(L) {
+ListIt.lvent.once('setup:views', function(L, lock) {
   'use strict';
-  // Setup views
-
-  L.vent.once('setup:views', function(window) {
-    // Make Pages
-    L.addPage('main', new L.views.MainPage());
+  // Make Pages
+  L.addPage('main', new L.views.MainPage());
+});
+ListIt.lvent.once('setup:views:after', function(L, lock) {
+  'use strict';
+  // Fix options link on chrome.
+  $('[href="#/options"]').attr({
+    'target': '_new',
+    'href': '/options.html'
   });
-  L.vent.once('setup:views:after', function(window) {
-    // Fix options link on chrome.
-    $('[href="#/options"]').attr({
-      'target': '_new',
-      'href': '/options.html'
-    });
-  });
-})(ListIt);
+});

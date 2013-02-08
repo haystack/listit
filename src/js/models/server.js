@@ -14,7 +14,7 @@
         },
         initialize: function() {
             _.bindAll(this);
-            L.vent.on('user:sync', this.syncNotes);
+            L.gvent.on('user:sync', this.syncNotes);
         },
         // Defines a translation between a packaged note and a local note.
         transTable : {

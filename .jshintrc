@@ -4,6 +4,7 @@
         "Backbone",
         "ListIt",
         "ActionQueue",
+        "Lock",
         "WYSIHTML5_CSS",
         "debug",
         "DEBUG",
@@ -20,7 +21,7 @@
     "camelcase": true,
     "eqeqeq": true,
     "forin": true,
-    "indent": 4,
+    "indent": 2,
     "latedef": true,
     "newcap": true,
     "noarg": true,
@@ -28,6 +29,7 @@
     "nonew": true,
     "undef": true,
     "strict": true,
-    "trailing": true
+    "trailing": true,
+    "sub": true,
 }
 

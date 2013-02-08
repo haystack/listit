@@ -95,6 +95,7 @@
         <file name="constants.js" />
         <file name="util.js" />
         <file name="actionqueue.js" />
+        <file name="lock.js" />
     </filelist>
 </resources>
 
@@ -107,15 +108,15 @@
 </resources>
 
 <resources id="js.setup.models">
-    <fileset file="${listit.js.dir}/model-setup.js" />
+    <fileset file="${listit.js.dir}/setup/models.js" />
 </resources>
 
 <resources id="js.setup.views">
-    <fileset file="${listit.js.dir}/view-setup.js" />
+    <fileset file="${listit.js.dir}/setup/views.js" />
 </resources>
 
 <resources id="js.setup.upgrade">
-    <fileset file="${listit.js.dir}/upgrade.js" />
+    <fileset file="${listit.js.dir}/setup/upgrade.js" />
 </resources>
 
 <resources id="js.setup">

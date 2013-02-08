@@ -1,9 +1,4 @@
-(function(L) {
+ListIt.lvent.once('setup:views', function(L, lock) {
   'use strict';
-  // Setup views
-
-  L.vent.once('setup:views', function(window) {
-    // Make Pages
-    L.addPage('options', new L.views.OptionsPage());
-  }, window);
-})(ListIt);
+  L.addPage('options', new L.views.OptionsPage());
+});

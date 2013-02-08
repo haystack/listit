@@ -27,8 +27,8 @@
         changeContents: function(newContents) {
             var note = this.toJSON();
             note.contents = newContents;
-            L.vent.trigger('note:request:parse', note, window);
-            L.vent.trigger('note:request:parse:changed', note, window);
+            L.gvent.trigger('note:request:parse', note, window);
+            L.gvent.trigger('note:request:parse:changed', note, window);
             this.set(note);
             this.save();
         },
@@ -253,8 +253,8 @@
           noteJSON = note.toJSON();
 
           noteJSON.meta = meta || {};
-          window.ListIt.vent.trigger('note:request:parse', noteJSON, window);
-          window.ListIt.vent.trigger('note:request:parse:new', noteJSON, window);
+          L.gvent.trigger('note:request:parse', noteJSON, window);
+          L.gvent.trigger('note:request:parse:new', noteJSON, window);
           note.set(noteJSON);
           this.get('notes').unshift(note, {action: 'add'});
           note.save();

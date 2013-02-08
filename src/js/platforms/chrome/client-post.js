@@ -6,9 +6,10 @@
     var bgL = background.ListIt;
 
     // Setup modules
-    L.vent = bgL.vent;
+    L.gvent = bgL.gvent;
     $(window).one('beforeunload', function() {
-      L.vent.off(null, null, window);
+      // TODO: Shouldn't be needed.
+      L.gvent.off(null, null, window);
     });
 
     // Copy models.
@@ -17,7 +18,7 @@
     // Then everything else (doesn't include templates, etc)
     _.defaults(L, bgL);
 
-    L.vent.once('setup:views:after', function() {
+    L.lvent.once('setup:views:after', function() {
         // TODO: Report bug in chrome
         // selectors sometimes not applied (neither query not css work).
         // probably due to passing from background into sidebar.

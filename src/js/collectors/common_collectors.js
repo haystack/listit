@@ -7,18 +7,18 @@
 
     $(document).ready(function() {
         // Collect date data
-        L.vent.on('note:request:parse:new', function(note) {
+        L.gvent.on('note:request:parse:new', function(note) {
             var date = new Date();
             note.meta['created-day'] = date.getDay();
             note.meta['created-hour'] = date.getHours();
         });
 
-        L.vent.on('note:request:parse', function(note) {
+        L.gvent.on('note:request:parse', function(note) {
             var text = _.str.trim(L.util.clean(note.contents));
             note.meta.pinned = text[0] === '!';
         });
 
-        L.vent.on('note:request:parse', function(note) {
+        L.gvent.on('note:request:parse', function(note) {
             var n = $('<span>').html(note.contents);
             n.cut('span.listit_tag');
             var tags = [];

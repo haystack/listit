@@ -16,8 +16,8 @@
             this.listenTo(this, 'change:text', function() {
                 slowSearch.apply(that);
             });
-            this.listenTo(L.vent, 'user:search', this.requestSearch);
-            this.listenTo(L.vent, 'user:save-note', this.saveNote);
+            this.listenTo(L.gvent, 'user:search', this.requestSearch);
+            this.listenTo(L.gvent, 'user:save-note', this.saveNote);
             this.listenTo(this, 'change', _.mask(this.throttledSave));
 
             this.fetch();
