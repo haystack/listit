@@ -126,8 +126,8 @@
     </macrodef>
 
     <target name="compile-templates">
-        <compiletemplates output="${listit.js.templates.file}" object="ListIt.templates">
-            <fileset dir="${listit.js.templates.dir}" includes="**/*.html" />
+        <compiletemplates output="${listit.templates.file}" object="ListIt.templates">
+            <fileset dir="${listit.templates.dir}" includes="**/*.html" />
         </compiletemplates>
     </target>
 

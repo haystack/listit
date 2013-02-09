@@ -4,7 +4,7 @@
 
 <fileset id="jshint-files" dir="${listit.js.dir}">
     <include name="**/*.js" />
-    <exclude name="**/templates.js" />
+    <exclude name="templates.js" />
     <exclude name="libs/**" />
 </fileset>
 
@@ -76,7 +76,7 @@
 </resources>
 
 <resources id="js.templates">
-    <fileset file="${listit.js.templates.file}" />
+    <fileset file="${listit.templates.file}" />
 </resources>
 <resources id="js.models">
     <fileset dir="${listit.js.models.dir}">
