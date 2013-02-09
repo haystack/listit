@@ -12,7 +12,7 @@
             <file name="${listit.js.platforms.dir}/chrome/client-post.js" />
             <file name="${listit.js.platforms.dir}/chrome/sidebar-setup.js" />
         </filelist>
-        <resources refid="js.setup.views"/>
+        <resources refid="js.setup"/>
     </resources>
 
     <resources id="js.options">
@@ -26,7 +26,7 @@
             <file name="${listit.js.platforms.dir}/chrome/client-post.js" />
             <file name="${listit.js.platforms.dir}/chrome/options-setup.js" />
         </filelist>
-        <resources refid="js.setup.views"/>
+        <resources refid="js.setup"/>
     </resources>
     <resources id="css.options">
         <resources refid="css.all" />
@@ -40,9 +40,9 @@
         <fileset file="${listit.js.platforms.dir}/chrome/chromeStorage.js" />
         <resources refid="js.models" />
         <resources refid="js.collectors" />
-        <resources refid="js.setup.upgrade"/>
-        <resources refid="js.setup.models"/>
+        <resources refid="js.upgrade"/>
         <fileset file="${listit.js.platforms.dir}/chrome/background.js" />
+        <resources refid="js.setup"/>
     </resources>
 
     <resources id="js.content">

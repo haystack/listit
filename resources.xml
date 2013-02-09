@@ -82,11 +82,13 @@
     <fileset dir="${listit.js.models.dir}">
         <include name="*.js" />
     </fileset>
+    <fileset file="${listit.js.dir}/setup-models.js" />
 </resources>
 <resources id="js.views">
     <fileset dir="${listit.js.views.dir}">
         <include name="*.js" />
     </fileset>
+    <fileset file="${listit.js.dir}/setup-views.js" />
 </resources>
 
 <resources id="js.common">
@@ -107,22 +109,12 @@
     <fileset file="${listit.js.dir}/router.js" />
 </resources>
 
-<resources id="js.setup.models">
-    <fileset file="${listit.js.dir}/setup/models.js" />
-</resources>
-
-<resources id="js.setup.views">
-    <fileset file="${listit.js.dir}/setup/views.js" />
-</resources>
-
-<resources id="js.setup.upgrade">
-    <fileset file="${listit.js.dir}/setup/upgrade.js" />
+<resources id="js.upgrade">
+    <fileset file="${listit.js.dir}/upgrade.js" />
 </resources>
 
 <resources id="js.setup">
-    <resources refid="js.setup.upgrade"/>
-    <resources refid="js.setup.models"/>
-    <resources refid="js.setup.views"/>
+    <fileset file="${listit.js.dir}/setup.js" />
 </resources>
 
 <resources id="js.collectors">
