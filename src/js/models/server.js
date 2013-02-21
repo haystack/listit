@@ -13,8 +13,17 @@
             logSyncInterval:  -1 // Disabled
         },
         initialize: function() {
-            _.bindAll(this);
-            L.gvent.on('user:sync', this.syncNotes);
+          _(this).bindAll(
+            '_syncNotesFailure',
+            '_syncNotesSuccess',
+            '_syncNotesEnter',
+            '_syncNotesExit',
+            'packageNote',
+            'unpackageNote',
+            'syncNotes',
+            'syncLogs'
+          );
+            L.gvent.on('user:sync', this.syncNotes, this);
         },
         // Defines a translation between a packaged note and a local note.
         transTable : {
