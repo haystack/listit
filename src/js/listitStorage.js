@@ -46,7 +46,7 @@
           }
         }
       },
-      remove: function(key, object, options) {
+      remove: function(key, options) {
         try {
           LocalStorage.store.removeItem(key);
           if (options && options.success) options.success();
