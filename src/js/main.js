@@ -84,13 +84,13 @@ window.ListIt = {VERSION: 1};
     } else {
       view.$el.hide();
     }
-    L.pages[name] = view
+    L.pages[name] = view;
   };
 
   L.removePage = function(name) {
     L.pages[name].remove();
     delete L.pages[name];
-  }
+  };
 
   L.setVersion = function(version) {
     L.store.set('version', version);

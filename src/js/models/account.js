@@ -3,7 +3,7 @@
     L.models.Account = Backbone.Model.extend({
         initialize: function() {
             this.fetch();
-            this.listenTo(this, 'change', _.mask(this.save), this)
+            this.listenTo(this, 'change', _.mask(this.save), this);
         },
         // Singleton
         url: '/account',

@@ -1,3 +1,4 @@
+/*global chrome: false*/
 (function(L) {
   'use strict';
 
@@ -73,4 +74,4 @@
       return '<a target="_blank" href="'+url+'">'+title+'</a>';
     }
   };
-});
+})(ListIt);

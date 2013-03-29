@@ -1,4 +1,5 @@
 (function(L) {
+  'use strict';
   var _ = this._;
   var Backbone = this.Backbone;
   L.stores = [];
@@ -60,7 +61,7 @@
   } catch (e) { }
 
   Backbone.sync = function(method, model, options) {
-    options || (options = {});
+    options = options || {};
 
     var success = options.success;
     if (success) {
@@ -85,15 +86,16 @@
       }
     } else {
       var url = options.url || getValue(model, 'url') || urlError();
+      var json;
       switch(method) {
         case "create":
-          var json = model.toJSON();
-          json.id = guid();
-          url += (url.charAt(url.length - 1) == '/' ? '' : '/') + encodeURIComponent(json.id);
+          json = model.toJSON();
+          json.id = Date.now();
+          url += (url.charAt(url.length - 1) === '/' ? '' : '/') + encodeURIComponent(json.id);
           store.set(url, json, options);
           break;
         case "update":
-          var json = model.toJSON();
+          json = model.toJSON();
           store.set(url, json, options);
           break;
         case "read":

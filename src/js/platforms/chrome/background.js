@@ -11,9 +11,11 @@
     // I can't find the memory leak so, for now, shred stuff.
     var shred = function(o) {
       for (var k in o) {
-        try {
-          delete o[k];
-        } catch (e) {}
+        if (o.hasOwnProperty(k)) {
+          try {
+            delete o[k];
+          } catch (e) {}
+        }
       }
     };
 
@@ -23,7 +25,10 @@
         delete win['background'];
         // Shred attached objects
         for (var k in win) {
-          shred(win[k]);
+
+          if (win.hasOwnProperty(k)) {
+            shred(win[k]);
+          }
         }
         // Shred window
         shred(win);

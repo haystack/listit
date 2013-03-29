@@ -2,12 +2,6 @@
 
 <project>
 
-<fileset id="jshint-files" dir="${listit.js.dir}">
-    <include name="**/*.js" />
-    <exclude name="templates.js" />
-    <exclude name="libs/**" />
-</fileset>
-
 <resources id="css.wysihtml5">
     <filelist dir="${listit.css.dir}">
         <file name="reset.css"/>

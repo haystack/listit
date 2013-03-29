@@ -16,8 +16,8 @@ window.Lock = (function() {
     },
     release: function() {
       if (!this.isSet()) {
-        throw Error("Lock not set.");
-      };
+        throw new Error("Lock not set.");
+      }
       this.value--;
       if (!this.isSet()) {
         var cb;

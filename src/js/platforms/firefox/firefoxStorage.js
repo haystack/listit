@@ -1,4 +1,6 @@
+/*globals Components: false*/
 (function(L) {
+  'use strict';
   // TODO: Extend LocalStorage instead of rewrite
   var FirefoxStorage = L.stores['firefox'] = {
     store:  (function() {

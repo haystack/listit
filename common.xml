@@ -6,6 +6,9 @@
     <taskdef resource="net/sf/antcontrib/antlib.xml"/>
     <include file="${root.dir}/util.xml" />
 
+    <taskdef name="jshint" classname="com.philmander.jshint.JsHintAntTask"
+        classpath="${root.dir}/tools/ant-jshint-0.3.4-deps.jar" />
+
     <!-- Properties -->
     <property file="${root.dir}/global.properties" />
 
@@ -132,8 +135,14 @@
     </target>
 
     <target name="jshint">
-        <jshint fail="${build.is.mode.release}">
-            <fileset refid="jshint-files" />
+        <jshint
+            dir="${listit.js.dir}"
+            fail="${build.is.mode.release}"
+            globalsFile="${root.dir}/tools/jshint-globals.properties"
+            optionsFile="${root.dir}/tools/jshint-options.properties">
+            <include name="**/*.js" />
+            <exclude name="templates.js" />
+            <exclude name="libs/**" />
         </jshint>
     </target>
 

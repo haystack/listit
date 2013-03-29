@@ -1,4 +1,7 @@
+
+/*global chrome: false*/
 (function(L) {
+  "use strict";
   var ChromeStorage = L.stores['chrome'] = {
     storage: chrome.storage.local,
     get: function(key, options) {

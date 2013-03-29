@@ -15,7 +15,6 @@ ListIt.lvent.once('setup:upgrade', function(L, lock) {
           ],
           upgradeFunctions = {
             1: function(from, to) {
-              console.log("Here?");
               L.lvent.once('setup:models:after', function(L, lock) {
 
                 _.each(defaultNotes, function(s) {
