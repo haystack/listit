@@ -5,14 +5,24 @@
     L.models.Server = Backbone.Model.extend({
         defaults : {
             url: 'https://welist.it/listit/jv3/',
-            syncing: false,
+            syncingNotes: false,
             syncingLogs: false,
-
+            registered: false,
+            email: '',
             noteSyncInterval: 10*60*1000, // 10m
             //logSyncInterval:  30*60*1000, // 30m
             logSyncInterval:  -1 // Disabled
         },
+        exclude: [
+          'syncingNotes',
+          'syncingLogs'
+        ],
+        toJSON: function(options) {
+          return _.omit(this.attributes, this.exclude);
+        },
         initialize: function() {
+          this.fetch();
+          this.listenTo(this, 'change', _.mask(this.save));
           _(this).bindAll(
             '_syncNotesFailure',
             '_syncNotesSuccess',
@@ -23,7 +33,22 @@
             'syncNotes',
             'syncLogs'
           );
-            L.gvent.on('user:sync', this.syncNotes, this);
+          L.gvent.on('user:sync', this.syncNotes, this);
+          this.listenTo(this, 'change:registered', function(m, registered) {
+            if (registered) {
+              m.start();
+            } else {
+              m.stop();
+            }
+          });
+          if (this.get('registered')) {
+            this.start();
+          }
+        },
+        // Singleton
+        url : '/server',
+        isNew: function() {
+            return false;
         },
         // Defines a translation between a packaged note and a local note.
         transTable : {
@@ -105,11 +130,11 @@
           debug('syncNotes::start');
 
           this.trigger('sync:start');
-          this.set('syncing', true);
+          this.set('syncingNotes', true);
           return true;
         },
         _syncNotesExit: function() {
-          this.set('syncing', false);
+          this.set('syncingNotes', false);
           var interval = this.get('noteSyncInterval');
           if (interval > 0) {
             this.set('noteSyncTimer', window.setTimeout(this.syncNotes, interval));
@@ -193,16 +218,19 @@
         start : function() {
             // Note: use timout instead of interval for a responsive interface.
             // Also allows pre-empting
+            var that = this;
 
-            var noteSyncInterval = this.get('noteSyncInterval', -1),
-                logSyncInterval = this.get('logSyncInterval', -1);
+            _.defer(function() {
+              var noteSyncInterval = that.get('noteSyncInterval', -1),
+                  logSyncInterval = that.get('logSyncInterval', -1);
 
-            if (noteSyncInterval > 0) {
-                this.syncNotes();
-            }
-            if (logSyncInterval > 0) {
-                this.syncLogs();
-            }
+              if (noteSyncInterval > 0) {
+                  that.syncNotes();
+              }
+              if (logSyncInterval > 0) {
+                  that.syncLogs();
+              }
+            });
         },
         stop : function() {
             clearTimeout(this.get('noteSyncTimer'));
@@ -345,21 +373,47 @@
             });
             return unpacked;
         },
-        validateUser: function(hashPass, options) {
-            debug('logging in:', hashPass);
-            this.ajax(_.extend({
-                method: 'login',
-                auth: 'true',
-                cache: false,
-                authToken: hashPass
-            }, options));
+        login: function(email, password, options) {
+            var hashpass = L.util.makeHashpass(email, password);
+            var that = this;
+            this.set({
+              email: undefined,
+              registered: false
+            });
+            this.ajax({
+              method: 'login',
+              auth: 'true',
+              cache: false,
+              authToken: hashpass,
+              success: function() {
+                that.set({
+                  email: email,
+                  registered: true,
+                  error: undefined
+                });
+                L.authmanager.setToken(hashpass);
+              },
+              error: function(jqXHR) {
+                if (jqXHR.status === 401) {
+                  that.set('error', 'Invalid email or password.');
+                } else {
+                  that.set('error', 'Connection Error.');
+                }
+              }
+            });
         },
-        registerUser : function(email, password, couhes, options) {
+        register: function(email, password, couhes, options) {
+            var that = this;
             // Pulled from zen/tags site
             var firstname = '';
             var lastname = '';
 
-            this.ajax(_.extend({
+            this.set({
+              email: undefined,
+              registered: false
+            });
+
+            this.ajax({
                 method: 'createuser',
                 data: {
                     username: email,
@@ -368,8 +422,22 @@
                     firstname: firstname,
                     lastname: lastname
                 },
-                cache: false
-            }, options));
+                cache: false,
+                success: function() {
+                    that.set({
+                      registered: true,
+                      error: undefined,
+                      email: email
+                    });
+                    L.authmanager.setToken(L.util.makeHashpass(email, password));
+                },
+                error: function() {
+                  that.set('error', 'Failed to register user.');
+                }
+            });
+        },
+        logout: function() {
+          this.set('registered', false);
         }
     });
 

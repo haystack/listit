@@ -14,7 +14,7 @@
       } else {
         // Default options panels
         this.panels = [
-          new L.views.AccountView({model: L.account}),
+          new L.views.ServerView({model: L.server}),
           new L.views.InfoView(),
           new L.views.PreferencesView({model: L.preferences}),
           new L.views.ImportExportView()

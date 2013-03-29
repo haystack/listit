@@ -8,5 +8,4 @@ ListIt.lvent.on('setup:models', function(L, lock) {
   L.omnibox     = new L.models.Omnibox();
   L.preferences = new L.models.Preferences();
   L.authmanager = new L.models.AuthManager();
-  L.account     = new L.models.Account();
 });

@@ -71,11 +71,11 @@ a, .tabbar a {
 #options-login {
   
 }
-.loginForm .inputLabel {
+#loginForm .inputLabel {
   font-weight: 500;
   margin-bottom: 4px;
 }
-.loginForm input {
+#loginForm .input {
   margin-bottom: 10px;
   width: 100%;
   height: 28px;

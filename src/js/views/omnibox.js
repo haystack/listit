@@ -166,14 +166,14 @@
                 L.server.off(null, null, that);
             });
             this.listenTo(L.preferences, 'change:shrinkNotes', this.render);
-            this.listenTo(L.server, 'change:syncing', this.render);
+            this.listenTo(L.server, 'change:syncingNotes', this.render);
         },
         render: function() {
             var shrink = L.preferences.get('shrinkNotes');
             this.$el.html(L.templates["omnibox/controls"]({
                 sizeIcon: shrink ?  'img/p-arrow-left.png': 'img/p-arrow-down.png',
                 sizeTitle: shrink ?  'Expand Notes': 'Minimize Notes',
-                syncState: L.server.get('syncing')
+                syncState: L.server.get('syncingNotes')
             }));
             return this;
         },
