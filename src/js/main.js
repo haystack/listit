@@ -95,14 +95,4 @@ window.ListIt = {VERSION: 1};
   L.setVersion = function(version) {
     L.store.set('version', version);
   };
-
-  L.log = function(action, info) {
-    var e = {action: action, info: info};
-    L.gvent.trigger('log', e);
-    L.gvent.trigger('log:' + e.action, e);
-  };
-
-  L.addNote = function(text, meta) {
-    return L.notebook.addNote(text, meta, window);
-  };
 })(ListIt);

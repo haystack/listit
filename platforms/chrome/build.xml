@@ -38,10 +38,11 @@
         <resources refid="js.common" />
         <resources refid="js.storage" />
         <fileset file="${listit.js.platforms.dir}/chrome/chromeStorage.js" />
+        <fileset file="${listit.js.platforms.dir}/chrome/background.js" />
         <resources refid="js.models" />
         <resources refid="js.collectors" />
         <resources refid="js.upgrade"/>
-        <fileset file="${listit.js.platforms.dir}/chrome/background.js" />
+        <fileset dir="${listit.js.platforms.dir}/chrome/views" includes="*.js" />
         <resources refid="js.setup"/>
     </resources>
 

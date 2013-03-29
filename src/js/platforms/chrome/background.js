@@ -38,10 +38,14 @@
       views: {},
       models: {}
     };
-    L.lvent.once('models:setup', function(L) {
+    L.lvent.once('setup:models:after', function(L) {
       L.chrome.omnibox = new L.models.FilterableNoteCollection();
-      L.chrome.omniboxView = new L.chrome.views.ChromeOmniboxView({collection: L.chrome.omnibox});
+    });
 
-      L.chrome.contextMenu = new L.chrome.ContextMenu();
+    L.lvent.once('setup:views:after', function(L) {
+      L.chrome.omniboxView = new L.chrome.views.ChromeOmniboxView({
+        collection: L.chrome.omnibox
+      });
+      L.chrome.contextMenu = new L.chrome.views.ContextMenu();
     });
 })(ListIt);

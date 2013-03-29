@@ -4,7 +4,8 @@
   L.chrome.views.ChromeOmniboxView = Backbone.ChromeOmniboxView.extend({
     collection: L.chrome.omnibox,
     initialize: function() {
-      this.collection.on('add remove reset', _.debounce(this.update, 100), this);
+      this.collection.on('search:paused', this.onSearchPause, this);
+      this.collection.on('search:completed', this.update, this);
     },
     defaultSuggestion: 'Add Note: <match>%s</match>',
     events : {
@@ -14,7 +15,6 @@
       'submit': 'onSubmit'
     },
     onChange: function(text, suggest) {
-      this.collection.stop();
       this.suggest = suggest;
       this.filter(text);
     },
@@ -28,7 +28,13 @@
       this.collection.reset();
     },
     onSubmit: function(text) {
-      L.addNote(text, {});
+      L.notebook.addNote(text, {});
+    },
+    onSearchPause: function() {
+      this.update();
+      if (this.collection.size() < 10) {
+        this.collection.next()
+      }
     },
     update: function() {
       if (!this.suggest) {

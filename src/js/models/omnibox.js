@@ -28,8 +28,8 @@
             var text = L.util.clean(this.get('text') || '');
             L.sidebar.search(text);
         },
-        saveNote: function(meta) {
-            L.addNote(this.get('text'), meta);
+        saveNote: function(window) {
+            return L.notebook.addNote(this.get('text'), {}, window);
         }
     });
 })(ListIt);

@@ -258,6 +258,7 @@
           note.set(noteJSON);
           this.get('notes').unshift(note, {action: 'add'});
           note.save();
+          return note;
       },
       getNote: function(id) {
           return (this.get('deletedNotes').get(id) || this.get('notes').get(id));

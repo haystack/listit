@@ -125,7 +125,7 @@
             this.model.unset('selection');
             // Clean
             this.storeText();
-            L.gvent.trigger('user:save-note');
+            this.model.saveNote(window);
             this.reset();
         },
 
