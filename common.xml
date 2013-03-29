@@ -6,7 +6,7 @@
     <taskdef resource="net/sf/antcontrib/antlib.xml"/>
     <include file="${root.dir}/util.xml" />
 
-    <taskdef name="jshint" classname="com.philmander.jshint.JsHintAntTask"
+    <taskdef name="jshint" classname="com.philmander.jshint.JsHintAntTask" 
         classpath="${root.dir}/tools/ant-jshint-0.3.4-deps.jar" />
 
     <!-- Properties -->

@@ -87,10 +87,11 @@
         <attribute name="object" />
         <element name="fileset" type="fileset"/>
         <![CDATA[
-        importPackage(java.io);
+        importPackage(Packages.java.io);
+        importPackage(Packages.org.apache.tools.ant.util);
 
         function readFile(file) {
-            return String(new java.lang.String(org.apache.tools.ant.util.FileUtils.readFully(new FileReader(file))));
+            return String(new java.lang.String(FileUtils.readFully(new FileReader(file))));
         }
 
         function writeFile(file, text) {
@@ -99,7 +100,7 @@
             fw.close();
         }
         function load(file) {
-            eval.call(this, readFile(file));
+            eval(readFile(file));
         }
 
         var projectDir = project.getProperty("root.dir");
