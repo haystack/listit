@@ -6,7 +6,7 @@ ListIt.lvent.on('setup:models', function(L, lock) {
   L.server      = new L.models.Server();
   L.sidebar     = new L.models.FilterableNoteCollection();
   L.omnibox     = new L.models.Omnibox();
-  L.options     = new L.models.Options();
+  L.preferences = new L.models.Preferences();
   L.authmanager = new L.models.AuthManager();
   L.account     = new L.models.Account();
 });

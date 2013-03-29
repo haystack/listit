@@ -212,7 +212,7 @@
             this.listenTo(this.collection, 'reset', _.mask(this.reset, 1));
             this.listenTo(this.collection, 'sort', _.mask(this.sort));
             this.listenTo(this.collection, 'search:paused', this.onPause);
-            this.listenTo(L.options, 'change:shrinkNotes', this.updateNoteShrinkState);
+            this.listenTo(L.preferences, 'change:shrinkNotes', this.updateNoteShrinkState);
             $(window).one('beforeunload', function() {
                 that.undelegateEvents();
                 that.stopListening();
@@ -321,7 +321,7 @@
                   'class': 'notelist', 'id': 'notes-container'
                 });
                 this.$el.html(ul);
-                this.updateNoteShrinkState(L.options, L.options.get('shrinkNotes'));
+                this.updateNoteShrinkState(L.preferences, L.preferences.get('shrinkNotes'));
 
                 this._rendered = true;
             }

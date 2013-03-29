@@ -1,7 +1,5 @@
 (function(L) {
   'use strict';
-  var _ = this._;
-  var Backbone = this.Backbone;
   L.stores = [];
 
   // Helper functions from Backbone

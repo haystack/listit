@@ -10,7 +10,7 @@
         that.undelegateEvents();
         that.stopListening();
       });
-      this.listenTo(L.options, 'change:toolbar', this.redraw);
+      this.listenTo(L.preferences, 'change:toolbar', this.redraw);
     },
     redraw: function() {
       if (this._rendered) {
@@ -19,7 +19,7 @@
     },
     render: function() {
       this.$el.html(L.templates["toolbar"]({
-        'items': L.options.get('toolbarItems')
+        'items': L.preferences.get('toolbarItems')
       }));
       this._rendered = true;
       return this;

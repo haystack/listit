@@ -162,14 +162,14 @@
             var that = this;
             $(window).one('beforeunload', function() {
                 that.undelegateEvents();
-                L.options.off(null, null, that);
+                L.preferences.off(null, null, that);
                 L.server.off(null, null, that);
             });
-            this.listenTo(L.options, 'change:shrinkNotes', this.render);
+            this.listenTo(L.preferences, 'change:shrinkNotes', this.render);
             this.listenTo(L.server, 'change:syncing', this.render);
         },
         render: function() {
-            var shrink = L.options.get('shrinkNotes');
+            var shrink = L.preferences.get('shrinkNotes');
             this.$el.html(L.templates["omnibox/controls"]({
                 sizeIcon: shrink ?  'img/p-arrow-left.png': 'img/p-arrow-down.png',
                 sizeTitle: shrink ?  'Expand Notes': 'Minimize Notes',
@@ -185,7 +185,7 @@
             L.server.syncNotes();
         },
         shrinkClicked: function(event) {
-            L.options.toggleShrink();
+            L.preferences.toggleShrink();
         }
     });
 

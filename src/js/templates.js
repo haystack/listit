@@ -85,11 +85,11 @@ __p+='\n        <li class="italic">List-it team at MIT CSAIL</li>\n    </ul>\n</
 }
 return __p;
 };
-ListIt.templates['options/settings'] = function(obj){
+ListIt.templates['options/preferences'] = function(obj){
 var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'')};
 with(obj||{}){
 __p+='<h3>Settings</h3>\n';
- _.each(options, function(opt) { 
+ _.each(preferences, function(opt) { 
 __p+='\n<div>\n    ';
  switch(opt.type) { case "boolean": 
 __p+='\n    <input '+

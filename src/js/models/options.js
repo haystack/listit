@@ -1,6 +1,6 @@
 (function(L) {
     'use strict';
-    L.models.Options = Backbone.Model.extend({
+    L.models.Preferences = Backbone.Model.extend({
         defaults: {
             shrinkNotes: true,
             expandVariables: true,
@@ -15,9 +15,9 @@
                 'link'
             ]
         },
-        // Specify user settable options here. The view will automatically
+        // Specify user settable preferences here. The view will automatically
         // format/display them.
-        options: {
+        schema: {
             shrinkNotes: {
                 type: 'boolean',
                 description: 'Collapse Notes' // TODO:Better desc
@@ -36,7 +36,7 @@
             }
         },
         // Singleton
-        url : '/options',
+        url : '/preferences',
         isNew: function() {
             return false;
         },

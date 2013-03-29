@@ -1,5 +1,5 @@
 <h3>Settings</h3>
-<% _.each(options, function(opt) { %>
+<% _.each(preferences, function(opt) { %>
 <div>
     <% switch(opt.type) { case "boolean": %>
     <input <%=opt.attrs %> id="<%=opt.name%>Field" class="input" type="checkbox" name="<%=opt.name%>" <% if (opt.value) { %> checked="checked" <%}%> />
