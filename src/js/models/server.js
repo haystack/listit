@@ -126,7 +126,7 @@
         },
         _syncNotesEnter: function() {
           // Don't sync if waiting for a past sync.
-          if (this.get('synching')) {
+          if (this.get('synching') || !this.get('registered')) {
             return false;
           }
           clearTimeout(this.get('noteSyncTimer'));
