@@ -13,16 +13,19 @@
             //logSyncInterval:  30*60*1000, // 30m
             logSyncInterval:  -1 // Disabled
         },
-        exclude: [
-          'syncingNotes',
-          'syncingLogs'
+        include: [
+          'registered',
+          'url',
+          'email',
+          'noteSyncInterval',
+          'logSyncInterval'
         ],
         toJSON: function(options) {
-          return _.omit(this.attributes, this.exclude);
+          return _.pick(this.attributes, this.include);
         },
         initialize: function() {
           this.fetch();
-          this.listenTo(this, 'change', _.mask(this.save));
+          this.listenTo(this, 'change:registered change:email', _.mask(this.save));
           _(this).bindAll(
             '_syncNotesFailure',
             '_syncNotesSuccess',
@@ -377,7 +380,7 @@
             var hashpass = L.util.makeHashpass(email, password);
             var that = this;
             this.set({
-              email: undefined,
+              email: '',
               registered: false
             });
             this.ajax({
@@ -387,7 +390,7 @@
               authToken: hashpass,
               success: function() {
                 that.set({
-                  email: email,
+                  email: '',
                   registered: true,
                   error: undefined
                 });
@@ -409,7 +412,7 @@
             var lastname = '';
 
             this.set({
-              email: undefined,
+              email: '',
               registered: false
             });
 
@@ -437,7 +440,11 @@
             });
         },
         logout: function() {
-          this.set('registered', false);
+          this.set({
+            registered: false,
+            email: '',
+          });
+          L.authmanager.unsetToken();
         }
     });
 
