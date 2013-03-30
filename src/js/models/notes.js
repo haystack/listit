@@ -256,19 +256,30 @@
           includeInJSON: "id"
         }
       },
-      addNote: function(text, meta, window) {
-          // Strip extra whitespace/cruft.
-          text = L.util.strip(text);
+      createNote: function(text, meta, window, options) {
+        // Strip extra whitespace/cruft.
+        text = L.util.strip(text);
 
-          var note = new L.models.Note({contents: text}),
-          noteJSON = note.toJSON();
+        var fromUser = _.pop(options || {}, "user", true);
+        var note = new L.models.Note({contents: text, meta: meta || {}}, options);
+        var noteJSON = note.toJSON();
 
-          noteJSON.meta = meta || {};
-          L.gvent.trigger('note:request:parse', noteJSON, window);
-          L.gvent.trigger('note:request:parse:new', noteJSON, window);
-          note.set(noteJSON);
-          this.get('notes').unshift(note, {action: 'add'});
-          note.save();
+        // TODO: This should use a different event
+        L.gvent.trigger("note:request:pqrse note:request:parse:new", noteJSON, window);
+        note.set(noteJSON);
+        note.save();
+        this.get('notes').unshift(note, options);
+        this.trigger("create", note);
+        return note;
+      },
+      trashNote: function(note) {
+          note.moveTo(this.get('deletedNotes'));
+          this.trigger("delete", note);
+          return note;
+      },
+      untrashNote: function(note) {
+          note.moveTo(this.get('notes'));
+          this.trigger("undelete", note);
           return note;
       },
       getNote: function(id) {

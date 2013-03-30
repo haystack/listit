@@ -20,7 +20,7 @@
         remove : function(options) {
             if (this._rendered) {
                 var el = this.$el;
-                if ((options && options.action) === 'delete') {
+                if (options && options.animate) {
                     el.stop().fadeOut({queue: false}, 200).slideUp(300, function() {
                         el.remove();
                     });
@@ -35,18 +35,6 @@
             return this.el && this.el.parentNode;
         },
         render: function(options) {
-            var action = options && options.action;
-
-            if (action === 'new') {
-                this.$el.one('DOMNodeInserted', function() {
-                    var that = $(this);
-                    that.hide();
-                    setTimeout(function() {
-                        that.stop().hide().fadeIn({queue: false}, 200).hide().slideDown(300);
-                    }, 1);
-                });
-            }
-
             this.$el.on('DOMNodeRemoved', _.bind(this.cleanupEditor, this));
 
             if (this._rendered) {
@@ -78,7 +66,7 @@
             this.$el.html(this.template(this.model.toJSON()));
         },
         events: {
-            'click .close-btn': 'onRemove',
+            'click .close-btn': 'onRemoveClicked',
             'click .contents': 'onClick',
             'keyup .contents': 'onKeyUp',
             'blur .editor': 'onBlur'
@@ -86,10 +74,9 @@
         getNoteText: function() {
             return this.$('.contents').html();
         },
-
-        onRemove: function() {
-            this.model.moveTo(L.notebook.get('deletedNotes'), {action: 'delete'});
-            return false;
+        onRemoveClicked: function() {
+          L.notebook.trashNote(this.model);
+          return false;
         },
         expand: function() {
             this.$el.css('height', 'auto');
@@ -99,6 +86,7 @@
         },
         openEditor: function() {
             // I know that this is unreadable. But it makes a point.
+            // (it's complicated)
 
             var $contentsEl = this.$('.contents'),
                 $editorEl = this.$('.editor');
@@ -152,7 +140,6 @@
             $editorEl.show();
             $contentsEl.hide();
             this.editor.focus();
-
         },
         onBlur: function() {
             var that = this;
@@ -207,8 +194,10 @@
             var that = this;
             this.subViews = {}; // Note views
             this.delayedRemove = {}; // Delay removes to prevent flickering.
-            this.listenTo(this.collection, 'add', _.mask(this.addNote, 0, 2));
-            this.listenTo(this.collection, 'remove', _.mask(this.removeNote, 0, 2));
+            this.listenTo(this.collection, 'add', _.mask(this.addNote, 0, 2))
+            this.listenTo(this.collection, 'remove', function(note, col, options) {
+              that.removeNote(note, _.defaults({animate: true}, options));
+            });
             this.listenTo(this.collection, 'reset', _.mask(this.reset, 1));
             this.listenTo(this.collection, 'sort', _.mask(this.sort));
             this.listenTo(this.collection, 'search:paused', this.onPause);

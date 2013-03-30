@@ -18,14 +18,14 @@
         title: 'Add to List.it (page)',
         contexts: ['page'],
         onclick: function(info, tab) {
-          L.notebook.addNote(this.mkLink(info.pageUrl, tab.title));
+          L.notebook.createNote(this.mkLink(info.pageUrl, tab.title));
         }
       },
       link: {
         title: 'Add to List.it (link)',
         contexts: ['link'],
         onclick: function(info, tab) {
-          L.notebook.addNote(this.mkLink(info.linkUrl, info.linkUrl));
+          L.notebook.createNote(this.mkLink(info.linkUrl, info.linkUrl));
         }
       },
       image: {
@@ -53,19 +53,19 @@
         title: 'Add to List.it (plain text)',
         contexts: ['selection'],
         onclick: function(info, tab) {
-          L.notebook.addNote(this.mkLink(info.pageUrl, tab.title) + '<br />' + _.str.escapeHTML(info.selectionText));
+          L.notebook.createNote(this.mkLink(info.pageUrl, tab.title) + '<br />' + _.str.escapeHTML(info.selectionText));
         }
       },
       html: {
         title: 'Add to List.it (raw html)',
         contexts: ['selection'],
         onclick: function(info, tab) {
-          L.notebook.addNote(this.mkLink(info.pageUrl, tab.title) + '<br />' + info.selectionText);
+          L.notebook.createNote(this.mkLink(info.pageUrl, tab.title) + '<br />' + info.selectionText);
         }
       }
     },
     mediaHandler: function(url, title, tag, src) {
-      L.notebook.addNote(this.mkLink(url, title)+'<br />'+this.mkMedia(tag, src));
+      L.notebook.createNote(this.mkLink(url, title)+'<br />'+this.mkMedia(tag, src));
     },
     mkMedia: function(tag, src) {
       return '<'+tag+ ' controls="controls" src="'+src+'"/>';

@@ -29,7 +29,7 @@
             L.sidebar.search(text);
         },
         saveNote: function(window) {
-            return L.notebook.addNote(this.get('text'), {}, window);
+            return L.notebook.createNote(this.get('text'), {}, window);
         }
     });
 })(ListIt);
