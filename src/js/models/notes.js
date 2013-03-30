@@ -24,14 +24,22 @@
                 'modified': true
             });
         },
-        changeContents: function(newContents) {
+        /*
+         * Change the contents of a note and trigger parse events.
+         *   newContents: new note contents
+         *   window: the window from which this note was changed (optional)
+         */
+        changeContents: function(newContents, window) {
             var note = this.toJSON();
             note.contents = newContents;
-            L.gvent.trigger('note:request:parse', note, window);
-            L.gvent.trigger('note:request:parse:changed', note, window);
+            // TODO: This should use a different event
+            L.gvent.trigger("note:request:pqrse note:request:parse:change", note, window);
             this.set(note);
             this.save();
         },
+        /*
+         * Merge a new note with this one.
+         */
         merge: function(attrs) {
           // Merge contents
           var newContents;
@@ -52,6 +60,9 @@
             'version': attrs.version
           });
         },
+        /*
+         * Move this note from it's current collection to a new one.
+         */
         moveTo: function(collection, options) {
             if (collection === this.collection) {
                 return;
