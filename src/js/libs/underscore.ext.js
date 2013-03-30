@@ -2,10 +2,14 @@
   var _ = this._;
   _.mixin({
     // Delete and return o[key]
-    pop: function(o, key) {
-      var ret = o[key];
-      delete o[key];
-      return ret;
+    pop: function(o, key, def) {
+      if (o.hasOwnProperty(key)) {
+        var ret = o[key];
+        delete o[key];
+        return ret;
+      } else {
+        return def;
+      }
     },
     // Like map but works on objects.
     kmap: function(obj, iterator, context) {
