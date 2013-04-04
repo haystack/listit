@@ -36,6 +36,7 @@
         },
         render: function(options) {
             this.$el.on('DOMNodeRemoved', _.bind(this.cleanupEditor, this));
+            this.$el.attr("id", "note-"+this.model.id);
 
             if (this._rendered) {
                 this.cleanupEditor();
