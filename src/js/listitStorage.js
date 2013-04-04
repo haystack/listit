@@ -64,7 +64,7 @@
     var success = options.success;
     if (success) {
       options.success = function(resp) {
-        if (success) success(model, resp, options);
+        success(model, resp, options);
         model.trigger('sync', model, resp, options);
       };
     }
@@ -72,7 +72,7 @@
     var error = options.error;
     if (error) {
       options.error = function(e) {
-        if (e) error(model, e, options);
+        error(model, e, options);
         model.trigger('error', model, e, options);
       };
     }
@@ -94,6 +94,13 @@
           break;
         case "update":
           json = model.toJSON();
+          // Don't pass back result on save (prevent change events on save)
+          if (success) {
+            options.success = function(resp) {
+              success(model, null, options);
+              model.trigger('sync', model, resp, options);
+            };
+          }
           store.set(url, json, options);
           break;
         case "read":
