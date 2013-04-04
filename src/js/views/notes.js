@@ -69,11 +69,15 @@
         events: {
             'click .close-btn': 'onRemoveClicked',
             'click .contents': 'onClick',
+            'click .contents a': 'onLinkOpen',
             'keyup .contents': 'onKeyUp',
             'blur .editor': 'onBlur'
         },
         getNoteText: function() {
             return this.$('.contents').html();
+        },
+        onLinkOpen: function(event) {
+          L.gvent.trigger('user:open-bookmark', this.model, event.target.href);
         },
         onRemoveClicked: function() {
           L.notebook.trashNote(this.model);
