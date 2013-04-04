@@ -30,6 +30,15 @@
         var callargs = arguments;
         return func.apply(this, underscore.map(args, function(i) { return callargs[i]; }));
       };
+    },
+    chunk: function(array, size) {
+      var i = 0;
+      var result = [];
+      while (i < array.length) {
+        result.push(array.slice(i, i+size));
+        i += size;
+      }
+      return result;
     }
   });
 })();
