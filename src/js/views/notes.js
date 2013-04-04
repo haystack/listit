@@ -198,14 +198,13 @@
         initialize: function() {
             var that = this;
             this.subViews = {}; // Note views
-            this.delayedRemove = {}; // Delay removes to prevent flickering.
+            this.renderNext = 0;
             this.listenTo(this.collection, 'add', _.mask(this.addNote, 0, 2))
             this.listenTo(this.collection, 'remove', function(note, col, options) {
-              that.removeNote(note, _.defaults({animate: true}, options));
+              that.removeNote(note, _.defaults({}, options));
             });
             this.listenTo(this.collection, 'reset', _.mask(this.reset, 1));
             this.listenTo(this.collection, 'sort', _.mask(this.sort));
-            this.listenTo(this.collection, 'search:paused', this.onPause);
             this.listenTo(L.preferences, 'change:shrinkNotes', this.updateNoteShrinkState);
             $(window).one('beforeunload', function() {
                 that.undelegateEvents();
@@ -234,27 +233,67 @@
             return (scrollTop + 2*containerHeight) > listHeight;
         },
         onScroll: function() {
-            // Load on scroll.
-            if (this.checkLoadMore()) {
-                this.collection.next();
+          // Load on scroll.
+          this.loadMore();
+        },
+        loadMore: function() {
+          var note;
+          var view;
+          while (this.collection.size() > this.renderNext && this.shouldRenderAt(this.renderNext)) {
+            note = this.collection.at(this.renderNext);
+            view = this.subViews[note.id];
+            if (!view) {
+              view = this.subViews[note.id] = new L.views.NoteView({model: note});
             }
+            if (!view.isVisible()) {
+              this.insertAt(this.renderNext, view);
+            }
+            this.renderNext += 1;
+          }
+        },
+        lazyLoadMore: _.debounce(function() {
+          return this.loadMore();
+        }, 100),
+        shouldRenderAt: function(index) {
+            var scrollTop = this.$el.scrollTop(),
+                containerHeight = this.$el.parent().height(),
+                notes = this.$('#notes-container .note'),
+                noteOffset;
+            if (notes.length > index) {
+              noteOffset = notes.eq(index).position().top;
+            } else if (notes.length > 0) {
+              noteOffset = notes.last().position().top;
+            } else {
+              noteOffset = 0;
+            }
+            return (scrollTop + 2*containerHeight) > noteOffset;
         },
         addNote: function(note, options) {
-            clearTimeout(this.delayedRemove[note.id]);
-            // Create the view iff it doesn't exist.
-            var view = this.subViews[note.id];
-            if (!view) {
-                view = this.subViews[note.id] = new L.views.NoteView({model: note});
-            }
+          var view = this.subViews[note.id];
 
-            if (!this._rendered || view.isVisible()) {
-                return;
+          // Ignore already visible/unrendered
+          if (!this._rendered || view && view.isVisible()) {
+              return;
+          }
+
+          // XXX: BUG: options.index incorrect. Calculate manually.
+          var index = this.collection.indexOf(note, options && options.index);
+
+          if (this.shouldRenderAt(index)) {
+            if (!view) {
+              view = this.subViews[note.id] = new L.views.NoteView({model: note});
             }
-            var index = this.collection.indexOf(note, options && options.index);
             this.insertAt(index, view);
+            if (index < this.renderNext) {
+              this.renderNext += 1;
+            }
+          } else if (index < this.renderNext) {
+            // If I choose not to render, fix the render next index.
+            this.renderNext = index;
+          }
+          this.fixHeight();
         },
         insertAt: function(index, view) {
-            // XXX: BUG: options.index incorrect. Calculate manually.
             var otherEl = this.$el.children('#notes-container').find('.note').eq(index);
             if (otherEl.length === 0) {
                 this.$el.children('#notes-container').append(view.render().$el);
@@ -262,49 +301,41 @@
                 otherEl.before(view.render().$el);
             }
         },
-        onPause: function() {
-            if (this.checkLoadMore()) {
-                this.collection.next();
-            }
-        },
         // Delay removes just in case we are re-adding the note.
         removeNote: function(note, options) {
-            var id = note.id || note;
-
-            clearTimeout(this.delayedRemove[id]);
-
-            try {
-                this.delayedRemove[id] = setTimeout(_.bind(this._removeNote, this, note, options), 50);
-            } catch (e) {
-                this._removeNote(note, options);
-            }
-        },
-        _removeNote: function(note, options) {
             var id = note.id || note,
                 view = this.subViews[id];
 
+            this.fixHeight();
             if (!view || !this._rendered) {
                 return;
             }
 
-            view.remove(options);
-            // This is necessary as removes are delayed.
-            if (this.checkLoadMore()) {
-                this.collection.next();
+            if (0 < this.$('#notes-container .note').index(view.$el) < this.renderNext) {
+              this.renderNext--;
             }
+
+
+            view.remove(options);
+            this.lazyLoadMore();
         },
-        sort: function() {
+        fixHeight: _.throttle(function() {
+          this.$('#notes-container').css("min-height", 36*this.collection.size());
+        }, 100),
+        sort: _.debounce(function() {
           var that = this;
           this.collection.each(function(note, i) {
             var view = that.subViews[note.id];
-            view.remove();
-            that.insertAt(i, view);
+            if (view) {
+              view.remove();
+              that.insertAt(i, view);
+            }
           });
-        },
+        }, 100),
         reset: function() {
+          this.renderNext = 0;
             if (this._rendered) {
-                //this.$el.children('#notes-container').empty();
-                _.each(this.subViews, _.mask(_.bind(this.removeNote, this), 1));
+                this.$el.children('#notes-container').empty();
                 this.collection.each(_.mask(_.bind(this.addNote, this), 0));
             }
         },
@@ -319,7 +350,7 @@
 
                 this._rendered = true;
             }
-            this.collection.reset();
+            _.defer(_.bind(this.reset, this));
             return this;
         }
     });

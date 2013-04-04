@@ -116,19 +116,27 @@
         initialize : function() {
             this.searchQueue = new ActionQueue(50);
             this.searchQueue.start();
+            this._searchCursor = 0;
             this.backingCollection = L.notebook.get('notes');
             this.listenTo(this.backingCollection, 'add', this.maybeAddNew);
             this.listenTo(this.backingCollection, 'remove', this._onRemove);
             this.listenTo(this.backingCollection, 'reset', _.mask(this.reset));
             this.listenTo(this.backingCollection, 'sort', _.mask(this.sort));
-            this.on('reset', this._onReset, this);
+            this.on('reset', _.mask(this._filter), this);
+            this.on('remove', function(note, c, options) {
+              if (this.indexOf(note) < this._searchCursor) {
+                this._searchCursor--;
+              }
+            });
+            this.on('add', function(note, c, options) {
+              if (this.indexOf(note) < this._searchCursor) {
+                this._searchCursor++;
+              }
+            });
+            this.reset();
         },
-        _offset: 10,
+        _chunk: 10,
         _onRemove: function(note, notes, options) {
-            if (note.id === this._lastSearchedNoteId) {
-                var n = this.backingCollection.at(this.backingCollection.indexOf(this._lastSearchedNoteId)-1);
-                this._lastSearchedNoteId = n ? n.id : undefined;
-            }
             this.remove(note, options);
         },
         comparator: function(note) {
@@ -150,7 +158,7 @@
             var text = L.util.clean(note.get('contents').toLowerCase());
             return L.util.matchTerms(this._terms, text);
         },
-        search: function(text, options) {
+        search: function(text) {
             // Extract the terms
             var newTerms = L.util.extractTerms(text);
 
@@ -158,67 +166,49 @@
             if (_.isEqual(this._terms, newTerms)) {
                 return;
             }
-
-            this._terms = newTerms;
-            this.reset();
+            this._filter(newTerms);
         },
-        _onReset: function() {
-            delete this._lastSearchedNoteId;
+        _filter: function(newTerms) {
+
+          this.searchQueue.clear();
+          if (this.searching) {
             this.searching = false;
-            this.searchQueue.clear();
-            this.next();
-        },
-        next: function(num) {
-            var start, end, lastNote,
-                that = this;
+            this.trigger("search:abort search:end", this._terms);
+            debug('search::cancel');
+          }
 
-            // Don't allow next to be called while searching
-            // Prevents bug where multiple views call next.
-            if (this.searching) {
-                return false;
-            } else {
-                this.searching = true;
-            }
+          this._searchCursor = 0;
 
-            num = num ? num : this._offset;
+          debug('search::start');
 
-            if (this._lastSearchedNoteId) {
-                lastNote = this.backingCollection.last();
+          var that = this;
+          if (arguments.length > 0) {
+            this._terms = newTerms;
+          }
+          this.searching = true;
+          this.trigger("search:begin", this._terms)
 
-                // Return if there are no notes to search or at end
-                if (!lastNote || this._lastSearchedNoteId === lastNote.id) {
-                    return;
-                }
+          var boundMatcher = _.bind(this.matcher, this)
 
-                start = this.backingCollection.indexOf(this.backingCollection.get(this._lastSearchedNoteId));
-            } else {
-                start = 0;
-            }
-
-            end = start+num;
-
-            _.each(this.backingCollection.slice(start, end+1), function(n) {
-                that.searchQueue.add(function() {
-                    if (that.matcher(n)) {
-                        // In order (or close enough), don't sort.
-                        that.add(n, {sort: false});
-                    }
+          _.each(_.chunk(this.backingCollection, this._chunk), function(chunk) {
+              that.searchQueue.add(function() {
+                _.each(chunk, function(note) {
+                  if (that.matcher(note)) {
+                    that.add(note, {at: that._searchCursor, sort: false});
+                    that._searchCursor++;
+                  } else {
+                    that.remove(note);
+                  }
                 });
-            });
-            this.searchQueue.add(function() {
-                that.searching = false;
-            });
+              });
+          });
 
-            lastNote = this.backingCollection.at(end);
-            if (lastNote) {
-                this._lastSearchedNoteId = lastNote.id;
-                this.searchQueue.add(_.bind(this.trigger, this, 'search:paused'));
-            } else {
-                lastNote = this.backingCollection.last();
-                this._lastSearchedNoteId = lastNote ? lastNote.id : undefined;
-                this.searchQueue.add(_.bind(this.trigger, this, 'search:completed'));
-            }
-        }
+          this.searchQueue.add(function() {
+            that.searching = false;
+            debug('search::end');
+            that.trigger('search:complete search:end', this._terms);
+          });
+        },
     });
 
     L.models.NoteBook = Backbone.RelModel.extend({
