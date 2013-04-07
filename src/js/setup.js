@@ -3,51 +3,51 @@
   'use strict';
   
   var setupActions = [
-    function(lock) {
-      L.lvent.trigger('setup:before', L, lock);
+    function(barr) {
+      L.lvent.trigger('setup:before', L, barr);
     },
-    function(lock) {
-      L.lvent.trigger('setup:upgrade:before', L, lock);
+    function(barr) {
+      L.lvent.trigger('setup:upgrade:before', L, barr);
     },
-    function(lock) {
-      L.lvent.trigger('setup:upgrade', L, lock);
+    function(barr) {
+      L.lvent.trigger('setup:upgrade', L, barr);
     },
-    function(lock) {
-      L.lvent.trigger('setup:upgrade:after', L, lock);
+    function(barr) {
+      L.lvent.trigger('setup:upgrade:after', L, barr);
     },
-    function(lock) {
-      L.lvent.trigger('setup:models:before', L, lock);
+    function(barr) {
+      L.lvent.trigger('setup:models:before', L, barr);
     },
-    function(lock) {
-      L.lvent.trigger('setup:models', L, lock);
+    function(barr) {
+      L.lvent.trigger('setup:models', L, barr);
     },
-    function(lock) {
-      L.lvent.trigger('setup:models:after', L, lock);
+    function(barr) {
+      L.lvent.trigger('setup:models:after', L, barr);
     },
-    function(lock) {
-      lock.aquire();
+    function(barr) {
+      barr.aquire();
       $(function() {
-        L.lvent.trigger('setup:views:before', L, lock);
-        lock.release();
+        L.lvent.trigger('setup:views:before', L, barr);
+        barr.release();
       });
     },
-    function(lock) {
-      L.lvent.trigger('setup:views', L, lock);
+    function(barr) {
+      L.lvent.trigger('setup:views', L, barr);
     },
-    function(lock) {
-      L.lvent.trigger('setup:views:after', L, lock);
+    function(barr) {
+      L.lvent.trigger('setup:views:after', L, barr);
     },
-    function(lock) {
-      L.lvent.trigger('setup:after', L, lock);
+    function(barr) {
+      L.lvent.trigger('setup:after', L, barr);
     }
   ];
 
   var callSetupAction = function(i) {
     if (setupActions.length <= i) return;
 
-    var lock = new Lock();
-    setupActions[i](lock);
-    lock.wait(callSetupAction, i+1);
+    var barr = new Barrier();
+    setupActions[i](barr);
+    barr.wait(callSetupAction, i+1);
   };
 
   callSetupAction(0);

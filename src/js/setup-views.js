@@ -1,4 +1,4 @@
-ListIt.lvent.on('setup:views:after', function(L, lock) {
+ListIt.lvent.on('setup:views:after', function(L, barr) {
   'use strict';
   // Open links in a new tab without accidentally modifying notes.
   $(document).on('click', 'a', function(e) {

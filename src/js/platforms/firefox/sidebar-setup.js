@@ -1,4 +1,4 @@
-ListIt.lvent.once('setup:views', function(L, lock) {
+ListIt.lvent.once('setup:views', function(L, barr) {
   'use strict';
   L.addPage('main', new L.views.MainPage());
   L.addPage('options', new L.views.OptionsPage());

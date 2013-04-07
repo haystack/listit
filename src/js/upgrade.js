@@ -1,6 +1,6 @@
-ListIt.lvent.once('setup:upgrade', function(L, lock) {
+ListIt.lvent.once('setup:upgrade', function(L, barr) {
     'use strict';
-    lock.aquire();
+    barr.aquire();
     L.getVersion(function(configVersion) {
       var programVersion = L.VERSION,
           defaultNotes = [
@@ -15,7 +15,7 @@ ListIt.lvent.once('setup:upgrade', function(L, lock) {
           ],
           upgradeFunctions = {
             1: function(from, to) {
-              L.lvent.once('setup:models:after', function(L, lock) {
+              L.lvent.once('setup:models:after', function(L, barr) {
 
                 _.each(defaultNotes, function(s) {
                   L.notebook.get('notes').create({'contents': s});
@@ -33,6 +33,6 @@ ListIt.lvent.once('setup:upgrade', function(L, lock) {
         upgradeFunctions[ver](configVersion, programVersion);
         L.setVersion(ver);
       }
-      lock.release();
+      barr.release();
     });
 });

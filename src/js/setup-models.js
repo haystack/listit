@@ -1,4 +1,4 @@
-ListIt.lvent.on('setup:models', function(L, lock) {
+ListIt.lvent.on('setup:models', function(L, barr) {
   'use strict';
   // Setup Models
   L.notebook = new L.models.NoteBook();
