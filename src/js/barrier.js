@@ -35,7 +35,7 @@ window.Barrier = (function() {
    **/
   var Barrier = function(n) {
     if (n < 0) {
-      throw new Error("Invalid Argument");
+      throw new RangeError("Invalid Argument");
     }
     this.value = n || 0;
     this.waiting = [];
@@ -60,12 +60,12 @@ window.Barrier = (function() {
      *
      **/
     aquire: function(n) {
-      if (arguments.length < 0) {
+      if (arguments.length === 0) {
         this.value++;
       } else if (n > 0) {
         this.value += n;
       } else {
-        throw new Error("Invalid Argument");
+        throw new RangeError("Invalid Argument");
       }
       return this.value;
     },
@@ -82,12 +82,12 @@ window.Barrier = (function() {
       if (!this.isSet()) {
         throw new Error("Barrier not set.");
       }
-      if (arguments.length < 0) {
+      if (arguments.length === 0) {
         this.value--;
       } else if (this.value >= n > 0) {
         this.value -= n;
       } else {
-        throw new Error("Invalid Argument");
+        throw new RangeError("Invalid Argument");
       }
 
       // Call waiting functions until set.

@@ -91,7 +91,7 @@
         <file name="constants.js" />
         <file name="util.js" />
         <file name="actionqueue.js" />
-        <file name="lock.js" />
+        <file name="barrier.js" />
     </filelist>
 </resources>
 
