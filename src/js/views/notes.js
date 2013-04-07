@@ -199,7 +199,7 @@
             var that = this;
             this.subViews = {}; // Note views
             this.renderNext = 0;
-            this.listenTo(this.collection, 'add', _.mask(this.addNote, 0, 2))
+            this.listenTo(this.collection, 'add', _.mask(this.addNote, 0, 2));
             this.listenTo(this.collection, 'remove', function(note, col, options) {
               that.removeNote(note, _.defaults({}, options));
             });

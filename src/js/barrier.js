@@ -92,7 +92,8 @@ window.Barrier = (function() {
 
       // Call waiting functions until set.
       var cb;
-      while (!this.isSet() && cb = this.waiting.pop()) {
+      while (!this.isSet() && this.waiting.length > 0) {
+        cb = this.waiting.pop();
         cb.callback.apply(null, cb.args);
       }
     },

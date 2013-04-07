@@ -186,9 +186,9 @@
             this._terms = newTerms;
           }
           this.searching = true;
-          this.trigger("search:begin", this._terms)
+          this.trigger("search:begin", this._terms);
 
-          var boundMatcher = _.bind(this.matcher, this)
+          var boundMatcher = _.bind(this.matcher, this);
 
           _.each(_.chunk(this.backingCollection, this._chunk), function(chunk) {
               that.searchQueue.add(function() {
@@ -208,7 +208,7 @@
             debug('search::end');
             that.trigger('search:complete search:end', this._terms);
           });
-        },
+        }
     });
 
     L.models.NoteBook = Backbone.RelModel.extend({

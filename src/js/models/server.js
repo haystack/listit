@@ -442,7 +442,7 @@
         logout: function() {
           this.set({
             registered: false,
-            email: '',
+            email: ''
           });
           L.authmanager.unsetToken();
         }
