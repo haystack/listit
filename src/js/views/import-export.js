@@ -41,38 +41,37 @@
     // TODO: Should probably define these elsewhere
     types: [
       {
-      fname : 'listit-notes.json',
-      display : 'JSON',
-      exporter: function() {
-        var nb = L.notebook.toJSON();
-        // FIXME: The next version of backbone relational should
-        // have a recursive export.
-        nb.notes = L.notebook.get('notes').toJSON();
-        _.each(L.notebook.getRelations(), function(r) {
-          nb[r.key] = L.notebook.get(r.key).toJSON();
-        });
-        return JSON.stringify(nb);
+        filename : 'listit-notes.json',
+        display : 'JSON',
+        exporter: function() {
+          return JSON.stringify(L.notebook.toJSON({include: true}));
+        },
+        importer : function(string) {
+          var obj = JSON.parse(string);
+          if (obj.notes) {
+            L.notebook.get('notes').add(obj.notes);
+          }
+          if (obj.deleted) {
+            L.notebook.get('deletedNotes').add(obj.notes);
+          }
+          L.notebook.get('notes').each(function(n) {
+            n.save();
+          });
+          L.notebook.get('deletedNotes').each(function(n) {
+            n.save();
+          });
+          L.notebook.save();
+        }
       },
-      importer : function(string) {
-        var obj = JSON.parse(string);
-        if (obj.notes) {
-          // FIXME (BUG!): Save notes on add
-          L.notebook.get('notes').add(obj.notes);
-        }
-        if (obj.deleted) {
-          L.notebook.get('deletedNotes').add(obj.notes);
+      {
+        filename : 'listit-notes.txt',
+        display : 'Text',
+        exporter: function() {
+          return L.notebook.get('notes').reduce(function(txt, n) {
+            return txt + '* ' + L.util.clean(n.get('contents')).replace(/\n/g, '\n  ') + '\n';
+          }, '');
         }
       }
-    },
-    {
-      fname : 'listit-notes.txt',
-      display : 'Text',
-      exporter: function() {
-        return L.notebook.get('notes').reduce(function(txt, n) {
-          return txt + '* ' + L.util.clean(n.get('contents')).replace(/\n/g, '\n  ') + '\n';
-        }, '');
-      }
-    }
     ],
     importClicked: function() {
       var type = this.types[this.$el.find('#importSelect').val()];
@@ -87,12 +86,13 @@
         }
       };
       fr.readAsText(file);
+      return false;
     },
     exportClicked: function() {
       var type = this.types[this.$el.find('#exportSelect').val()];
       var blob = new BlobBuilder();
       blob.append(type.exporter());
-      saveAs(blob.getBlob('text/plain;charset=utf-8'), type.fname);
+      saveAs(blob.getBlob('text/plain;charset=utf-8'), type.filename);
     }
   });
 })(ListIt);
