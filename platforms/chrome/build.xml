@@ -41,6 +41,7 @@
         <fileset file="${listit.js.platforms.dir}/chrome/background.js" />
         <resources refid="js.models" />
         <resources refid="js.collectors" />
+        <resources refid="js.observers" />
         <resources refid="js.upgrade"/>
         <fileset dir="${listit.js.platforms.dir}/chrome/views" includes="*.js" />
         <resources refid="js.setup"/>

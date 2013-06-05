@@ -77,7 +77,7 @@
             return this.$('.contents').html();
         },
         onLinkOpen: function(event) {
-          L.gvent.trigger('user:open-bookmark', this.model, event.target.href);
+          this.model.trigger('user:open-bookmark', this.model, this, event.target.href);
         },
         onRemoveClicked: function() {
           L.notebook.trashNote(this.model);
@@ -130,6 +130,7 @@
 
 
                 // Maintain a dialog count so that we don't close the editor with a dialog open.
+                // Referance counts are ugly but work.
                 this.editor._dialogCount = 0;
                 this.editor.on('show:dialog', function() {
                     editor._dialogCount++;
@@ -145,6 +146,7 @@
             $editorEl.show();
             $contentsEl.hide();
             this.editor.focus();
+            this.model.trigger('user:edit', this.model, this);
         },
         onBlur: function() {
             var that = this;
@@ -161,7 +163,8 @@
             });
         },
         closeEditor: function() {
-            this.model.changeContents(this.editor.getValue());
+            this.model.changeContents(this.editor.getValue(), window);
+            this.model.trigger('user:save', this.model, this);
             this.collapse();
             this.$('.editor').hide();
             this.$('.contents').show();

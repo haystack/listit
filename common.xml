@@ -105,7 +105,8 @@
         <property name="build.dir" value="${base-build.dir}/${platform}" />
         <property name="debug.dir" value="${base-debug.dir}/${platform}" />
         <property file="${platform.dir}/platform.properties" />
-    </target>
+
+        </target>
 
     <target name="mkdirs" depends="setup-platform">
         <mkdir dir="${deploy.dir}" />

@@ -115,6 +115,22 @@
     <fileset dir="${listit.js.dir}/collectors" excludes="${settings.disabled_collectors}">
         <include name="*.js" />
     </fileset>
+    <!--
+    <fileset dir="${listit.js.platforms.dir}/${platform}/collectors" excludes="${settings.disabled_collectors}">
+        <include name="*.js" />
+    </fileset>
+    -->
+</resources>
+
+<resources id="js.observers">
+    <fileset dir="${listit.js.dir}/observers" excludes="${settings.disabled_observers}">
+        <include name="*.js" />
+    </fileset>
+    <!--
+    <fileset dir="${listit.js.platforms.dir}/${platform}/observers" excludes="${settings.disabled_observers}">
+        <include name="*.js" />
+    </fileset>
+    -->
 </resources>
 
 <resources id="js.all">
@@ -126,6 +142,7 @@
     <resources refid="js.models" />
     <resources refid="js.views" />
     <resources refid="js.collectors" />
+    <resources refid="js.observers" />
     <resources refid="js.setup" />
 </resources>
 

@@ -24,10 +24,13 @@
         throttledSave: _.debounce(function() { this.save.apply(this, arguments); }, 500),
         requestSearch: function() {
             var text = L.util.clean(this.get('text') || '');
-            L.sidebar.search(text);
+            var searchID = L.sidebar.search(text);
+            this.trigger("search-requested", this, text, searchID);
         },
         saveNote: function(window) {
-            return L.notebook.createNote(this.get('text'), {}, window);
+            var note = L.notebook.createNote(this.get('text'), {}, window);
+            this.trigger("note-created", this, note);
+            return note;
         }
     });
 })(ListIt);

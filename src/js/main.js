@@ -31,6 +31,7 @@ window.ListIt = {VERSION: 1};
   L.pages = {};
   L.views = {};
   L.models = {};
+  L.observers = {};
   L.templates = {};
 
   /*******************

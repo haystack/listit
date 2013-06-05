@@ -164,16 +164,16 @@
 
             // Don't search if the terms haven't changed.
             if (_.isEqual(this._terms, newTerms)) {
-                return;
+                return this.searchID;
             }
-            this._filter(newTerms);
+            return this._filter(newTerms);
         },
         _filter: function(newTerms) {
 
           this.searchQueue.clear();
           if (this.searching) {
             this.searching = false;
-            this.trigger("search:abort search:end", this._terms);
+            this.trigger("search:abort search:end", this._terms, this.searchID);
             debug('search::cancel');
           }
 
@@ -186,7 +186,8 @@
             this._terms = newTerms;
           }
           this.searching = true;
-          this.trigger("search:begin", this._terms);
+          this.searchID = Math.random();
+          this.trigger("search:begin", this._terms, this.searchID);
 
           var boundMatcher = _.bind(this.matcher, this);
 
@@ -206,8 +207,9 @@
           this.searchQueue.add(function() {
             that.searching = false;
             debug('search::end');
-            that.trigger('search:complete search:end', this._terms);
+            that.trigger('search:complete search:end', that._terms, that.searchID);
           });
+          return this.searchID;
         }
     });
 

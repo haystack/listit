@@ -48,4 +48,18 @@
       });
       L.chrome.contextMenu = new L.chrome.views.ContextMenu();
     });
+
+    L.gvent.on('log:request:data', function(logEntry) {
+      //barr.aquire();
+      chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+        var tab = tabs[0];
+        logEntry.set('tabid', tab.id);
+        var info = logEntry.get('info');
+        if (!info.url) {
+          info.url = tab.url;
+        }
+        //barr.release();
+      });
+    });
+
 })(ListIt);
