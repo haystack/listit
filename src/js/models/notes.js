@@ -33,7 +33,7 @@
             var note = this.toJSON();
             note.contents = newContents;
             // TODO: This should use a different event
-            L.gvent.trigger("note:request:pqrse note:request:parse:change", note, window);
+            L.gvent.trigger("note:request:parse note:request:parse:change", note, window);
             this.set(note);
             this.save();
         },
