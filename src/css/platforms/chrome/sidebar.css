@@ -6,3 +6,46 @@ body {
 a[href="#"] {
     display: none;
 }
+
+/* Scrollbar stuff */
+
+#page-main > .contents {
+  overflow-y: scroll;
+}
+
+#page-main {
+  overflow-y: hidden;
+}
+
+::-webkit-scrollbar {
+  width: 13px;
+  height: 13px;
+}
+ 
+::-webkit-scrollbar:hover {
+  height: 18px;
+}
+ 
+::-webkit-scrollbar-button {
+  display: none;
+}
+ 
+ 
+::-webkit-scrollbar-track-piece {
+  background-color: hsl(60, 100%, 98%);
+}
+ 
+::-webkit-scrollbar-thumb {
+  border-radius: 2px;
+}
+::-webkit-scrollbar-thumb:vertical {
+  height: 50px;
+  background: -webkit-gradient(linear, left top, right top, color-stop(0%, #dddddd), color-stop(100%, #cccccc));
+  border: 1px solid #aaaaaa;
+}
+ 
+::-webkit-scrollbar-thumb:horizontal {
+  width: 50px;
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #dddddd), color-stop(100%, #cccccc));
+  border: 1px solid #666666;
+}
