@@ -346,9 +346,9 @@
                   'class': 'notelist', 'id': 'notes-container'
                 });
                 this.$el.html(ul);
-                this.updateNoteShrinkState(L.preferences, L.preferences.get('shrinkNotes'));
 
                 this._rendered = true;
+                this.updateNoteShrinkState(L.preferences, L.preferences.get('shrinkNotes'));
             }
             _.defer(_.bind(this.reset, this));
             return this;
