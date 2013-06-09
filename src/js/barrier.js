@@ -62,7 +62,7 @@ window.Barrier = (function() {
     aquire: function(n) {
       if (arguments.length === 0) {
         this.value++;
-      } else if (n > 0) {
+      } else if (n >= 0) {
         this.value += n;
       } else {
         throw new RangeError("Invalid Argument");
