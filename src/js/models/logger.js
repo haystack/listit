@@ -25,9 +25,10 @@
       isNew: function() {
         return false;
       },
-      initialize: function() {
+      initialize: function(models, options) {
+        // Call destructors on exit
+        this.listenTo(L.gvent, 'sys:exit', this.stop);
         var that = this;
-        this.observers = [];
         this.fetch({
           success: function() {
             // Fetch contents.
@@ -35,27 +36,39 @@
           }
         });
         var debouncedSave = _.debounce(_.bind(that.save, that), 100);
-        _.each(that.relations, function(v, k) {
+        // Autosave
+        _.each(this.relations, function(v, k) {
           that.get(k).on('add remove', function(model, collection, options) {
             if (!(options && options.nosave)) {
               debouncedSave();
             }
           });
         });
-        _.each(L.observers, function(obs) {
-          if (_.result(obs, "condition")) {
-            var ctor = function() {};
-            ctor.prototype = obs;
-            var inst = new ctor();
-            that.observers.push(inst);
-            inst.setup();
-          }
+        this.listenTo(that.get('log'), 'add', function(m, c) {
+          m.save();
         });
-        L.gvent.on('sys:exit', function() {
-          _.each(that.observers, function(inst) {
-            inst.destroy();
-          });
+      },
+      start: function() {
+        if (this._started) {
+          return;
+        }
+        this.observers = _.chain(
+          L.observers
+        ).filter(function(obs) {
+          return _.result(obs, "condition");
+        }).map(function(obs) {
+          var ctor = function() {};
+          ctor.prototype = obs;
+          var inst = new ctor();
+          inst.setup();
+          return inst;
         });
+      },
+      stop: function() {
+        _.each(that.observers, function(inst) {
+          inst.destroy();
+        });
+        delete that.observers;
       },
       relations: {
         log: {
