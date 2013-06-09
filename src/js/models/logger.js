@@ -28,13 +28,9 @@
       initialize: function(models, options) {
         // Call destructors on exit
         this.listenTo(L.gvent, 'sys:exit', this.stop);
+      },
+      initialized: function(models, options) {
         var that = this;
-        this.fetch({
-          success: function() {
-            // Fetch contents.
-            _.each(that.relations, _.mask(_.bind(that.fetchRelated, that), 1));
-          }
-        });
         var debouncedSave = _.debounce(_.bind(that.save, that), 100);
         // Autosave
         _.each(this.relations, function(v, k) {

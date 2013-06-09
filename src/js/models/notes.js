@@ -221,14 +221,8 @@
       isNew: function() {
         return false;
       },
-      initialize: function() {
+      initialized: function() {
         var that = this;
-        this.fetch({
-          success: function() {
-            // Fetch contents.
-            _.each(that.relations, _.mask(_.bind(that.fetchRelated, that), 1));
-          }
-        });
         var debouncedSave = _.debounce(_.bind(that.save, that), 100);
         _.each(that.relations, function(v, k) {
           that.get(k).on('add remove', function(model, collection, options) {
@@ -257,7 +251,7 @@
         var noteJSON = note.toJSON();
 
         // TODO: This should use a different event
-        L.gvent.trigger("note:request:pqrse note:request:parse:new", noteJSON, window);
+        L.gvent.trigger("note:request:parse note:request:parse:new", noteJSON, window);
         note.set(noteJSON);
         note.save();
         this.get('notes').unshift(note, options);

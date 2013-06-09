@@ -54,10 +54,9 @@
 <resources id="js.libs.backbone">
     <filelist dir="${listit.js.dir}/libs">
         <file name="backbone.js" />
+        <file name="backbone.ext.js"/>
+        <file name="backbone.rel.js"/>
     </filelist>
-    <fileset dir="${listit.js.dir}/libs/">
-        <include name="backbone.*.js"/>
-    </fileset>
 </resources>
 
 <resources id="js.libs">

@@ -1,6 +1,6 @@
 (function() {
   'use strict';
-  Backbone.RelModel = Backbone.Model.extend({
+  var RelModel = Backbone.Model.extend({
     relations: {},
     initializeRelations: function() {
       var that = this;
@@ -25,9 +25,10 @@
       if (!this._relationsInited) {
         this.initializeRelations();
       }
+      // DO NOT PASS OPTIONS (will cause wierd behavior, multiple fetching, etc...)
       _.each(_.pick(attributes, _.keys(this.relations)), function(value, key) {
         if (value instanceof Backbone.Model || value instanceof Backbone.Collection) {
-          that.set(key, value);
+          that.set(key, value, options);
         } else if (_.isArray(value)) {
           that.get(key).update(_.map(value, _.bind(that._initRelObject, that, key)), options);
         } else {
@@ -95,13 +96,68 @@
     },
     fetchRelated: function(key, options) {
       var relation = this.get(key);
+      var that = this;
       if (relation instanceof Backbone.Collection) {
+        if (options && options.complete) {
+          var result = {
+            succeeded: [],
+            failed: []
+          };
+          var barr = new Barrier(relation.size());
+          barr.wait(_.partial(options.complete, this, relation, result));
+          options = _.defaults({
+            complete: function(model, succeeded) {
+              result[succeeded ? "succeeded" : "failed"].push(model);
+              barr.release();
+            }
+          }, options);
+        }
+
         relation.each(function(m) {
           m.fetch(options);
         });
       } else if (relation instanceof Backbone.Model) {
         relation.fetch(options);
       }
+    },
+    fetch: function(options) {
+      var that = this;
+      var complete_cb = options.complete;
+
+      if (options && options.fetchRelated) {
+        var to_fetch;
+        if (_.isArray(options.fetchRelated)) {
+          to_fetch = options.fetchRelated;
+        } else if (_.isString(options.fetchRelated)) {
+          to_fetch = [options.fetchRelated];
+        } else if (_.isBoolean(options.fetchRelated)) {
+          to_fetch = _.keys(this.relations);
+        }
+
+        options = _.defaults({
+          complete: function() {
+            if (complete_cb) {
+              var result = {};
+              var barr = new Barrier(to_fetch.length);
+              _.each(to_fetch, function(key) {
+                that.fetchRelated(key, _.defaults({
+                  complete: function(fn, that, relation, res) {
+                    result[key] = res;
+                    barr.release();
+                  }
+                }, options));
+              });
+              barr.wait(_.partial(complete_cb, that, result));
+            } else {
+              _.each(to_fetch, function(key) {
+                that.fetchRelated(key, options);
+              });
+            }
+          }
+        }, options);
+      }
+      RelModel.__super__.fetch.call(this, options);
     }
   });
+  Backbone.RelModel = RelModel;
 })();

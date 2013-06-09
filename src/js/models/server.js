@@ -24,7 +24,6 @@
           return _.pick(this.attributes, this.include);
         },
         initialize: function() {
-          this.fetch();
           this.listenTo(this, 'change:registered change:email', _.mask(this.save));
           _(this).bindAll(
             '_syncNotesFailure',
@@ -36,17 +35,6 @@
             'syncNotes',
             'syncLogs'
           );
-          L.gvent.on('user:sync', this.syncNotes, this);
-          this.listenTo(this, 'change:registered', function(m, registered) {
-            if (registered) {
-              m.start();
-            } else {
-              m.stop();
-            }
-          });
-          if (this.get('registered')) {
-            this.start();
-          }
         },
         // Singleton
         url : '/server',

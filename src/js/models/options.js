@@ -40,8 +40,7 @@
         isNew: function() {
             return false;
         },
-        initialize: function() {
-            this.fetch();
+        initialized: function() {
             this.on('change', this.save, this);
         },
         toggleShrink: function() {
