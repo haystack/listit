@@ -1,26 +1,40 @@
-/**
+/* Barrier.js
+ * ==========
+ *
  * Provides a simple barrier for synchronization.
  *
- * To use, aquire the barrier before initiating a asynchronous operation and
- * release the barrier after the asynchronous operation has completed.
- *
- * When all aquired barriers have been released waiting functions will be
- * called in order until either no waiting functions remain or a waiting
- * function takes the barrier.
- *
- * Ex:
- *
- *   var barr = new Barrier();
- *   var myCb = function() {
- *     barr.release();
- *   };
- *   barr.aquire(2);
- *   myAsynchrounousMethod(myCb)
- *   myAsynchrounousMethod2(myCb)
- *   barr.wait(function() {
- *     //continue
- *   });
+ * Source: https://github.com/Stebalien/barrier.js
+ * Licence: MIT, Copyright (c) 2013 Steven Allen
+ */
+
+/**
+ * Bind compatability snippet
+ * From: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/bind
  **/
+if (!Function.prototype.bind) {
+  Function.prototype.bind = function (oThis) {
+    if (typeof this !== "function") {
+      // closest thing possible to the ECMAScript 5 internal IsCallable function
+      throw new TypeError("Function.prototype.bind - what is trying to be bound is not callable");
+    }
+ 
+    var aArgs = Array.prototype.slice.call(arguments, 1),
+        fToBind = this,
+        fNOP = function () {},
+        fBound = function () {
+          return fToBind.apply(this instanceof fNOP && oThis
+                                 ? this
+                                 : oThis,
+                               aArgs.concat(Array.prototype.slice.call(arguments)));
+        };
+ 
+    fNOP.prototype = this.prototype;
+    fBound.prototype = new fNOP();
+ 
+    return fBound;
+  };
+}
+
 window.Barrier = (function() {
   'use strict';
 
@@ -39,7 +53,12 @@ window.Barrier = (function() {
     }
     this.value = n || 0;
     this.waiting = [];
-    _.bindAll(this, 'aquire', 'release', 'isSet', 'wait');
+
+    // These funtions may be called passed arround. Bind them.
+    this.aquire = this.aquire.bind(this);
+    this.release = this.release.bind(this);
+    this.isSet = this.isSet.bind(this);
+    this.wait = this.wait.bind(this);
   };
 
   Barrier.prototype = {
