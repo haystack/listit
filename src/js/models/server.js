@@ -1,7 +1,13 @@
 (function(L) {
     'use strict';
-    // Handles syncing notes with the server.
-    // Do not persist
+    /** Handles all communication with the server.
+     *
+     * It syncs both notes and logs, translating them to and from the protocol
+     * representation.
+     *
+     * This is broken out into a separate model to avoid contaminating the
+     * local implementation with the server protocol.
+     */
     L.models.Server = Backbone.Model.extend({
         defaults : {
             url: 'https://welist.it/listit/jv3/',
@@ -29,7 +35,10 @@
             '_syncNotesFailure',
             '_syncNotesSuccess',
             '_syncNotesEnter',
+            '_syncNotesReschedule',
             '_syncNotesExit',
+            '_syncLogsEnter',
+            '_syncLogsReschedule',
             'packageNote',
             'unpackageNote',
             'syncNotes',
@@ -42,7 +51,7 @@
             return false;
         },
         // Defines a translation between a packaged note and a local note.
-        transTable : {
+        noteTransTable : {
             'jid': { here: 'id' },
             'version': {},
             'created': {},
@@ -54,6 +63,16 @@
                 transOut: function(v) { return v ? 1 : 0; }
             }
         },
+        logTopLevelAttributes: [
+          "tabid",
+          "action",
+          "time",
+          "url",
+          "noteid"
+        ],
+        logExcludedAttributes: [
+          "id",
+        ],
         // Make an ajax method call
         ajax : function(options) {
             options = _.clone(options);
@@ -80,7 +99,7 @@
                         options.authToken = token;
                         that.ajax(options);
                     } else {
-                        (options.error || $.noop)(null, 'Failed to authenticate');
+                        (options.error || $.noop)(null, 'User not authenticated');
                         (options.complete || $.noop)();
                     }
                 });
@@ -99,6 +118,7 @@
             $.ajax(options);
         },
         syncNotes : function() {
+          return;
           if (this._syncNotesEnter()) {
             var that = this;
             this.pullNotes({
@@ -114,7 +134,7 @@
         },
         _syncNotesEnter: function() {
           // Don't sync if waiting for a past sync.
-          if (this.get('synching') || !this.get('registered')) {
+          if (this.get('syncingNotes') || !this.get('registered')) {
             return false;
           }
           clearTimeout(this.get('noteSyncTimer'));
@@ -126,6 +146,9 @@
         },
         _syncNotesExit: function() {
           this.set('syncingNotes', false);
+          this._syncNotesReschedule();
+        },
+        _syncNotesReschedule: function() {
           var interval = this.get('noteSyncInterval');
           if (interval > 0) {
             this.set('noteSyncTimer', window.setTimeout(this.syncNotes, interval));
@@ -175,36 +198,49 @@
           });
         },
         syncLogs : function() {
-            if (this.get('syncingLogs')) {
-                return;
-            }
-
-            debug('syncLogs::start');
-            var that = this;
-
-            this.set('syncingLogs', true);
+          var that = this;
+          if (this._syncLogsEnter()) {
             this.ajax({
-                method: 'post_json_chrome_logs',
-                auth: true,
-                data: L.logs.toJSON(),
-                error: function() {
-                    debug('FAIL: Logs not sent to server.');
-                    debug('syncLogs::failed');
-                    // TODO:Do something?
-                },
-                success: function() {
-                    // TODO: Clear Logs
-                    debug('Implement logging.');
-                    debug('syncLogs::succeeded');
-                },
-                complete: function() {
-                    that.set('syncingLogs', false);
-                    var interval = that.get('logSyncInterval');
-                    if (interval > 0) {
-                        that.set('logSyncTimer', setTimeout(that.syncLogs, interval));
-                    }
-                }
+              method: 'post_json_chrome_logs',
+              auth: true,
+              data: JSON.stringify(this.bundleLogs()),
+              error: function(xhr, error) {
+                debug('syncLogs::failed', error);
+              },
+              success: function(response) {
+                L.logger.clearUntil(response.lastTimeRecorded);
+                debug('syncLogs::succeeded');
+              },
+              complete: function() {
+                that.set('syncingLogs', false);
+                that._syncLogsReschedule();
+              }
             });
+          }
+        },
+        _syncLogsEnter: function() {
+          // Don't sync if waiting for a past sync.
+          if (this.get('syncingLogs') || !this.get('registered')) {
+            return false;
+          }
+          clearTimeout(this.get('logSyncTimer'));
+          if (L.logger.get('log').isEmpty()) {
+            this._syncLogsReschedule();
+            debug('syncLogs::skip');
+            return false;
+          }
+
+          debug('syncLogs::start');
+
+          this.set('syncingLogs', true);
+          return true;
+
+        },
+        _syncLogsReschedule: function() {
+          var interval = this.get('logSyncInterval');
+          if (interval > 0) {
+              this.set('logSyncTimer', setTimeout(this.syncLogs, interval));
+          }
         },
         start : function() {
             // Note: use timout instead of interval for a responsive interface.
@@ -226,6 +262,24 @@
         stop : function() {
             clearTimeout(this.get('noteSyncTimer'));
             clearTimeout(this.get('logSyncTimer'));
+        },
+        bundleLogs : function() {
+          var excluded = _.union(this.logTopLevelAttributes, this.logExcludedAttributes);
+          var toplevel = this.logTopLevelAttributes;
+          return L.logger.get('log').chain()
+          // Convert to object.
+          .map(function(e) {
+            return e.toJSON();
+          })
+          // Translate
+          .map(function(e) {
+            var out = _.pick(e, toplevel);
+            var data = _.omit(e, excluded);
+            if (!_.isEmpty(data)) {
+              out.data = JSON.stringify(data);
+            }
+            return out;
+          }).value();
         },
         /**
         * Package and bundle the given notes.
@@ -339,7 +393,7 @@
             var meta = note.get('meta'),
                 packed = {deleted: deleted ? 1 : 0};
 
-            _(this.transTable).each(function(trans, field) {
+            _(this.noteTransTable).each(function(trans, field) {
                 packed[field] = note.get(trans.here || field);
                 if (trans.transOut) {
                     packed[field] = trans.transOut(packed[field]);
@@ -352,7 +406,7 @@
         */
         unpackageNote : function(note) {
             var unpacked = {modified: false, deleted: note.deleted !== 0};
-            _(this.transTable).each(function(trans, field) {
+            _(this.noteTransTable).each(function(trans, field) {
                 if (!note.hasOwnProperty(field)) {
                     return;
                 }
