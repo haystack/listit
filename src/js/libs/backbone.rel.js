@@ -122,7 +122,7 @@
     },
     fetch: function(options) {
       var that = this;
-      var complete_cb = options.complete;
+      var complete_cb = options && options.complete;
 
       if (options && options.fetchRelated) {
         var to_fetch;
