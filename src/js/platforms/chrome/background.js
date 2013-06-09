@@ -16,8 +16,7 @@
             delete o[k];
           } catch (e) {}
         }
-      }
-    };
+      } };
 
     L.gvent.on('sys:window-closed', function(win) {
       _.defer(function() {
@@ -54,9 +53,8 @@
       chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
         var tab = tabs[0];
         logEntry.set('tabid', tab.id);
-        var info = logEntry.get('info');
-        if (!info.url) {
-          info.url = tab.url;
+        if (!logEntry.get('url')) {
+          logEntry.set('url', tab.url);
         }
         //barr.release();
       });

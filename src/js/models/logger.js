@@ -4,20 +4,35 @@
       urlRoot: '/logentries',
       defaults: function() {
         return {
-          when: Date.now(),
-          info: {}
+          time: Date.now(),
         };
-      }
-    }, {
-      create: function(action, data) {
-        var item = new L.models.LogEvent({action: action, info: data});
-        L.gvent.trigger('log:request:data', item);
-        return item;
+      },
+      initialize: function() {
+        if (this.isNew()) {
+          L.gvent.trigger('log:request:data', this);
+        }
+        var debouncedSave = _.debounce(_.bind(this.save, this), 100);
+        this.listenTo(this, "change", function(m) {
+          if (!this.isNew()) {
+            debouncedSave();
+          }
+        });
       }
     });
 
     L.models.Log = Backbone.Collection.extend({
-      model: L.models.LogEvent
+      model: L.models.LogEvent,
+      initialize: function() {
+      },
+      clearUntil: function(time) {
+        this.chain()
+        .filter(function(e) {
+          return e.get('time') <= time;
+        })
+        .each(function(e) {
+          e.destroy();
+        });
+      }
     });
 
     L.models.Logger = Backbone.RelModel.extend({
@@ -72,12 +87,13 @@
           includeInJSON: "id"
         }
       },
+      clearUntil: function() {
+        var log = this.get('log');
+        return log.clearUntil.apply(log, arguments);
+      },
       add: function() {
         var log = this.get('log');
-        log.add.apply(log, arguments);
-      },
-      create: function() {
-        log.create.apply(log, arguments);
-      },
+        return log.add.apply(log, arguments);
+      }
     });
 })(ListIt);

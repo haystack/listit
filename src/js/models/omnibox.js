@@ -14,16 +14,16 @@
             var that = this;
             // Stop search when typing but don't start next search until stop.
             this.listenTo(this, 'change:text', function() {
-                slowSearch.apply(that);
+                slowSearch.call(that, {user: true});
             });
             this.listenTo(this, 'change', _.mask(this.throttledSave));
             this.requestSearch();
         },
         throttledSave: _.debounce(function() { this.save.apply(this, arguments); }, 500),
-        requestSearch: function() {
+        requestSearch: function(options) {
             var text = L.util.clean(this.get('text') || '');
             var searchID = L.sidebar.search(text);
-            this.trigger("search-requested", this, text, searchID);
+            this.trigger("user:search", this, text, searchID);
         },
         saveNote: function(window) {
             var note = L.notebook.createNote(this.get('text'), {}, window);

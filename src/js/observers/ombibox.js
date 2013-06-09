@@ -6,16 +6,9 @@
     setup: function() {
       var that = this;
       this.pendingEntries = [];
-      // Record that the omnibox triggered a search.
-      L.omnibox.on("search-requested", function(m, newSearch, searchID) {
-        if (newSearch === '') {
-          that.searchID = null;
-          that.addPendingEntry(LogType.SEARCH_CLEAR);
-          that.commitPendingEntries();
-        } else {
-          that.searchString = newSearch;
-          that.searchID = searchID;
-        }
+      // Record that the user triggered a search through the omnibox.
+      L.omnibox.on("user:search", function(m, newSearch, searchID) {
+        that.searchID = searchID;
       }, this);
 
       // Log completed searches:
@@ -23,17 +16,26 @@
       //   if they were triggered by the omnibox
       L.sidebar.on("search:complete", _.debounce(function(terms, id) {
         if (that.searchID !== null && that.searchID === id) {
-          that.addPendingEntry(LogType.SEARCH, {
-            terms: that.searchString,
-            noteids: L.sidebar.pluck('id')
-          });
+          if (terms === null) {
+            if (that.pendingEntries.length > 0) {
+              that.addPendingEntry({action: LogType.SEARCH_CLEAR});
+              that.commitPendingEntries();
+            }
+          } else {
+            that.addPendingEntry({
+              action: LogType.SEARCH,
+              terms: terms, // This has both positive and negative terms XXX: Might break stuff.
+              noteids: L.sidebar.pluck('id')
+            });
+          }
           that.searchID = null;
         }
       }, 500));
 
       L.omnibox.on("note-created", function(m, note) {
         that.clearPendingEntries();
-        that.addEntry(LogType.CREATE_SAVE, {
+        that.addEntry({
+          action: LogType.CREATE_SAVE,
           noteid: note.id,
           contents: note.get('contents'),
           pinned: note.get('meta').pinned ? true : false
@@ -44,11 +46,11 @@
       L.omnibox.off(null, null, this);
       L.sidebar.off(null, null, this);
     },
-    addPendingEntry: function(type, data) {
-      this.pendingEntries.push(L.models.LogEvent.create(type, data));
+    addPendingEntry: function(data) {
+      this.pendingEntries.push(new L.models.LogEvent(data));
     },
-    addEntry: function(type, data) {
-      L.logger.add(L.models.LogEvent.create(type, data));
+    addEntry: function(data) {
+      L.logger.add(data);
     },
     commitPendingEntries: function() {
       var pending = this.clearPendingEntries();
