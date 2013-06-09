@@ -118,7 +118,6 @@
             $.ajax(options);
         },
         syncNotes : function() {
-          return;
           if (this._syncNotesEnter()) {
             var that = this;
             this.pullNotes({
