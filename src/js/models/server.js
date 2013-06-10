@@ -30,7 +30,6 @@
           return _.pick(this.attributes, this.include);
         },
         initialize: function() {
-          this.listenTo(this, 'change:registered change:email', _.mask(this.save));
           _(this).bindAll(
             '_syncNotesFailure',
             '_syncNotesSuccess',
@@ -44,6 +43,11 @@
             'syncNotes',
             'syncLogs'
           );
+        },
+        initialized: function() {
+          this.listenTo(this, _.reduce(this.include, function(memo, attr) {
+            return memo+" change:"+attr
+          }, ""), _.mask(this.save));
         },
         // Singleton
         url : '/server',
