@@ -9,22 +9,25 @@
      * local implementation with the server protocol.
      */
     L.models.Server = Backbone.Model.extend({
-        defaults : {
+        defaults : function() {
+          return {
             url: 'https://welist.it/listit/jv3/',
             syncingNotes: false,
             syncingLogs: false,
             registered: false,
             email: '',
+            studies: {},
             noteSyncInterval: 10*60*1000, // 10m
-            //logSyncInterval:  30*60*1000, // 30m
-            logSyncInterval:  -1 // Disabled
+            logSyncInterval:  30*60*1000 // 30m
+          };
         },
         include: [
           'registered',
           'url',
           'email',
           'noteSyncInterval',
-          'logSyncInterval'
+          'logSyncInterval',
+          'studies'
         ],
         toJSON: function(options) {
           return _.pick(this.attributes, this.include);
@@ -257,7 +260,8 @@
               if (noteSyncInterval > 0) {
                   that.syncNotes();
               }
-              if (logSyncInterval > 0) {
+
+              if (logSyncInterval > 0 && that.get("studies").study2) {
                   that.syncLogs();
               }
             });
@@ -433,9 +437,10 @@
               auth: 'true',
               cache: false,
               authToken: hashpass,
-              success: function() {
+              success: function(response) {
                 that.set({
-                  email: '',
+                  studies: _.kmap(_.omit(response, "code"), function(v) { return v != 0; }),
+                  email: email,
                   registered: true,
                   error: undefined
                 });
@@ -473,6 +478,7 @@
                 cache: false,
                 success: function() {
                     that.set({
+                      studies: _.kmap(_.omit(response, "code"), function(v) { return v != 0; }),
                       registered: true,
                       error: undefined,
                       email: email
@@ -487,7 +493,8 @@
         logout: function() {
           this.set({
             registered: false,
-            email: ''
+            email: '',
+            studies: {}
           });
           L.authmanager.unsetToken();
         }

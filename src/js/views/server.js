@@ -81,11 +81,11 @@
                 this.model.set('error', 'Passwords do not match.');
                 return false;
             }
-            L.server.register(this.getUsername(), this.getPassword(), this.getPassword());
+            L.server.register(this.getUsername(), this.getPassword(), this.getParticipate());
             return false;
         },
         doLogin : function() {
-            L.server.login(this.getUsername(), this.getPassword(), this.getParticipate());
+            L.server.login(this.getUsername(), this.getPassword());
             return false;
         },
         doLogout : function() {
