@@ -9,6 +9,7 @@
     });
 
     // I can't find the memory leak so, for now, shred stuff.
+    /* Causing issues, disabled for now.
     var shred = function(o) {
       for (var k in o) {
         if (o.hasOwnProperty(k)) {
@@ -33,6 +34,7 @@
         shred(win);
       });
     });
+    */
     L.chrome = {
       views: {},
       models: {}
