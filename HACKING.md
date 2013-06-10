@@ -34,6 +34,7 @@ templates/              | Underscore HTML templates (see [Templates](#templates)
 Directory               | Description
 ------------------------|------------
 collectors/             | See [Collectors](#collectors)
+migrations/             | See [Migrating](#migrating)
 libs/                   | Libraries
 models/                 | Data models
 observers/              | See [Logging](#logging)
@@ -48,7 +49,7 @@ setup.js                | Triggers the setup signals (see [Setup](#setup))
 setup-models.js         | Model setup file (see [Setup](#setup))
 setup-views.js          | View setup file (see [Setup](#setup))
 templates.js            | The compiled templates; auto-generated (see [Templates](#templates))
-upgrade.js              | The upgrade transition coordinator (see [Upgrading](#upgrading))
+migrate.js              | The migration coordinator (see [Migrating](#migrating))
 util.js                 | Various utility functions that don't really belong anywhere else
 
 ## Templates
@@ -67,7 +68,7 @@ TODO
 
 TODO
 
-## Upgrading
+## Migrating
 
 TODO
 

@@ -108,8 +108,11 @@
     <fileset file="${listit.js.dir}/router.js" />
 </resources>
 
-<resources id="js.upgrade">
-    <fileset file="${listit.js.dir}/upgrade.js" />
+<resources id="js.migrate">
+    <fileset file="${listit.js.dir}/migrate.js" />
+    <fileset dir="${listit.js.dir}/migrations/" excludes="${settings.disabled_migrations}">
+        <include name="*.js" />
+    </fileset>
 </resources>
 
 <resources id="js.setup">

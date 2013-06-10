@@ -8,15 +8,15 @@
       L.lvent.trigger('setup:before', L, barr);
     },
     function(barr) {
-      debug("setup::upgrade::begin");
-      L.lvent.trigger('setup:upgrade:before', L, barr);
+      debug("setup::migrate::begin");
+      L.lvent.trigger('setup:migrate:before', L, barr);
     },
     function(barr) {
-      L.lvent.trigger('setup:upgrade', L, barr);
+      L.lvent.trigger('setup:migrate', L, barr);
     },
     function(barr) {
-      L.lvent.trigger('setup:upgrade:after', L, barr);
-      debug("setup::upgrade::end");
+      L.lvent.trigger('setup:migrate:after', L, barr);
+      debug("setup::migrate::end");
     },
     function(barr) {
       debug("setup::models::begin");
