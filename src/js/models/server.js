@@ -167,6 +167,7 @@
         },
         _syncNotesSuccess: function() {
           // Successful Ajax Response:
+          debug('syncNotes::success');
           this.trigger('sync:success');
           this._syncNotesExit();
         },
@@ -388,9 +389,6 @@
 
             // Save collections
             L.notebook.save();
-
-            // Successful Ajax Response:
-            this.trigger('sync:success');
         },
 
         /**
