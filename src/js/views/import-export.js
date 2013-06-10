@@ -70,6 +70,29 @@
           return L.notebook.get('notes').reduce(function(txt, n) {
             return txt + '* ' + L.util.clean(n.get('contents')).replace(/\n/g, '\n  ') + '\n';
           }, '');
+        },
+        importer: function(string) {
+          var notes = L.notebook.get('notes');
+          string = _.str.trim(string);
+          var note_strings;
+          var bullet = string[0];
+          if ("*-+".indexOf(bullet) >= 0) {
+            string = string.replace(/\n\s*/g, '\n'); // TODO to greedy
+            string = string.replace(new RegExp("^\\"+bullet+"\s*"), ""); // Strip first
+            console.log(string);
+            note_strings = string.split(new RegExp("\n\s*\\"+bullet+"\s*"));
+            console.log(note_strings);
+            note_strings = _.map(note_strings, function(str) {
+              return str.replace(/\n/g, '<br />');
+            });
+            console.log(note_strings);
+          } else {
+            note_strings = string.split('\n');
+          }
+          _.each(note_strings, function(contents) {
+            notes.create({"contents": contents});
+          });
+          L.notebook.save();
         }
       },
       {
