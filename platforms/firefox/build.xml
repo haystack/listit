@@ -3,7 +3,6 @@
 
     <resources id="js.sidebar">
         <resources refid="js.libs" />
-        <fileset file="${listit.js.platforms.dir}/firefox/firefox-pre.js" />
         <resources refid="js.common" />
         <resources refid="js.storage" />
         <fileset file="${listit.js.platforms.dir}/firefox/firefoxStorage.js" />
@@ -15,6 +14,7 @@
             <file name="${listit.js.platforms.dir}/firefox/sidebar-setup.js" />
         </filelist>
         <resources refid="js.collectors" />
+        <resources refid="js.observers" />
         <resources refid="js.setup" />
     </resources>
 
