@@ -12,6 +12,7 @@
         <resources refid="js.models" />
         <resources refid="js.views" />
         <resources refid="js.collectors" />
+        <resources refid="js.observers" />
         <fileset file="${listit.js.platforms.dir}/web/web-setup.js" />
         <resources refid="js.setup" />
     </resources>
