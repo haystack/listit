@@ -12,7 +12,8 @@
                 version: 0,
                 modified: true,
                 id: Math.ceil(Math.random()*2147483647), // must be an int32.
-                created: Date.now()
+                created: Date.now(),
+                edited: Date.now()
             };
         },
         initialize: function() {

@@ -65,10 +65,6 @@
             'edited': {},
             'contents': {},
             'meta': { transIn: JSON.parse, transOut: JSON.stringify },
-            'modified': {
-                transIn: function(v) { return v !== 0; },
-                transOut: function(v) { return v ? 1 : 0; }
-            }
         },
         logTopLevelAttributes: [
           "tabid",
@@ -310,7 +306,7 @@
                 'created': 0,
                 'edited': 0,
                 'contents': JSON.stringify({noteorder:L.notebook.get('notes').getOrder()}),
-                'deleted': 1
+                'deleted': true
             });
             L.notebook.get('notes').each(function(n) { bundleNote(n, false); });
             L.notebook.get('deletedNotes').each(function(n) { bundleNote(n, true); });
@@ -326,7 +322,11 @@
           })
           // Check status
           .filter(function(note) {
-            return (note.status === 201 || note.status === 200);
+            if (!note.status === 201 || note.status === 200) {
+              debug("syncNotes::error", "Invalid Note", note.jid);
+              return false;
+            }
+            return true;
           })
           // Lookup note
           .pluck('jid')
@@ -344,7 +344,7 @@
           L.notebook.set('version', L.notebook.get('version') + 1);
         },
         unbundleNotes: function(result) {
-            var order;
+            var magic;
             // Update changed
             _.chain(result)
             .pluck("fields")
@@ -352,7 +352,7 @@
             .filter(function(n) { // Filter out magic note.
                 if (n.id < 0) {
                   if (L.notebook.get('version') < n.version) {
-                    order = JSON.parse(n.contents);
+                    magic = JSON.parse(n.contents);
                   }
                   return false;
                 } else {
@@ -383,9 +383,14 @@
             });
             
             // FIXME: don't necessarily clobber order.
-            if (order) {
-              L.notebook.get('notes').setOrder(order);
-            }
+            if (magic) {
+              if (magic.order) {
+                L.notebook.get('notes').setOrder(magic.order);
+              }
+              if (magic.version) {
+                L.notebook.set('version');
+              }
+            } 
 
             // Save collections
             L.notebook.save();
@@ -395,8 +400,7 @@
         * Convert a note into a package that can be sent to the server.
         */
         packageNote : function(note, deleted) {
-            var meta = note.get('meta'),
-                packed = {deleted: deleted ? 1 : 0};
+            var packed = {deleted: deleted };
 
             _(this.noteTransTable).each(function(trans, field) {
                 packed[field] = note.get(trans.here || field);
@@ -410,7 +414,7 @@
         * Convert a package from the server into a hash of fields that can be used to update/create a note.
         */
         unpackageNote : function(note) {
-            var unpacked = {modified: false, deleted: note.deleted !== 0};
+            var unpacked = {modified: false, deleted: !!note.deleted};
             _(this.noteTransTable).each(function(trans, field) {
                 if (!note.hasOwnProperty(field)) {
                     return;
