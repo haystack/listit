@@ -3,29 +3,27 @@
 
     <resources id="js.sidebar">
         <resources refid="js.libs" />
-        <fileset file="${listit.js.platforms.dir}/chrome/client-pre.js" />
         <resources refid="js.common" />
+        <filelist dir="${listit.js.platforms.dir}/chrome">
+            <file name="client-setup.js" />
+            <file name="sidebar-setup.js" />
+        </filelist>
         <resources refid="js.router" />
         <resources refid="js.templates" />
         <resources refid="js.views" />
-        <filelist>
-            <file name="${listit.js.platforms.dir}/chrome/client-post.js" />
-            <file name="${listit.js.platforms.dir}/chrome/sidebar-setup.js" />
-        </filelist>
         <resources refid="js.setup"/>
     </resources>
 
     <resources id="js.options">
         <resources refid="js.libs" />
-        <fileset file="${listit.js.platforms.dir}/chrome/client-pre.js" />
         <resources refid="js.common" />
+        <filelist dir="${listit.js.platforms.dir}/chrome">
+            <file name="client-setup.js" />
+            <file name="options-setup.js" />
+        </filelist>
         <resources refid="js.router" />
         <resources refid="js.templates" />
         <resources refid="js.views" />
-        <filelist>
-            <file name="${listit.js.platforms.dir}/chrome/client-post.js" />
-            <file name="${listit.js.platforms.dir}/chrome/options-setup.js" />
-        </filelist>
         <resources refid="js.setup"/>
     </resources>
     <resources id="css.options">
@@ -37,8 +35,10 @@
         <fileset file="${listit.js.platforms.dir}/chrome/backbone.omnibox.js" />
         <resources refid="js.common" />
         <resources refid="js.storage" />
-        <fileset file="${listit.js.platforms.dir}/chrome/chromeStorage.js" />
-        <fileset file="${listit.js.platforms.dir}/chrome/background.js" />
+        <filelist dir="${listit.js.platforms.dir}/chrome">
+            <file name="chromeStorage.js" />
+            <file name="background-setup.js" />
+        </filelist>
         <resources refid="js.models" />
         <resources refid="js.collectors" />
         <resources refid="js.observers" />

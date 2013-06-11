@@ -3,6 +3,7 @@ ListIt.lvent.once('setup:views', function(L, barr) {
   // Make Pages
   L.addPage('main', new L.views.MainPage());
 });
+
 ListIt.lvent.once('setup:views:after', function(L, barr) {
   'use strict';
   // Fix options link on chrome.
