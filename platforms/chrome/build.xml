@@ -40,6 +40,7 @@
             <file name="background-setup.js" />
         </filelist>
         <resources refid="js.models" />
+        <fileset dir="${listit.js.platforms.dir}/chrome/models" includes="*.js" />
         <resources refid="js.collectors" />
         <resources refid="js.observers" />
         <resources refid="js.migrate"/>
