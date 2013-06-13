@@ -41,7 +41,7 @@
             return false;
         },
         initialized: function() {
-            this.on('change', this.save, this);
+            this.on('change', _.mask(this.save), this);
         },
         toggleShrink: function() {
             this.set('shrinkNotes', !this.get('shrinkNotes'));
