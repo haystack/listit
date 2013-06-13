@@ -87,6 +87,7 @@
     position: fixed; /* ick. */
     left: 10px;
     right: 10px;
+    z-index: 99;
 }
 
 #omnibox-toolbar [data-wysihtml5-dialog] {
