@@ -28,6 +28,7 @@
     </resources>
     <resources id="css.options">
         <resources refid="css.all" />
+        <fileset file="${listit.css.platforms.dir}/chrome/options.css" />
     </resources>
 
     <resources id="js.background">
