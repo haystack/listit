@@ -33,9 +33,9 @@ ListIt.lvent.once('setup:models:after', function(L, barr) {
       chrome.windows.create({
         url:"index.html",
         type: "popup",
-        width: 400,
+        width: 350,
         height: cwin.height,
-        left: cwin.left-410,
+        left: cwin.left-360,
         top: cwin.top,
         focused: true
       }, function(win) {
