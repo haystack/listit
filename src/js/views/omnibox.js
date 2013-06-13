@@ -70,7 +70,14 @@
             this.editor.on('keyup', _.bind(this._onKeyUp, this));
             this.editor.on('change', _.bind(this.storeText, this));
 
+            // Focus after inserted.
+            this.$el.on("DOMNodeInsertedIntoDocument", function() {
+              _.defer(function() {
+                iframe.contentDocument.body.focus();
+              });
+            });
             this._rendered = true;
+
             return this;
         },
         events: {
