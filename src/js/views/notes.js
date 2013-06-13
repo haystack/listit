@@ -213,6 +213,12 @@
                 that.undelegateEvents();
                 that.stopListening();
             });
+            // Load more if needed on window resize.
+            $(window).on("resize", function() {
+              if (that._rendered) {
+                that.lazyLoadMore();
+              }
+            });
         },
         events: {
             'scroll': 'onScroll'
