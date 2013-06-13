@@ -22,6 +22,7 @@
                 type: 'boolean',
                 description: 'Collapse Notes' // TODO:Better desc
             },
+            /* Not used
             expandVariables: {
                 type: 'boolean',
                 description: 'Expand variables' // TODO: Add help.
@@ -34,6 +35,7 @@
                 type: 'number',
                 description: 'Notification Timeout (s)'
             }
+            */
         },
         // Singleton
         url : '/preferences',
