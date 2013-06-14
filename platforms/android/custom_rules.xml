@@ -58,7 +58,7 @@
 
     <target name="html">
         <htmltemplate
-            input="${listit.html.tmpl}"
+            input="${listit.templates.paged}"
             output="${assets.html.file}"
             scripts="${assets.js.path}"
             stylesheets="${assets.css.path}"
