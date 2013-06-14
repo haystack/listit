@@ -243,15 +243,12 @@
           includeInJSON: "id"
         }
       },
-      createNote: function(text, meta, window, options) {
-        // Strip extra whitespace/cruft.
-        text = L.util.strip(text);
-
-        var fromUser = _.pop(options || {}, "user", true);
-        var note = new L.models.Note({contents: text, meta: meta || {}}, options);
+      createNote: function(obj, window, options) {
+        var note = new L.models.Note(obj, options);
         var noteJSON = note.toJSON();
 
         // TODO: This should use a different event
+        // TODO: Move this into the collection. Call when NEW (unsaved) note is added.
         L.gvent.trigger("note:request:parse note:request:parse:new", noteJSON, window);
         note.set(noteJSON);
         note.save();

@@ -26,7 +26,10 @@
             this.trigger("user:search", this, text, searchID);
         },
         saveNote: function(window) {
-            var note = L.notebook.createNote(this.get('text'), {}, window);
+            var note = L.notebook.createNote({
+              contents: L.util.strip(this.get('text')),
+              meta: {}
+            }, window);
             this.trigger("note-created", this, note);
             return note;
         }
