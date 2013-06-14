@@ -5,15 +5,7 @@
             shrinkNotes: true,
             expandVariables: true,
             openHotkey: '',
-            notificationTimeout: 5,
-            toolbarItems: [
-                'mode',
-                'bold',
-                'italic',
-                'underline',
-                'foreground',
-                'link'
-            ]
+            notificationTimeout: 5
         },
         // Specify user settable preferences here. The view will automatically
         // format/display them.
