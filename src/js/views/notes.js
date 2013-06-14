@@ -8,7 +8,6 @@
         className: 'note hbox justified_box',
         initialize: function(options) {
             var that = this;
-            this.editor = options.editor;
             $(window).one('beforeunload', function() {
                 that.undelegateEvents();
                 that.stopListening();
@@ -35,7 +34,12 @@
             return this.el && this.el.parentNode;
         },
         render: function(options) {
-            this.$el.on('DOMNodeRemoved', _.bind(this.cleanupEditor, this));
+            var that = this;
+            this.$el.on('DOMNodeRemoved', function(evt) {
+              if (evt.srcElement === that.el) {
+                that.cleanupEditor()
+              }
+            });
             this.$el.attr("id", "note-"+this.model.id);
 
             if (this._rendered) {
@@ -53,7 +57,7 @@
         },
         cleanupEditor: function() {
             if (this.editor) {
-                this.$('.editor').html('<textarea></textarea>');
+                this.editor.remove();
                 delete this.editor;
             }
         },
@@ -94,55 +98,13 @@
             // (it's complicated)
 
             var $contentsEl = this.$('.contents'),
-                $editorEl = this.$('.editor');
+                $editorEl = this.$('.editor-container');
             if (!this.editor) {
-                var $textareaEl = $editorEl.children('textarea'),
-                    toolbar = new L.views.Toolbar();
-
-                $editorEl.append(toolbar.render().el);
-
-                var txtbox = $textareaEl.get(0);
-                var editor = new wysihtml5.Editor(txtbox, {
-                  toolbar: toolbar.el,
-                  parserRules: wysihtml5ParserRules,
-                  style: false,
-                  stylesheets: WYSIHTML5_CSS
-                });
-
-                var iframe = editor.composer.iframe;
-
-                var resizeEditor = function() {
-                  var body = $(iframe).contents().find('body'); // Needs document to be loaded.
-                  _.delay(function() {
-                    iframe.style.height = 'auto';
-                    iframe.style.height = body.height() + 'px';
-                    txtbox.style.height = iframe.style.height;
-                  });
-                };
-
-                this.editor = editor;
-
-                this.editor.on('keydown', resizeEditor);
-                this.editor.on('change', resizeEditor);
-                this.editor.on('load', resizeEditor);
-
-                this.editor.on('blur', _.bind(this.onBlur, this));
-
-
-                // Maintain a dialog count so that we don't close the editor with a dialog open.
-                // Referance counts are ugly but work.
-                this.editor._dialogCount = 0;
-                this.editor.on('show:dialog', function() {
-                    editor._dialogCount++;
-                });
-                this.editor.on('save:dialog', function() {
-                    editor._dialogCount--;
-                });
-                this.editor.on('cancel:dialog', function() {
-                    editor._dialogCount--;
-                });
+              this.editor = new ListIt.views.Editor({
+                text: $contentsEl.html()
+              });
+              $editorEl.html(this.editor.render().el);
             }
-            this.editor.setValue($contentsEl.html());
             $editorEl.show();
             $contentsEl.hide();
             this.editor.focus();
@@ -150,7 +112,7 @@
         },
         onBlur: function() {
             var that = this;
-            if (!this.editor || this.editor._dialogCount > 0) {
+            if (!this.editor || this.editor.isShowingDialog()) {
                 return;
             }
             _.defer(function() {
@@ -163,10 +125,10 @@
             });
         },
         closeEditor: function() {
-            this.model.changeContents(this.editor.getValue(), window);
+            this.model.changeContents(this.editor.getText(), window);
             this.model.trigger('user:save', this.model, this);
             this.collapse();
-            this.$('.editor').hide();
+            this.$('.editor-container').hide();
             this.$('.contents').show();
         },
         onClick: function(e) {

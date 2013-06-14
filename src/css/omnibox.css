@@ -1,5 +1,5 @@
 
-#omnibox {
+.note-creator .editor {
   border: 1px solid rgba(128,128,128,.5);   
   border-top-right-radius: 3px;
   border-bottom-left-radius: 3px;
@@ -9,19 +9,16 @@
   margin: 0px 7px;
 }
 
-#omnibox.focus {
+.note-creator .editor.focus {
   border: 1px solid #d36c00;
   box-shadow:0px 0px 0px 0px;
 }
-#omnibox.focus #omnibox-desc {
-    display: none;
-}
 
-#omnibox.focus {
+.note-creator .editor.focus {
   min-height: 1.1em; 
 }
 
-#omnibox-entry, #omnibox-entry + .wysihtml5-sandbox {
+.note-creator .editor-entry, .note-creator .editor-entry + .wysihtml5-sandbox {
   text-align:left;
   height: 20px;
   min-height: 40px;
@@ -60,7 +57,7 @@
   background-color: rgba(128,128,128,.5);
 }
 
-#omnibox-icons {
+.editor-icons {
   font-size: 1.01em;
   padding: 0px;
   margin: 0;
@@ -83,14 +80,14 @@
   color:black;
 }
 
-#omnibox-toolbar .wysihtml5-dialogs  {
+.editor-toolbar .wysihtml5-dialogs  {
     position: fixed; /* ick. */
     left: 10px;
     right: 10px;
     z-index: 99;
 }
 
-#omnibox-toolbar [data-wysihtml5-dialog] {
+.editor-toolbar [data-wysihtml5-dialog] {
     margin-top: 10px;
     padding: 10px;
     -moz-box-shadow: 0 0 10px #888;

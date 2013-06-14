@@ -1,5 +1,21 @@
 /* Generated Template */
 
+ListIt.templates['create-actions'] = function(obj){
+var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'')};
+with(obj||{}){
+__p+='<div class="pin-icon iconTab box center_box clickable">\n    <img src="img/pin_plus.png" title="Keep this note at the top of my list.">\n</div>\n<div class="save-icon clickable iconTab box center_box">\n    <img src="img/plus.png" title="Save this note!">\n</div>\n\n';
+}
+return __p;
+};
+ListIt.templates['editor'] = function(obj){
+var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'')};
+with(obj||{}){
+__p+='<textarea class="editor-entry input-div flex editable" placeholder="Search or Create Note">'+
+((__t=(text))==null?'':__t)+
+'</textarea>\n<div class="editor-bottombar hbox">\n    <div class="editor-icons hbox"></div>\n</div>\n\n';
+}
+return __p;
+};
 ListIt.templates['forms/select'] = function(obj){
 var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'')};
 with(obj||{}){
@@ -22,7 +38,7 @@ var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments
 with(obj||{}){
 __p+='<div class="icon draggable"></div>\n<div class="editable contents contents flex">'+
 ((__t=(contents))==null?'':__t)+
-'</div>\n<div class="editor flex">\n    <textarea></textarea>\n</div>\n<div class="close-btn clickable"></div>\n';
+'</div>\n<div class="editor-container flex">\n</div>\n<div class="close-btn clickable"></div>\n';
 }
 return __p;
 };
@@ -159,7 +175,7 @@ return __p;
 ListIt.templates['pages/main'] = function(obj){
 var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'')};
 with(obj||{}){
-__p+='<div id="controls-container" class="header hbox">\n    <div id="omnibox" class="flex"></div>\n    <div id="controls"></div>\n</div>\n<div id="notes" class="contents flex"></div>\n';
+__p+='<div id="controls-container" class="header hbox">\n    <div id="omnibox" class="note-creator flex"></div>\n    <div id="controls"></div>\n</div>\n<div id="notes" class="contents flex"></div>\n';
 }
 return __p;
 };

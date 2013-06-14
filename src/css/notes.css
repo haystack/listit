@@ -92,7 +92,7 @@
     position: relative;
 }
 
-.note .editor {
+.note .editor-container {
     display: none;
 }
 

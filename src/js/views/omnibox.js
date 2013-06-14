@@ -8,7 +8,7 @@
 
     L.views.OmniboxView = Backbone.View.extend({
         id: 'omnibox',
-        className: 'flex',
+        className: 'flex note-creator',
         initialize: function() {
             var that = this;
             $(window).one('beforeunload', function() {
@@ -36,53 +36,20 @@
                 return this;
             }
 
-            this.toolbar = new L.views.Toolbar({
-                'id': 'omnibox-toolbar',
-                'className': 'flex'
+            this.editor = new L.views.Editor({
+              text: this.model.get('text')||'',
+              actions: L.templates['create-actions']()
             });
-            this.$el.html(L.templates["omnibox/input"]({ text: this.model.get('text') || '' }));
-            this.$('#omnibox-bottombar').prepend(this.toolbar.render().el);
-            this.editor = new wysihtml5.Editor(this.$el.find('#omnibox-entry').get()[0], {
-                toolbar: this.toolbar.el,
-                parserRules: wysihtml5ParserRules,
-                style: false,
-                stylesheets: WYSIHTML5_CSS
-            });
-
-            var iframe = this.editor.composer.iframe;
-            var txtbox = this.$("#omnibox-entry").get(0);
-
-            var resizeEditor = function() {
-                var body = $(iframe).contents().find('body'); // Needs document to be loaded.
-                _.delay(function() {
-                    iframe.style.height = 'auto';
-                    iframe.style.height = body.height() + 'px';
-                    txtbox.style.height = iframe.style.height;
-                });
-            };
-
-
-            this.editor.on('keydown', resizeEditor);
-            this.editor.on('change', resizeEditor);
-            this.editor.on('load', resizeEditor);
-
-            this.editor.on('keydown', _.bind(this._onKeyDown, this));
-            this.editor.on('keyup', _.bind(this._onKeyUp, this));
-            this.editor.on('change', _.bind(this.storeText, this));
-
-            // Focus after inserted.
-            this.$el.on("DOMNodeInsertedIntoDocument", function() {
-              _.defer(function() {
-                iframe.contentDocument.body.focus();
-              });
-            });
+            this.$el.html(this.editor.render().el);
             this._rendered = true;
-
             return this;
         },
         events: {
-            'click #save-icon': '_onSaveClicked',
-            'click #pinIconPlus': '_onSavePinClicked'
+            'click .save-icon': '_onSaveClicked',
+            'click .pin-icon': '_onSavePinClicked',
+            'keydown .editor': '_onKeyDown',
+            'keyup .editor': '_onKeyUp',
+            'change .editor': 'storeText'
         },
         // Handle esc/shift-enter
         _onKeyDown: function(event) {
@@ -124,7 +91,7 @@
         * @private
         */
         _onSavePinClicked: function(event) {
-            this.editor.setValue('!! ' + this.editor.getValue());
+            this.editor.setText('!! ' + this.editor.getText());
             this.save();
         },
         save: function() {
@@ -142,12 +109,12 @@
         */
         getText: function() {
             this.assertRendered();
-            return this.editor.getValue();
+            return this.editor.getText();
         },
 
         setText: function(text) {
             this.assertRendered();
-            this.editor.setValue(text);
+            this.editor.setText(text);
         },
 
         /**
