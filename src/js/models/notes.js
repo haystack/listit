@@ -42,17 +42,27 @@
          * Merge a new note with this one.
          */
         merge: function(attrs) {
-          // Merge contents
+          /* Merge strategy:
+           *
+           * ( old &&  new) && (old == new) -> new
+           * ( old &&  new) && (old != new) -> old + new
+           * ( old && !new)                 -> old
+           * (!old &&  new)                 -> new
+           */
           var newContents;
           var oldContents = this.get('contents');
           if (oldContents && _.str.trim(oldContents).length > 0) {
             if (attrs.contents && _.str.trim(attrs.contents).length > 0) {
-              newContents = attrs.contents + '\n--\n' + oldContents;
+              if (_.str.trim(attrs.contents) === _.str.trim(oldContents)) {
+                newContents = attrs.contents;
+              } else {
+                newContents = attrs.contents + '<br/>--<br/>' + oldContents;
+              }
             } else {
               newContents = oldContents;
             }
           } else {
-            newContents = oldContents;
+            newContents = attrs.contents;
           }
           this.set({
             'meta': _.defaults({}, this.get('meta'), attrs.meta),
