@@ -7,9 +7,9 @@
 Directory                       | Description
 --------------------------------|------------
 `build/<platform>/`             | Build cache
-`debug/platform/`               | Debug build destination.
-`platforms/platform/build.xml`  | Platform specific build file
-`release/platform/`             | Release build destination
+`debug/<platform>/`               | Debug build destination.
+`platforms/<platform>/build.xml`  | Platform specific build file
+`release/<platform>/`             | Release build destination
 `src/`                          | Application source code (see [Source Layout](#source-layout))
 `build.xml`                     | Global build file; builds all platforms
 `common.xml`                    | Common build targets; included in platform build files
@@ -23,9 +23,9 @@ Directory                       | Description
 Directory               | Description
 ------------------------|------------
 `css/`                  | CSS assets
-`css/platform`          | Platform specific CSS assets
+`css/<platform>/`          | Platform specific CSS assets
 `js/`                   | JavaScript Assets (see [JavaScript Layout](#javascript-layout))
-`js/platform`           | Platform specific JavaScript assets
+`js/<platform>/`           | Platform specific JavaScript assets
 `img/`                  | Image assets
 `templates/`            | Underscore HTML templates (see [Templates](#templates))
 
