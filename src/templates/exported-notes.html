@@ -1,0 +1,24 @@
+<html>
+  <head>
+    <style>
+      #content {
+        width: 800px;
+        margin: 20px auto 0px;
+        padding: 10px 20px;
+        border: 1px solid red;
+      }
+      p {
+        color: gray;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="content">
+      <ul>
+        <% _.each(note_contents, function(note_content) { %>
+        <li><%= note_content %></li>
+        <% }) %>
+      </ul>
+    </div>
+  </body>
+</html>

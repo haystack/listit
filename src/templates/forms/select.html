@@ -1,5 +1,5 @@
 <select id="<%=id%>">
-    <% _.each(options, function(name, i) { %>
-    <option value="<%=i%>"><%=name%></option>
+    <% _.each(options, function(name, key) { %>
+    <option value="<%=key%>"><%=name%></option>
     <% }); %>
 </select>

@@ -13,23 +13,15 @@
       this.$el.html(L.templates["options/importexport"]({
         exportSelect: L.templates["forms/select"]({
           id: 'exportSelect',
-          options: _.chain(this.types)
-          .filter(function(t) {
-            return t.exporter;
+          options: _.kmap(L.notebook.exporters, function(value) {
+            return value.display;
           })
-          .map(function(t) {
-            return t.display;
-          }).value()
         }),
         importSelect: L.templates["forms/select"]({
           id: 'importSelect',
-          options: _.chain(this.types)
-          .filter(function(t) {
-            return t.importer;
+          options: _.kmap(L.notebook.importers, function(value) {
+            return value.display;
           })
-          .map(function(t) {
-            return t.display;
-          }).value()
         })
       }));
       return this;
@@ -38,117 +30,24 @@
       'click #exportButton': 'exportClicked',
       'click #importButton': 'importClicked'
     },
-    // TODO: Should probably define these elsewhere
-    types: [
-      { 
-        filename : 'listit-notes.json',
-        display : 'JSON',
-        exporter: function() {
-          return JSON.stringify(L.notebook.toJSON({include: true}));
-        },
-        importer : function(string) {
-          var obj = JSON.parse(string);
-          if (obj.notes) {
-            L.notebook.get('notes').add(obj.notes);
-          }
-          if (obj.deleted) {
-            L.notebook.get('deletedNotes').add(obj.notes);
-          }
-          L.notebook.get('notes').each(function(n) {
-            n.save();
-          });
-          L.notebook.get('deletedNotes').each(function(n) {
-            n.save();
-          });
-          L.notebook.save();
-        }
-      },
-      {
-        filename : 'listit-notes.txt',
-        display : 'Text',
-        exporter: function() {
-          return L.notebook.get('notes').reduce(function(txt, n) {
-            return txt + '* ' + L.util.clean(n.get('contents')).replace(/\n/g, '\n  ') + '\n';
-          }, '');
-        },
-        importer: function(string) {
-          var notes = L.notebook.get('notes');
-          string = _.str.trim(string);
-          var note_strings;
-          var bullet = string[0];
-          if ("*-+".indexOf(bullet) >= 0) {
-            string = string.replace(/\n\s*/g, '\n'); // TODO to greedy
-            string = string.replace(new RegExp("^\\"+bullet+"\s*"), ""); // Strip first
-            console.log(string);
-            note_strings = string.split(new RegExp("\n\s*\\"+bullet+"\s*"));
-            console.log(note_strings);
-            note_strings = _.map(note_strings, function(str) {
-              return str.replace(/\n/g, '<br />');
-            });
-            console.log(note_strings);
-          } else {
-            note_strings = string.split('\n');
-          }
-          _.each(note_strings, function(contents) {
-            notes.create({"contents": contents});
-          });
-          L.notebook.save();
-        }
-      },
-      {
-        filename : 'listit-notes.html',
-        display : 'HTML',
-        exporter: function() {
-          var before = "<html>\n"+
-                      "<head>\n"+
-                      "<style>\n"+
-                      "#content\n"+
-                      "{\n"+
-                      "    width: 800px;\n"+
-                      "    margin: 20px auto 0px;\n"+
-                      "    padding: 10px 20px;\n"+
-                      "    border: 1px solid red;\n"+
-                      "}\n"+
-                      "\n"+
-                      "p\n"+
-                      "{\n"+
-                      "    color: gray;\n"+
-                      "}\n"+
-                      "</style>\n"+
-                      "</head>\n"+
-                      "<body>\n"+
-                      "<div id=\"content\">\n"+
-                      "  <ul>\n";
-          var after = "</ul>\n"+
-                      "  </div>\n"+
-                      "</body>\n"+
-                      "</html>";
-          return before + L.notebook.get('notes').reduce(function(txt, n) {
-            return txt + '<li><p>' + L.util.clean(n.get('contents')).replace(/\n/g, '\n  ') + '</p></li>' + '\n';
-          }, '') + after;
-        }
-      }
-    ],
     importClicked: function() {
-      var type = this.types[this.$el.find('#importSelect').val()];
+      var type = this.$el.find('#importSelect').val();
       var file = this.$el.find('#importFile').get()[0].files[0];
       if (!file) {
         alert('Select a file first.');
       }
       var fr = new FileReader();
       fr.onload = function() {
-        if (type.importer(fr.result)) {
-          //notify good.
-        }
+        L.notebook.import(type, fr.result);
       };
       fr.readAsText(file);
       return false;
     },
     exportClicked: function() {
-      var type = this.types[this.$el.find('#exportSelect').val()];
-        var blob = new BlobBuilder();
-        blob.append(type.exporter());
-        saveAs(blob.getBlob('text/plain;charset=utf-8'), type.filename);
+      var type = this.$el.find('#exportSelect').val();
+      var blob = new BlobBuilder();
+      blob.append(L.notebook.export(type));
+      saveAs(blob.getBlob('text/plain;charset=utf-8'), "listit-notes." + type);
     }
   });
 })(ListIt);

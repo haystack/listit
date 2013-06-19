@@ -31,15 +31,28 @@ __p+='<textarea class="editor-entry input-div flex editable" placeholder="Search
 }
 return __p;
 };
+ListIt.templates['exported-notes'] = function(obj){
+var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'')};
+with(obj||{}){
+__p+='<html>\n  <head>\n    <style>\n      #content {\n        width: 800px;\n        margin: 20px auto 0px;\n        padding: 10px 20px;\n        border: 1px solid red;\n      }\n      p {\n        color: gray;\n      }\n    </style>\n  </head>\n  <body>\n    <div id="content">\n      <ul>\n        ';
+ _.each(note_contents, function(note_content) { 
+__p+='\n        <li>'+
+((__t=( note_content ))==null?'':__t)+
+'</li>\n        ';
+ }) 
+__p+='\n      </ul>\n    </div>\n  </body>\n</html>\n';
+}
+return __p;
+};
 ListIt.templates['forms/select'] = function(obj){
 var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'')};
 with(obj||{}){
 __p+='<select id="'+
 ((__t=(id))==null?'':__t)+
 '">\n    ';
- _.each(options, function(name, i) { 
+ _.each(options, function(name, key) { 
 __p+='\n    <option value="'+
-((__t=(i))==null?'':__t)+
+((__t=(key))==null?'':__t)+
 '">'+
 ((__t=(name))==null?'':__t)+
 '</option>\n    ';

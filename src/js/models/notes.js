@@ -243,6 +243,88 @@
           });
         });
       },
+      import: function(type, string) {
+        if (!_.has(this.importers, type)) {
+          throw new Error("Invalid Importer");
+        }
+        console.log(string);
+        var json = this.importers[type].importer(string);
+        console.log(json);
+        if (json.notes) {
+          var notes = this.get('notes');
+          _.each(json.notes, function(note) {
+            notes.create(note);
+          });
+        }
+        if (json.deletedNotes) {
+          var deletedNotes = this.get('deletedNotes');
+          _.each(json.deletedNotes, function(note) {
+            deletedNotes.create(note);
+          });
+        }
+        return true;
+      },
+      export: function(type) {
+        if (!_.has(this.exporters, type)) {
+          throw new Error("Invalid Exporter");
+        }
+        return this.exporters[type].exporter(L.notebook);
+      },
+      exporters: {
+        json: { 
+          display: 'JSON',
+          exporter: function(notebook) {
+            return JSON.stringify(notebook.toJSON({include: true}));
+          }
+        },
+        txt: {
+          display : 'Text',
+          exporter: function(notebook) {
+            return notebook.get('notes').reduce(function(txt, n) {
+              return txt + '* ' + L.util.clean(n.get('contents')).replace(/\n/g, '\n  ') + '\n';
+            }, '');
+          }
+        },
+        html: {
+          display : 'HTML',
+          exporter: function(notebook) {
+            return L.templates['exported-notes']({note_contents: notebook.get('notes').pluck('contents')});
+          }
+        }
+      },
+      importers: {
+        json: { 
+          display: 'JSON',
+          importer : function(string) {
+            return JSON.parse(string);
+          }
+        },
+        txt: {
+          display: 'Text',
+          importer: function(string) {
+            var notes = L.notebook.get('notes');
+            string = _.str.trim(string);
+            var note_strings;
+            var bullet = string[0];
+            if ("*-+".indexOf(bullet) >= 0) {
+              string = string.replace(/\n\s*/g, '\n'); // TODO to greedy
+              string = string.replace(new RegExp("^\\"+bullet+"\s*"), ""); // Strip first
+              note_strings = string.split(new RegExp("\n\s*\\"+bullet+"\s*"));
+              note_strings = _.map(note_strings, function(str) {
+                return str.replace(/\n/g, '<br />');
+              });
+            } else {
+              note_strings = string.split('\n');
+            }
+
+            return {
+              notes: _.map(note_strings, function(note_string) {
+                return {contents: note_string};
+              })
+            };
+          }
+        }
+      },
       relations: {
         notes: {
           type: L.models.NoteCollection,
