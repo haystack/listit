@@ -35,7 +35,7 @@
         },
         render: function(options) {
             var that = this;
-            this.$el.on('DOMNodeRemoved', function(evt) {
+            this.$el.on('DOMNodeRemovedFromDocument', function(evt) {
               if (evt.srcElement === that.el) {
                 that.cleanupEditor()
               }
@@ -71,11 +71,12 @@
             this.$el.html(this.template(this.model.toJSON()));
         },
         events: {
-            'click .close-btn': 'onRemoveClicked',
-            'click .contents': 'onClick',
-            'click .contents a': 'onLinkOpen',
-            'keyup .contents': 'onKeyUp',
-            'blur .editor': 'onBlur'
+            'click   .close-btn':   'onRemoveClicked',
+            'click   .contents':    'onClick',
+            'click   .contents a':  'onLinkOpen',
+            'keyup   .contents':    'onKeyUp',
+            'blur    .editor':      'onBlur',
+            'keydown .editor':      'onKeyDown'
         },
         getNoteText: function() {
             return this.$('.contents').html();
@@ -141,10 +142,15 @@
         * Scroll List so note selected with tab is at top.
         */
         onKeyUp: function(event) {
-            if (event.keyCode === 9) { // TAB
+            if (event.keyCode === KeyCode.TAB) {
                 event.target.scrollIntoView();
                 $('#notes')[0].scrollTop -= 4;
             }
+        },
+        onKeyDown: function(event) {
+          if (event.keyCode === KeyCode.ESC && this.editor && !this.editor.isShowingDialog()) {
+            this.closeEditor();
+          }
         },
         openLink: function() {
             window.debug('READY');
