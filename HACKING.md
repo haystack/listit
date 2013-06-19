@@ -123,22 +123,11 @@ following order:
 
 Event | Description
 ------|------------
-setup:before \
-    | Issued before setup.
-setup:migrate:before \
-setup:migrate \
-setup:migrate:after \
-    | This is where any migration code runs.
-setup:models:before \
-setup:models \
-setup:models:after \
-    | This is where models are setup (ListIt.notebook etc.).
-setup:views:before \
-setup:views \
-setup:views:after \
-    | This is where views are setup. This event is not triggered until the DOM has finished loading (jQuery.ready).
-setup:after \
-    | Issued after the setup has completed.
+setup:before | Issued before setup.
+setup:migrate:before <br/> setup:migrate <br/> setup:migrate:after | This is where any migration code runs.
+setup:models:before <br/> setup:models <br/> setup:models:after <br/> | This is where models are setup (ListIt.notebook etc.).
+setup:views:before <br/> setup:views <br/> setup:views:after <br/> | This is where views are setup. This event is not triggered until the DOM has finished loading (jQuery.ready).
+setup:after | Issued after the setup has completed.
 
 Each setup event listener is passed the ListIt instance and a barrier. If an
 event listener needs to pause the setup process while it performs some
