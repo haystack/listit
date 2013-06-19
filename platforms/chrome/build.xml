@@ -85,10 +85,12 @@
 
         <mk-defines-debug />
 
-        <deploy-resource-debug name="sidebar" />
-        <deploy-resource-debug name="options" />
-        <deploy-resource-debug name="addnotebox" />
-        <deploy-resource-debug name="background" />
+        <parallel>
+            <deploy-resource-debug name="sidebar" />
+            <deploy-resource-debug name="options" />
+            <deploy-resource-debug name="addnotebox" />
+            <deploy-resource-debug name="background" />
+        </parallel>
     </target>
 
     <target name="release" depends="-build.setup,build.img,build.assets,build.html,build.manifest">
@@ -128,12 +130,12 @@
         <mkdir dir="${build.js.dir}" />
 
         <!-- Compiles given resources and stores their paths in buid.@resource.@type.path -->
+        <deploy-resource name="wysihtml5" />
         <parallel>
             <deploy-resource name="sidebar" />
             <deploy-resource name="background" />
             <deploy-resource name="options" />
             <deploy-resource name="addnotebox" />
-            <deploy-resource name="wysihtml5" />
         </parallel>
     </target>
 
