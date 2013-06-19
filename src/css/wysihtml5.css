@@ -1,47 +1,3 @@
-html, body {
-  padding: 0px;
-  margin: 0px;
-  height: auto;
-  background-color: transparent;
-  line-height: 1.2;
-
-  font-family: Helvetica Neue Ultralight, "Helvetica Neue", "Helvetica", sans-serif !important;
-  font-weight:110;
-  font-size: 14px;
-}
-
-.wysiwyg-color-gray {
-    color: gray;
-}
-
-.wysiwyg-color-red {
-    color: red;
-}
-
-.wysiwyg-color-white {
-    color: white;
-}
-
-.wysiwyg-color-green {
-    color: green;
-}
-
-.wysiwyg-color-yellow {
-    color: yellow;
-}
-
-.wysiwyg-color-maroon {
-    color: maroon;
-}
-
-.wysiwyg-color-navy {
-    color: navy;
-}
-
-.wysiwyg-color-purple {
-    color: purple;
-}
-
 .wysihtml5-toolbar-buttons [data-wysihtml5-command=italic] {
     background-image: url("../img/icons/format-text-italic.png");
 }
@@ -215,18 +171,6 @@ html, body {
 
 .wysihtml5-toolbar-buttons [data-wysihtml5-command-group]:hover .wysihtml5-command-active {
     border-color: #000;
-}
-
-
-b {
-    font-weight: bold;
-}
-
-i {
-    font-style: italic;
-}
-
-.wysihtml5-dialogs {
 }
 
 

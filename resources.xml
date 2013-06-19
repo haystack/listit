@@ -2,13 +2,6 @@
 
 <project>
 
-<resources id="css.wysihtml5">
-    <filelist dir="${listit.css.dir}">
-        <file name="reset.css"/>
-        <file name="wysihtml5.css"/>
-    </filelist>
-</resources>
-
 <resources id="js.libs.jquery">
     <filelist dir="${listit.js.dir}/libs">
         <file name="jquery.js" />
@@ -154,13 +147,25 @@
     <resources refid="js.setup" />
 </resources>
 
+<resources id="css.wysihtml5">
+    <filelist dir="${listit.css.dir}">
+        <file name="reset.css" />
+        <file name="wysihtml5-iframe.css" />
+        <file name="note-content.css" />
+    </filelist>
+</resources>
 
 <resources id="css.all">
-    <filelist dir="${listit.css.dir}" files="reset.css" />
-    <fileset dir="${listit.css.dir}">
-        <include name="*.css"/>
-        <exclude name="reset.css"/>
-    </fileset>
+    <filelist dir="${listit.css.dir}">
+        <file name="reset.css" />
+        <file name="main.css" />
+        <file name="page-main.css" />
+        <file name="page-options.css" />
+        <file name="omnibox.css" />
+        <file name="notes.css" />
+        <file name="note-content.css" />
+        <file name="wysihtml5.css" />
+    </filelist>
 </resources>
 </project>
 

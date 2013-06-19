@@ -1,13 +1,18 @@
-
 .note-creator .editor {
+  background: #FFF;
+  cursor: text;
+  padding: 0;
+  margin: 0;
+}
+
+#omnibox .editor {
   border: 1px solid rgba(128,128,128,.5);   
   border-top-right-radius: 3px;
   border-bottom-left-radius: 3px;
-  background: #FFF;
   padding: 7px 7px 0px 7px;
-  cursor: text;
   margin: 0px 7px;
 }
+
 
 .note-creator .editor.focus {
   border: 1px solid #d36c00;
