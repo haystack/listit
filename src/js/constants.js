@@ -52,6 +52,7 @@
         ENTER : 13,
         ESC : 27,
         BS: 8,
+        TAB: 9,
         DEL: 46
     };
 
