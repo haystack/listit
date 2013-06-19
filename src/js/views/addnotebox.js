@@ -10,6 +10,15 @@
       'click .pin-icon': '_onPinClicked',
       'keydown .editor': '_onKeyDown',
     },
+    initialize: function() {
+      var that = this;
+      window.onbeforeunload = function() {
+        if (that._rendered) {
+          return "You have an unsaved list.it note open.";
+        }
+      };
+
+    },
     _onKeyDown: function(event) {
       var keyCode;
       event = event || window.event;
@@ -45,8 +54,10 @@
     remove: function() {
       if (this._rendered) {
         this.editor.remove();
-        return Backbone.View.prototype.remove.call(this);
+        Backbone.View.prototype.remove.call(this);
+        this._rendered = false;
       }
+      return this;
     },
     render: function(options) {
       if (!this._rendered) {
