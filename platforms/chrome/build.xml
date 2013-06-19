@@ -96,6 +96,7 @@
             <arg value="--pack-extension=${build.dir}" />
             <arg value="--pack-extension-key=${privatekey}" />
         </exec>
+        <move file="${build.dir}/../chrome.crx" todir="${deploy.dir}" />
     </target>
 
     <target name="debug" depends="-build.setup,build.assets-debug,build.html,build.manifest">
