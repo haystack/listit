@@ -31,4 +31,11 @@ ListIt.lvent.once('setup:views:after', function(L, barr) {
     this.id = this.id;
     this.className = this.className;
   });
+  // Close on hotkey press.
+  chrome.commands.getAll(function(cmds) {
+    var cmd = _.findWhere(cmds, {name: "_execute_browser_action"});
+    if (cmd && cmd.shortcut) {
+      $(document).bind('keydown', cmd.shortcut, _.bind(window.close, window));
+    }
+  });
 });

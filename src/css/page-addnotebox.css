@@ -1,0 +1,33 @@
+body {
+  overflow: hidden;
+}
+
+#addnote {
+  border-top-left-radius: 2px;
+  border-top-right-radius: 2px;
+  position: absolute;
+  bottom: 0;
+  margin: 10px;
+  margin-bottom: 0px;
+  border: 1px solid #aaa;   
+  background: white;
+  -moz-box-shadow: 0 0 10px #888;
+  -webkit-box-shadow: 0 0 10px #888;
+  box-shadow: 0 0 10px #888;
+}
+
+#addnote .editor textarea, #addnote iframe {
+  height: 200px;
+  overflow: auto !important;
+}
+#addnote .editor {
+  margin: 5px;
+}
+
+#addnote .header {
+  background: silver;
+  border-bottom: 1px solid #aaa;
+  font-size: large;
+  padding: 4px 6px;
+}
+

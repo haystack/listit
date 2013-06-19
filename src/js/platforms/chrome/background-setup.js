@@ -2,7 +2,8 @@
 
 ListIt.chrome = {
   views: {},
-  models: {}
+  models: {},
+  ports: {}
 };
 
 
@@ -13,57 +14,18 @@ $(window).one('beforeunload', function() {
 
 ListIt.lvent.once('setup:models:after', function(L, barr) {
   'use strict';
+  // Create omnibox.
   L.chrome.omnibox = new L.models.FilterableNoteCollection();
 
-  L.gvent.on('log:request:data', function(logEntry) {
-    //barr.aquire();
-    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-      var tab = tabs[0];
-      logEntry.set('tabid', tab.id);
-      if (!logEntry.get('url')) {
-        logEntry.set('url', tab.url);
-      }
-      //barr.release();
-    });
-  });
-  var current_popup_id = null;
-  var open_popup = function() {
-    current_popup_id = true;
-    chrome.windows.getCurrent(function(cwin) {
-      chrome.windows.create({
-        url:"index.html",
-        type: "popup",
-        width: 350,
-        height: cwin.height,
-        left: cwin.left-360,
-        top: cwin.top,
-        focused: true
-      }, function(win) {
-        current_popup_id = win.id;
-      });
-    });
-  };
-
-  chrome.browserAction.onClicked.addListener(function() {
-    if (current_popup_id) {
-      if (current_popup_id !== true) {
-        chrome.windows.update(current_popup_id, {
-          focused: true
-        }, function(win) {
-          if (!win) {
-            open_popup()
-          }
-        });
-      }
+  // Handle ports.
+  chrome.runtime.onConnect.addListener(function(port) {
+    var port_handler = L.chrome.ports[port.name];
+    if (port_handler) {
+      port_handler(port);
     } else {
-      open_popup()
+      port.disconnect();
     }
   });
-
-  L.preferences.on('change:popup', function(model, value) {
-    chrome.browserAction.setPopup({popup: (value ? "index.html" : '')})
-  });
-  chrome.browserAction.setPopup({popup: (L.preferences.get('popup') ? "index.html" : '')})
 });
 
 ListIt.lvent.once('setup:views:after', function(L, barr) {

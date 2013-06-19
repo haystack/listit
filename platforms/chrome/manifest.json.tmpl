@@ -11,16 +11,38 @@
     "background": {
         "scripts": @background_js@
     },
+    "web_accessible_resources": [
+      "addnotebox.html"
+    ],
     "permissions": [
         "storage",
         "background",
-        "notifications",
-        "http://*.welist.it/*",
-        "https://*.welist.it/*",
+        "activeTab",
         "unlimitedStorage",
         "contextMenus",
+        "https://welist.it/listit/jv3/*",
         "tabs"
     ],
+    "commands": {
+        "create-note": {
+            "suggested_key": {
+                "default": "Ctrl+M"
+            },
+            "description": "Take a note"
+        },
+        "create-page-note": {
+            "suggested_key": {
+                "default": "Ctrl+Shift+M"
+            },
+            "description": "Take a note (and link to the current page)"
+        },
+        "_execute_browser_action": {
+            "suggested_key": {
+                "default": "Ctrl+Shift+L"
+            },
+            "description": "Open your notes"
+        }
+    },
     "icons": {
         "16": "@icon@"
     },

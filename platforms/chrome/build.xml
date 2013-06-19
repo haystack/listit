@@ -14,6 +14,27 @@
         <resources refid="js.setup"/>
     </resources>
 
+
+    <resources id="js.addnotebox">
+        <resources refid="js.libs" />
+        <resources refid="js.common" />
+        <resources refid="js.templates" />
+        <!-- don't include setup -->
+        <fileset dir="${listit.js.models.dir}">
+            <include name="*.js" />
+        </fileset>
+        <fileset dir="${listit.js.views.dir}">
+            <include name="*.js" />
+        </fileset>
+        <filelist dir="${listit.js.platforms.dir}/chrome">
+            <file name="addnotebox-setup.js" />
+        </filelist>
+    </resources>
+    <resources id="css.addnotebox">
+        <resources refid="css.all" />
+        <fileset file="${listit.css.platforms.dir}/chrome/addnotebox.css" />
+    </resources>
+
     <resources id="js.options">
         <resources refid="js.libs" />
         <resources refid="js.common" />
@@ -41,19 +62,14 @@
             <file name="background-setup.js" />
         </filelist>
         <resources refid="js.models" />
+        <resources refid="js.templates" />
         <fileset dir="${listit.js.platforms.dir}/chrome/models" includes="*.js" />
         <resources refid="js.collectors" />
         <resources refid="js.observers" />
         <resources refid="js.migrate"/>
-        <fileset dir="${listit.js.platforms.dir}/chrome/views" includes="*.js" />
+        <fileset dir="${listit.js.platforms.dir}/chrome/background" includes="*.js" />
         <resources refid="js.setup"/>
     </resources>
-
-    <resources id="js.content">
-        <resources refid="js.libs.jquery" />
-        <fileset file="${listit.js.platforms.dir}/chrome/content.js" />
-    </resources>
-
 
     <resources id="css.sidebar">
         <resources refid="css.all" />
@@ -71,6 +87,7 @@
 
         <deploy-resource-debug name="sidebar" />
         <deploy-resource-debug name="options" />
+        <deploy-resource-debug name="addnotebox" />
         <deploy-resource-debug name="background" />
     </target>
 
@@ -87,6 +104,7 @@
                 <file name="manifest.json" />
                 <file name="index.html" />
                 <file name="options.html" />
+                <file name="addnotebox.html" />
             </filelist>
         </copy>
         <!--
@@ -113,6 +131,7 @@
             <deploy-resource name="sidebar" />
             <deploy-resource name="background" />
             <deploy-resource name="options" />
+            <deploy-resource name="addnotebox" />
             <deploy-resource name="wysihtml5" />
         </parallel>
     </target>
@@ -120,21 +139,16 @@
     <target name="build.html" depends="-build.setup">
         <deploy-html resource="sidebar" />
         <deploy-html resource="options" />
-        <!--<deploy-html resource="add_dialog" />-->
+        <deploy-html resource="addnotebox" />
     </target>
 
     <target name="build.manifest" depends="-build.setup">
-        <!--
-        <local name="content_path" />
-        <jsonpath property="content_path" path="${build.content.js.path}" />
-        -->
         <local name="background_path" />
         <jsonpath property="background_path" path="${build.background.js.path}" />
         <copy file="${platform.dir}/manifest.json.tmpl" tofile="${build.dir}/manifest.json">
             <filterchain>
                 <filterreader classname="org.apache.tools.ant.filters.ReplaceTokens">
                     <param type="propertiesfile" value="manifest.properties" />
-                    <!--<token key="content_js" value="${content_path}"/>-->
                     <param type="token" name="background_js" value="${background_path}" />
                     <param type="token" name="version" value="${listit.version}" />
                     <param type="token" name="name" value="${listit.name}" />

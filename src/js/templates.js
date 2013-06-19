@@ -1,5 +1,20 @@
 /* Generated Template */
 
+ListIt.templates['blockquote'] = function(obj){
+var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'')};
+with(obj||{}){
+__p+='<blockquote>\n  '+
+((__t=( content ))==null?'':_.escape(__t))+
+'\n  ';
+ if (typeof source !== "undefined") { 
+__p+='<footer class="source">'+
+((__t=( source ))==null?'':__t)+
+'</footer>';
+ } 
+__p+='\n</blockquote>\n';
+}
+return __p;
+};
 ListIt.templates['create-actions'] = function(obj){
 var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'')};
 with(obj||{}){
@@ -33,6 +48,31 @@ __p+='\n</select>\n';
 }
 return __p;
 };
+ListIt.templates['link'] = function(obj){
+var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'')};
+with(obj||{}){
+__p+='<a target="_blank" href="'+
+((__t=( url ))==null?'':_.escape(__t))+
+'">';
+ if (typeof icon === "string" ) { 
+__p+='<img width="16" height="16" src="'+
+((__t=( icon ))==null?'':_.escape(__t))+
+'"/>';
+ } 
+__p+='';
+ if (typeof title === "string") { 
+__p+=''+
+((__t=( title ))==null?'':_.escape(__t))+
+'';
+ } else { 
+__p+=''+
+((__t=( url ))==null?'':_.escape(__t))+
+'';
+ } 
+__p+='</a>\n';
+}
+return __p;
+};
 ListIt.templates['note'] = function(obj){
 var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'')};
 with(obj||{}){
@@ -52,15 +92,6 @@ __p+=' settingIcon" src="img/arrowstill.png" width="16" height="16" title="Save 
 '" width="16" height="16" title="'+
 ((__t=(sizeTitle ))==null?'':__t)+
 '" >\n</a>\n\n';
-}
-return __p;
-};
-ListIt.templates['omnibox/input'] = function(obj){
-var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'')};
-with(obj||{}){
-__p+='<textarea id="omnibox-entry" class="omnibox-entry input-div flex editable" placeholder="Search or Create Note">'+
-((__t=(text))==null?'':__t)+
-'</textarea>\n<div id="omnibox-bottombar" class="hbox">\n    <div id="omnibox-icons" class="hbox">\n        <div class="iconTab box center_box clickable">\n            <img id="pinIconPlus" src="img/pin_plus.png" title="Keep this note at the top of my list.">\n        </div>\n        <div id="save-icon" class="clickable iconTab box center_box">\n            <img src="img/plus.png" title="Save this note!">\n        </div>\n    </div>\n</div>\n\n';
 }
 return __p;
 };
