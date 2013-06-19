@@ -43,8 +43,8 @@ ListIt.lvent.once("setup:models:after", function(L, barr) {
         // If the sidebar was focused (is open), append to the omnibox.
         var text = L.omnibox.get('text', '');
         var trimmed_text = _.str.trim(text);
-        if (trimmed_text !== '' || trimmed_text.match(/<br[^>]>$/) {
-          contents = '<br/>'+contents
+        if (trimmed_text !== '' || trimmed_text.match(/<br[^>]>$/)) {
+          contents = '<br/>'+contents;
         }
         contents += '<br/>';
         L.omnibox.set({text: text+contents});
