@@ -68,8 +68,8 @@ template, stored at `src/templates/pages/main.html` can be rendered by calling
 ## Collectors
 
 Collectors, found in `src/js/collectors`, add metadata to new or recently
-modified notes. Collectors should listen on the
-[global event interface](#global-event-interface) for the following events:
+modified notes. Collectors should listen on the global event interface (see
+[Event Interfaces](#event-interfaces)) for the following events:
 
 Event                       | On
 ----------------------------|---------------------------------------------------------
@@ -100,28 +100,51 @@ in list.it and submit the appropriate log entries. They are kept separate so
 to keep logging and functionality separate.
 
 Unfortunately, some code must be inserted into the functional code to facilitate
-logging. In general, these code snippets should simply trigger `user:<action>`
-events on the [global event interface](#global-event-interface). Observers
-should listen to for these events and act appropriately. __NOTE:__ A
+logging. In general, these code snippets should simply trigger `user:<action>`.
+Observers should listen to for these events and act appropriately. __NOTE:__ A
 `user:<action>` event should never include information specific to logging
 functionality; they should only be used to indicate that the user has performed
 some action.
 
 ## Event Interfaces
 
-TODO
-
-### Global Event Interface
-
-TODO
-
-### Local Event Interface
-
-TODO
+In addition to the model specific event handlers, each window (background,
+sidebar, options, etc.) has it's own local event interface `ListIt.lvent` and the
+entire extension as a whole has a global event interface `ListIt.gvent`. The
+local event interface should be used for any events that are pertinent to the
+local window only (setup etc.). The global interface, on the other hand, should
+be used to broadcast information that is relevant to the entire extension.
 
 ## Setup
 
-TODO
+On startup (global and per page), list.it sets up the environment by issuing
+setup events on the local event interface. The events are triggered in the
+following order:
+
+Event | Description
+------|------------
+setup:before \
+    | Issued before setup.
+setup:migrate:before \
+setup:migrate \
+setup:migrate:after \
+    | This is where any migration code runs.
+setup:models:before \
+setup:models \
+setup:models:after \
+    | This is where models are setup (ListIt.notebook etc.).
+setup:views:before \
+setup:views \
+setup:views:after \
+    | This is where views are setup. This event is not triggered until the DOM has finished loading (jQuery.ready).
+setup:after \
+    | Issued after the setup has completed.
+
+Each setup event listener is passed the ListIt instance and a barrier. If an
+event listener needs to pause the setup process while it performs some
+asynchronous operation, it should call `aquire()` on the barrier before
+executing the asynchronous operation and then `release()` from the asynchronous
+operation's callback.
 
 ## Migrating
 
