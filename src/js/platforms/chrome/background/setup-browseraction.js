@@ -1,6 +1,7 @@
 ListIt.lvent.once("setup:views:after", function(L, barr) {
 
   var current_sidebar_id = null;
+  var current_sidebar_resizer = null;
   var sidebar = L.chrome.sidebar = {
     // Does not check if open.
     _open: function(callback) {
@@ -15,6 +16,25 @@ ListIt.lvent.once("setup:views:after", function(L, barr) {
           top: cwin.top,
           focused: true
         }, function(win) {
+          if (L.preferences.get('sidebar_track_window', false)) {
+            current_sidebar_resizer = setInterval(function() {
+              chrome.windows.get(cwin.id, function(main_win) {
+                chrome.windows.get(win.id, function(sidebar_win) {
+                  if (main_win.height !== cwin.height || main_win.left !== cwin.left || main_win.top !== cwin.top || sidebar_win.width !== win.width) {
+                    chrome.windows.update(win.id, {
+                      height: main_win.height,
+                      top: main_win.top,
+                      left: main_win.left - sidebar_win.width-10,
+                      height: main_win.height
+                    }, function() {
+                      win = sidebar_win;
+                    });
+                  }
+                  cwin = main_win;
+                });
+              });
+            }, 500);
+          }
           current_sidebar_id = win.id;
           if (callback) {
             callback(win);
@@ -36,6 +56,7 @@ ListIt.lvent.once("setup:views:after", function(L, barr) {
             if (!win) {
               // Window really didn't exist, fix it.
               current_sidebar_id = null;
+              clearInterval(current_sidebar_resizer);
             }
             if (callback) {
               callback(!!win);
@@ -55,6 +76,7 @@ ListIt.lvent.once("setup:views:after", function(L, barr) {
             if (!win) {
               // Window really didn't exist, fix it.
               current_sidebar_id = null;
+              clearInterval(current_sidebar_resizer);
               sidebar._open();
             }
           });
@@ -75,6 +97,7 @@ ListIt.lvent.once("setup:views:after", function(L, barr) {
             // Fix error
             if (!win) {
               current_sidebar_id = null;
+              clearInterval(current_sidebar_resizer);
             }
             callback(!!win);
           });
@@ -98,6 +121,7 @@ ListIt.lvent.once("setup:views:after", function(L, barr) {
   chrome.windows.onRemoved.addListener(function(win_id) {
     if (win_id === current_sidebar_id) {
       current_sidebar_id = null;
+      clearInterval(current_sidebar_resizer);
     }
   });
 
