@@ -146,7 +146,7 @@ triggered.
 
 On upgrade/downgrade, List.it will trigger the following events:
 
-<table markdown="markdown">
+<table>
     <thead>
         <tr>
             <th>Event</th><th>Description</th>
@@ -154,33 +154,33 @@ On upgrade/downgrade, List.it will trigger the following events:
     </thead>
     <tbody>
         <tr>
-            <td> `upgrade/downgrade:prepare` </td>
+            <td> <code>upgrade/downgrade:prepare</code> </td>
             <td>
             Indicates that an upgrade/downgrade is about to take place.
             <br/>
-            Arguments: `ListIt`, `{to: <dest_version>, from: <old_version>}`, `barrier`
+            Arguments: <code>ListIt</code>, <code>{to: &lt;dest_version&gt;, from: &lt;old_version&gt;}</code>, <code>barrier</code>
             </td>
         </tr>
         <tr>
-            <td>`upgrade/downgrade:version`<br>`upgrade/downgrade:version:<n>`</td>
+            <td><code>upgrade/downgrade:version</code><br><code>upgrade/downgrade:version:&lt;n&gt;</code></td>
             <td>
-            Indicates that list.it is upgrading/downgrading to version `<n>`. On
+            Indicates that list.it is upgrading/downgrading to version <code>&lt;n&gt;</code>. On
             upgrade, these events are triggered for every version greater than the
             current version and less than or equal to the target version (in
             increasing order). On downgrade, these events are triggered for
             every version less than or equal to the current version and greater
             than the target version (in decreasing order).
             <br>
-            Arguments: `ListIt`, `{to: <dest_version>, from: <old_version>, now: <n>}`, `barrier`
+            Arguments: <code>ListIt</code>, <code>{to: &lt;dest_version&gt;, from: &lt;old_version&gt;, now: &lt;n&gt;}</code>, <code>barrier</code>
             </br>
             </td>
         </tr>
         <tr>
-            <td>`upgrade/downgrade:complete`</td>
+            <td><code>upgrade/downgrade:complete</code></td>
             <td>
             Indicates that an upgrade/downgrade has completed.
             <br/>
-            Arguments: `ListIt`, `{to: <dest_version>, from: <old_version>}`, `barrier`
+            Arguments: <code>ListIt</code>, <code>{to: &lt;dest_version&gt;, from: &lt;old_version&gt;}</code>, <code>barrier</code>
             </td>
         </tr>
     </tbody>
