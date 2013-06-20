@@ -7,8 +7,19 @@
             openHotkey: '',
             notificationTimeout: 5
         },
-        // Specify user settable preferences here. The view will automatically
-        // format/display them.
+        /**
+         * Specify user settable preferences here. The view will automatically
+         * format/display them.
+         *
+         * Format:
+         *   
+         *   <var_name>: {
+         *     type: '<var_type>'
+         *     description: '<var_description>'
+         *   }
+         *
+         * where type is one of: boolean, number, hotkey, text
+         **/
         schema: {
             shrinkNotes: {
                 type: 'boolean',

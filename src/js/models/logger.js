@@ -1,5 +1,10 @@
 (function(L) {
     'use strict';
+    /**
+     * The log event.
+     *
+     * @param{Object} object The initial attributes of this log event.
+     **/
     L.models.LogEvent = Backbone.Model.extend({
       urlRoot: '/logentries',
       defaults: function() {
@@ -20,6 +25,9 @@
       }
     });
 
+    /**
+     * The actual log collection. Never used by itself.
+     **/
     L.models.Log = Backbone.Collection.extend({
       model: L.models.LogEvent,
       initialize: function() {
@@ -35,8 +43,20 @@
       }
     });
 
+    /**
+     * The logger model.
+     *
+     * A singleton.
+     *
+     **/
     L.models.Logger = Backbone.RelModel.extend({
       url: '/log',
+      relations: {
+        log: {
+          type: L.models.Log,
+          includeInJSON: "id"
+        }
+      },
       isNew: function() {
         return false;
       },
@@ -59,6 +79,11 @@
           m.save();
         });
       },
+      /**
+       * Start logging
+       *
+       * Starts the logging observers.
+       **/
       start: function() {
         if (this._started) {
           return;
@@ -75,23 +100,30 @@
           return inst;
         });
       },
+      /**
+       * Stop logging
+       *
+       * Stops the logging observers.
+       **/
       stop: function() {
         _.each(that.observers, function(inst) {
           inst.destroy();
         });
         delete that.observers;
       },
-      relations: {
-        log: {
-          type: L.models.Log,
-          includeInJSON: "id"
-        }
-      },
-      clearUntil: function() {
+      /**
+       * Clear log events before and including time.
+       **/
+      clearUntil: function(/* time */) {
         var log = this.get('log');
         return log.clearUntil.apply(log, arguments);
       },
-      add: function() {
+      /**
+       * Add the passed LogEvent models to the log.
+       *
+       * @see Backbone.Collection#add
+       **/
+      add: function(/* model[s], [options] */) {
         var log = this.get('log');
         return log.add.apply(log, arguments);
       }

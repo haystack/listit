@@ -2,22 +2,29 @@
     'use strict';
     L.Router = Backbone.Router.extend({
         routes: {
-            ':action': 'go',
+            ':page_name': 'go',
             '': 'main'
         },
+        // Default start page.
         stack : ['main'],
-        go: function(action) {
-            var page = $('#page-'+action),
+
+        /**
+         * Goes to the specified page.
+         *
+         * @param{String} page_name The name of the page to which to switch.
+         **/
+        go: function(page_name) {
+            var page = $('#page-'+page_name),
                 d1, d2;
 
-            if (this.stack[this.stack.length-1] === action) {
+            if (this.stack[this.stack.length-1] === page_name) {
                 page.show();
-            } else if (this.stack[this.stack.length-2] === action) {
+            } else if (this.stack[this.stack.length-2] === page_name) {
                 this.stack.pop();
                 d1 = 'right';
                 d2 = 'left';
             } else {
-                this.stack.push(action);
+                this.stack.push(page_name);
                 d1 = 'left';
                 d2 = 'right';
             }

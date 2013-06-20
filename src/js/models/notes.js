@@ -3,6 +3,9 @@
 
 (function(L) {
     'use strict';
+    /**
+     * Stores a single note.
+     **/
     L.models.Note = Backbone.Model.extend({
         urlRoot: '/note',
         defaults: function() {
@@ -25,11 +28,13 @@
                 'modified': true
             });
         },
-        /*
+        /**
          * Change the contents of a note and trigger parse events.
-         *   newContents: new note contents
-         *   window: the window from which this note was changed (optional)
-         */
+         *
+         * @param {String} newContents New note contents
+         * @param {Window} window The window from which this note was changed (optional)
+         *
+         **/
         changeContents: function(newContents, window) {
             var note = this.toJSON();
             note.contents = newContents;
@@ -38,17 +43,19 @@
             this.set(note);
             this.save();
         },
-        /*
+        /**
          * Merge a new note with this one.
-         */
+         *
+         * @param {Object} attrs The new note's attributes
+         *
+         * Merge strategy:
+         *
+         *   ( old &&  new) && (old == new) -> new
+         *   ( old &&  new) && (old != new) -> old + new
+         *   ( old && !new)                 -> old
+         *   (!old &&  new)                 -> new
+         **/
         merge: function(attrs) {
-          /* Merge strategy:
-           *
-           * ( old &&  new) && (old == new) -> new
-           * ( old &&  new) && (old != new) -> old + new
-           * ( old && !new)                 -> old
-           * (!old &&  new)                 -> new
-           */
           var newContents;
           var oldContents = this.get('contents');
           if (oldContents && _.str.trim(oldContents).length > 0) {
@@ -71,9 +78,12 @@
             'version': attrs.version
           });
         },
-        /*
+        /**
          * Move this note from it's current collection to a new one.
-         */
+         *
+         * @param {Backbone.Collection} collection The destination collection.
+         * @param {Object} [options] Options
+         **/
         moveTo: function(collection, options) {
             if (collection === this.collection) {
                 return;
@@ -93,7 +103,12 @@
         slice: function(a, b) {
             return this.models.slice(a, b);
         },
-        // Reorder contents by list of ids
+        /**
+         * Reorder contents by list of IDs
+         *
+         * @param {Array<int>} newOrder A list of note IDs
+         * @param {Object} [options]
+         **/
         setOrder: function(newOrder, options) {
             options = options || {};
             var orderMap = _.invert(newOrder),
@@ -115,6 +130,11 @@
             this.trigger('sort', this, options);
           }
         },
+        /**
+         * Get the list of in-order note IDs.
+         *
+         * @return {Array} Returns an Array of note IDs
+         **/
         getOrder: function() {
             return this.pluck("id");
         }
@@ -128,6 +148,7 @@
             this.searchQueue = new ActionQueue(50);
             this.searchQueue.start();
             this._searchCursor = 0;
+            // TODO: Don't hardcode this.
             this.backingCollection = L.notebook.get('notes');
             this.listenTo(this.backingCollection, 'add', this.maybeAddNew);
             this.listenTo(this.backingCollection, 'remove', this._onRemove);
@@ -157,11 +178,23 @@
           var i = arguments[1];
           return this.backingCollection.indexOf(note, typeof(i) === "number" ? i : undefined);
         },
+        /**
+         * Add new note iff it matches the current search terms.
+         *
+         * @param {LisIt.models.Note} note The note to consider adding.
+         **/
         maybeAddNew: function(note) {
             if (this.matcher(note)) {
                 this.add(note, {'new': true});
             }
         },
+        /**
+         * Check if a note matches the current search terms.
+         *
+         * @param {ListIt.models.Note} note The note to test
+         *
+         * @return {boolean} Returns true iff the note matches the terms.
+         **/
         matcher: function(note) {
             if (!this._terms) {
                 return true;
@@ -169,6 +202,13 @@
             var text = L.util.clean(note.get('contents').toLowerCase());
             return L.util.matchTerms(this._terms, text);
         },
+        /**
+         * Filter the list by the given search terms (as text).
+         *
+         * @param{String} text the search terms as text (Ex: "search for this but -not -this")
+         *
+         * @return {int} Returns a unique ID representing this search.
+         **/
         search: function(text) {
             // Extract the terms
             var newTerms = L.util.extractTerms(text);
@@ -179,6 +219,9 @@
             }
             return this._filter(newTerms);
         },
+        /**
+         * Given the parsed search terms, perform the actual search.
+         **/
         _filter: function(newTerms) {
 
           this.searchQueue.clear();
@@ -243,6 +286,15 @@
           });
         });
       },
+      /**
+       * Import notes
+       *
+       * @param{String} type The type of file stored in string.
+       * @param{String} string The contents of the file to import.
+       *
+       * @exception {Error} Throws "Invalid Importer" if the type cannot be imported.
+       *
+       **/
       import: function(type, string) {
         if (!_.has(this.importers, type)) {
           throw new Error("Invalid Importer");
@@ -262,14 +314,29 @@
             deletedNotes.create(note);
           });
         }
-        return true;
       },
+      /**
+       * Export notes
+       *
+       * @param {String} type The type to which to export
+       *
+       * @exception {Error} Throws "Invalid Exporter" if type cannot be exported.
+       * @return {String} Returns the exported notes in the requested format (type).
+       *
+       **/
       export: function(type) {
         if (!_.has(this.exporters, type)) {
           throw new Error("Invalid Exporter");
         }
         return this.exporters[type].exporter(L.notebook);
       },
+      /**
+       * The exporters. These should be of the form:
+       *   <type>: {
+       *     display: '<display name>',
+       *     exporter: function(<notebook instance>) -> @type{String}
+       *   }
+       **/
       exporters: {
         json: { 
           display: 'JSON',
