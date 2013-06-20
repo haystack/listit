@@ -15,7 +15,7 @@ ListIt.lvent.once('setup:models', function(L, barr) {
   L.notebook = new L.models.NoteBook(null, options);
 
   L.server      = new L.models.Server(null, options);
-  L.sidebar     = new L.models.FilterableNoteCollection(); // Not saved
+  L.sidebar     = new L.models.FilterableNoteCollection(null, {track: L.notebook.get('notes')}); // Not saved
   L.omnibox     = new L.models.Omnibox(null, options);
   L.preferences = new L.models.Preferences(null, options);
   L.authmanager = new L.models.AuthManager(null, options);

@@ -15,7 +15,7 @@ $(window).one('beforeunload', function() {
 ListIt.lvent.once('setup:models:after', function(L, barr) {
   'use strict';
   // Create omnibox.
-  L.chrome.omnibox = new L.models.FilterableNoteCollection();
+  L.chrome.omnibox = new L.models.FilterableNoteCollection(null, {track: L.notebook.get('notes')});
 
   // Handle ports.
   chrome.runtime.onConnect.addListener(function(port) {

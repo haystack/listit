@@ -144,12 +144,11 @@
     // the notebook.  This shouldn't be a problem in bug-free code but search
     // assumes this (to reduce flickering).
     L.models.FilterableNoteCollection = L.models.NoteCollection.extend({
-        initialize : function() {
+        initialize : function(attrs, options) {
             this.searchQueue = new ActionQueue(50);
             this.searchQueue.start();
             this._searchCursor = 0;
-            // TODO: Don't hardcode this.
-            this.backingCollection = L.notebook.get('notes');
+            this.backingCollection = options.track;
             this.listenTo(this.backingCollection, 'add', this.maybeAddNew);
             this.listenTo(this.backingCollection, 'remove', this._onRemove);
             this.listenTo(this.backingCollection, 'reset', _.mask(this.reset));
