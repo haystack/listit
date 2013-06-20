@@ -1,5 +1,5 @@
 // Add notes on first upgrade.
-ListIt.gvent.on('upgrade:version:1', function(L, desc, barr) {
+ListIt.gvent.on('initialize', function(L, version, barr) {
   var defaultNotes = [
     'Open and close list.it by clicking on the <img alt="list-it" ' +
     'src="/img/listit-icon.png"> icon in the upper right hand ' +

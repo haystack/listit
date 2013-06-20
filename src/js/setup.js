@@ -1,35 +1,36 @@
 (function(L) {
 
   'use strict';
-  
-  var setupActions = [
-    function(barr) {
+
+  var barr = new Barrier();
+  _.each([
+    function() {
       debug("setup::begin");
       L.lvent.trigger('setup:before', L, barr);
     },
-    function(barr) {
+    function() {
       debug("setup::migrate::begin");
       L.lvent.trigger('setup:migrate:before', L, barr);
     },
-    function(barr) {
+    function() {
       L.lvent.trigger('setup:migrate', L, barr);
     },
-    function(barr) {
+    function() {
       L.lvent.trigger('setup:migrate:after', L, barr);
       debug("setup::migrate::end");
     },
-    function(barr) {
+    function() {
       debug("setup::models::begin");
       L.lvent.trigger('setup:models:before', L, barr);
     },
-    function(barr) {
+    function() {
       L.lvent.trigger('setup:models', L, barr);
     },
-    function(barr) {
+    function() {
       L.lvent.trigger('setup:models:after', L, barr);
       debug("setup::models::end");
     },
-    function(barr) {
+    function() {
       barr.aquire();
       $(function() {
         debug("setup::views::begin");
@@ -37,26 +38,18 @@
         barr.release();
       });
     },
-    function(barr) {
+    function() {
       L.lvent.trigger('setup:views', L, barr);
     },
-    function(barr) {
+    function() {
       L.lvent.trigger('setup:views:after', L, barr);
       debug("setup::views::end");
     },
-    function(barr) {
+    function() {
       L.lvent.trigger('setup:after', L, barr);
       debug("setup::end");
     }
-  ];
-
-  var callSetupAction = function(i) {
-    if (setupActions.length <= i) return;
-
-    var barr = new Barrier();
-    setupActions[i](barr);
-    barr.wait(callSetupAction, i+1);
-  };
-
-  callSetupAction(0);
+  ], function(fn) {
+    barr.wait(fn);
+  });
 })(ListIt);
