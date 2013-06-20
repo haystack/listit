@@ -118,8 +118,8 @@ be used to broadcast information that is relevant to the entire extension.
 ## Setup
 
 On startup (global and per page), list.it sets up the environment by issuing
-setup events on the local event interface. The events are triggered in the
-following order:
+setup events on the local event interface (`ListIt.gvent`). The events are
+triggered in the following order:
 
 Event | Description
 ------|------------
@@ -131,13 +131,69 @@ setup:after | Issued after the setup has completed.
 
 Each setup event listener is passed the ListIt instance and a barrier. If an
 event listener needs to pause the setup process while it performs some
-asynchronous operation, it should call `aquire()` on the barrier before
+asynchronous operation, it should call `acquire()` on the barrier before
 executing the asynchronous operation and then `release()` from the asynchronous
 operation's callback.
 
 ## Migrating
 
-TODO
+If the way in which list.it stores data is changed, the version (`ListIt.VERSION`)
+should be changed so that a migration can take place. List.it has three
+migration types: upgrade, downgrade, and initialize. If the version is raised,
+upgrade migrations are triggered, if it is lowered, downgrade migrations are
+triggered, and if the stored version is zero, initialization migrations are
+triggered.
+
+On upgrade/downgrade, List.it will trigger the following events:
+
+<table markdown="markdown">
+    <thead>
+        <tr>
+            <th>Event</th><th>Description</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td> `upgrade/downgrade:prepare` </td>
+            <td>
+            Indicates that an upgrade/downgrade is about to take place.
+            <br/>
+            Arguments: `ListIt`, `{to: <dest_version>, from: <old_version>}`, `barrier`
+            </td>
+        </tr>
+        <tr>
+            <td>`upgrade/downgrade:version`<br>`upgrade/downgrade:version:<n>`</td>
+            <td>
+            Indicates that list.it is upgrading/downgrading to version `<n>`. On
+            upgrade, these events are triggered for every version greater than the
+            current version and less than or equal to the target version (in
+            increasing order). On downgrade, these events are triggered for
+            every version less than or equal to the current version and greater
+            than the target version (in decreasing order).
+            <br>
+            Arguments: `ListIt`, `{to: <dest_version>, from: <old_version>, now: <n>}`, `barrier`
+            </br>
+            </td>
+        </tr>
+        <tr>
+            <td>`upgrade/downgrade:complete`</td>
+            <td>
+            Indicates that an upgrade/downgrade has completed.
+            <br/>
+            Arguments: `ListIt`, `{to: <dest_version>, from: <old_version>}`, `barrier`
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+On initialization, List.it will trigger the following events in order:
+
+1. `initialize:prepare`
+2. `initialize`
+3. `initialize:complete`
+
+As usual, if the barrier is acquired, the upgrade process does not move on until
+it has been released.
 
 ## Pages
 
