@@ -14,6 +14,66 @@ and acting on events. However, platform specific code should *NEVER* be injected
 into the core application, instead it should be placed in the correct platform
 folder and be hooked in by the build system.
 
+# Library modifications
+
+## Backbone Modifications
+
+For a less ad-hoc description of the changes, please see the actual code.
+
+In addition to the standard backbone features, list.it adds the following
+features to all models:
+ 1. A `complete` callback option to `Backbone.Model#fetch()` and `Backbone.Model()`. This method is called
+    when the model has been completely initialized.
+ 2. A `fetch` option to `Backbone.Model()` that causes the model to immediately
+    fetch itself from List.it's storage mechanism.
+ 3. A `Backbone.Model#initialized()` method to compliment the built-in
+    `Backbone.Model#initialize()` method. `initialized()` is called after the
+    model has been completely initialized just like the `complete` callback.
+
+List.it's version of backbone also has very basic `BackboneRelational` support.
+While it would have been nice to use `BackboneRelational` as is, it's extremely
+slow. Therefore, List.it implements it's own stripped down/less powerful
+version.
+
+This relational model is exposed through `Backbone.RelModel` and has the
+following additional features:
+
+1. A `relations` property that stores a mapping of (`<relation_name>: {/*desc*/}`) pairs where
+   `<relation_name>` is the name of the related object and `{/*desc*/}` is in
+   the form:
+
+    ```
+    {
+      type: Related Model/Collection,
+      includeInJSON: A list of keys, or single key, to include in the jsonified
+      object (saved to storage).
+    }
+    ```
+
+2. A `fetchRelated(options)` method that fetches related models and calls
+   `options.complete` when done.
+3. The `fetch(options)` method calls `fetchRelated()` if `options.fetchRelated`
+   is true.
+4. The model constructor accepts an additional `fetchRelated` option that causes
+   related models to be fetched after fetching the primary model. The
+   `options.complete` callback will not be called until all related models have
+   been fetched.
+
+## Underscore Modifications
+
+In addition to the standard underscore functions, list.it adds the following:
+
+1. `_.pop(object, key, default)` - Removes and returns `key` (or `default`) from
+   `object`. This mimics python's `dict#pop` method.
+2. `_.kmap(object, Function(value, key, object), context)` - Map but with object keys
+   instead of array indices. Returns an object with the same keys but the new
+   values.
+3. `_.mask(function, arg_indicies)` - Rewires the function arguments by
+   `arg_indicies`. For example,
+   `_.mask(function() {return arguments;}, 2, 1)('a', 'b', 'c', 'd')` will
+   return `['c', 'b']`.
+
+
 ## Directory Structure
 
 ### Base Layout
