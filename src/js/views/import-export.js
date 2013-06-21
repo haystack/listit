@@ -38,7 +38,7 @@
       }
       var fr = new FileReader();
       fr.onload = function() {
-        L.notebook.import(type, fr.result);
+        L.notebook.importString(fr.result, type);
       };
       fr.readAsText(file);
       return false;
@@ -46,7 +46,7 @@
     exportClicked: function() {
       var type = this.$el.find('#exportSelect').val();
       var blob = new BlobBuilder();
-      blob.append(L.notebook.export(type));
+      blob.append(L.notebook.exportString(type));
       saveAs(blob.getBlob('text/plain;charset=utf-8'), "listit-notes." + type);
     }
   });

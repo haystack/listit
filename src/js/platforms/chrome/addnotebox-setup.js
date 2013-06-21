@@ -1,4 +1,6 @@
+/*global chrome: false*/
 (function(L) {
+  'use strict';
   var port = chrome.runtime.connect({name: "addnote"});
   var view;
   port.onMessage.addListener(function(contents) {
@@ -13,24 +15,24 @@
       var note = new L.models.Note({contents: contents+"<br />"});
       view = new L.views.AddnotePage({model: note});
       note.save = function(attrs, options) {
-        var old_view = view;
+        var oldView = view;
         view = null;
         port.postMessage(this.toJSON(attrs, options));
-        old_view.$el.toggle("drop", {direction:"right"}, function() {
-          old_view.remove();
+        oldView.$el.toggle("drop", {direction:"right"}, function() {
+          oldView.remove();
         });
       };
       note.destroy = function() {
-        var old_view = view;
+        var oldView = view;
         view = null;
         port.postMessage(null);
-        old_view.$el.toggle("drop", {direction:"down"}, function() {
-          old_view.remove();
-        })
-      }
+        oldView.$el.toggle("drop", {direction:"down"}, function() {
+          oldView.remove();
+        });
+      };
       view.render();
       view.$el.hide();
-      $(document.body).append(view.el)
+      $(document.body).append(view.el);
       _.defer(function() {
         view.$el.slideDown(200);
       });

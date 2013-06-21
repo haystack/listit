@@ -12,7 +12,7 @@
          * format/display them.
          *
          * Format:
-         *   
+         *
          *   <var_name>: {
          *     type: '<var_type>'
          *     description: '<var_description>'
@@ -21,10 +21,6 @@
          * where type is one of: boolean, number, hotkey, text
          **/
         schema: {
-            shrinkNotes: {
-                type: 'boolean',
-                description: 'Collapse Notes' // TODO:Better desc
-            },
             /* Not used
             expandVariables: {
                 type: 'boolean',
@@ -37,8 +33,12 @@
             notificationTimeout: {
                 type: 'number',
                 description: 'Notification Timeout (s)'
-            }
+            },
             */
+            shrinkNotes: {
+                type: 'boolean',
+                description: 'Collapse Notes' // TODO:Better desc
+            }
         },
         // Singleton
         url : '/preferences',

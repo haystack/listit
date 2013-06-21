@@ -35,7 +35,7 @@ ListIt.templates['exported-notes'] = function(obj){
 var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'')};
 with(obj||{}){
 __p+='<html>\n  <head>\n    <style>\n      #content {\n        width: 800px;\n        margin: 20px auto 0px;\n        padding: 10px 20px;\n        border: 1px solid red;\n      }\n      p {\n        color: gray;\n      }\n    </style>\n  </head>\n  <body>\n    <div id="content">\n      <ul>\n        ';
- _.each(note_contents, function(note_content) { 
+ _.each(noteContents, function(noteContent) { 
 __p+='\n        <li>'+
 ((__t=( note_content ))==null?'':__t)+
 '</li>\n        ';

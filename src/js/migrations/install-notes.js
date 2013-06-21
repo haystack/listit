@@ -1,5 +1,6 @@
 // Add notes on first upgrade.
 ListIt.gvent.on('initialize', function(L, version, barr) {
+  'use strict';
   var defaultNotes = [
     'Open and close list.it by clicking on the <img alt="list-it" ' +
     'src="/img/listit-icon.png"> icon in the upper right hand ' +

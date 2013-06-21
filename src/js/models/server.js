@@ -49,7 +49,7 @@
         },
         initialized: function() {
           this.listenTo(this, _.reduce(this.include, function(memo, attr) {
-            return memo+" change:"+attr
+            return memo+" change:"+attr;
           }, ""), _.mask(this.save));
         },
         // Singleton
@@ -64,7 +64,7 @@
             'created': {},
             'edited': {},
             'contents': {},
-            'meta': { transIn: JSON.parse, transOut: JSON.stringify },
+            'meta': { transIn: JSON.parse, transOut: JSON.stringify }
         },
         logTopLevelAttributes: [
           "tabid",
@@ -74,7 +74,7 @@
           "noteid"
         ],
         logExcludedAttributes: [
-          "id",
+          "id"
         ],
         // Make an ajax method call
         ajax : function(options) {
@@ -322,7 +322,7 @@
           })
           // Check status
           .filter(function(note) {
-            if (!note.status === 201 || note.status === 200) {
+            if (!(note.status === 201 || note.status === 200)) {
               debug("syncNotes::error", "Invalid Note", note.jid);
               return false;
             }
@@ -390,7 +390,7 @@
               if (magic.version) {
                 L.notebook.set('version');
               }
-            } 
+            }
 
             // Save collections
             L.notebook.save();
@@ -441,7 +441,7 @@
               authToken: hashpass,
               success: function(response) {
                 that.set({
-                  studies: _.kmap(_.omit(response, "code"), function(v) { return v != 0; }),
+                  studies: _.kmap(_.omit(response, "code"), function(v) { return v !== 0; }),
                   email: email,
                   registered: true,
                   error: undefined
@@ -478,9 +478,9 @@
                     lastname: lastname
                 },
                 cache: false,
-                success: function() {
+                success: function(response) {
                     that.set({
-                      studies: _.kmap(_.omit(response, "code"), function(v) { return v != 0; }),
+                      studies: _.kmap(_.omit(response, "code"), function(v) { return v !== 0; }),
                       registered: true,
                       error: undefined,
                       email: email

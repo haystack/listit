@@ -1,23 +1,25 @@
+/*global chrome: false*/
 ListIt.lvent.once("setup:models:after", function(L, barr) {
-  var addnote_pages = {};
+  'use strict';
+  var addnotePages = {};
   L.chrome.ports.addnote = function(port) {
     if (!(port.sender && port.sender.tab)) {
       port.disconnect();
       return;
     }
 
-    var tab_id = port.sender.tab.id;
-    var addnote_page = addnote_pages[tab_id];
+    var tabId = port.sender.tab.id;
+    var addnotePage = addnotePages[tabId];
 
-    if (!addnote_page || addnote_page.port) {
+    if (!addnotePage || addnotePage.port) {
       port.disconnect();
       return;
     }
-    addnote_page.port = port;
+    addnotePage.port = port;
 
     port.onMessage.addListener(function(msg) {
-      if (addnote_page.outstanding) {
-        addnote_page.outstanding = false;
+      if (addnotePage.outstanding) {
+        addnotePage.outstanding = false;
         // Allow cancelling outstanding note with empty message.
         if (msg) {
           L.notebook.createNote(msg);
@@ -25,61 +27,61 @@ ListIt.lvent.once("setup:models:after", function(L, barr) {
       }
     });
     port.onDisconnect.addListener(function() {
-      delete addnote_pages[tab_id];
+      delete addnotePages[tabId];
     });
-    _.each(addnote_page.pending, function(note_contents) {
-      addnote_page.outstanding = true;
-      port.postMessage(note_contents);
+    _.each(addnotePage.pending, function(noteContents) {
+      addnotePage.outstanding = true;
+      port.postMessage(noteContents);
     });
   };
 
   // ONLY CALL FROM USER ACTION CALLBACK
   // DEPENDS ON activeTab permission
-  L.chrome.appendToCurrentNote = function(contents, from_tab_id) {
+  L.chrome.appendToCurrentNote = function(contents, fromTabId) {
     contents = contents || "";
     // Try to focus the sidebar
     L.chrome.sidebar.focus(function(succ) {
       if (succ) {
         // If the sidebar was focused (is open), append to the omnibox.
         var text = L.omnibox.get('text', '');
-        var trimmed_text = _.str.trim(text);
-        if (trimmed_text !== '' || trimmed_text.match(/<br[^>]>$/)) {
+        var trimmedText = _.str.trim(text);
+        if (trimmedText !== '' || trimmedText.match(/<br[^>]>$/)) {
           contents = '<br/>'+contents;
         }
         contents += '<br/>';
         L.omnibox.set({text: text+contents});
       } else {
         // Otherwise, open a note in the current tab.
-        L.chrome.appendToCurrentNoteDialog(contents, from_tab_id);
+        L.chrome.appendToCurrentNoteDialog(contents, fromTabId);
       }
     });
   };
-  L.chrome.appendToCurrentNoteDialog = function(contents, from_tab_id) {
+  L.chrome.appendToCurrentNoteDialog = function(contents, fromTabId) {
     // Allow calling without knowing the current tab id
-    if (!from_tab_id) {
+    if (!fromTabId) {
       chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
         L.chrome.appendToCurrentNoteDialog(contents, tabs[0].id);
       });
       return;
     }
 
-    var addnote_page = addnote_pages[from_tab_id];
-    if (!addnote_page) {
-      addnote_pages[from_tab_id] = {
+    var addnotePage = addnotePages[fromTabId];
+    if (!addnotePage) {
+      addnotePages[fromTabId] = {
         outstanding: false,
         pending: [contents]
       };
-      chrome.tabs.insertCSS(from_tab_id, {
+      chrome.tabs.insertCSS(fromTabId, {
         code:
           ".listit-iframe {" +
-          "display: none; margin: 0 !important; padding: 0 !important;" + 
+          "display: none; margin: 0 !important; padding: 0 !important;" +
           "border-style: none !important; background-color: transparent !important;" +
           "position: fixed !important; right: 0 !important; bottom: 0 !important;" +
           "z-index: 9001 !important;" +
           "}"
       });
 
-      chrome.tabs.executeScript(from_tab_id, {
+      chrome.tabs.executeScript(fromTabId, {
         code:
           "var iframe = window.document.createElement('iframe');" +
           "iframe.className = 'listit-iframe';" +
@@ -88,11 +90,11 @@ ListIt.lvent.once("setup:models:after", function(L, barr) {
           "iframe.onload = function() { window.setTimeout(function() { iframe.style['display'] = 'block'; },0) };" + // Prevents flickering.
           "document.body.appendChild(iframe);"
       });
-    } else if (!addnote_page.port) {
-      addnote_page.pending.push(contents);
+    } else if (!addnotePage.port) {
+      addnotePage.pending.push(contents);
     } else {
-      addnote_page.outstanding = true;
-      addnote_page.port.postMessage(contents);
+      addnotePage.outstanding = true;
+      addnotePage.port.postMessage(contents);
     }
   };
 });

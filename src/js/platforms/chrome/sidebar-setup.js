@@ -1,3 +1,4 @@
+/*global chrome: false*/
 ListIt.lvent.once('setup:views', function(L, barr) {
   'use strict';
   // Make Pages

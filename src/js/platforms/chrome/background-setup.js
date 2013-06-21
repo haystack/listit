@@ -8,7 +8,8 @@ ListIt.chrome = {
 
 
 $(window).one('beforeunload', function() {
-    ListIt.gvent.trigger('sys:quit');
+  'use strict';
+  ListIt.gvent.trigger('sys:quit');
 });
 
 
@@ -19,9 +20,9 @@ ListIt.lvent.once('setup:models:after', function(L, barr) {
 
   // Handle ports.
   chrome.runtime.onConnect.addListener(function(port) {
-    var port_handler = L.chrome.ports[port.name];
-    if (port_handler) {
-      port_handler(port);
+    var portHandler = L.chrome.ports[port.name];
+    if (portHandler) {
+      portHandler(port);
     } else {
       port.disconnect();
     }

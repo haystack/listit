@@ -37,7 +37,7 @@
             var that = this;
             this.$el.on('DOMNodeRemovedFromDocument', function(evt) {
               if (evt.srcElement === that.el) {
-                that.cleanupEditor()
+                that.cleanupEditor();
               }
             });
             this.$el.attr("id", "note-"+this.model.id);

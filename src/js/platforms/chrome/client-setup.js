@@ -7,9 +7,9 @@ ListIt.lvent.once('setup:before', function(L, barr) {
     L.gvent.off(null, null, window);
   });
 
-  var background_window = window.chrome.extension.getBackgroundPage();
-  var bgL = background_window.ListIt;
-  window.console = background_window.console;
+  var backgroundWindow = window.chrome.extension.getBackgroundPage();
+  var bgL = backgroundWindow.ListIt;
+  window.console = backgroundWindow.console;
 
   // Setup modules
   L.gvent = bgL.gvent;

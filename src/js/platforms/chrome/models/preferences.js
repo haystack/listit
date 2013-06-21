@@ -1,4 +1,5 @@
 (function(L) {
+  'use strict';
   L.models.Preferences.prototype.schema = _.defaults({
     popup: {
       type: 'boolean',
@@ -12,7 +13,7 @@
 
   L.models.Preferences.prototype.defaults = _.defaults({
     popup: false,
-    sidebar_track_window: false,
+    sidebar_track_window: false
   }, L.models.Preferences.prototype.defaults);
 })(ListIt);
 

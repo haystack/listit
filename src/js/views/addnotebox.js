@@ -8,7 +8,7 @@
       'click .save-icon': '_onSaveClicked',
       'click .close-icon': '_onCloseClicked',
       'click .pin-icon': '_onPinClicked',
-      'keydown .editor': '_onKeyDown',
+      'keydown .editor': '_onKeyDown'
     },
     initialize: function() {
       var that = this;

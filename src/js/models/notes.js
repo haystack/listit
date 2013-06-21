@@ -288,19 +288,17 @@
       /**
        * Import notes
        *
-       * @param{String} type The type of file stored in string.
        * @param{String} string The contents of the file to import.
+       * @param{String} type The type of file stored in string.
        *
        * @exception {Error} Throws "Invalid Importer" if the type cannot be imported.
        *
        **/
-      import: function(type, string) {
+      importString: function(string, type) {
         if (!_.has(this.importers, type)) {
           throw new Error("Invalid Importer");
         }
-        console.log(string);
         var json = this.importers[type].importer(string);
-        console.log(json);
         if (json.notes) {
           var notes = this.get('notes');
           _.each(json.notes, function(note) {
@@ -323,7 +321,7 @@
        * @return {String} Returns the exported notes in the requested format (type).
        *
        **/
-      export: function(type) {
+      exportString: function(type) {
         if (!_.has(this.exporters, type)) {
           throw new Error("Invalid Exporter");
         }
@@ -337,7 +335,7 @@
        *   }
        **/
       exporters: {
-        json: { 
+        json: {
           display: 'JSON',
           exporter: function(notebook) {
             return JSON.stringify(notebook.toJSON({include: true}));
@@ -354,12 +352,12 @@
         html: {
           display : 'HTML',
           exporter: function(notebook) {
-            return L.templates['exported-notes']({note_contents: notebook.get('notes').pluck('contents')});
+            return L.templates['exported-notes']({noteContents: notebook.get('notes').pluck('contents')});
           }
         }
       },
       importers: {
-        json: { 
+        json: {
           display: 'JSON',
           importer : function(string) {
             return JSON.parse(string);
@@ -370,22 +368,22 @@
           importer: function(string) {
             var notes = L.notebook.get('notes');
             string = _.str.trim(string);
-            var note_strings;
+            var noteStrings;
             var bullet = string[0];
             if ("*-+".indexOf(bullet) >= 0) {
               string = string.replace(/\n\s*/g, '\n'); // TODO to greedy
-              string = string.replace(new RegExp("^\\"+bullet+"\s*"), ""); // Strip first
-              note_strings = string.split(new RegExp("\n\s*\\"+bullet+"\s*"));
-              note_strings = _.map(note_strings, function(str) {
+              string = string.replace(new RegExp("^\\"+bullet+"\\s*"), ""); // Strip first
+              noteStrings = string.split(new RegExp("\n\\s*\\"+bullet+"\\s*"));
+              noteStrings = _.map(noteStrings, function(str) {
                 return str.replace(/\n/g, '<br />');
               });
             } else {
-              note_strings = string.split('\n');
+              noteStrings = string.split('\n');
             }
 
             return {
-              notes: _.map(note_strings, function(note_string) {
-                return {contents: note_string};
+              notes: _.map(noteStrings, function(noteString) {
+                return {contents: noteString};
               })
             };
           }

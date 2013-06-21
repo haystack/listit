@@ -1,4 +1,6 @@
+/*global chrome: false*/
 ListIt.lvent.once("setup:models:after", function(L, barr) {
+  'use strict';
 
   L.gvent.on('log:request:data', function(logEntry) {
     // Query optional permission.

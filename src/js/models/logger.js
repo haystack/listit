@@ -9,7 +9,7 @@
       urlRoot: '/logentries',
       defaults: function() {
         return {
-          time: Date.now(),
+          time: Date.now()
         };
       },
       initialize: function() {
@@ -93,9 +93,9 @@
         ).filter(function(obs) {
           return _.result(obs, "condition");
         }).map(function(obs) {
-          var ctor = function() {};
-          ctor.prototype = obs;
-          var inst = new ctor();
+          var Ctor = function() {};
+          Ctor.prototype = obs;
+          var inst = new Ctor();
           inst.setup();
           return inst;
         });
@@ -106,10 +106,10 @@
        * Stops the logging observers.
        **/
       stop: function() {
-        _.each(that.observers, function(inst) {
+        _.each(this.observers, function(inst) {
           inst.destroy();
         });
-        delete that.observers;
+        delete this.observers;
       },
       /**
        * Clear log events before and including time.

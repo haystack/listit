@@ -1,8 +1,10 @@
+/*global chrome: false*/
 ListIt.lvent.once('setup:models:after', function(L, barr) {
+  'use strict';
   var commands = {
     "create-page-note": function() {
       chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-        var tab = tabs[0]
+        var tab = tabs[0];
         L.chrome.appendToCurrentNote(L.templates.link({
           url: tab.url,
           title: tab.title,

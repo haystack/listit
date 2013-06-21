@@ -1,11 +1,12 @@
+/*global chrome: false*/
 ListIt.lvent.once("setup:views:after", function(L, barr) {
-
-  var current_sidebar_id = null;
-  var current_sidebar_resizer = null;
+  'use strict';
+  var currentSidebarId = null;
+  var currentSidebarResizer = null;
   var sidebar = L.chrome.sidebar = {
     // Does not check if open.
     _open: function(callback) {
-      current_sidebar_id = true;
+      currentSidebarId = true;
       chrome.windows.getCurrent(function(cwin) {
         chrome.windows.create({
           url:"index.html",
@@ -17,25 +18,24 @@ ListIt.lvent.once("setup:views:after", function(L, barr) {
           focused: true
         }, function(win) {
           if (L.preferences.get('sidebar_track_window', false)) {
-            current_sidebar_resizer = setInterval(function() {
-              chrome.windows.get(cwin.id, function(main_win) {
-                chrome.windows.get(win.id, function(sidebar_win) {
-                  if (main_win.height !== cwin.height || main_win.left !== cwin.left || main_win.top !== cwin.top || sidebar_win.width !== win.width) {
+            currentSidebarResizer = setInterval(function() {
+              chrome.windows.get(cwin.id, function(mainWindow) {
+                chrome.windows.get(win.id, function(sidebarWindow) {
+                  if (mainWindow.height !== cwin.height || mainWindow.left !== cwin.left || mainWindow.top !== cwin.top || sidebarWindow.width !== win.width) {
                     chrome.windows.update(win.id, {
-                      height: main_win.height,
-                      top: main_win.top,
-                      left: main_win.left - sidebar_win.width-10,
-                      height: main_win.height
+                      top: mainWindow.top,
+                      left: mainWindow.left - sidebarWindow.width-10,
+                      height: mainWindow.height
                     }, function() {
-                      win = sidebar_win;
+                      win = sidebarWindow;
                     });
                   }
-                  cwin = main_win;
+                  cwin = mainWindow;
                 });
               });
             }, 500);
           }
-          current_sidebar_id = win.id;
+          currentSidebarId = win.id;
           if (callback) {
             callback(win);
           }
@@ -43,20 +43,20 @@ ListIt.lvent.once("setup:views:after", function(L, barr) {
       });
     },
     focus: function(callback) {
-      if (current_sidebar_id) {
-        if (current_sidebar_id === true) {
+      if (currentSidebarId) {
+        if (currentSidebarId === true) {
           // Opening, no point in focusing.
           if (callback) {
             callback(true);
           }
         } else {
-          chrome.windows.update(current_sidebar_id, {
-            focused: true,
+          chrome.windows.update(currentSidebarId, {
+            focused: true
           }, function(win) {
             if (!win) {
               // Window really didn't exist, fix it.
-              current_sidebar_id = null;
-              clearInterval(current_sidebar_resizer);
+              currentSidebarId = null;
+              clearInterval(currentSidebarResizer);
             }
             if (callback) {
               callback(!!win);
@@ -68,15 +68,15 @@ ListIt.lvent.once("setup:views:after", function(L, barr) {
       }
     },
     openOrFocus: function() {
-      if (current_sidebar_id) {
-        if (current_sidebar_id !== true) {
-          chrome.windows.update(current_sidebar_id, {
+      if (currentSidebarId) {
+        if (currentSidebarId !== true) {
+          chrome.windows.update(currentSidebarId, {
             focused: true
           }, function(win) {
             if (!win) {
               // Window really didn't exist, fix it.
-              current_sidebar_id = null;
-              clearInterval(current_sidebar_resizer);
+              currentSidebarId = null;
+              clearInterval(currentSidebarResizer);
               sidebar._open();
             }
           });
@@ -88,16 +88,16 @@ ListIt.lvent.once("setup:views:after", function(L, barr) {
     isOpen: function(callback) {
       // Yes, this really do double check whether the sidebar is really
       // open. This would be a really bad place to have a bug.
-      if (current_sidebar_id) {
-        if (current_sidebar_id === true) {
+      if (currentSidebarId) {
+        if (currentSidebarId === true) {
           callback(true);
         } else {
           // Double check.
-          chrome.windows.get(current_sidebar_id, function(win) {
+          chrome.windows.get(currentSidebarId, function(win) {
             // Fix error
             if (!win) {
-              current_sidebar_id = null;
-              clearInterval(current_sidebar_resizer);
+              currentSidebarId = null;
+              clearInterval(currentSidebarResizer);
             }
             callback(!!win);
           });
@@ -109,8 +109,8 @@ ListIt.lvent.once("setup:views:after", function(L, barr) {
     close: function(callback) {
       // Will fail if the sidebar is currently opening but it isn't worth it to
       // fix that.
-      if (current_sidebar_id && current_sidebar_id !== true) {
-        chrome.windows.remove(current_sidebar_id, callback);
+      if (currentSidebarId && currentSidebarId !== true) {
+        chrome.windows.remove(currentSidebarId, callback);
       } else if (callback) {
         callback();
       }
@@ -118,10 +118,10 @@ ListIt.lvent.once("setup:views:after", function(L, barr) {
   };
 
   // Track sidebar close event
-  chrome.windows.onRemoved.addListener(function(win_id) {
-    if (win_id === current_sidebar_id) {
-      current_sidebar_id = null;
-      clearInterval(current_sidebar_resizer);
+  chrome.windows.onRemoved.addListener(function(windowId) {
+    if (windowId === currentSidebarId) {
+      currentSidebarId = null;
+      clearInterval(currentSidebarResizer);
     }
   });
 
@@ -131,7 +131,7 @@ ListIt.lvent.once("setup:views:after", function(L, barr) {
   });
 
   L.preferences.on('change:popup', function(model, value) {
-    chrome.browserAction.setPopup({popup: (value ? "index.html" : '')})
+    chrome.browserAction.setPopup({popup: (value ? "index.html" : '')});
   });
-  chrome.browserAction.setPopup({popup: (L.preferences.get('popup') ? "index.html" : '')})
+  chrome.browserAction.setPopup({popup: (L.preferences.get('popup') ? "index.html" : '')});
 });

@@ -1,5 +1,6 @@
 (function(L) {
-  L.observers.OmbiboxObserver = {
+  'use strict';
+  L.observers.OmniboxObserver = {
     condition: function() {
       return L.sidebar && L.omnibox;
     },

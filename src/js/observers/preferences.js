@@ -1,4 +1,5 @@
 (function(L) {
+  'use strict';
   L.observers.PreferencesObserver = {
     condition: function() {
       return L.preferences;
@@ -11,6 +12,6 @@
     },
     destroy: function() {
       L.preferences.off(null, null, this);
-    },
-  }
+    }
+  };
 })(ListIt);

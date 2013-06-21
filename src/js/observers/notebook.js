@@ -1,4 +1,5 @@
 (function(L) {
+  'use strict';
   L.observers.NotebookObserver = {
     condition: function() {
       return L.notebook;
@@ -29,6 +30,6 @@
     },
     destroy: function() {
       L.notebook.get('notes').off(null, null, this);
-    },
-  }
+    }
+  };
 })(ListIt);

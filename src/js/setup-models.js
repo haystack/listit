@@ -23,6 +23,7 @@ ListIt.lvent.once('setup:models', function(L, barr) {
 });
 
 ListIt.lvent.once('setup:models:after', function(L, barr) {
+  'use strict';
   // Don't start logging until initialized.
   L.logger.start();
   // Start syncing after models completely initialized.

@@ -79,6 +79,6 @@
     },
     mkMedia: function(tag, src) {
       return '<'+tag+ ' controls="controls" src="'+src+'"/>';
-    },
+    }
   };
 })(ListIt);

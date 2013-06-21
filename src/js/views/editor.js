@@ -5,9 +5,9 @@
   L.views.Editor = Backbone.View.extend({
     initialize: function(options) {
       if (!options) {
-        options = {}
+        options = {};
       }
-      this.initial_content = options.text || '';
+      this.initialContent = options.text || '';
       this.actions = options.actions;
       this.toolbarItems = options.toolbarItems;
       this.autoResize = _.isUndefined(options.autoResize) ? true : options.autoResize;
@@ -28,7 +28,7 @@
     },
     render: function() {
       var that = this;
-      this.$el.html(L.templates["editor"]({ text: this.initial_content}));
+      this.$el.html(L.templates["editor"]({ text: this.initialContent}));
       var $bottombar = this.$('.editor-bottombar');
       var $entry = this.$('.editor-entry');
 
@@ -94,7 +94,7 @@
       if (this._rendered) {
         return this.wysihtml5entry.getValue();
       } else {
-        return this.initial_content || "";
+        return this.initialContent || "";
       }
     },
     isShowingDialog: function() {
@@ -107,7 +107,7 @@
         this.wysihtml5entry.focus(true);
         this._fixHeight();
       } else {
-        this.initial_content = text;
+        this.initialContent = text;
       }
     },
     appendText: function(text) {
@@ -117,7 +117,7 @@
       if (this._rendered) {
         this.wysihtml5entry.clear();
       } else {
-        this.initial_content = "";
+        this.initialContent = "";
       }
     },
     remove: function() {
