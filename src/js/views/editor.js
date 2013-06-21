@@ -24,6 +24,12 @@
         iframe.style.height = 'auto';
         iframe.style.height = body.height() + 'px';
         txtbox.style.height = iframe.style.height;
+        if ($.browser.mozilla) {
+          // Ugly hack for firefox -moz-box. Need this event to fixup page header
+          // (omnibox) /content (notelist) heights.
+          // BUG: https://bugzil.la/579776 (the workarround doesn't work).
+          $(txtbox).trigger("resize");
+        }
       });
     },
     render: function() {
