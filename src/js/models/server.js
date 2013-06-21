@@ -153,7 +153,7 @@
         _syncNotesReschedule: function() {
           var interval = this.get('noteSyncInterval');
           if (interval > 0) {
-            this.set('noteSyncTimer', window.setTimeout(this.syncNotes, interval));
+            this.set('noteSyncTimer', setTimeout(this.syncNotes, interval));
           }
         },
         _syncNotesFailure: function(xhdr, stat) {
