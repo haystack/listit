@@ -4,7 +4,7 @@ ListIt.lvent.once('setup:models', function(L, barr) {
 
   // Wait until the models have been fetched.
   // Oh lovely async...
-  barr.aquire(6);
+  barr.aquire(5);
 
   var options = {
     fetch: true,
@@ -18,7 +18,7 @@ ListIt.lvent.once('setup:models', function(L, barr) {
   L.sidebar     = new L.models.FilterableNoteCollection(null, {track: L.notebook.get('notes')}); // Not saved
   L.omnibox     = new L.models.Omnibox(null, options);
   L.preferences = new L.models.Preferences(null, options);
-  L.authmanager = new L.models.AuthManager(null, options);
+  L.authmanager = new L.models.AuthManager(); // Might not be a backbone model
   L.logger = new L.models.Logger(null, options);
 });
 

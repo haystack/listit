@@ -505,10 +505,25 @@
     // This manages account information.
     // It doesn't have a view, it doesn't do anything but store the auth token.
     L.models.AuthManager = Backbone.Model.extend({
-        initialized: function() {
-            this.listenTo(this, 'change', _.mask(this.save));
+        initialize: function() {
+          var that = this;
+          // Can't use normal autofetch logic. This model is not guarenteed to be a backbone model.
+          this.fetch({complete: function() {
+            that.listenTo(that, 'change', _.mask(that.save));
+            that._initialized = true;
+            that.trigger('initialized');
+          }});
         },
-
+        _when_initialized: function(cb) {
+          var that = this;
+          if (!this._initialized) {
+            this.once('initialized', function() {
+              cb.apply(that);
+            });
+          } else {
+            cb.apply(that);
+          }
+        },
         // Singleton
         url: '/authmanager',
         isNew: function() {return false;},
@@ -518,7 +533,9 @@
         * This method must be defined.
         */
         getToken: function(callback) {
+          this._when_initialized(function() {
             callback(this.get('hashpass', null));
+          });
         },
         /**
         * Set the auth token.
@@ -526,10 +543,14 @@
         * This method doesn't only needs to be made available to the authentication agent.
         */
         setToken: function(token) {
+          this._when_initialized(function() {
             this.set('hashpass', token);
+          });
         },
         unsetToken: function() {
+          this._when_initialized(function() {
             this.unset('hashpass');
+          });
         }
     });
 })(ListIt);
