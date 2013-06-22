@@ -16,7 +16,10 @@ ListIt.lvent.once('setup:views', function(L, barr) {
     $(".page>.header").on("resize", fixSize);
 
     _.defer(function() {
-      $(".page>.header").each(fixSize);
+      $(".page>.header").each(function() {
+        fixSize.apply(this);
+        $(window).on('resize', _.bind(fixSize, this));
+      });
     });
   }
 });
