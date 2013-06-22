@@ -5,6 +5,7 @@
   var barr = new Barrier();
   _.each([
     function() {
+      L.setStatus('setup');
       debug("setup::begin");
       L.lvent.trigger('setup:before', L, barr);
     },
@@ -48,6 +49,8 @@
     function() {
       L.lvent.trigger('setup:after', L, barr);
       debug("setup::end");
+    }, function() {
+      L.setStatus('ready');
     }
   ], function(fn) {
     barr.wait(fn);

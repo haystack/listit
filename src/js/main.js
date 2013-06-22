@@ -41,6 +41,12 @@ window.ListIt = {VERSION: 1};
   L.gvent = _.clone(Backbone.Events);
   L.lvent = _.clone(Backbone.Events);
 
+  L.status = 'loading';
+  L.setStatus = function(status) {
+    L.status = status;
+    L.lvent.trigger('status status:'+status, status);
+  };
+
   /*************
    *  Cleanup  *
    *************/
