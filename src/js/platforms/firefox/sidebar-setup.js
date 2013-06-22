@@ -13,7 +13,7 @@ ListIt.lvent.once('setup:views:after', function(L, barr) {
     var p = h.parent();
     var c = p.children('.contents');
     c.height(p.innerHeight()-h.outerHeight());
-  }
+  };
   $(".page>.header").on("resize", fixSize);
 
   _.defer(function() {

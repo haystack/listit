@@ -1,9 +1,9 @@
-/*globals Components: false*/
+/*globals Components: false, FileUtils: false, NetUtil: false*/
 (function(L) {
   'use strict';
-  // TODO: Extend LocalStorage instead of rewrite
-  Components.utils.import("resource://gre/modules/FileUtils.jsm");
-  Components.utils.import("resource://gre/modules/NetUtil.jsm");
+ // Access using [] as import is technically a reserved word.
+  Components.utils['import']("resource://gre/modules/FileUtils.jsm");
+  Components.utils['import']("resource://gre/modules/NetUtil.jsm");
   var converter = Components.classes["@mozilla.org/intl/scriptableunicodeconverter"].
     createInstance(Components.interfaces.nsIScriptableUnicodeConverter);
   converter.charset = "UTF-8";
@@ -14,7 +14,7 @@
       file = fileCache[path] = FileUtils.getFile("ProfD", _.compact(("listit/"+path).split('/')));
     }
     return file;
-  }
+  };
 
   var FirefoxStorage = L.stores['firefox'] = {
     set: function(key, object, options) {
