@@ -17,7 +17,7 @@ ListIt.lvent.once("setup:views:after", function(L, barr) {
           top: cwin.top,
           focused: true
         }, function(win) {
-          if (L.preferences.get('sidebar_track_window', false)) {
+          if (L.preferences.get('sidebarTrackWindow', false)) {
             currentSidebarResizer = setInterval(function() {
               chrome.windows.get(cwin.id, function(mainWindow) {
                 chrome.windows.get(win.id, function(sidebarWindow) {
