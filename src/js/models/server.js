@@ -505,8 +505,7 @@
     // This manages account information.
     // It doesn't have a view, it doesn't do anything but store the auth token.
     L.models.AuthManager = Backbone.Model.extend({
-        initialize: function() {
-            this.fetch();
+        initialized: function() {
             this.listenTo(this, 'change', _.mask(this.save));
         },
 
