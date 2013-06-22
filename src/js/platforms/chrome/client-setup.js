@@ -11,14 +11,20 @@ ListIt.lvent.once('setup:before', function(L, barr) {
   var bgL = backgroundWindow.ListIt;
   window.console = backgroundWindow.console;
 
-  // Setup modules
-  L.gvent = bgL.gvent;
-
-  // Copy models.
-  _.defaults(L.models, bgL.models);
-
-  // Then everything else (doesn't include templates, etc)
-  _.defaults(L, bgL);
+  // Wait until ready
+  if (bgL.status !== 'ready') {
+    barr.aquire();
+    bgL.lvent.once('status:ready', function() {
+      L.gvent = bgL.gvent;
+      _.defaults(L.models, bgL.models);
+      _.defaults(L, bgL);
+      barr.release();
+    });
+  } else {
+    L.gvent = bgL.gvent;
+    _.defaults(L.models, bgL.models);
+    _.defaults(L, bgL);
+  }
 });
 
 

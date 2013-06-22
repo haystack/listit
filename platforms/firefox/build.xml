@@ -4,21 +4,47 @@
     <resources id="js.sidebar">
         <resources refid="js.libs" />
         <resources refid="js.common" />
+        <filelist dir="${listit.js.platforms.dir}/firefox">
+            <file name="client-setup.js" />
+            <file name="sidebar-setup.js" />
+        </filelist>
+        <resources refid="js.router" />
+        <resources refid="js.templates" />
+        <resources refid="js.views" />
+        <resources refid="js.setup" />
+    </resources>
+
+    <resources id="js.options">
+        <resources refid="js.libs" />
+        <resources refid="js.common" />
+        <filelist dir="${listit.js.platforms.dir}/firefox">
+            <file name="client-setup.js" />
+            <file name="options-setup.js" />
+        </filelist>
+        <resources refid="js.router" />
+        <resources refid="js.templates" />
+        <resources refid="js.views" />
+        <resources refid="js.setup" />
+    </resources>
+
+    <resources id="js.background">
+        <resources refid="js.libs" />
+        <resources refid="js.common" />
         <resources refid="js.storage" />
         <fileset file="${listit.js.platforms.dir}/firefox/firefoxStorage.js" />
         <resources refid="js.router" />
-        <resources refid="js.templates" />
         <resources refid="js.models" />
-        <resources refid="js.views" />
-        <filelist>
-            <file name="${listit.js.platforms.dir}/firefox/sidebar-setup.js" />
-        </filelist>
+
+        <resources refid="js.templates" />
         <resources refid="js.collectors" />
         <resources refid="js.observers" />
+        <resources refid="js.migrate" />
+        <fileset file="${listit.js.platforms.dir}/firefox/background-setup.js" />
         <resources refid="js.setup" />
     </resources>
 
     <resources id="css.sidebar" refid="css.all"/>
+    <resources id="css.options" refid="css.all"/>
 
     <target name="-build.img" depends="-build.setup">
         <deploy-img dest="${build.img.dir}"/>
@@ -27,8 +53,28 @@
     <target name="-build.assets-debug" depends="-build.setup">
         <deploy-resource-debug name="wysihtml5" />
         <mk-defines-debug />
-        <deploy-resource name="sidebar" />
-        <deploy-resource name="wysihtml5" />
+        <deploy-resource-debug name="sidebar" />
+        <deploy-resource-debug name="options" />
+        <concat overwrite="yes" destfile="${build.background.js.file}">
+            <header trimleading="yes" filtering="no">
+                this.EXPORTED_SYMBOLS = ["ListIt"];
+
+                var window = null;
+                var appShellService = Components.classes["@mozilla.org/appshell/appShellService;1"]
+                      .getService(Components.interfaces.nsIAppShellService);
+                window = appShellService.hiddenDOMWindow;
+                //window.document.html = window.document.createElement('html');
+                window.document.body = window.document.createElement('body');
+                //window.document.appendChild(window.document.html);
+                //window.document.html.appendChild(window.document.body);
+                with (window) {
+            </header>
+            <resources refid="js.background" />
+            <footer trimleading="yes" filtering="no">
+                }
+                var ListIt = window.ListIt;
+            </footer>
+        </concat>
     </target>
 
     <target name="-build.assets" depends="-build.setup">
@@ -36,12 +82,15 @@
         <mkdir dir="${build.js.dir}" />
         <parallel>
             <deploy-resource name="sidebar" />
+            <deploy-resource name="options" />
+            <deploy-resource name="background" />
             <deploy-resource name="wysihtml5" />
         </parallel>
     </target>
 
     <target name="-build.html" depends="-build.setup">
         <deploy-html resource="sidebar" />
+        <deploy-html resource="options" />
     </target>
 
     <target name="build.install" depends="-build.setup">
@@ -83,9 +132,9 @@
     </target>
 
     <target name="debug"
-        depends="-build.setup,-build.framework,build.install,build.manifest">
-        <deploy-resource-debug name="sidebar" />
+        depends="-build.setup,-build.framework,-build.assets-debug,build.install,build.manifest">
         <deploy-html resource="sidebar" />
+        <deploy-html resource="options" />
         <copy todir="${debug.dir}">
             <fileset dir="${build.dir}" includes="**"/>
         </copy>

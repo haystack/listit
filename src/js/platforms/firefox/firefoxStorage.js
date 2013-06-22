@@ -2,49 +2,76 @@
 (function(L) {
   'use strict';
   // TODO: Extend LocalStorage instead of rewrite
-  var FirefoxStorage = L.stores['firefox'] = {
-    store:  (function() {
-      var ios = Components.classes["@mozilla.org/network/io-service;1"].getService(Components.interfaces.nsIIOService);
-      var ssm = Components.classes["@mozilla.org/scriptsecuritymanager;1"].getService(Components.interfaces.nsIScriptSecurityManager);
-      var dsm = Components.classes["@mozilla.org/dom/storagemanager;1"].getService(Components.interfaces.nsIDOMStorageManager);
+  Components.utils.import("resource://gre/modules/FileUtils.jsm");
+  Components.utils.import("resource://gre/modules/NetUtil.jsm");
+  var converter = Components.classes["@mozilla.org/intl/scriptableunicodeconverter"].
+    createInstance(Components.interfaces.nsIScriptableUnicodeConverter);
+  converter.charset = "UTF-8";
+  var fileCache = {};
+  var getFile = function(path) {
+    var file = fileCache[path];
+    if (!file) {
+      file = fileCache[path] = FileUtils.getFile("ProfD", _.compact(("listit/"+path).split('/')));
+    }
+    return file;
+  }
 
-      var uri = ios.newURI("chrome://listit/content/webapp/", "", null);
-      var principal = ssm.getNoAppCodebasePrincipal(uri);
-      return dsm.getLocalStorageForPrincipal(principal, "");
-    })(),
+  var FirefoxStorage = L.stores['firefox'] = {
     set: function(key, object, options) {
+      var cb;
+      if (options && (options.success || options.error)) {
+        cb = function(status) {
+          if (Components.isSuccessCode(status)) {
+            if (options.success) {
+              options.success(object);
+            }
+          } else if (options.error) {
+            options.error(status);
+          }
+        };
+      }
+      var file = getFile(key);
+      var istream = converter.convertToInputStream(JSON.stringify(object));
+      var ostream = FileUtils.openSafeFileOutputStream(file);
+      NetUtil.asyncCopy(istream, ostream, cb);
+    },
+    get: function(key, options) {
+      var error, object;
+      if (!options || !(options.success || options.error)) {
+        return;
+      }
+
+      var file = getFile(key);
+      var channel = NetUtil.newChannel(file);
+      channel.contentType = "application/json";
+      NetUtil.asyncFetch(channel, function(istream, status) {
+        var error;
+        try {
+          if (Components.isSuccessCode(status)) {
+            if (options.success) {
+              options.success(JSON.parse(NetUtil.readInputStreamToString(istream, istream.available())));
+            }
+            return;
+          }
+        } catch (e) {
+          error = e;
+        }
+        if (options.error) {
+          options.error(error);
+        }
+      });
+    },
+    remove: function(key, object, options) {
       try {
-        FirefoxStorage.store.setItem(key, JSON.stringify(object));
-        if (options && options.success) options.success(object);
+        getFile(key).remove();
+        if (options && options.success) options.success();
       } catch (e) {
         if (options && options.error) options.error(e);
       }
     },
-    get: function(key, options) {
-      var error, object;
+    clear: function(options) {
       try {
-        var json = FirefoxStorage.store.getItem(key);
-        if (json === null) {
-          error = "Not Found";
-        } else {
-          object = JSON.parse(json);
-        }
-      } catch (e) {
-        error = e;
-      }
-
-
-      if (options) {
-        if (error !== undefined) {
-          if (options.error) options.error(error);
-        } else {
-          if (options.success) options.success(object);
-        }
-      }
-    },
-    remove: function(key, object, options) {
-      try {
-        FirefoxStorage.store.removeItem(key);
+        getFile("/").remove(true);
         if (options && options.success) options.success();
       } catch (e) {
         if (options && options.error) options.error(e);
