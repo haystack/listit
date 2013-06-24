@@ -37,10 +37,9 @@ a, .tabbar a {
   box-shadow: 2px 2px 4px #aaaaaa;
   padding: 1em;
   vertical-align:top;
-  max-width: 350px;
+  width: 350px;
   min-width: 280px;
   display: inline-block;
-  text-align: left;
 }
 .options-item h3 {
   font: helvetica neue ultralight, helvetia; 
@@ -64,13 +63,17 @@ a, .tabbar a {
 }
 
 #options-body {
-  width: 100%;
-  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+  width: 810px;
 }
 
-#options-login {
-  
+@media (max-width: 900px) {
+  #options-body {
+    width: 405px;
+  }
 }
+
 #loginForm .inputLabel {
   font-weight: 500;
   margin-bottom: 4px;
