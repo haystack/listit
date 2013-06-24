@@ -22,11 +22,14 @@
             var n = $('<span>').html(note.contents);
             n.cut('span.listit_tag');
             var tags = [];
-            note.contents = n.html().replace(/(?:^|.*[\s\(\[,])#([a-zA-Z][a-zA-Z0-9]{2,})\b/g, function(m, t) {
+            note.contents = n.html().replace(
+              /(^|[\s\(\[,])#([a-zA-Z][a-zA-Z0-9]{2,})\b/g,
+              function(match, prefix, tag) {
 
-                tags.push(t);
-                return '<span class="listit_tag">#' + t + '</span>';
-            });
+                tags.push(tag);
+                return prefix+'<span class="listit_tag">#' + tag + '</span>';
+              }
+            );
             note.meta.tags = tags;
         });
 
