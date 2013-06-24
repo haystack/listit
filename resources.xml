@@ -15,7 +15,7 @@
 
 <resources id="js.libs.compatability">
     <filelist dir="${listit.js.dir}/libs/">
-        <file name="BlobBuilder.js" />
+        <file name="Blob.js" />
         <file name="FileSaver.js" />
     </filelist>
 </resources>

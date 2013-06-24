@@ -45,9 +45,8 @@
     },
     exportClicked: function() {
       var type = this.$('#exportSelect').val();
-      var blob = new BlobBuilder();
-      blob.append(L.notebook.exportString(type));
-      saveAs(blob.getBlob('text/plain;charset=utf-8'), "listit-notes." + type);
+      //TODO: Set MIME type
+      saveAs(new Blob([L.notebook.exportString(type)]), "listit-notes." + type);
     }
   });
 })(ListIt);
