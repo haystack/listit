@@ -293,16 +293,20 @@ To build list.it, you need both [Apache Ant](https://ant.apache.org/) and
 [Ant Contrib](http://ant-contrib.sourceforge.net/). Everything
 else is included.
 
-### Building
+### Release Builds
 
-To build a platform, first change to the platform's directory
-(`platforms/<platform>`).
-
-To build a release build, run:
+To release a platform, change to the platform's directory
+(`platforms/<platform>`) and run:
 
     ant release
 
-To build a debug build, run:
+Release builds appear under `release/<platform>`.
+
+*Note: to build all platforms, issue `ant release` in the root directory.*
+
+### Debug
+
+To build a debug build, switch to the platforms directory and then run:
 
     ant debug
 
@@ -316,9 +320,10 @@ to edit code without rebuilding. However,the following exceptions apply:
   * Firefox's background module must be manually recompiled. This could
     theoretically be fixed.
 
-Release builds appear under `release/<platform>`.
+For debugging setup instructions, see the README file in the respective
+platform's directory.
 
-*Note: to build all platforms, issue `ant debug/release` in the root directory.*
+*Note: to build all platforms, issue `ant debug` in the root directory.*
 
 ### Other Tasks
 
