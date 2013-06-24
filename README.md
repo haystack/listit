@@ -14,9 +14,11 @@ and acting on events. However, platform specific code should *NEVER* be injected
 into the core application, instead it should be placed in the correct platform
 folder and be hooked in by the build system.
 
-# Library modifications
+For more information, see: [welist.it](https://welist.it/)
 
-## Backbone Modifications
+## Library modifications
+
+### Backbone Modifications
 
 For a less ad-hoc description of the changes, please see the actual code.
 
@@ -59,7 +61,7 @@ following additional features:
    `options.complete` callback will not be called until all related models have
    been fetched.
 
-## Underscore Modifications
+### Underscore Modifications
 
 In addition to the standard underscore functions, list.it adds the following:
 
