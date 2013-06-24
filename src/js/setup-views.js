@@ -1,4 +1,7 @@
-ListIt.lvent.on('setup:views:after', function(L, barr) {
+ListIt.lvent.once('setup:views:before', function(L, barr) {
+  L.router = new L.Router();
+});
+ListIt.lvent.once('setup:views:after', function(L, barr) {
   'use strict';
   // Open links in a new tab without accidentally modifying notes.
   $(document).on('click', 'a', function(e) {
@@ -12,8 +15,5 @@ ListIt.lvent.on('setup:views:after', function(L, barr) {
     window.open(href, '_blank');
     e.preventDefault();
   });
-
-  L.router = new L.Router();
-
   Backbone.history.start();
 });

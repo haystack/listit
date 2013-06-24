@@ -1,12 +1,8 @@
 (function(L) {
     'use strict';
     L.Router = Backbone.Router.extend({
-        routes: {
-            ':pageName': 'go',
-            '': 'main'
-        },
-        // Default start page.
-        stack : ['main'],
+        // History for sliding.
+        stack : [],
 
         /**
          * Goes to the specified page.
@@ -43,7 +39,6 @@
             }
 
             this._loaded = true;
-        },
-        main: function() {this.go('main');}
+        }
     });
 })(ListIt);

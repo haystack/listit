@@ -4,9 +4,10 @@ ListIt.lvent.once('setup:views', function(L, barr) {
 });
 ListIt.lvent.once('setup:views:after', function(L, barr) {
   'use strict';
-  $('[href="#/options"]').attr({
-    'target': '_blank',
-    'href': 'chrome://listit/content/webapp/options.html'
+  L.router.route('options', 'options', function() {
+    // Intercept options page request and open a new window.
+    this.navigate('', {trigger: false});
+    window.open('/options.html', '_new');
   });
   var fixSize = function() {
     var h = $(this);

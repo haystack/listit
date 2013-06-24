@@ -7,11 +7,12 @@ ListIt.lvent.once('setup:views', function(L, barr) {
 
 ListIt.lvent.once('setup:views:after', function(L, barr) {
   'use strict';
-  // Fix options link on chrome.
-  $('[href="#/options"]').attr({
-    'target': '_new',
-    'href': '/options.html'
+  L.router.route('options', 'options', function() {
+    // Intercept options page request and open a new window.
+    this.navigate('', {trigger: false});
+    window.open('/options.html', '_new');
   });
+
   // Close on hotkey press.
   chrome.commands.getAll(function(cmds) {
     var cmd = _.findWhere(cmds, {name: "_execute_browser_action"});
