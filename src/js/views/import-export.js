@@ -44,7 +44,7 @@
       return false;
     },
     exportClicked: function() {
-      var type = this.$el.find('#exportSelect').val();
+      var type = this.$('#exportSelect').val();
       var blob = new BlobBuilder();
       blob.append(L.notebook.exportString(type));
       saveAs(blob.getBlob('text/plain;charset=utf-8'), "listit-notes." + type);
