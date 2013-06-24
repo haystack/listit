@@ -35,11 +35,6 @@
         },
         render: function(options) {
             var that = this;
-            this.$el.on('DOMNodeRemovedFromDocument', function(evt) {
-              if (evt.srcElement === that.el) {
-                that.cleanupEditor();
-              }
-            });
             this.$el.attr("id", "note-"+this.model.id);
 
             if (this._rendered) {
@@ -48,8 +43,12 @@
                 this.delegateEvents();
             } else {
                 this._rendered = true;
-
-                this.updateContents(options);
+                this.$el.on('DOMNodeRemoved', function(evt) {
+                  if (evt.srcElement === that.el) {
+                    that.cleanupEditor();
+                  }
+                });
+                this.$el.html(this.template(this.model.toJSON()));
                 this.updateMeta();
             }
 
@@ -70,7 +69,7 @@
             }
         },
         updateContents: function(options) {
-            this.$el.html(this.template(this.model.toJSON()));
+          this.$el.children('.contents').html(this.model.get('contents'));
         },
         events: {
             'click   .close-btn':   'onRemoveClicked',
