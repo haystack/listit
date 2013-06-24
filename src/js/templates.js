@@ -37,7 +37,7 @@ with(obj||{}){
 __p+='<html>\n  <head>\n    <style>\n      #content {\n        width: 800px;\n        margin: 20px auto 0px;\n        padding: 10px 20px;\n        border: 1px solid red;\n      }\n      p {\n        color: gray;\n      }\n    </style>\n  </head>\n  <body>\n    <div id="content">\n      <ul>\n        ';
  _.each(noteContents, function(noteContent) { 
 __p+='\n        <li>'+
-((__t=( note_content ))==null?'':__t)+
+((__t=( noteContent ))==null?'':__t)+
 '</li>\n        ';
  }) 
 __p+='\n      </ul>\n    </div>\n  </body>\n</html>\n';
