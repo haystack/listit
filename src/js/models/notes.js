@@ -36,11 +36,11 @@
          *
          **/
         changeContents: function(newContents, window) {
-            var note = this.toJSON();
-            note.contents = newContents;
+            var noteJSON = _.kmap(this.toJSON(), _.clone);
+            noteJSON.contents = newContents;
             // TODO: This should use a different event
-            L.gvent.trigger("note:request:parse note:request:parse:change", note, window);
-            this.set(note);
+            L.gvent.trigger("note:request:parse note:request:parse:change", noteJSON, window);
+            this.set(noteJSON);
             this.save();
         },
         /**

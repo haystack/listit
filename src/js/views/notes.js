@@ -63,8 +63,10 @@
         },
         updateMeta: function(options) {
             this.$el.attr('class', this.className);
-            if (this.model.get('meta').pinned) {
+            if (this.model.get('meta', {}).pinned) {
                 this.$el.addClass('pinned');
+            } else {
+                this.$el.removeClass('pinned');
             }
         },
         updateContents: function(options) {
