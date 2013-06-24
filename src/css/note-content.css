@@ -65,3 +65,16 @@ a img {
   vertical-align: top;
   padding: 0px 2px;
 }
+
+b {
+  font-weight: bold;
+}
+
+u {
+  text-decoration: underline;
+}
+
+i {
+  font-style: italic;
+}
+
