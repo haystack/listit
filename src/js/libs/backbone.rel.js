@@ -30,7 +30,7 @@
         if (value instanceof Backbone.Model || value instanceof Backbone.Collection) {
           that.set(key, value, options);
         } else if (_.isArray(value)) {
-          that.get(key).update(_.map(value, _.bind(that._initRelObject, that, key)), options);
+          that.get(key).set(_.map(value, _.bind(that._initRelObject, that, key)), options);
         } else {
           that.get(key).set(that._initRelObject(key, value), options);
         }

@@ -34,7 +34,7 @@
           if (chrome.runtime.lastError) {
             if (options.error) options.error(chrome.runtime.lastError);
           } else {
-            if (options.success) options.success(object);
+            if (options.success) options.success();
           }
         }
       });

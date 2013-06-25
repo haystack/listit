@@ -23,7 +23,7 @@
         cb = function(status) {
           if (Components.isSuccessCode(status)) {
             if (options.success) {
-              options.success(object);
+              options.success();
             }
           } else if (options.error) {
             options.error(status);

@@ -59,23 +59,6 @@
   } catch (e) { }
 
   Backbone.sync = function(method, model, options) {
-    options = options || {};
-
-    var success = options.success;
-    if (success) {
-      options.success = function(resp) {
-        success(model, resp, options);
-        model.trigger('sync', model, resp, options);
-      };
-    }
-
-    var error = options.error;
-    if (error) {
-      options.error = function(e) {
-        error(model, e, options);
-        model.trigger('error', model, e, options);
-      };
-    }
 
     var store = model.store || L.store;
     if (store === undefined) {
@@ -94,14 +77,7 @@
           break;
         case "update":
           json = model.toJSON();
-          // Don't pass back result on save (prevent change events on save)
-          if (success) {
-            options.success = function(resp) {
-              success(model, null, options);
-              model.trigger('sync', model, resp, options);
-            };
-          }
-          store.set(url, json, options);
+          store.set(url, model, options);
           break;
         case "read":
           store.get(url, options);
