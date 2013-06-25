@@ -45,6 +45,25 @@
         i += size;
       }
       return result;
+    },
+    // Source: https://github.com/documentcloud/underscore/issues/310#issuecomment-2510502
+    // Slightly adapted
+    // Time (schmerg)
+    debounceReduce: function(combine, func, wait) {
+      var object;
+      var context;
+      var wrapper = _.debounce(function() {
+        var args = object;
+        object = undefined;
+        func.call(context, args);
+      }, wait);
+      return function() {
+        context = this;
+        var newargs = Array.prototype.slice.call(arguments, 0);
+        newargs.unshift(object)
+        object = combine.apply(context, newargs);
+        wrapper();
+      };
     }
   });
 })();
