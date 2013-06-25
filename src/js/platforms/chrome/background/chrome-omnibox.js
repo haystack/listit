@@ -28,7 +28,7 @@
       this.collection.reset();
     },
     onSubmit: function(text) {
-      L.notebook.createNote(text, {});
+      L.notebook.createNote({contents: text});
     },
     update: function() {
       if (!this.suggest) {
