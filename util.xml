@@ -3,13 +3,14 @@
     <taskdef resource="net/sf/antcontrib/antlib.xml"/>
     <dirname property="root.dir" file="${ant.file.util}" />
     <macrodef name="jsonpath">
-        <attribute name="path" />
         <attribute name="property" />
+        <attribute name="prefix" default="" />
+        <element name="files" implicit="true"/>
         <sequential>
             <local name="contents" />
-            <pathconvert property="contents" pathsep='", "'>
-                <path path="@{path}"/>
-                <globmapper from="${basedir}/*" to="*" />
+            <pathconvert dirsep="/" property="contents" pathsep='", "'>
+                <files />
+                <map from="${listit.dir}/" to="@{prefix}" />
             </pathconvert>
             <property name="@{property}" value='["${contents}"]' />
         </sequential>
@@ -28,28 +29,34 @@
                     <yuiel />
                 </concat>
             </loadresource>
-            <apply errorproperty="null" executable="java" parallel="true" inputstring="${input}" addsourcefile="false" output="@{output}">
+            <java inputstring="${input}" jar="${tools.yuicompressor}" fork="true" addsourcefile="false" output="@{output}">
                 <yuiel />
                 <arg value="-jar"/>
                 <arg value="${tools.yuicompressor}"/>
                 <arg value="--type"/>
                 <arg value="@{type}"/>
-                <mapper type="merge" to="@{output}" />
-            </apply>
+            </java>
         </sequential>
     </macrodef> 
 
     <macrodef name="htmltemplate">
         <attribute name="output" />
         <attribute name="input" />
-        <attribute name="scripts" default="" />
-        <attribute name="stylesheets" default="" />
-        <element name="htmltemplate-elements" optional="true" implicit="true" />
+        <attribute name="prefix" default='' />
+        <element name="scripts" optional="true"/>
+        <element name="stylesheets" optional="true"/>
+        <element name="variables" optional="true"/>
         <sequential>
             <parallel>
                 <sequential>
+                    <local name="scripts_list" />
+                    <pathconvert property="scripts_list"
+                        dirsep="/" pathsep=",">
+                        <scripts/>
+                        <map from="${listit.dir}/" to="@{prefix}" />
+                    </pathconvert>
                     <var name="html_scripts" value=""/>
-                    <for param="src" list="@{scripts}" delimiter=":">
+                    <for param="src" list="${scripts_list}">
                         <sequential>
                             <var
                                 name="html_scripts"
@@ -59,8 +66,14 @@
                     </for>
                 </sequential>
                 <sequential>
+                    <local name="stylesheets_list" />
+                    <pathconvert property="stylesheets_list"
+                        dirsep="/" pathsep=",">
+                        <stylesheets/>
+                        <map from="${listit.dir}/" to="@{prefix}" />
+                    </pathconvert>
                     <var name="html_stylesheets" value=""/>
-                    <for param="src" list="@{stylesheets}" delimiter=":">
+                    <for param="src" list="${stylesheets_list}">
                         <sequential>
                             <var
                                 name="html_stylesheets"
@@ -75,7 +88,7 @@
                     <replacetokens>
                         <token key="scripts" value="${html_scripts}"/>
                         <token key="stylesheets" value="${html_stylesheets}"/>
-                        <htmltemplate-elements />
+                        <variables />
                     </replacetokens>
                 </filterchain>
             </copy>
@@ -89,7 +102,7 @@
         <![CDATA[
         importPackage(Packages.java.io);
         importPackage(Packages.org.apache.tools.ant.util);
-
+        
         function readFile(file) {
             return String(new java.lang.String(FileUtils.readFully(new FileReader(file))));
         }
@@ -103,9 +116,7 @@
             eval(readFile(file));
         }
 
-        var projectDir = project.getProperty("root.dir");
-
-        load(projectDir + "/tools/underscore.js");
+        load(FileUtils.translatePath(project.getProperty("tools.underscore")));
 
         var objectName = String(attributes.get("object"));
         var outputFile = attributes.get("output");
@@ -120,7 +131,7 @@
                 var filename = files[j];
                 var file = new File(basedir, filename);
                 var contents = readFile(file);
-                var basename = filename.slice(0, -5);
+                var basename = String(filename).replace(/\\/g, '/').slice(0, -5);
                 src += objectName + "['" + basename + "'] = " + _.template(contents).source + ";\n";
             }
         }

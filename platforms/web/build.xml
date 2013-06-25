@@ -1,21 +1,5 @@
 <project>
-    <import file="../../common.xml"/>
-
-    <resources id="css.index" refid="css.all"/>
-
-    <resources id="js.index">
-        <resources refid="js.libs" />
-        <resources refid="js.common" />
-        <resources refid="js.storage" />
-        <resources refid="js.router" />
-        <resources refid="js.templates" />
-        <resources refid="js.models" />
-        <resources refid="js.views" />
-        <resources refid="js.collectors" />
-        <resources refid="js.observers" />
-        <fileset file="${listit.js.platforms.dir}/web/web-setup.js" />
-        <resources refid="js.setup" />
-    </resources>
+    <import file="../../platform-common.xml"/>
 
     <target name="-build.img" depends="-build.setup">
         <deploy-img dest="${build.img.dir}"/>

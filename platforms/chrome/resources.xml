@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+
+    <property name="build.css.dir" location="${build.dir}/css" />
+    <property name="build.js.dir" location="${build.dir}/js" />
+    <property name="build.img.dir" location="${build.dir}/img" />
+
+    <property name="build.sidebar.html.file" location="${build.dir}/index.html" />
+    <property name="build.sidebar.tmpl.file" location="${listit.templates.paged}" />
+    <property name="build.options.html.file" location="${build.dir}/options.html" />
+    <property name="build.options.tmpl.file" location="${listit.templates.paged}" />
+    <property name="build.addnotebox.html.file" location="${build.dir}/addnotebox.html" />
+    <property name="build.addnotebox.tmpl.file" location="${listit.templates.empty}" />
+    <property name="privatekey" location="${platform.dir}/key.pem" />
+
+    <echo message="${build.sidebar.html.file}" />
+
+    <resources id="js.sidebar">
+        <resources refid="js.libs" />
+        <resources refid="js.common" />
+        <filelist dir="${listit.js.platforms.dir}/chrome">
+            <file name="client-setup.js" />
+            <file name="sidebar-setup.js" />
+        </filelist>
+        <resources refid="js.router" />
+        <resources refid="js.templates" />
+        <resources refid="js.views" />
+        <resources refid="js.setup"/>
+    </resources>
+
+
+    <resources id="js.addnotebox">
+        <resources refid="js.libs" />
+        <resources refid="js.common" />
+        <resources refid="js.templates" />
+        <!-- don't include setup -->
+        <fileset dir="${listit.js.models.dir}">
+            <include name="*.js" />
+        </fileset>
+        <fileset dir="${listit.js.views.dir}">
+            <include name="*.js" />
+        </fileset>
+        <filelist dir="${listit.js.platforms.dir}/chrome">
+            <file name="addnotebox-setup.js" />
+        </filelist>
+    </resources>
+    <resources id="css.addnotebox">
+        <resources refid="css.all" />
+        <fileset file="${listit.css.platforms.dir}/chrome/addnotebox.css" />
+    </resources>
+
+    <resources id="js.options">
+        <resources refid="js.libs" />
+        <resources refid="js.common" />
+        <filelist dir="${listit.js.platforms.dir}/chrome">
+            <file name="client-setup.js" />
+            <file name="options-setup.js" />
+        </filelist>
+        <resources refid="js.router" />
+        <resources refid="js.templates" />
+        <resources refid="js.views" />
+        <resources refid="js.setup"/>
+    </resources>
+    <resources id="css.options">
+        <resources refid="css.all" />
+        <fileset file="${listit.css.platforms.dir}/chrome/options.css" />
+    </resources>
+
+    <resources id="js.background">
+        <resources refid="js.libs" />
+        <fileset file="${listit.js.platforms.dir}/chrome/backbone.omnibox.js" />
+        <resources refid="js.common" />
+        <resources refid="js.storage" />
+        <filelist dir="${listit.js.platforms.dir}/chrome">
+            <file name="chromeStorage.js" />
+            <file name="background-setup.js" />
+        </filelist>
+        <resources refid="js.models" />
+        <resources refid="js.templates" />
+        <fileset dir="${listit.js.platforms.dir}/chrome/models" includes="*.js" />
+        <resources refid="js.collectors" />
+        <resources refid="js.observers" />
+        <resources refid="js.migrate"/>
+        <fileset dir="${listit.js.platforms.dir}/chrome/background" includes="*.js" />
+        <resources refid="js.setup"/>
+    </resources>
+
+    <resources id="css.sidebar">
+        <resources refid="css.all" />
+        <fileset file="${listit.css.platforms.dir}/chrome/sidebar.css" />
+    </resources>
+
+</project>
+<!-- vim: set ft=ant: -->

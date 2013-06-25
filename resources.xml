@@ -2,172 +2,172 @@
 
 <project>
 
-<resources id="js.libs.jquery">
-    <filelist dir="${listit.js.dir}/libs">
-        <file name="jquery.js" />
-        <file name="jquery-ui.js" />
-    </filelist>
-    <fileset dir="${listit.js.dir}/libs/">
-        <include name="jquery.*.js"/>
-    </fileset>
-</resources> 
+    <resources id="js.libs.jquery">
+        <filelist dir="${listit.js.dir}/libs">
+            <file name="jquery.js" />
+            <file name="jquery-ui.js" />
+        </filelist>
+        <fileset dir="${listit.js.dir}/libs/">
+            <include name="jquery.*.js"/>
+        </fileset>
+    </resources> 
 
 
-<resources id="js.libs.compatability">
-    <filelist dir="${listit.js.dir}/libs/">
-        <file name="Blob.js" />
-        <file name="FileSaver.js" />
-    </filelist>
-</resources>
+    <resources id="js.libs.compatability">
+        <filelist dir="${listit.js.dir}/libs/">
+            <file name="Blob.js" />
+            <file name="FileSaver.js" />
+        </filelist>
+    </resources>
 
-<resources id="js.libs.wysihtml5">
-    <filelist dir="${listit.js.dir}/libs/wysihtml5">
-        <file name="parser_rules/advanced.js" />
-        <file name="dist/wysihtml5-0.4.0pre.js" />
-    </filelist>
-</resources>
+    <resources id="js.libs.wysihtml5">
+        <filelist dir="${listit.js.dir}/libs/wysihtml5">
+            <file name="parser_rules/advanced.js" />
+            <file name="dist/wysihtml5-0.4.0pre.js" />
+        </filelist>
+    </resources>
 
-<resources id="js.libs.underscore">
-    <filelist dir="${listit.js.dir}/libs">
-        <file name="underscore.js" />
-    </filelist>
-    <fileset dir="${listit.js.dir}/libs/">
-        <include name="underscore.*.js"/>
-    </fileset>
-</resources>
-<resources id="js.libs.rangy">
-    <filelist dir="${listit.js.dir}/libs">
-        <file name="rangy.js" />
-    </filelist>
-    <fileset dir="${listit.js.dir}/libs/">
-        <include name="rangy.*.js"/>
-    </fileset>
-</resources>
+    <resources id="js.libs.underscore">
+        <filelist dir="${listit.js.dir}/libs">
+            <file name="underscore.js" />
+        </filelist>
+        <fileset dir="${listit.js.dir}/libs/">
+            <include name="underscore.*.js"/>
+        </fileset>
+    </resources>
+    <resources id="js.libs.rangy">
+        <filelist dir="${listit.js.dir}/libs">
+            <file name="rangy.js" />
+        </filelist>
+        <fileset dir="${listit.js.dir}/libs/">
+            <include name="rangy.*.js"/>
+        </fileset>
+    </resources>
 
-<resources id="js.libs.backbone">
-    <filelist dir="${listit.js.dir}/libs">
-        <file name="backbone.js" />
-        <file name="backbone.ext.js"/>
-        <file name="backbone.rel.js"/>
-    </filelist>
-</resources>
+    <resources id="js.libs.backbone">
+        <filelist dir="${listit.js.dir}/libs">
+            <file name="backbone.js" />
+            <file name="backbone.ext.js"/>
+            <file name="backbone.rel.js"/>
+        </filelist>
+    </resources>
 
-<resources id="js.libs.barrier">
-    <filelist dir="${listit.js.dir}/libs">
-        <file name="barrier.js" />
-    </filelist>
-</resources>
+    <resources id="js.libs.barrier">
+        <filelist dir="${listit.js.dir}/libs">
+            <file name="barrier.js" />
+        </filelist>
+    </resources>
 
-<resources id="js.libs">
-    <resources refid="js.libs.jquery" />
-    <resources refid="js.libs.compatability" />
-    <resources refid="js.libs.barrier" />
-    <resources refid="js.libs.rangy" />
-    <resources refid="js.libs.underscore" />
-    <resources refid="js.libs.backbone" />
-    <resources refid="js.libs.wysihtml5" />
-</resources>
+    <resources id="js.libs">
+        <resources refid="js.libs.jquery" />
+        <resources refid="js.libs.compatability" />
+        <resources refid="js.libs.barrier" />
+        <resources refid="js.libs.rangy" />
+        <resources refid="js.libs.underscore" />
+        <resources refid="js.libs.backbone" />
+        <resources refid="js.libs.wysihtml5" />
+    </resources>
 
-<resources id="js.templates">
-    <fileset file="${listit.templates.file}" />
-</resources>
-<resources id="js.models">
-    <fileset dir="${listit.js.models.dir}">
-        <include name="*.js" />
-    </fileset>
-    <fileset file="${listit.js.dir}/setup-models.js" />
-</resources>
-<resources id="js.views">
-    <fileset dir="${listit.js.views.dir}">
-        <include name="*.js" />
-    </fileset>
-    <fileset file="${listit.js.dir}/setup-views.js" />
-</resources>
+    <resources id="js.templates">
+        <fileset file="${listit.templates.file}" />
+    </resources>
+    <resources id="js.models">
+        <fileset dir="${listit.js.models.dir}">
+            <include name="*.js" />
+        </fileset>
+        <fileset file="${listit.js.dir}/setup-models.js" />
+    </resources>
+    <resources id="js.views">
+        <fileset dir="${listit.js.views.dir}">
+            <include name="*.js" />
+        </fileset>
+        <fileset file="${listit.js.dir}/setup-views.js" />
+    </resources>
 
-<resources id="js.common">
-    <filelist dir="${listit.js.dir}">
-        <file name="main.js" />
-        <file name="constants.js" />
-        <file name="util.js" />
-        <file name="actionqueue.js" />
-    </filelist>
-</resources>
+    <resources id="js.common">
+        <filelist dir="${listit.js.dir}">
+            <file name="main.js" />
+            <file name="constants.js" />
+            <file name="util.js" />
+            <file name="actionqueue.js" />
+        </filelist>
+    </resources>
 
-<resources id="js.storage">
-    <file name="${listit.js.dir}/listitStorage.js" />
-</resources>
+    <resources id="js.storage">
+        <file name="${listit.js.dir}/listitStorage.js" />
+    </resources>
 
-<resources id="js.router">
-    <fileset file="${listit.js.dir}/router.js" />
-</resources>
+    <resources id="js.router">
+        <fileset file="${listit.js.dir}/router.js" />
+    </resources>
 
-<resources id="js.migrate">
-    <fileset file="${listit.js.dir}/migrate.js" />
-    <fileset dir="${listit.js.dir}/migrations/" excludes="${settings.disabled_migrations}">
-        <include name="*.js" />
-    </fileset>
-</resources>
+    <resources id="js.migrate">
+        <fileset file="${listit.js.dir}/migrate.js" />
+        <fileset dir="${listit.js.dir}/migrations/" excludes="${settings.disabled_migrations}">
+            <include name="*.js" />
+        </fileset>
+    </resources>
 
-<resources id="js.setup">
-    <fileset file="${listit.js.dir}/setup.js" />
-</resources>
+    <resources id="js.setup">
+        <fileset file="${listit.js.dir}/setup.js" />
+    </resources>
 
-<resources id="js.collectors">
-    <fileset dir="${listit.js.dir}/collectors" excludes="${settings.disabled_collectors}">
-        <include name="*.js" />
-    </fileset>
-    <!--
-    <fileset dir="${listit.js.platforms.dir}/${platform}/collectors" excludes="${settings.disabled_collectors}">
-        <include name="*.js" />
-    </fileset>
-    -->
-</resources>
+    <resources id="js.collectors">
+        <fileset dir="${listit.js.dir}/collectors" excludes="${settings.disabled_collectors}">
+            <include name="*.js" />
+        </fileset>
+        <!--
+        <fileset dir="${listit.js.platforms.dir}/${platform}/collectors" excludes="${settings.disabled_collectors}">
+            <include name="*.js" />
+        </fileset>
+        -->
+    </resources>
 
-<resources id="js.observers">
-    <fileset dir="${listit.js.dir}/observers" excludes="${settings.disabled_observers}">
-        <include name="*.js" />
-    </fileset>
-    <!--
-    <fileset dir="${listit.js.platforms.dir}/${platform}/observers" excludes="${settings.disabled_observers}">
-        <include name="*.js" />
-    </fileset>
-    -->
-</resources>
+    <resources id="js.observers">
+        <fileset dir="${listit.js.dir}/observers" excludes="${settings.disabled_observers}">
+            <include name="*.js" />
+        </fileset>
+        <!--
+        <fileset dir="${listit.js.platforms.dir}/${platform}/observers" excludes="${settings.disabled_observers}">
+            <include name="*.js" />
+        </fileset>
+        -->
+    </resources>
 
-<resources id="js.all">
-    <resources refid="js.libs" />
-    <resources refid="js.common" />
-    <resources refid="js.storage" />
-    <resources refid="js.router" />
-    <resources refid="js.templates" />
-    <resources refid="js.models" />
-    <resources refid="js.views" />
-    <resources refid="js.collectors" />
-    <resources refid="js.observers" />
-    <resources refid="js.setup" />
-</resources>
+    <resources id="js.all">
+        <resources refid="js.libs" />
+        <resources refid="js.common" />
+        <resources refid="js.storage" />
+        <resources refid="js.router" />
+        <resources refid="js.templates" />
+        <resources refid="js.models" />
+        <resources refid="js.views" />
+        <resources refid="js.collectors" />
+        <resources refid="js.observers" />
+        <resources refid="js.setup" />
+    </resources>
 
-<resources id="css.wysihtml5">
-    <filelist dir="${listit.css.dir}">
-        <file name="reset.css" />
-        <file name="wysihtml5-iframe.css" />
-        <file name="note-content.css" />
-    </filelist>
-</resources>
+    <resources id="css.wysihtml5">
+        <filelist dir="${listit.css.dir}">
+            <file name="reset.css" />
+            <file name="wysihtml5-iframe.css" />
+            <file name="note-content.css" />
+        </filelist>
+    </resources>
 
-<resources id="css.all">
-    <filelist dir="${listit.css.dir}">
-        <file name="reset.css" />
-        <file name="main.css" />
-        <file name="page-main.css" />
-        <file name="page-options.css" />
-        <file name="omnibox.css" />
-        <file name="notes.css" />
-        <file name="note-content.css" />
-        <file name="wysihtml5.css" />
-        <file name="page-addnotebox.css" />
-    </filelist>
-</resources>
+    <resources id="css.all">
+        <filelist dir="${listit.css.dir}">
+            <file name="reset.css" />
+            <file name="main.css" />
+            <file name="page-main.css" />
+            <file name="page-options.css" />
+            <file name="omnibox.css" />
+            <file name="notes.css" />
+            <file name="note-content.css" />
+            <file name="wysihtml5.css" />
+            <file name="page-addnotebox.css" />
+        </filelist>
+    </resources>
 </project>
 
 

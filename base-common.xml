@@ -1,0 +1,43 @@
+<!-- vim: set ft=ant : -->
+<project name="base_common">
+    <dirname property="root.dir" file="${ant.file.base_common}" />
+
+    <condition property="build.is.mode.release">
+        <equals arg1="${build.target}" arg2="release" />
+    </condition>
+
+
+    <property name="tools.dir" location="${root.dir}/tools" />
+    <property name="tools.yuicompressor" location="${tools.dir}/yuicompressor-2.4.7.jar" />
+    <property name="tools.underscore" location="${tools.dir}/underscore.js" />
+    <property name="tools.jshint" location="${tools.dir}/ant-jshint-0.3.4-deps.jar" />
+
+    <taskdef name="jshint" classname="com.philmander.jshint.JsHintAntTask" 
+        classpath="${tools.jshint}" />
+
+    <!-- Properties -->
+    <property file="${root.dir}/global.properties" />
+    <include file="${root.dir}/paths.xml" />
+
+    <target name="compile-templates">
+        <compiletemplates output="${listit.templates.file}" object="ListIt.templates">
+            <fileset dir="${listit.templates.dir}" includes="**/*.html" />
+        </compiletemplates>
+    </target>
+
+    <target name="jshint">
+        <local name="globals_file" />
+        <local name="options_file" />
+        <property name="globals_file" location="${tools.dir}/jshint-globals.properties" />
+        <property name="options_file" location="${tools.dir}/jshint-options.properties" />
+        <jshint
+            dir="${listit.js.dir}"
+            fail="${build.is.mode.release}"
+            globalsFile="${globals_file}"
+            optionsFile="${options_file}">
+            <include name="**/*.js" />
+            <exclude name="templates.js" />
+            <exclude name="libs/**" />
+        </jshint>
+    </target>
+</project>

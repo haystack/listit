@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project>
+    <property name="listit.dir" location="${root.dir}/src" />
+    <property name="listit.templates.paged" location="${listit.dir}/paged.html.tmpl" />
+    <property name="listit.templates.empty" location="${listit.dir}/empty.html.tmpl" />
+    <property name="listit.js.dir" location="${listit.dir}/js" />
+    <property name="listit.js.platforms.dir" location="${listit.js.dir}/platforms" />
+    <property name="listit.js.models.dir" location="${listit.js.dir}/models" />
+    <property name="listit.js.views.dir" location="${listit.js.dir}/views" />
+    <property name="listit.css.dir" location="${listit.dir}/css" />
+    <property name="listit.css.platforms.dir" location="${listit.css.dir}/platforms" />
+    <property name="listit.templates.dir" location="${listit.dir}/templates" />
+    <property name="listit.templates.file" location="${listit.js.dir}/templates.js" />
+    <property name="listit.img.dir" location="${listit.dir}/img" />
+
+    <property name="base-build.dir" location="${root.dir}/build" />
+    <property name="base-debug.dir" location="${root.dir}/debug" />
+    <property name="base-platform.dir" location="${root.dir}/platforms" />
+    <property name="base-deploy.dir" location="${root.dir}/release" />
+
+</project>
+<!-- vim: set ft=ant: -->

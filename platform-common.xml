@@ -1,0 +1,134 @@
+<!-- vim: set ft=ant : -->
+<project name="platform_common">
+    <dirname property="root.dir" file="${ant.file.platform_common}" />
+    <import file="${root.dir}/base-common.xml" />
+
+    <!-- Useful Functions -->
+    <taskdef resource="net/sf/antcontrib/antlib.xml"/>
+    <include file="${root.dir}/util.xml" />
+
+    <dirname property="platform.dir" file="${ant.file}" />
+    <basename property="platform" file="${platform.dir}" />
+    <property name="deploy.dir" location="${base-deploy.dir}/${platform}" />
+    <property name="build.dir" location="${base-build.dir}/${platform}" />
+    <property name="debug.dir" location="${base-debug.dir}/${platform}" />
+    <property file="${platform.dir}/platform.properties" />
+
+    <!-- Resources -->
+    <include file="${root.dir}/resources.xml" />
+    <include optional="true" file="${platform.dir}/resources.xml" />
+
+    <macrodef name="deploy-resource">
+        <attribute name="name"/>
+        <sequential><parallel>
+            <if>
+                <isreference refid="js.@{name}"/>
+                <then>
+                    <property name="build.@{name}.js.file" location="${build.js.dir}/@{name}.js" />
+                    <resource refid="build.@{name}.js.files">
+                        <file name="${build.@{name}.js.file}" />
+                    </resource>
+                    <local name="wysihtml5_json"/>
+                    <jsonpath property="wysihtml5_json">
+                        <resources refid="build.wysihtm5.css.files" />
+                    </jsonpath>
+
+                    <yuicompress type="js" output="${build.@{name}.js.file}">
+                        <resources refid="js.@{name}" />
+                        DEBUG=false;
+                        WYSIHTML5_CSS=${wysihtml5_json};
+                    </yuicompress>
+                </then>
+            </if>
+            <if>
+                <isreference refid="css.@{name}"/>
+                <then>
+                    <property name="build.@{name}.css.file" location="${build.css.dir}/@{name}.css" />
+                    <resource refid="build.@{name}.css.files">
+                        <file name="${build.@{name}.css.file}" />
+                    </resource>
+
+                    <yuicompress type="css" output="${build.@{name}.css.file}">
+                        <resources refid="css.@{name}" />
+                    </yuicompress>
+                </then>
+            </if>
+        </parallel></sequential>
+    </macrodef>
+
+    <macrodef name="deploy-resource-debug">
+        <attribute name="name"/>
+        <sequential><parallel>
+            <if>
+                <isreference refid="js.@{name}"/>
+                <then>
+                    <resources id="build.@{name}.js.files">
+                        <fileset file="${listit.js.dir}/defines-debug.js"/>
+                        <resources refid="js.@{name}" />
+                    </resources>
+                </then>
+            </if>
+            <if>
+                <isreference refid="css.@{name}"/>
+                <then>
+                    <resources id="build.@{name}.css.files" refid="css.@{name}" />
+                </then>
+            </if>
+        </parallel></sequential>
+    </macrodef>
+
+    <macrodef name="mk-defines-debug">
+        <sequential>
+            <local name="wysihtml5_json" />
+            <jsonpath property="wysihtml5_json">
+                <resources refid="build.wysihtml5.css.files" />
+            </jsonpath>
+            <echo message="DEBUG=false; WYSIHTML5_CSS=${wysihtml5_json};" 
+                file="${listit.js.dir}/defines-debug.js" />
+        </sequential>
+    </macrodef>
+
+    <macrodef name="deploy-html">
+        <attribute name="resource"/>
+        <sequential>
+            <htmltemplate input="${build.@{resource}.tmpl.file}" output="${build.@{resource}.html.file}">
+                <scripts>
+                    <resources refid="build.@{resource}.js.files" />
+                </scripts>
+                <stylesheets>
+                    <resources refid="build.@{resource}.css.files" />
+                </stylesheets>
+            </htmltemplate>
+        </sequential>
+    </macrodef>
+
+    <target name="mkdirs">
+        <mkdir dir="${deploy.dir}" />
+        <mkdir dir="${build.dir}" />
+    </target>
+
+    <globmapper id="resource-mapper" from="${listit.dir}/*" to="*"/>
+
+    <macrodef name="deploy-img">
+        <attribute name="dest" />
+        <sequential>
+            <mkdir dir="@{dest}" />
+            <copy todir="@{dest}">
+                <fileset dir="${listit.img.dir}">
+                    <include name="**/*.png"/>
+                    <include name="**/*.jpg"/>
+                    <include name="**/*.gif"/>
+                </fileset>
+            </copy>
+        </sequential>
+    </macrodef>
+
+    <target name="-build.setup" depends="clean,mkdirs,compile-templates,jshint" />
+
+    <target name="clean">
+        <delete includeemptydirs="true">
+            <fileset erroronmissingdir="false" followsymlinks="false" dir="${debug.dir}" includes="**" />
+            <fileset erroronmissingdir="false" followsymlinks="false" dir="${build.dir}" includes="**" />
+        </delete>
+    </target>
+</project>
