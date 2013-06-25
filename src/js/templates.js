@@ -3,15 +3,15 @@
 ListIt.templates['blockquote'] = function(obj){
 var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'')};
 with(obj||{}){
-__p+='<blockquote>\n  '+
-((__t=( content ))==null?'':_.escape(__t))+
-'\n  ';
+__p+='';
  if (typeof source !== "undefined") { 
-__p+='<footer class="source">'+
+__p+='<span class="source">'+
 ((__t=( source ))==null?'':__t)+
-'</footer>';
+'</span>';
  } 
-__p+='\n</blockquote>\n';
+__p+='\n<blockquote>\n  '+
+((__t=( content ))==null?'':_.escape(__t))+
+'\n</blockquote>\n';
 }
 return __p;
 };
@@ -68,7 +68,7 @@ __p+='<a target="_blank" href="'+
 ((__t=( url ))==null?'':_.escape(__t))+
 '">';
  if (typeof icon === "string" ) { 
-__p+='<img width="16" height="16" src="'+
+__p+='<img class="favicon" width="16" height="16" src="'+
 ((__t=( icon ))==null?'':_.escape(__t))+
 '"/>';
  } 

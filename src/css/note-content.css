@@ -40,30 +40,21 @@ blockquote {
   margin: 5px;
   padding: 5px;
   color: #222;
-  background: #f0f0f0;
-  outline: 1px solid gray;
+  background: #fefefe;
+  outline: 1px solid #f0f0f0;
   white-space: normal;
 }
 
-blockquote > footer {
-  margin-top: 5px;
-  color: #aaa;
-  opacity: .8;
-}
-
-blockquote > footer:before {
-  content: "--";
-  margin: 5px;
-}
-
-blockquote > footer a {
+.source a {
   color: #333;
-  opacity: .8;
+}
+.source {
+  white-space: nowrap;
 }
 
-a img {
-  vertical-align: top;
-  padding: 0px 2px;
+a img.favicon {
+  padding: 2px;
+  vertical-align: middle;
 }
 
 b {
