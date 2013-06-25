@@ -10,19 +10,17 @@
          * @param{String} pageName The name of the page to which to switch.
          **/
         go: function(pageName) {
-            var page = $('#page-'+pageName),
-                d1, d2;
+            var page = $('#page-'+pageName);
+            var sign;
 
             if (this.stack[this.stack.length-1] === pageName) {
                 page.show();
             } else if (this.stack[this.stack.length-2] === pageName) {
                 this.stack.pop();
-                d1 = 'right';
-                d2 = 'left';
+                sign = 1;
             } else {
                 this.stack.push(pageName);
-                d1 = 'left';
-                d2 = 'right';
+                sign = -1;
             }
 
             // 404 page
@@ -32,8 +30,21 @@
 
             // Only slide if loaded
             if (this._loaded) {
-                $('.page:visible').not(page).hide('slide', {direction: d1});
-                page.show('slide', {direction: d2});
+              // Manually using animate instead of slide to prevent jQueryUI
+              // from taking the page out of the DOM (breaking wysihtml5)
+                page.css({
+                  left: sign*(-100)+"%",
+                  right: sign*(100)+"%",
+                  display: 'block'
+                });
+                $('.page:visible').not(page).animate({
+                  left: sign*(100)+"%",
+                  right: sign*(-100)+"%",
+                });
+                page.animate({
+                  left: 0,
+                  right: 0,
+                });
             } else {
                 page.show();
             }
