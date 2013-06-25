@@ -77,7 +77,7 @@
           break;
         case "update":
           json = model.toJSON();
-          store.set(url, model, options);
+          store.set(url, json, options);
           break;
         case "read":
           store.get(url, options);
