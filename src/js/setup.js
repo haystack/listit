@@ -3,9 +3,13 @@
   'use strict';
 
   var barr = new Barrier();
+  if (DEBUG) {
+    var start_time = Date.now();
+  }
   _.each([
     function() {
       L.setStatus('setup');
+
       debug("setup::begin");
       L.lvent.trigger('setup:before', L, barr);
     },
@@ -51,6 +55,9 @@
       debug("setup::end");
     }, function() {
       L.setStatus('ready');
+      if (DEBUG) {
+        debug("Startup took "+(Date.now()-start_time)+"ms.");
+      }
     }
   ], function(fn) {
     barr.wait(fn);
