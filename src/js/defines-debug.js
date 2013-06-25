@@ -1,1 +1,1 @@
-DEBUG=false; WYSIHTML5_CSS=["css/reset.css", "css/wysihtml5-iframe.css", "css/note-content.css"];
+DEBUG_MODE=true; WYSIHTML5_CSS=["css/reset.css", "css/wysihtml5-iframe.css", "css/note-content.css"];

@@ -3,7 +3,7 @@
   'use strict';
 
   var barr = new Barrier();
-  if (DEBUG) {
+  if (DEBUG_MODE) {
     var start_time = Date.now();
   }
   _.each([
@@ -55,7 +55,7 @@
       debug("setup::end");
     }, function() {
       L.setStatus('ready');
-      if (DEBUG) {
+      if (DEBUG_MODE) {
         debug("Startup took "+(Date.now()-start_time)+"ms.");
       }
     }

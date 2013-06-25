@@ -35,7 +35,7 @@
 
                     <yuicompress type="js" output="${build.@{name}.js.file}">
                         <resources refid="js.@{name}" />
-                        DEBUG=false;
+                        DEBUG_MODE=false;
                         WYSIHTML5_CSS=${wysihtml5_json};
                     </yuicompress>
                 </then>
@@ -83,7 +83,7 @@
             <jsonpath property="wysihtml5_json">
                 <resources refid="build.wysihtml5.css.files" />
             </jsonpath>
-            <echo message="DEBUG=false; WYSIHTML5_CSS=${wysihtml5_json};" 
+            <echo message="DEBUG_MODE=true; WYSIHTML5_CSS=${wysihtml5_json};" 
                 file="${listit.js.dir}/defines-debug.js" />
         </sequential>
     </macrodef>
