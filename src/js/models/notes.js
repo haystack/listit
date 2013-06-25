@@ -362,8 +362,11 @@
         csv: {
           display : 'CSV',
           exporter: function(notebook) {
-            return notebook.get('notes').reduce(function(txt, n) {
-                return txt + '"' + L.util.clean(n.get('contents').replace(/<br>/g, '\n')).replace(/"/g, '""') + '"' + ',' + '\n';
+            return  notebook.get('notes').reduce(function(txt, n) {
+                return txt + '"' + L.util.clean(n.get('contents').replace(/<br>/g, '\n')).replace(/"/g, '""') + '","'
+                + n.get('modified') + '","' + n.get('id') + '","' + n.get('version') + '","' + n.get('created') + '","'
+                + n.get('edited') + '","' + n.get('meta') + '",'
+                + '\n';
             }, '');
           }
         }
