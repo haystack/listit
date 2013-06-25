@@ -362,10 +362,11 @@
         csv: {
           display : 'CSV',
           exporter: function(notebook) {
-            return  notebook.get('notes').reduce(function(txt, n) {
+            var CSVHeader = '"contents","modified","id","version","created","edited","meta",\n';
+            return  CSVHeader + notebook.get('notes').reduce(function(txt, n) {
                 return txt + '"' + L.util.clean(n.get('contents').replace(/<br>/g, '\n')).replace(/"/g, '""') + '","'
                 + n.get('modified') + '","' + n.get('id') + '","' + n.get('version') + '","' + n.get('created') + '","'
-                + n.get('edited') + '","' + n.get('meta') + '",'
+                + n.get('edited') + '","' + n.get('meta') + '",'    //CURRENTLY: 'meta' returns as [object Object]. FIX THIS
                 + '\n';
             }, '');
           }
