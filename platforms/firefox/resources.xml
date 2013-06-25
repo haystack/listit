@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- vim: set ft=ant: -->
+<project>
+    <property name="build.css.dir" location="${build.dir}/css" />
+    <property name="build.js.dir" location="${build.dir}/js" />
+    <property name="build.img.dir" location="${build.dir}/img" />
+
+    <property name="build.sidebar.html.file" location="${build.dir}/chrome/content/webapp/sidebar.html" />
+    <property name="build.sidebar.tmpl.file" location="${listit.templates.paged}" />
+
+    <property name="build.options.html.file" location="${build.dir}/chrome/content/webapp/options.html" />
+    <property name="build.options.tmpl.file" location="${listit.templates.paged}" />
+
+    <property name="build.background.js.file" location="${build.dir}/chrome/content/background.jsm" />
+
+    <resources id="js.sidebar">
+        <resources refid="js.libs" />
+        <resources refid="js.common" />
+        <filelist dir="${listit.js.platforms.dir}/firefox">
+            <file name="client-setup.js" />
+            <file name="sidebar-setup.js" />
+        </filelist>
+        <resources refid="js.router" />
+        <resources refid="js.templates" />
+        <resources refid="js.views" />
+        <resources refid="js.setup" />
+    </resources>
+
+    <resources id="js.options">
+        <resources refid="js.libs" />
+        <resources refid="js.common" />
+        <filelist dir="${listit.js.platforms.dir}/firefox">
+            <file name="client-setup.js" />
+            <file name="options-setup.js" />
+        </filelist>
+        <resources refid="js.router" />
+        <resources refid="js.templates" />
+        <resources refid="js.views" />
+        <resources refid="js.setup" />
+    </resources>
+
+    <resources id="js.background">
+        <resources refid="js.libs" />
+        <resources refid="js.common" />
+        <resources refid="js.storage" />
+        <fileset file="${listit.js.platforms.dir}/firefox/firefoxStorage.js" />
+        <resources refid="js.router" />
+        <resources refid="js.models" />
+        <fileset dir="${listit.js.platforms.dir}/firefox/models/" includes="*.js"/>
+        <resources refid="js.templates" />
+        <resources refid="js.collectors" />
+        <resources refid="js.observers" />
+        <resources refid="js.migrate" />
+        <fileset file="${listit.js.platforms.dir}/firefox/background-setup.js" />
+        <resources refid="js.setup" />
+    </resources>
+
+    <resources id="css.sidebar" refid="css.all"/>
+    <resources id="css.options" refid="css.all"/>
+</project>
