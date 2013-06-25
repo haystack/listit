@@ -354,6 +354,14 @@
           exporter: function(notebook) {
             return L.templates['exported-notes']({noteContents: notebook.get('notes').pluck('contents')});
           }
+        },
+        csv: {
+          display : 'CSV',
+          exporter: function(notebook) {
+            return notebook.get('notes').reduce(function(txt, n) {
+                return txt + '"' + L.util.clean(n.get('contents').replace(/<br>/g, '\n')).replace(/"/g, '""') + '"' + ',' + '\n';
+            }, '');
+          }
         }
       },
       importers: {
