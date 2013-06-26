@@ -1,9 +1,7 @@
-/*globals Components: false*/
-// Fixup cors
-ListIt.lvent.on('setup:before', function() {
+/*globals ListItAddons: false*/
+ListIt.lvent.once('setup:before', function(L, barr) {
   'use strict';
-  jQuery.ajaxSettings.xhr = function() {
-    return Components.classes["@mozilla.org/xmlextras/xmlhttprequest;1"]
-    .createInstance(Components.interfaces.nsIXMLHttpRequest);
-  };
+  L.store = ListItAddons.FirefoxStorage;
+  L.models.AuthManager = ListItAddons.AuthManager;
 });
+

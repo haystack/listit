@@ -12,22 +12,37 @@
         <deploy-resource-debug name="options" />
         <concat overwrite="yes" destfile="${build.background.js.file}">
             <header trimleading="yes" filtering="no">
+                <![CDATA[
                 this.EXPORTED_SYMBOLS = ["ListIt"];
 
-                var window = null;
-                var appShellService = Components.classes["@mozilla.org/appshell/appShellService;1"]
-                      .getService(Components.interfaces.nsIAppShellService);
-                window = appShellService.hiddenDOMWindow;
-                //window.document.html = window.document.createElement('html');
-                window.document.body = window.document.createElement('body');
-                //window.document.appendChild(window.document.html);
-                //window.document.html.appendChild(window.document.body);
+                // TODO: Don't hardcode this!
+                var ListItAddons = {};
+                Components.utils.import("chrome://listit/content/webapp/js/platforms/firefox/firefoxStorage.js", ListItAddons);
+                Components.utils.import("chrome://listit/content/webapp/js/platforms/firefox/authmanager.js", ListItAddons);
+
+                // Don't expose firefox stuff
+                var window = (function() {
+                    var appShellService = Components.classes["@mozilla.org/appshell/appShellService;1"]
+                          .getService(Components.interfaces.nsIAppShellService);
+                    var window = appShellService.hiddenDOMWindow;
+                    //window.document.html = window.document.createElement('html');
+                    window.document.body = window.document.createElement('body');
+                    // Allow CORS
+                    window.XMLHttpRequest = function() {
+                        return Components.classes["@mozilla.org/xmlextras/xmlhttprequest;1"]
+                        .createInstance(Components.interfaces.nsIXMLHttpRequest);
+                    }
+                    return window;
+                })();
                 with (window) {
+                ]]>
             </header>
             <resources refid="js.background" />
             <footer trimleading="yes" filtering="no">
+                <![CDATA[
                 }
                 var ListIt = window.ListIt;
+                ]]>
             </footer>
         </concat>
     </target>

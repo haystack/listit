@@ -1,6 +1,8 @@
 /*globals Components: false*/
 ListIt.lvent.once('setup:before', function(L, barr) {
   'use strict';
+  // For security, this should go at the top.
+  // After importing the background window, we should be able to ditch Components.
   var backgroundWindow = {};
   Components.utils['import']("chrome://listit/content/background.jsm", backgroundWindow);
 

@@ -7,7 +7,9 @@ ListIt.lvent.once('setup:views:after', function(L, barr) {
   L.router.route('options', 'options', function() {
     // Intercept options page request and open a new window.
     this.navigate('', {trigger: false});
-    window.open('/options.html', '_new');
+    // TODO: reuse open preferences.
+    var browser = window.top.getBrowser();
+    browser.selectedTab = browser.addTab('chrome://listit/content/webapp/options.html');
   });
   var fixSize = function() {
     var h = $(this);
