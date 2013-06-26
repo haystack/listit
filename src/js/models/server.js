@@ -61,8 +61,8 @@
         noteTransTable : {
             'jid': { here: 'id' },
             'version': {},
-            'created': {},
-            'edited': {},
+            'created': {transIn: Number}, // The server is odd
+            'edited': {transIn: Number},
             'contents': {},
             'meta': { transIn: JSON.parse, transOut: JSON.stringify }
         },
