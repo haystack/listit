@@ -366,7 +366,7 @@
             return  CSVHeader + notebook.get('notes').reduce(function(txt, n) {                
                 return txt + '"' + L.util.clean(n.get('contents').replace(/<br>/g, '\n')).replace(/"/g, '""') + '","'
                 + n.get('modified') + '","' + n.get('id') + '","' + n.get('version') + '","' + n.get('created') + '","'
-                + n.get('edited') + '","' + JSON.stringify(n.get('meta')) + '",'
+                + n.get('edited') + '","' + JSON.stringify(n.get('meta')).replace(/"/g, '""') + '",'
                 + '\n';
             }, '');
           }
