@@ -25,8 +25,9 @@
         _onChange: function(model, value, options) {
           // Allow setting without marking the note as modified.
           // Also, don't set modified on fetch.
+          // TODO: the fetching part shouldn't be necessary, don't add
+          // partially fetched notes to the collection!
           if (!(options && (options.fetching || options.nomodify))) {
-            debug('here', arguments);
             this.set({ 'modified': true });
           }
         },
