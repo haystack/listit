@@ -362,11 +362,11 @@
         csv: {
           display : 'CSV',
           exporter: function(notebook) {
-            var CSVHeader = '"contents","modified","id","version","created","edited","meta",\n';
+            var CSVHeader = '"Contents","Modified","ID","Version","Created","Edited","Meta",\n';
             return  CSVHeader + notebook.get('notes').reduce(function(txt, n) {                
-                return txt + '"' + n.get('contents').replace(/"/g, '""') + '","'
-                + n.get('modified') + '","' + n.get('id') + '","' + n.get('version') + '","' + n.get('created') + '","'
-                + n.get('edited') + '","' + JSON.stringify(n.get('meta')).replace(/"/g, '""') + '",'
+                return txt + '"' + n.get('contents').replace(/"/g, '""') + '"' + ',' 
+                + n.get('modified') + ',' + n.get('id') + ',' + n.get('version') + ',' + new Date(n.get('created')) + ','
+                + new Date(n.get('edited')) + ','+ '"' + JSON.stringify(n.get('meta')).replace(/"/g, '""') + '"' + ','
                 + '\n';
             }, '');
           }
