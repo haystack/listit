@@ -371,7 +371,7 @@
                       note.moveTo(L.notebook.get('notes'), {nosave: true});
                     }
                   } else {
-                    note.set(n);
+                    note.set(n, {nomodify: true});
                     // delete/undelete based on latest version.
                     note.moveTo(L.notebook.get(deleted ? 'deletedNotes' : 'notes'), {nosave: true});
                   }

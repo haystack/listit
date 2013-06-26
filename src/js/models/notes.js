@@ -19,14 +19,16 @@
                 edited: Date.now()
             };
         },
-        initialize: function() {
+        initialized: function() {
             this.on('change:contents change:meta', _.bind(this._onChange, this), this);
         },
-        _onChange: function() {
-            this.set({
-                'edited': Date.now(),
-                'modified': true
-            });
+        _onChange: function(model, value, options) {
+          // Allow setting without marking the note as modified.
+          // Also, don't set modified on fetch.
+          if (!(options && (options.fetching || options.nomodify))) {
+            debug('here', arguments);
+            this.set({ 'modified': true });
+          }
         },
         /**
          * Change the contents of a note and trigger parse events.
@@ -40,6 +42,7 @@
             noteJSON.contents = newContents;
             // TODO: This should use a different event
             L.gvent.trigger("note:request:parse note:request:parse:change", noteJSON, window);
+            noteJSON.edited = Date.now();
             this.set(noteJSON);
             this.save();
         },

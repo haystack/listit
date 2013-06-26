@@ -32,6 +32,7 @@
         var that = this;
         var complete_cb = options.complete;
         options = _.defaults({
+          fetching: true,
           success: _.wrap(options.success, function(func) {
             if (func) {
               func(this, _.rest(arguments));
@@ -45,6 +46,8 @@
             complete_cb(that, false);
           }),
         }, _.omit(options, 'complete'));
+      } else {
+        options = _.defaults({fetching: true}, options);
       }
       Model.__super__.fetch.call(this, options);
     }
