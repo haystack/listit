@@ -359,21 +359,10 @@
           display : 'CSV',
           exporter: function(notebook) {
             var CSVHeader = '"contents","modified","id","version","created","edited","meta",\n';
-            return  CSVHeader + notebook.get('notes').reduce(function(txt, n) {
-                var meta = n.get('meta');
-                var metaString = "{";
-                for (var key in meta){
-                    console.log(meta[key]);
-                    metaString += meta[key] + ",";
-                }
-                if (metaString.slice(-1) === ","){
-                    metaString = metaString.substring(0, metaString.length - 1);
-                }
-                metaString += "}";
-                
+            return  CSVHeader + notebook.get('notes').reduce(function(txt, n) {                
                 return txt + '"' + L.util.clean(n.get('contents').replace(/<br>/g, '\n')).replace(/"/g, '""') + '","'
                 + n.get('modified') + '","' + n.get('id') + '","' + n.get('version') + '","' + n.get('created') + '","'
-                + n.get('edited') + '","' + metaString + '",'
+                + n.get('edited') + '","' + JSON.stringify(n.get('meta')) + '",'
                 + '\n';
             }, '');
           }
