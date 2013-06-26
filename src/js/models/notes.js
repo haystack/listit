@@ -358,6 +358,25 @@
           exporter: function(notebook) {
             return L.templates['exported-notes']({noteContents: notebook.get('notes').pluck('contents')});
           }
+        },
+        csv: {
+          display : 'CSV',
+          exporter: function(notebook) {
+            var CSVHeader = '"Contents","Deleted","Modified","ID","Version","Created","Edited","Meta"\n';
+            var activeNotes = notebook.get('notes').reduce(function(txt, n) {                
+                return txt + '"' + n.get('contents').replace(/"/g, '""') + '"' + ',FALSE,' 
+                + n.get('modified') + ',' + n.get('id') + ',' + n.get('version') + ',' + new Date(n.get('created')) + ','
+                + new Date(n.get('edited')) + ','+ '"' + JSON.stringify(n.get('meta')).replace(/"/g, '""') + '"'
+                + '\n';
+            }, '');
+            var deletedNotes = notebook.get('deletedNotes').reduce(function(txt, n) {
+                return txt + '"' + n.get('contents').replace(/"/g, '""') + '"' + ',TRUE,' 
+                + n.get('modified') + ',' + n.get('id') + ',' + n.get('version') + ',' + new Date(n.get('created')) + ','
+                + new Date(n.get('edited')) + ','+ '"' + JSON.stringify(n.get('meta')).replace(/"/g, '""') + '"'
+                + '\n';
+            }, '');
+            return CSVHeader + activeNotes + deletedNotes;
+          }
         }
       },
       importers: {
