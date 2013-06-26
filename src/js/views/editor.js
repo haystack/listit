@@ -48,7 +48,7 @@
       this.wysihtml5entry = new wysihtml5.Editor($entry.get(0), {
         toolbar: this.toolbar.el,
         parserRules: wysihtml5ParserRules,
-        style: true,
+        style: false,
         stylesheets: WYSIHTML5_CSS
       });
 
