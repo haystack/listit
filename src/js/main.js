@@ -102,14 +102,14 @@ window.ListIt = {VERSION: 1};
     $('body').append(view.render().el);
     var gofn = _.partial(L.router.go, name);
     if (_.keys(L.pages).length === 0) {
-      L.router.route('', name, gofn)
+      L.router.route('', name, gofn);
       L.router.stack[0] = name;
       view.$el.show();
     } else {
       view.$el.hide();
     }
     L.pages[name] = view;
-    L.router.route(name, name, gofn)
+    L.router.route(name, name, gofn);
   };
 
   L.removePage = function(name) {

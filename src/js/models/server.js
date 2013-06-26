@@ -514,7 +514,7 @@
             that.trigger('initialized');
           }});
         },
-        _when_initialized: function(cb) {
+        _whenInitialized: function(cb) {
           var that = this;
           if (!this._initialized) {
             this.once('initialized', function() {
@@ -533,7 +533,7 @@
         * This method must be defined.
         */
         getToken: function(callback) {
-          this._when_initialized(function() {
+          this._whenInitialized(function() {
             callback(this.get('hashpass', null));
           });
         },
@@ -543,12 +543,12 @@
         * This method doesn't only needs to be made available to the authentication agent.
         */
         setToken: function(token) {
-          this._when_initialized(function() {
+          this._whenInitialized(function() {
             this.set('hashpass', token);
           });
         },
         unsetToken: function() {
-          this._when_initialized(function() {
+          this._whenInitialized(function() {
             this.unset('hashpass');
           });
         }

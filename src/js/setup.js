@@ -4,7 +4,7 @@
 
   var barr = new Barrier();
   if (DEBUG_MODE) {
-    var start_time = Date.now();
+    var startTime = Date.now();
   }
   _.each([
     function() {
@@ -56,7 +56,7 @@
     }, function() {
       L.setStatus('ready');
       if (DEBUG_MODE) {
-        debug("Startup took "+(Date.now()-start_time)+"ms.");
+        debug("Startup took "+(Date.now()-startTime)+"ms.");
       }
     }
   ], function(fn) {

@@ -39,11 +39,11 @@
                 });
                 $('.page:visible').not(page).animate({
                   left: sign*(100)+"%",
-                  right: sign*(-100)+"%",
+                  right: sign*(-100)+"%"
                 });
                 page.animate({
                   left: 0,
-                  right: 0,
+                  right: 0
                 });
             } else {
                 page.show();

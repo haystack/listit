@@ -1,4 +1,5 @@
 ListIt.lvent.once('setup:views:before', function(L, barr) {
+  'use strict';
   L.router = new L.Router();
 });
 ListIt.lvent.once('setup:views:after', function(L, barr) {
