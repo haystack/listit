@@ -116,7 +116,6 @@
         setOrder: function(newOrder, options) {
             options = options || {};
             var orderMap = _.invert(newOrder),
-                that = this,
                 posCounter = 0,
                 appendOffset = this.models.length;
 
@@ -245,8 +244,6 @@
           this.searching = true;
           this.searchID = Math.random();
           this.trigger("search:begin", this._terms, this.searchID);
-
-          var boundMatcher = _.bind(this.matcher, this);
 
           _.each(_.chunk(this.backingCollection, this._chunk), function(chunk) {
               that.searchQueue.add(function() {
@@ -389,7 +386,6 @@
         txt: {
           display: 'Text',
           importer: function(string) {
-            var notes = L.notebook.get('notes');
             string = _.str.trim(string);
             var noteStrings;
             var bullet = string[0];

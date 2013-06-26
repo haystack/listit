@@ -10,7 +10,7 @@
     <property name="tools.dir" location="${root.dir}/tools" />
     <property name="tools.yuicompressor" location="${tools.dir}/yuicompressor-2.4.7.jar" />
     <property name="tools.underscore" location="${tools.dir}/underscore.js" />
-    <property name="tools.jshint" location="${tools.dir}/ant-jshint-0.3.4-deps.jar" />
+    <property name="tools.jshint" location="${tools.dir}/ant-jshint-0.3.6-SNAPSHOT-deps.jar" />
 
     <taskdef name="jshint" classname="com.philmander.jshint.JsHintAntTask" 
         classpath="${tools.jshint}" />
@@ -37,6 +37,7 @@
             optionsFile="${options_file}">
             <include name="**/*.js" />
             <exclude name="templates.js" />
+            <exclude name="defines-debug.js" />
             <exclude name="libs/**" />
         </jshint>
     </target>

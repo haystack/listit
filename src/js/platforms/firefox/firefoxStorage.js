@@ -1,5 +1,6 @@
 /*jshint globalstrict: true*/
 /*globals Components: false, FileUtils: false, NetUtil: false*/
+/*exported EXPORTED_SYMBOLS, FirefoxStorage*/
 'use strict';
 
 var EXPORTED_SYMBOLS = ["FirefoxStorage"];
@@ -49,7 +50,6 @@ var FirefoxStorage = {
     NetUtil.asyncCopy(istream, ostream, cb);
   },
   get: function(key, options) {
-    var error, object;
     if (!options || !(options.success || options.error)) {
       return;
     }

@@ -1,5 +1,3 @@
-/*jshint jquery: true, browser: true*/
-/*global _: false, Backbone: false, ActionQueue: true, LogType: true*/
 (function(L) {
     'use strict';
 

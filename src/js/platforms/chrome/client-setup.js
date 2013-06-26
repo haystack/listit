@@ -1,4 +1,4 @@
-/*global chrome:true, background:true */
+/*global chrome:true*/
 
 ListIt.lvent.once('setup:before', function(L, barr) {
   'use strict';
@@ -7,7 +7,7 @@ ListIt.lvent.once('setup:before', function(L, barr) {
     L.gvent.off(null, null, window);
   });
 
-  var backgroundWindow = window.chrome.extension.getBackgroundPage();
+  var backgroundWindow = chrome.extension.getBackgroundPage();
   var bgL = backgroundWindow.ListIt;
   window.console = backgroundWindow.console;
 

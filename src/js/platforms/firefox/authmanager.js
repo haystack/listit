@@ -1,5 +1,6 @@
 /*jshint globalstrict: true*/
 /*globals Components: false*/
+/*exported EXPORTED_SYMBOLS, AuthManager*/
 
 'use strict';
 

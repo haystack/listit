@@ -310,7 +310,7 @@
             });
             L.notebook.get('notes').each(function(n) { bundleNote(n, false); });
             L.notebook.get('deletedNotes').each(function(n) { bundleNote(n, true); });
-            
+
             return bundle;
         },
         commitNotes: function(committed) {
@@ -381,7 +381,7 @@
                 L.notebook.get(deleted ? 'deletedNotes' : 'notes').create(n, {nosave: true});
               }
             });
-            
+
             // FIXME: don't necessarily clobber order.
             if (magic) {
               if (magic.order) {

@@ -32,12 +32,12 @@
     * @return {string} utftext The encoded string.
     */
     var utfEncode = function(string)  {
-        /*jslint bitwise: true */
         var utftext = '';
 
         string = string.replace(/\r\n/g,'\n');
 
         for (var n = 0; n < string.length; n++) {
+            /*jshint bitwise: false*/
             var c = string.charCodeAt(n);
             if (c < 128) {
                 utftext += String.fromCharCode(c);
@@ -51,6 +51,7 @@
                 utftext += String.fromCharCode(((c >> 6) & 63) | 128);
                 utftext += String.fromCharCode((c & 63) | 128);
             }
+            /*jshint bitwise: true*/
         }
         return utftext;
     };
@@ -70,10 +71,12 @@
             chr2 = input.charCodeAt(i++);
             chr3 = input.charCodeAt(i++);
 
+            /*jshint bitwise: false*/
             enc1 = chr1 >> 2;
             enc2 = ((chr1 & 3) << 4) | (chr2 >> 4);
             enc3 = ((chr2 & 15) << 2) | (chr3 >> 6);
             enc4 = chr3 & 63;
+            /*jshint bitwise: true*/
 
             if (isNaN(chr2)) {
                 enc3 = enc4 = 64;

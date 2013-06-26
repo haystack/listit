@@ -41,7 +41,7 @@ window.ListIt = {VERSION: 1};
   /***********************
    *  Setup Environment  *
    ***********************/
-  
+
   L.pages = {};
   L.views = {};
   L.models = {};
@@ -51,7 +51,7 @@ window.ListIt = {VERSION: 1};
   /*******************
    *  Event Objects  *
    *******************/
-  
+
   L.gvent = _.clone(Backbone.Events);
   L.lvent = _.clone(Backbone.Events);
 
@@ -64,7 +64,7 @@ window.ListIt = {VERSION: 1};
   /*************
    *  Cleanup  *
    *************/
-  
+
   var beforeunloadFired = false;
   $(window).one('beforeunload', function() {
     beforeunloadFired = true;
@@ -77,11 +77,11 @@ window.ListIt = {VERSION: 1};
     }
   });
 
-  
+
   /*************
    *  Helpers  *
    *************/
-  
+
 
   // Global methods (instantiate somewhere else)?
   // These should be very small convenience functions.
