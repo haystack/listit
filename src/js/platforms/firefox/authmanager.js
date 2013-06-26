@@ -16,7 +16,7 @@ var domain = 'chrome://listit';
 var realm = 'Token';
 
 var getLogin = function() {
-  var logins = loginManager.findLogins({}, this.domain, '', '', this.realm);
+  var logins = loginManager.findLogins({}, domain, '', '', realm);
   if (logins.length > 0) {
     if (logins.length > 1) {
       error("This should never happen.");
