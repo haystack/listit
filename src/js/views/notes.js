@@ -77,9 +77,6 @@
             'blur    .editor':      'onBlur',
             'keydown .editor':      'onKeyDown'
         },
-        getNoteText: function() {
-            return this.$('.contents').html();
-        },
         onLinkOpen: function(event) {
           this.model.trigger('user:open-bookmark', this.model, this, event.target.href);
         },
@@ -101,7 +98,7 @@
                 $editorEl = this.$('.editor-container');
             if (!this.editor) {
               this.editor = new ListIt.views.Editor({
-                text: $contentsEl.html()
+                text: this.model.get('contents')
               });
               $editorEl.html(this.editor.render().el);
             }
