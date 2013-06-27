@@ -52,6 +52,8 @@
      **/
     L.models.Logger = Backbone.RelModel.extend({
       url: '/log',
+      autoFetch: true,
+      autoFetchRelated: true,
       relations: {
         log: {
           type: L.models.Log,

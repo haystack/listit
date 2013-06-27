@@ -275,6 +275,8 @@
 
     L.models.NoteBook = Backbone.RelModel.extend({
       url: '/notebook',
+      autoFetch: true,
+      autoFetchRelated: true,
       defaults : {
         version: 0
       },

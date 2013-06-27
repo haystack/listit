@@ -1,6 +1,7 @@
 (function(L) {
     'use strict';
     L.models.Preferences = Backbone.Model.extend({
+        autoFetch: true,
         defaults: {
             shrinkNotes: true,
             expandVariables: true,

@@ -2,6 +2,7 @@
     'use strict';
     L.models.Omnibox = Backbone.Model.extend({
         // Singleton
+        autoFetch: true,
         url : '/omnibox',
         isNew: function() {
             return false;

@@ -9,11 +9,16 @@
      * local implementation with the server protocol.
      */
     L.models.Server = Backbone.Model.extend({
+        autoFetch: true,
         defaults : function() {
           return {
             url: 'https://welist.it/listit/jv3/',
             syncingNotes: false,
             syncingLogs: false,
+            running: false,
+            paused: true,
+            noteSyncRunning: false,
+            logSyncRunning: false,
             registered: false,
             email: '',
             studies: {},
@@ -48,9 +53,23 @@
           );
         },
         initialized: function() {
+          var that = this;
           this.listenTo(this, _.reduce(this.include, function(memo, attr) {
             return memo+" change:"+attr;
           }, ""), _.mask(this.save));
+
+          this.listenTo(this, 'change:registered', function(server, registered) {
+            // Don't start if not running.
+            if (!that.get('running')) {
+              return;
+            }
+            if (registered) {
+              that._resume();
+            } else {
+              that._pause();
+            }
+          });
+
         },
         // Singleton
         url : '/server',
@@ -245,27 +264,46 @@
               this.set('logSyncTimer', setTimeout(this.syncLogs, interval));
           }
         },
-        start : function() {
-            // Note: use timout instead of interval for a responsive interface.
-            // Also allows pre-empting
-            var that = this;
-
-            _.defer(function() {
-              var noteSyncInterval = that.get('noteSyncInterval', -1),
-                  logSyncInterval = that.get('logSyncInterval', -1);
-
-              if (noteSyncInterval > 0) {
-                  that.syncNotes();
-              }
-
-              if (logSyncInterval > 0 && that.get("studies").study2) {
-                  that.syncLogs();
-              }
+        resume: function() {
+          var that = this;
+          if (!this.get('paused')) {
+            return;
+          } else {
+            this.set('paused', false);
+          }
+          if (this.get('noteSyncInterval', -1) > 0) {
+            L.notebook.ready(function() {
+              that.syncNotes();
             });
+          }
+          if (this.get('logSyncInterval', -1) > 0) {
+            L.logger.ready(function() {
+              that.syncLogs();
+            });
+          }
+        },
+        pause: function() {
+          clearTimeout(this.get('noteSyncTimer'));
+          clearTimeout(this.get('logSyncTimer'));
+          this.set('paused', true);
+        },
+        start : function() {
+          // Note: use timout instead of interval for a responsive interface.
+          // Also allows pre-empting
+          // Don't start twice
+          if (this.get('running')) {
+            return;
+          } else {
+            this.set('running', true);
+          }
+
+          if (this.get('registered')) {
+            this.resume();
+          }
         },
         stop : function() {
-            clearTimeout(this.get('noteSyncTimer'));
-            clearTimeout(this.get('logSyncTimer'));
+          this.pause();
+          this.set('running', false);
         },
         bundleLogs : function() {
           var excluded = _.union(this.logTopLevelAttributes, this.logExcludedAttributes);
@@ -505,25 +543,7 @@
     // This manages account information.
     // It doesn't have a view, it doesn't do anything but store the auth token.
     L.models.AuthManager = Backbone.Model.extend({
-        initialize: function() {
-          var that = this;
-          // Can't use normal autofetch logic. This model is not guarenteed to be a backbone model.
-          this.fetch({complete: function() {
-            that.listenTo(that, 'change', _.mask(that.save));
-            that._initialized = true;
-            that.trigger('initialized');
-          }});
-        },
-        _whenInitialized: function(cb) {
-          var that = this;
-          if (!this._initialized) {
-            this.once('initialized', function() {
-              cb.apply(that);
-            });
-          } else {
-            cb.apply(that);
-          }
-        },
+        autoFetch: true,
         // Singleton
         url: '/authmanager',
         isNew: function() {return false;},
@@ -533,7 +553,7 @@
         * This method must be defined.
         */
         getToken: function(callback) {
-          this._whenInitialized(function() {
+          this.ready(function() {
             callback(this.get('hashpass', null));
           });
         },
@@ -543,12 +563,12 @@
         * This method doesn't only needs to be made available to the authentication agent.
         */
         setToken: function(token) {
-          this._whenInitialized(function() {
+          this.ready(function() {
             this.set('hashpass', token);
           });
         },
         unsetToken: function() {
-          this._whenInitialized(function() {
+          this.ready(function() {
             this.unset('hashpass');
           });
         }
