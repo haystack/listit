@@ -124,13 +124,15 @@
       var that = this;
       var complete_cb = options && options.complete;
 
-      if (options && options.fetchRelated) {
+      var fetchRelated = (options && _.has(options, "fetchRelated")) ?
+        options.fetchRelated : this.autoFetchRelated;
+      if (fetchRelated) {
         var to_fetch;
-        if (_.isArray(options.fetchRelated)) {
-          to_fetch = options.fetchRelated;
-        } else if (_.isString(options.fetchRelated)) {
-          to_fetch = [options.fetchRelated];
-        } else if (_.isBoolean(options.fetchRelated)) {
+        if (_.isArray(fetchRelated)) {
+          to_fetch = fetchRelated;
+        } else if (_.isString(fetchRelated)) {
+          to_fetch = [fetchRelated];
+        } else if (_.isBoolean(fetchRelated)) {
           to_fetch = _.keys(this.relations);
         }
 
