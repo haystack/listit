@@ -42,10 +42,8 @@
       this.model.destroy();
     },
     _onPinClicked: function() {
-      var meta = this.model.get('meta', {});
-      meta.pinned = true;
-      this.model.set('meta', meta);
-      this.saveNot();
+      this.editor.setText('!! ' + this.editor.getText());
+      this.saveNote();
     },
     saveNote: function() {
       this.model.set({contents: L.util.strip(this.editor.getText())});
