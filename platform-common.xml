@@ -3,10 +3,6 @@
     <dirname property="root.dir" file="${ant.file.platform_common}" />
     <import file="${root.dir}/base-common.xml" />
 
-    <!-- Useful Functions -->
-    <taskdef resource="net/sf/antcontrib/antlib.xml"/>
-    <include file="${root.dir}/util.xml" />
-
     <dirname property="platform.dir" file="${ant.file}" />
     <basename property="platform" file="${platform.dir}" />
     <property name="deploy.dir" location="${base-deploy.dir}/${platform}" />

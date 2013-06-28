@@ -1,7 +1,6 @@
 <!-- vim: set ft=ant : -->
 <project name="base_common">
     <dirname property="root.dir" file="${ant.file.base_common}" />
-
     <condition property="build.is.mode.release">
         <equals arg1="${build.target}" arg2="release" />
     </condition>
@@ -18,6 +17,10 @@
     <!-- Properties -->
     <property file="${root.dir}/global.properties" />
     <include file="${root.dir}/paths.xml" />
+
+    <taskdef resource="net/sf/antcontrib/antlib.xml"/>
+    <include file="${root.dir}/util.xml" />
+
 
     <target name="compile-templates">
         <compiletemplates output="${listit.templates.file}" object="ListIt.templates">
