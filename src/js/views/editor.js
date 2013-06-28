@@ -20,7 +20,8 @@
       var txtbox = this.wysihtml5entry.textareaElement;
       _.delay(function() {
         iframe.style.height = 'auto';
-        iframe.style.height = body.height() + 'px';
+        // Don't hardcode height here.
+        iframe.style.height = body.height() + 16 + 'px';
         txtbox.style.height = iframe.style.height;
         if ($.browser.mozilla) {
           // Ugly hack for firefox -moz-box. Need this event to fixup page header
