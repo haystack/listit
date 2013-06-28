@@ -104,9 +104,6 @@
 
     L.models.NoteCollection = Backbone.Collection.extend({
         model: L.models.Note,
-        slice: function(a, b) {
-            return this.models.slice(a, b);
-        },
         /**
          * Reorder contents by list of IDs
          *
