@@ -133,7 +133,7 @@
             if (!$editorEl.is(":visible")) {
               return; // Already closed
             }
-            storeText();
+            this.storeText();
             this.collapse();
             $editorEl.hide();
             $contentsEl.show();
@@ -159,7 +159,7 @@
             this.closeEditor();
           }
         },
-				storeText: function(event) {
+				storeText: function() {
 					this.model.changeContents(this.editor.getText(), window);
 					this.model.trigger('user:save', this.model, this);
 				},
