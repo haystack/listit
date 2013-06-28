@@ -9,6 +9,7 @@
             $(window).one('beforeunload', function() {
                 that.undelegateEvents();
                 that.stopListening();
+								that.storeText();
             });
             this.template = L.templates["note"];
             this.listenTo(this.model, 'change:contents', _.mask(this.updateContents, 2));
@@ -77,7 +78,6 @@
             'keyup   .contents':    'onKeyUp',
             'blur    .editor':      'onBlur',
             'keydown .editor':      'onKeyDown',
-					  'keyup   .editor':      'storeText',
 						'change  .editor':			'storeText'
         },
         onLinkOpen: function(event) {
@@ -164,7 +164,6 @@
 				storeText: function(event) {
 					this.model.changeContents(this.editor.getText(), window);
 					this.model.trigger('user:save', this.model, this);
-					console.log("storing text");
 				},
         openLink: function() {
             window.debug('READY');
