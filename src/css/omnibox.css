@@ -64,8 +64,8 @@
 
 .editor-icons {
   font-size: 1.01em;
-  padding: 0px;
-  margin: 0;
+  padding: 2px;
+  margin: 2px;
 }
 
 /* Icon Tab Icon Containers! */
@@ -73,7 +73,8 @@
   height: 20px;
   color:rgb(120,120,120);
   padding-left:5px; 
-  padding-right:5px;
+  padding-right:0px;
+  padding-bottom:3px;
   background:rgba(255,255,255,0.9) !important;
   margin-right: 5px;
 
