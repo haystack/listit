@@ -166,7 +166,7 @@
             var that = this;
             this.subViews = {}; // Note views
             this.renderNext = 0;
-            this.listenTo(this.collection, 'add', _.mask(this.addNote, 0, 2));
+            this.listenTo(this.collection, 'add', this.addNote);
             this.listenTo(this.collection, 'remove', function(note, col, options) {
               that.removeNote(note, _.defaults({}, options));
             });
@@ -241,7 +241,7 @@
             }
             return (scrollTop + 2*containerHeight) > noteOffset;
         },
-        addNote: function(note, options) {
+        addNote: function(note) {
           var view = this.subViews[note.id];
 
           // Ignore already visible/unrendered
@@ -249,8 +249,7 @@
               return;
           }
 
-          // XXX: BUG: options.index incorrect. Calculate manually.
-          var index = this.collection.indexOf(note, options && options.index);
+          var index = this.collection.indexOf(note);
 
           if (this.shouldRenderAt(index)) {
             if (!view) {
