@@ -34,6 +34,7 @@
         render: function(options) {
             var that = this;
             this.$el.attr("id", "note-"+this.model.id);
+            this.$el.attr("data-note", this.model.id);
 
             if (this._rendered) {
                 this.cleanupEditor();
@@ -96,6 +97,9 @@
 
             var $contentsEl = this.$('.contents'),
                 $editorEl = this.$('.editor-container');
+            if ($editorEl.is(":visible")) {
+              return; // Already open
+            }
             if (!this.editor) {
               this.editor = new ListIt.views.Editor({
                 text: this.model.get('contents')
@@ -104,6 +108,7 @@
             }
             $editorEl.show();
             $contentsEl.hide();
+            this.$el.trigger('startediting');
             this.editor.focus();
             this.model.trigger('user:edit', this.model, this);
         },
@@ -122,11 +127,17 @@
             });
         },
         closeEditor: function() {
+            var $contentsEl = this.$('.contents'),
+                $editorEl = this.$('.editor-container');
+            if (!$editorEl.is(":visible")) {
+              return; // Already closed
+            }
             this.model.changeContents(this.editor.getText(), window);
             this.model.trigger('user:save', this.model, this);
             this.collapse();
-            this.$('.editor-container').hide();
-            this.$('.contents').show();
+            $editorEl.hide();
+            $contentsEl.show();
+            this.$el.trigger('stopediting');
         },
         onClick: function(e) {
             if (!e.target.href) {
@@ -185,7 +196,15 @@
             });
         },
         events: {
-            'scroll': 'onScroll'
+            'scroll': 'onScroll',
+            'stopediting .note': 'onStopEditing',
+            'startediting .note': 'onStartEditing'
+        },
+        onStartEditing: function() {
+          this.$('#notes-container').sortable("disable");
+        },
+        onStopEditing: function() {
+          this.$('#notes-container').sortable("enable");
         },
         updateNoteShrinkState : function(model, state) {
             if (!this._rendered) {
@@ -318,6 +337,25 @@
                   'class': 'notelist', 'id': 'notes-container'
                 });
                 this.$el.html(ul);
+
+                var collection = this.collection.backingCollection;
+                ul.sortable({
+                  items: '.note',
+                  containment: 'parent',
+                  stop: function(event, ui) {
+                    var noteId = ui.item.attr('data-note');
+                    var previousId = ui.item.prev().attr('data-note');
+                    var note = collection.get(noteId);
+                    var insertIndex;
+                    if (previousId) {
+                      insertIndex = collection.indexOf(collection.get(previousId));
+                    } else {
+                      insertIndex = 0;
+                    }
+                    collection.remove(note);
+                    collection.add(note, {at: insertIndex});
+                  }
+                });
 
                 this._rendered = true;
                 this.updateNoteShrinkState(L.preferences, L.preferences.get('shrinkNotes'));
