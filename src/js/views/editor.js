@@ -116,7 +116,20 @@
       }
     },
     appendText: function(text) {
-      this.setText(this.getText() + text);
+      if (this._rendered) {
+        this.wysihtml5entry.appendValue(text);
+        this._fixHeight();
+      } else {
+        this.initialContent += text;
+      }
+    },
+    prependText: function(text) {
+      if (this._rendered) {
+        this.wysihtml5entry.prependValue(text);
+        this._fixHeight();
+      } else {
+        this.initialContent = text+this.initialContent;
+      }
     },
     clear: function() {
       if (this._rendered) {
