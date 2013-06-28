@@ -76,7 +76,9 @@
             'click   .contents a':  'onLinkOpen',
             'keyup   .contents':    'onKeyUp',
             'blur    .editor':      'onBlur',
-            'keydown .editor':      'onKeyDown'
+            'keydown .editor':      'onKeyDown',
+					  'keyup   .editor':      'storeText',
+						'change  .editor':			'storeText'
         },
         onLinkOpen: function(event) {
           this.model.trigger('user:open-bookmark', this.model, this, event.target.href);
@@ -159,6 +161,11 @@
             this.closeEditor();
           }
         },
+				storeText: function(event) {
+					this.model.changeContents(this.editor.getText(), window);
+					this.model.trigger('user:save', this.model, this);
+					console.log("storing text");
+				},
         openLink: function() {
             window.debug('READY');
             L.openLinkTimer = setTimeout(function () {
