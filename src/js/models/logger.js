@@ -13,12 +13,13 @@
         };
       },
       initialize: function() {
+        var that = this;
         if (this.isNew()) {
           L.gvent.trigger('log:request:data', this);
         }
         var debouncedSave = _.debounce(_.bind(this.save, this), 100);
         this.listenTo(this, "change", function(m) {
-          if (!this.isNew()) {
+          if (!that.isNew()) {
             debouncedSave();
           }
         });
@@ -62,7 +63,7 @@
       },
       initialize: function(models, options) {
         // Call destructors on exit
-        this.listenTo(L.gvent, 'sys:exit', this.stop);
+        this.listenTo(L.gvent, 'sys:exit', _.bind(this.stop, this));
       },
       initialized: function(models, options) {
         var that = this;
@@ -75,7 +76,7 @@
             }
           });
         });
-        this.listenTo(that.get('log'), 'add', function(m, c) {
+        this.listenTo(this.get('log'), 'add', function(m, c) {
           m.save();
         });
       },
