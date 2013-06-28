@@ -15,7 +15,7 @@
 
         L.gvent.on('note:request:parse', function(note) {
             var text = _.str.trim(L.util.clean(note.contents));
-            note.meta.pinned = text[0] === '!';
+            note.meta.pinned = _.str.startsWith(text, '!!');
         });
 
         L.gvent.on('note:request:parse', function(note) {
