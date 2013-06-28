@@ -73,6 +73,10 @@
           json = model.toJSON();
           json.id = Date.now();
           url += (url.charAt(url.length - 1) === '/' ? '' : '/') + encodeURIComponent(json.id);
+          if (options && options.success) {
+            // Pass json back to success to set id.
+            options = _.defaults({success: _.partial(options.success, json)}, options);
+          }
           store.set(url, json, options);
           break;
         case "update":
