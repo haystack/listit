@@ -173,9 +173,18 @@
         comparator: function(note) {
           // Backbone checks the number of arguments (1 = absolute, 2 = compare)
           // Underscore passes an extra argument (the index in the underlying
-          // list). This is probabbly a good guess for indexOf.
-          var i = arguments[1];
-          return this.backingCollection.indexOf(note, typeof(i) === "number" ? i : undefined);
+          // list). The note must be before this index in the filtered list.
+          var lastIndex;
+          if (typeof(arguments[1]) === "number") {
+            lastIndex = arguments[1]+1;
+          }
+
+          var val = this.backingCollection.lastIndexOf(note, lastIndex);
+          // Just in case
+          if (val < 0) {
+            val = this.backingCollection.indexOf(note);
+          }
+          return val;
         },
         /**
          * Add new note iff it matches the current search terms.
