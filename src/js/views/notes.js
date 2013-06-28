@@ -77,8 +77,7 @@
             'click   .contents a':  'onLinkOpen',
             'keyup   .contents':    'onKeyUp',
             'blur    .editor':      'onBlur',
-            'keydown .editor':      'onKeyDown',
-						'change  .editor':			'storeText'
+            'keydown .editor':      'onKeyDown'
         },
         onLinkOpen: function(event) {
           this.model.trigger('user:open-bookmark', this.model, this, event.target.href);
@@ -134,8 +133,7 @@
             if (!$editorEl.is(":visible")) {
               return; // Already closed
             }
-            this.model.changeContents(this.editor.getText(), window);
-            this.model.trigger('user:save', this.model, this);
+            storeText();
             this.collapse();
             $editorEl.hide();
             $contentsEl.show();
