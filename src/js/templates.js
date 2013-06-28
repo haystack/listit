@@ -18,7 +18,7 @@ return __p;
 ListIt.templates['create-actions'] = function(obj){
 var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'')};
 with(obj||{}){
-__p+='<div class="pin-icon iconTab box center_box clickable">\n    <img src="img/pin_plus.png" title="Keep this note at the top of my list.">\n</div>\n<div class="save-icon clickable iconTab box center_box">\n    <img src="img/plus.png" title="Save this note!">\n</div>\n\n';
+__p+='<div class="pin-icon iconTab box center_box clickable">\n    <img src="img/star-gold-plus.png" title="Keep this note at the top of my list." height="20px" width="20px">\n</div>\n<div class="save-icon clickable iconTab box center_box">\n    <img src="img/plus.png" title="Save this note!" height="20px" width="20px">\n</div>\n\n';
 }
 return __p;
 };
