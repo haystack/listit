@@ -62,7 +62,7 @@
         <resources refid="js.libs.jquery" />
         <resources refid="js.libs.compatability" />
         <resources refid="js.libs.barrier" />
-        <resources refid="js.libs.rangy" />
+        <!--<resources refid="js.libs.rangy" />-->
         <resources refid="js.libs.underscore" />
         <resources refid="js.libs.backbone" />
         <resources refid="js.libs.wysihtml5" />
