@@ -9,7 +9,7 @@
             $(window).one('beforeunload', function() {
                 that.undelegateEvents();
                 that.stopListening();
-								that.storeText();
+                that.storeText();
             });
             this.template = L.templates["note"];
             this.listenTo(this.model, 'change:contents', _.mask(this.updateContents, 2));
@@ -159,10 +159,10 @@
             this.closeEditor();
           }
         },
-				storeText: function() {
-					this.model.changeContents(this.editor.getText(), window);
-					this.model.trigger('user:save', this.model, this);
-				},
+        storeText: function() {
+          this.model.changeContents(this.editor.getText(), window);
+          this.model.trigger('user:save', this.model, this);
+        },
         openLink: function() {
             window.debug('READY');
             L.openLinkTimer = setTimeout(function () {
