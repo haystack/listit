@@ -21,12 +21,12 @@
                 <isreference refid="js.@{name}"/>
                 <then>
                     <property name="build.@{name}.js.file" location="${build.js.dir}/@{name}.js" />
-                    <resource refid="build.@{name}.js.files">
+                    <resources id="build.@{name}.js.files">
                         <file name="${build.@{name}.js.file}" />
-                    </resource>
+                    </resources>
                     <local name="wysihtml5_json"/>
                     <jsonpath property="wysihtml5_json">
-                        <resources refid="build.wysihtm5.css.files" />
+                        <resources refid="build.wysihtml5.css.files" />
                     </jsonpath>
 
                     <yuicompress type="js" output="${build.@{name}.js.file}">
@@ -40,9 +40,9 @@
                 <isreference refid="css.@{name}"/>
                 <then>
                     <property name="build.@{name}.css.file" location="${build.css.dir}/@{name}.css" />
-                    <resource refid="build.@{name}.css.files">
+                    <resources id="build.@{name}.css.files">
                         <file name="${build.@{name}.css.file}" />
-                    </resource>
+                    </resources>
 
                     <yuicompress type="css" output="${build.@{name}.css.file}">
                         <resources refid="css.@{name}" />
@@ -76,7 +76,7 @@
     <macrodef name="mk-defines-debug">
         <sequential>
             <local name="wysihtml5_json" />
-            <jsonpath property="wysihtml5_json">
+            <jsonpath basedir="${listit.dir}" property="wysihtml5_json">
                 <resources refid="build.wysihtml5.css.files" />
             </jsonpath>
             <echo message="DEBUG_MODE=true; WYSIHTML5_CSS=${wysihtml5_json};" 

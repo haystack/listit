@@ -8,6 +8,8 @@
     <target name="-build.assets" depends="-build.setup">
         <mkdir dir="${build.css.dir}" />
         <mkdir dir="${build.js.dir}" />
+        <property name="assets.dir" location="${build.dir}" />
+        <deploy-resource name="wysihtml5" />
         <deploy-resource name="index" />
     </target>
 
@@ -22,6 +24,7 @@
     </target>
 
     <target name="debug" depends="-build.setup">
+        <property name="assets.dir" location="${listit.dir}" />
         <deploy-resource-debug name="index" />
         <deploy-html resource="index" />
 

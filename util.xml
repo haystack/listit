@@ -5,12 +5,13 @@
     <macrodef name="jsonpath">
         <attribute name="property" />
         <attribute name="prefix" default="" />
+        <attribute name="basedir" default="${assets.dir}"/>
         <element name="files" implicit="true"/>
         <sequential>
             <local name="contents" />
             <pathconvert dirsep="/" property="contents" pathsep='", "'>
                 <files />
-                <map from="${listit.dir}/" to="@{prefix}" />
+                <map from="@{basedir}/" to="@{prefix}" />
             </pathconvert>
             <property name="@{property}" value='["${contents}"]' />
         </sequential>
@@ -29,10 +30,7 @@
                     <yuiel />
                 </concat>
             </loadresource>
-            <java inputstring="${input}" jar="${tools.yuicompressor}" fork="true" addsourcefile="false" output="@{output}">
-                <yuiel />
-                <arg value="-jar"/>
-                <arg value="${tools.yuicompressor}"/>
+            <java inputstring="${input}" jar="${tools.yuicompressor}" fork="true" logError="true" failonerror="true" output="@{output}">
                 <arg value="--type"/>
                 <arg value="@{type}"/>
             </java>
@@ -43,6 +41,7 @@
         <attribute name="output" />
         <attribute name="input" />
         <attribute name="prefix" default='' />
+        <attribute name="basedir" default='${assets.dir}' />
         <element name="scripts" optional="true"/>
         <element name="stylesheets" optional="true"/>
         <element name="variables" optional="true"/>
@@ -53,7 +52,7 @@
                     <pathconvert property="scripts_list"
                         dirsep="/" pathsep=",">
                         <scripts/>
-                        <map from="${listit.dir}/" to="@{prefix}" />
+                        <map from="@{basedir}/" to="@{prefix}" />
                     </pathconvert>
                     <var name="html_scripts" value=""/>
                     <for param="src" list="${scripts_list}">
@@ -70,7 +69,7 @@
                     <pathconvert property="stylesheets_list"
                         dirsep="/" pathsep=",">
                         <stylesheets/>
-                        <map from="${listit.dir}/" to="@{prefix}" />
+                        <map from="@{basedir}/" to="@{prefix}" />
                     </pathconvert>
                     <var name="html_stylesheets" value=""/>
                     <for param="src" list="${stylesheets_list}">

@@ -5,13 +5,15 @@
     <property name="build.js.dir" location="${build.dir}/js" />
     <property name="build.img.dir" location="${build.dir}/img" />
 
-    <property name="build.sidebar.html.file" location="${build.dir}/chrome/content/webapp/sidebar.html" />
+    <property name="build.content.dir" location="${build.dir}/chrome/content/" />
+    <property name="build.webapp.dir" location="${build.content.dir}/webapp/" />
+    <property name="build.sidebar.html.file" location="${build.webapp.dir}/sidebar.html" />
     <property name="build.sidebar.tmpl.file" location="${listit.templates.paged}" />
 
-    <property name="build.options.html.file" location="${build.dir}/chrome/content/webapp/options.html" />
+    <property name="build.options.html.file" location="${build.webapp.dir}/options.html" />
     <property name="build.options.tmpl.file" location="${listit.templates.paged}" />
 
-    <property name="build.background.js.file" location="${build.dir}/chrome/content/background.jsm" />
+    <property name="build.background.js.file" location="${build.content.dir}/background.jsm" />
 
     <resources id="js.sidebar">
         <resources refid="js.libs" />

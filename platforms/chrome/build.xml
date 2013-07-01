@@ -5,6 +5,7 @@
     </target>
 
     <target name="build.assets-debug" depends="-build.setup">
+        <property name="assets.dir" location="${listit.dir}" />
         <deploy-resource-debug name="wysihtml5" />
 
         <mk-defines-debug />
@@ -50,6 +51,7 @@
     </target>
 
     <target name="build.assets" depends="-build.setup">
+        <property name="assets.dir" location="${build.dir}" />
         <mkdir dir="${build.css.dir}" />
         <mkdir dir="${build.js.dir}" />
 
