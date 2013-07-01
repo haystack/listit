@@ -351,11 +351,10 @@
                     var noteId = ui.item.attr('data-note');
                     var previousId = ui.item.prev().attr('data-note');
                     var note = collection.get(noteId);
-                    var startIndex = collection.indexOf(note);
                     var insertIndex;
                     if (previousId) {
                       insertIndex = collection.indexOf(collection.get(previousId));
-                      if (startIndex > insertIndex) {
+                      if (collection.indexOf(note) > insertIndex) {
                         insertIndex+=1;
                       }
                     } else {
