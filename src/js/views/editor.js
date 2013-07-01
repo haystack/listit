@@ -15,14 +15,23 @@
       if (!(this._rendered && this.autoResize)) {
         return;
       }
+      var that = this;
       var iframe = this.wysihtml5entry.composer.iframe;
-      var body = $(iframe).contents().find('body'); // Needs document to be loaded.
+      var $body = $(iframe).contents().find('body'); // Needs document to be loaded.
       var txtbox = this.wysihtml5entry.textareaElement;
       _.delay(function() {
-        iframe.style.height = 'auto';
-        // Don't hardcode height here.
-        iframe.style.height = body.height() + 16 + 'px';
-        txtbox.style.height = iframe.style.height;
+        if (that.wysihtml5entry.currentView === that.wysihtml5entry.composer) {
+          // Using composer
+          iframe.style.height = 'auto';
+          // TODO: Don't hardcode height here.
+          iframe.style.height = $body.height() + 16 + 'px';
+          txtbox.style.height = iframe.style.height;
+        } else {
+          // Not using composer
+          txtbox.style.height = 'auto';
+          txtbox.style.height = txtbox.scrollHeight + 16 + 'px';
+          iframe.style.height = txtbox.style.height;
+        }
         if ($.browser.mozilla) {
           // Ugly hack for firefox -moz-box. Need this event to fixup page header
           // (omnibox) /content (notelist) heights.
