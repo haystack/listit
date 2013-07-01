@@ -344,15 +344,20 @@
 
                 var collection = this.collection.backingCollection;
                 ul.sortable({
+                  distance: 10,
                   items: '.note',
                   containment: 'parent',
                   stop: function(event, ui) {
                     var noteId = ui.item.attr('data-note');
                     var previousId = ui.item.prev().attr('data-note');
                     var note = collection.get(noteId);
+                    var startIndex = collection.indexOf(note);
                     var insertIndex;
                     if (previousId) {
                       insertIndex = collection.indexOf(collection.get(previousId));
+                      if (startIndex > insertIndex) {
+                        insertIndex+=1;
+                      }
                     } else {
                       insertIndex = 0;
                     }
