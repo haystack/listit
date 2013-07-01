@@ -140,6 +140,14 @@
         this.initialContent = text+this.initialContent;
       }
     },
+    replaceText: function(a, b) {
+      if (this._rendered) {
+        this.wysihtml5entry.replaceValue(a, b);
+        this._fixHeight();
+      } else {
+        this.initialContent = this.initialContent.replace(a, b);
+      }
+    },
     clear: function() {
       if (this._rendered) {
         this.wysihtml5entry.clear();
