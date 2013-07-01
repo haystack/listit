@@ -19,7 +19,7 @@
       set: function(key, object, options) {
         try {
           LocalStorage.store.setItem(key, JSON.stringify(object));
-          if (options && options.success) options.success(object);
+          if (options && options.success) options.success();
         } catch (e) {
           if (options && options.error) options.error(e);
         }
