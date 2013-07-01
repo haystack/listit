@@ -9,7 +9,7 @@
             $(window).one('beforeunload', function() {
                 that.undelegateEvents();
                 that.stopListening();
-                that.storeText();
+                that.closeEditor();
             });
             this.template = L.templates["note"];
             this.listenTo(this.model, 'change:contents', _.mask(this.updateContents, 2));
