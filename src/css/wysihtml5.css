@@ -1,25 +1,25 @@
 .wysihtml5-toolbar-buttons [data-wysihtml5-command=italic] {
-    background-image: url("../img/icons/format-text-italic.png");
+    background-image: url("../img/toolbar/format-text-italic.png");
 }
 
 .wysihtml5-toolbar-buttons [data-wysihtml5-command=underline] {
-    background-image: url("../img/icons/format-text-underline.png");
+    background-image: url("../img/toolbar/format-text-underline.png");
 }
 
 .wysihtml5-toolbar-buttons [data-wysihtml5-command=bold] {
-    background-image: url("../img/icons/format-text-bold.png");
+    background-image: url("../img/toolbar/format-text-bold.png");
 }
 
 .wysihtml5-toolbar-buttons [data-wysihtml5-command=createLink] {
-    background-image: url("../img/icons/link.png");
+    background-image: url("../img/toolbar/link.png");
 }
 
 .wysihtml5-toolbar-buttons [data-wysihtml5-action=change_view] {
-    background-image: url("../img/icons/text-html.png");
+    background-image: url("../img/toolbar/text-html.png");
 }
 
 .wysihtml5-toolbar-buttons [data-wysihtml5-command-group=foreColor] {
-    background-image: url("../img/icons/format-text-color.png");
+    background-image: url("../img/toolbar/format-text-color.png");
 }
 
 .wysihtml5-toolbar-buttons li.spacer {

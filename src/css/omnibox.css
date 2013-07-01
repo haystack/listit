@@ -62,15 +62,10 @@
   background-color: rgba(128,128,128,.5);
 }
 
-.editor-icons {
-  font-size: 1.01em;
-  padding: 2px;
-  margin: 2px;
-}
-
 /* Icon Tab Icon Containers! */
 .iconTab {
-  height: 20px;
+  height: 22px;
+  width: 22px;
   color:rgb(120,120,120);
   padding-left:5px; 
   padding-right:5px;

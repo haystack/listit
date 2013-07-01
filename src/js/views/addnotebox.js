@@ -64,7 +64,14 @@
           autoResize: false,
           actions: L.templates['create-actions']()
         });
-        this.$el.append('<div class="header hbox"><h1 class="flex">List.it: Add Note</h1><span class="clickable close-icon"><img src="img/x10.png" /></span></div>');
+        this.$el.append(
+          '<div class="header hbox">' +
+            '<h1 class="flex">List.it: Add Note</h1>' +
+            '<span class="clickable close-icon">' +
+              '<img src="img/close.png" />' +
+            '</span>' +
+          '</div>'
+        );
         this.$el.append(this.editor.render().el);
       }
       this._rendered = true;

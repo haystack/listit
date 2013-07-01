@@ -18,14 +18,14 @@ return __p;
 ListIt.templates['create-actions'] = function(obj){
 var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'')};
 with(obj||{}){
-__p+='<div class="pin-icon iconTab box center_box clickable">\n    <img src="img/star-gold-plus.png" title="Keep this note at the top of my list." height="20" width="20">\n</div>\n<div class="save-icon clickable iconTab box center_box">\n    <img src="img/plus.png" title="Save this note!" height="20" width="20">\n</div>\n\n';
+__p+='<div class="pin-icon iconTab box center_box clickable">\n    <img src="img/actions/add_pinned.png" title="Keep this note at the top of my list." height="22" width="22">\n</div>\n<div class="save-icon clickable iconTab box center_box">\n    <img src="img/actions/add.png" title="Save this note!" height="22" width="22">\n</div>\n\n';
 }
 return __p;
 };
 ListIt.templates['edit-actions'] = function(obj){
 var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'')};
 with(obj||{}){
-__p+='<div class="save-icon update-icon clickable iconTab box center_box" unselectable="on">\n    <img src="img/save.png" title="Save changes" unselectable="on" height="20" width="20">\n</div>';
+__p+='<div class="save-icon update-icon clickable iconTab box center_box" unselectable="on">\n    <img src="img/actions/save.png" title="Save changes" unselectable="on" height="20" width="20">\n</div>\n';
 }
 return __p;
 };
@@ -107,11 +107,13 @@ var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments
 with(obj||{}){
 __p+='<a class="clickable">\n    <img id="syncIcon" class="';
  if (syncState) print("spinner"); 
-__p+=' settingIcon" src="img/arrowstill.png" width="16" height="16" title="Save a backup copy of your notes on our server.">\n</a>\n<a href="#/options" class="clickable">\n    <img id="optionsIcon" class="settingIcon" src="img/settings_white.png" width="16" height="16" title="View Options and Login to save a backup of your notes." >\n</a>\n<a class="clickable">\n    <img id="shrinkIcon" class="settingIcon" src="'+
-((__t=(sizeIcon ))==null?'':__t)+
-'" width="16" height="16" title="'+
-((__t=(sizeTitle ))==null?'':__t)+
-'" >\n</a>\n\n';
+__p+=' settingIcon" src="img/controls/sync.png" width="16" height="16" title="Save a backup copy of your notes on our server.">\n</a>\n<a href="#/options" class="clickable">\n    <img id="optionsIcon" class="settingIcon" src="img/controls/options.png" width="16" height="16" title="View Options and Login to save a backup of your notes." >\n</a>\n<a class="clickable">\n  <img id="shrinkIcon" class="settingIcon"\n    ';
+ if (shrinkState) { 
+__p+='\n    src="img/controls/arrow-left.png" title="Expand Notes"\n    ';
+ } else { 
+__p+='\n    src="img/controls/arrow-down.png" title="Minimize Notes"\n    ';
+ } 
+__p+='\n    width="16" height="16">\n</a>\n\n';
 }
 return __p;
 };

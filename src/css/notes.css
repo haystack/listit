@@ -76,17 +76,15 @@
     max-width: 100%;
 }
 .note .icon {
-    background-image: url("../img/star-gray.png");
-    background-size: 16px 16px;
-    margin: 8px;
-    height: 16px;
-    width: 16px;
-    background-repeat: no-repeat;
+  background-image: url("../img/note/star-inactive.png");
+  margin: 8px;
+  height: 16px;
+  width: 16px;
+  background-repeat: no-repeat;
 }
 
 .note.pinned .icon {
-  background-image: url("../img/star-gold.png");
-  background-size: 16px 16px;
+  background-image: url("../img/note/star-active.png");
 }
 
 .note .close-btn {

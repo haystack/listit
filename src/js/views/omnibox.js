@@ -153,10 +153,8 @@
       this.listenTo(L.server, 'change:syncingNotes', this.render);
     },
     render: function() {
-      var shrink = L.preferences.get('shrinkNotes');
       this.$el.html(L.templates["omnibox/controls"]({
-        sizeIcon: shrink ?  'img/p-arrow-left.png': 'img/p-arrow-down.png',
-        sizeTitle: shrink ?  'Expand Notes': 'Minimize Notes',
+        shrinkState: L.preferences.get('shrinkNotes'),
         syncState: L.server.get('syncingNotes')
       }));
       return this;
