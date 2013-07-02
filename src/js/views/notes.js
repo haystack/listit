@@ -171,21 +171,17 @@
         //if editor is visible, gets/sets text through editor - otherwise, through model
         onPinToggle: function(event) {
           if ((this.$('.editor-container')).is(":visible")) {
-            if (_.str.startsWith(this.editor.getText(), '!')) {
-              this.editor.replaceText('!', '');
-              this.$el.removeClass('pinned');
+            if (L.util.strip(this.editor.getText())[0] === '!') {
+              this.editor.replaceText(/!+ */, '');
             } else {
-              this.editor.prependText('!');
-              this.$el.addClass('pinned');
+              this.editor.prependText('! ');
             }
           } else {
             var text = this.model.get('contents');
-            if (_.str.startsWith(text, '!')) {
-              text = text.replace(/! */, '');
-              this.$el.removeClass('pinned');
+            if (this.model.get('meta').pinned) {
+              text = text.replace(/!+ */, '');
             } else {
               text = '! ' + text;
-              this.$el.addClass('pinned');
             }
             this.model.changeContents(text);
           }
