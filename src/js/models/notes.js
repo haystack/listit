@@ -380,7 +380,7 @@
                   _.str.q(JSON.stringify(n.get('meta')).replace(/"/g, '""'))];
             }
             noteArray.push.apply(noteArray, notebook.get('notes').map(_.partial(convertCSV, false)));
-            noteArray.push.apply(noteArray, notebook.get('notes').map(_.partial(convertCSV, true)));
+            noteArray.push.apply(noteArray, notebook.get('deletedNotes').map(_.partial(convertCSV, true)));
             return noteArray.join('\n') + '\n';
           }
         }
