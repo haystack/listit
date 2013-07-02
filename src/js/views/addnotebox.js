@@ -42,7 +42,7 @@
       this.model.destroy();
     },
     _onPinClicked: function() {
-      this.editor.setText('!! ' + this.editor.getText());
+      this.editor.setText('! ' + this.editor.getText());
       this.saveNote();
     },
     saveNote: function() {
