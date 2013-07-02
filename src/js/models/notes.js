@@ -367,25 +367,20 @@
         csv: {
           display : 'CSV',
           exporter: function(notebook) {
-            var noteArray = [];
+            var noteArray=[];
             noteArray.push(["Contents","Deleted","Modified","ID","Version","Created","Edited","Meta"]);
-            var convertCSV = function(collection) {
-              var nb = notebook.get(collection);
-              var isDel = false;
-              if (collection == "deletedNotes") {isDel= true;}
-              nb.map(function(n) {
-                noteArray.push([_.str.q(n.get('contents').replace(/"/g, '""')), 
-                  isDel,
+            var convertCSV = function(isDeleted, n) {
+            	return [_.str.q(n.get('contents').replace(/"/g, '""')), 
+                  isDeleted,
                   n.get('modified'),
                   n.get('id'),
                   n.get('version'),
                   new Date(n.get('created')),
                   new Date(n.get('edited')),
-                  _.str.q(JSON.stringify(n.get('meta')).replace(/"/g, '""'))]);
-            	});
+                  _.str.q(JSON.stringify(n.get('meta')).replace(/"/g, '""'))];
             }
-            convertCSV("notes");
-            convertCSV("deletedNotes");
+            noteArray.push.apply(noteArray, notebook.get('notes').map(_.partial(convertCSV, false)));
+            noteArray.push.apply(noteArray, notebook.get('notes').map(_.partial(convertCSV, true)));
             return noteArray.join('\n') + '\n';
           }
         }
