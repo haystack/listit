@@ -91,8 +91,12 @@
         * @private
         */
         _onSavePinClicked: function(event) {
-            this.editor.setText('! ' + this.editor.getText());
-            this.save();
+          var contents = L.util.strip(this.editor.getText());
+          if (contents[0] != '!') {
+            contents = '! ' + contents;
+          }
+          this.editor.setText(contents);
+          this.save();
         },
         save: function() {
             this.assertRendered();
