@@ -173,8 +173,10 @@
           if ((this.$('.editor-container')).is(":visible")) {
             if (L.util.strip(this.editor.getText())[0] === '!') {
               this.editor.replaceText(/!+ */, '');
+              this.$el.removeClass('pinned');
             } else {
               this.editor.prependText('! ');
+              this.$el.addClass('pinned');
             }
           } else {
             var text = this.model.get('contents');
