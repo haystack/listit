@@ -76,7 +76,8 @@
     max-width: 100%;
 }
 .note .icon {
-    background-image: url("../img/orangedot.png");
+    background-image: url("../img/star-gray.png");
+    background-size: 16px 16px;
     margin: 8px;
     height: 16px;
     width: 16px;
@@ -84,7 +85,8 @@
 }
 
 .note.pinned .icon {
-    background-image: url("../img/pin.png");
+  background-image: url("../img/star-gold.png");
+  background-size: 16px 16px;
 }
 
 .note .close-btn {

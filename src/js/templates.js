@@ -22,6 +22,13 @@ __p+='<div class="pin-icon iconTab box center_box clickable">\n    <img src="img
 }
 return __p;
 };
+ListIt.templates['edit-actions'] = function(obj){
+var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'')};
+with(obj||{}){
+__p+='<div class="save-icon update-icon clickable iconTab box center_box" unselectable="on">\n    <img src="img/save.png" title="Save changes" unselectable="on" height="20px" width="20px">\n</div>';
+}
+return __p;
+};
 ListIt.templates['editor'] = function(obj){
 var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'')};
 with(obj||{}){
@@ -89,7 +96,7 @@ return __p;
 ListIt.templates['note'] = function(obj){
 var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'')};
 with(obj||{}){
-__p+='<div class="icon draggable"></div>\n<div class="editable contents flex">'+
+__p+='<div class="pin-icon icon clickable"></div>\n<div class="editable contents flex">'+
 ((__t=(contents))==null?'':__t)+
 '</div>\n<div class="editor-container flex">\n</div>\n<div class="close-btn clickable"></div>\n';
 }

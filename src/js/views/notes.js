@@ -72,12 +72,16 @@
           this.$el.children('.contents').html(this.model.get('contents'));
         },
         events: {
-            'click   .close-btn':   'onRemoveClicked',
-            'click   .contents':    'onClick',
-            'click   .contents a':  'onLinkOpen',
-            'keyup   .contents':    'onKeyUp',
-            'blur    .editor':      'onBlur',
-            'keydown .editor':      'onKeyDown'
+            'click     .close-btn':   'onRemoveClicked',
+            'click     .contents':    'onClick',
+            'click     .contents a':  'onLinkOpen',
+            'keyup     .contents':    'onKeyUp',
+            'blur      .editor':      'onBlur',
+            'keydown   .editor':      'onKeyDown',
+            'click     .pin-icon':    'onPinToggle',
+            'mousedown .pin-icon':    function(event){event.preventDefault();},
+            'click     .save-icon':   'onSaveToggle',
+            'mousedown .save-icon':   function(event){event.preventDefault();}
         },
         onLinkOpen: function(event) {
           this.model.trigger('user:open-bookmark', this.model, this, event.target.href);
@@ -102,10 +106,11 @@
               return; // Already open
             }
             if (!this.editor) {
-              this.editor = new ListIt.views.Editor({
-                text: this.model.get('contents')
-              });
-              $editorEl.html(this.editor.render().el);
+                this.editor = new ListIt.views.Editor({
+                    text: this.model.get('contents'),
+                    actions: L.templates['edit-actions']()
+                });
+                $editorEl.html(this.editor.render().el);
             }
             $editorEl.show();
             $contentsEl.hide();
@@ -162,6 +167,31 @@
         storeText: function() {
           this.model.changeContents(this.editor.getText(), window);
           this.model.trigger('user:save', this.model, this);
+        },
+        //if editor is visible, gets/sets text through editor - otherwise, through model
+        onPinToggle: function(event) {
+          if ((this.$('.editor-container')).is(":visible")) {
+            if (_.str.startsWith(this.editor.getText(), '!')) {
+              this.editor.replaceText('!', '');
+              this.$el.removeClass('pinned');
+            } else {
+              this.editor.prependText('!');
+              this.$el.addClass('pinned');
+            }
+          } else {
+            var text = this.model.get('contents');
+            if (_.str.startsWith(text, '!')) {
+              text = text.replace(/! */, '');
+              this.$el.removeClass('pinned');
+            } else {
+              text = '! ' + text;
+              this.$el.addClass('pinned');
+            }
+            this.model.changeContents(text);
+          }
+        },
+        onSaveToggle: function(event) {
+            this.closeEditor();
         },
         openLink: function() {
             window.debug('READY');
