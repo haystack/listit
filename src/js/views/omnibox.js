@@ -91,7 +91,7 @@
         * @private
         */
         _onSavePinClicked: function(event) {
-            this.editor.setText('!! ' + this.editor.getText());
+            this.editor.setText('! ' + this.editor.getText());
             this.save();
         },
         save: function() {
