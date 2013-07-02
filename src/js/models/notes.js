@@ -367,18 +367,16 @@
         csv: {
           display : 'CSV',
           exporter: function(notebook) {
-            var CSVHeader = ["Contents","Collection","Modified","ID","Version","Created","Edited","Meta"];
-              var noteArray = [];
-              var collectionArray = ["notes", "deletedNotes"];
-              noteArray.push(CSVHeader);
-              for (var i = 0; i<collectionArray.length; i++) {
-                notebook.get(collectionArray[i]).reduce(function(txt, n) {                
-                  var temp = ['"' + n.get('contents').replace(/"/g, '""') + '"', collectionArray[i],
-                    n.get('modified'), n.get('id'), n.get('version'), new Date(n.get('created')),
-                    new Date(n.get('edited')), '"' + JSON.stringify(n.get('meta')).replace(/"/g, '""') + '"'];
-                  noteArray.push(temp);
-                }, '');
-              };
+            var noteArray = [];
+            var collectionArray = ["notes", "deletedNotes"];
+            noteArray.push(["Contents","Collection","Modified","ID","Version","Created","Edited","Meta"]);
+            for (var i = 0; i<collectionArray.length; i++) {
+              notebook.get(collectionArray[i]).reduce(function(txt, n) {                
+                noteArray.push(['"' + n.get('contents').replace(/"/g, '""') + '"', collectionArray[i],
+                  n.get('modified'), n.get('id'), n.get('version'), new Date(n.get('created')),
+                  new Date(n.get('edited')), '"' + JSON.stringify(n.get('meta')).replace(/"/g, '""') + '"']);
+              }, '');
+            };
             return noteArray.join('\n');
           }
         }
