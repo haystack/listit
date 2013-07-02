@@ -367,20 +367,20 @@
         csv: {
           display : 'CSV',
           exporter: function(notebook) {
-            var CSVHeader = '"Contents","Deleted","Modified","ID","Version","Created","Edited","Meta"\n';
-            var activeNotes = notebook.get('notes').reduce(function(txt, n) {                
-                return txt + '"' + n.get('contents').replace(/"/g, '""') + '"' + ',FALSE,' 
-                + n.get('modified') + ',' + n.get('id') + ',' + n.get('version') + ',' + new Date(n.get('created')) + ','
-                + new Date(n.get('edited')) + ','+ '"' + JSON.stringify(n.get('meta')).replace(/"/g, '""') + '"'
-                + '\n';
-            }, '');
-            var deletedNotes = notebook.get('deletedNotes').reduce(function(txt, n) {
-                return txt + '"' + n.get('contents').replace(/"/g, '""') + '"' + ',TRUE,' 
-                + n.get('modified') + ',' + n.get('id') + ',' + n.get('version') + ',' + new Date(n.get('created')) + ','
-                + new Date(n.get('edited')) + ','+ '"' + JSON.stringify(n.get('meta')).replace(/"/g, '""') + '"'
-                + '\n';
-            }, '');
-            return CSVHeader + activeNotes + deletedNotes;
+            var noteArray=[];
+            noteArray.push(["Contents","Deleted","ID","Version","Created","Edited","Meta"]);
+            var convertCSV = function(isDeleted, n) {
+              return [_.str.q(n.get('contents').replace(/"/g, '""')),
+                isDeleted,
+                n.get('id'),
+                n.get('version'),
+                new Date(n.get('created')),
+                new Date(n.get('edited')),
+                _.str.q(JSON.stringify(n.get('meta')).replace(/"/g, '""'))];
+            };
+            noteArray.push.apply(noteArray, notebook.get('notes').map(_.partial(convertCSV, false)));
+            noteArray.push.apply(noteArray, notebook.get('deletedNotes').map(_.partial(convertCSV, true)));
+            return noteArray.join('\n') + '\n';
           }
         }
       },
