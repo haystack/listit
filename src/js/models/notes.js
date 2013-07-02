@@ -370,6 +370,7 @@
             var CSVHeader = ["Contents","Collection","Modified","ID","Version","Created","Edited","Meta"];
               var noteArray = [];
               var collectionArray = ["notes", "deletedNotes"];
+              noteArray.push(CSVHeader);
               for (var i = 0; i<collectionArray.length; i++) {
                 notebook.get(collectionArray[i]).reduce(function(txt, n) {                
                   var temp = ['"' + n.get('contents').replace(/"/g, '""') + '"', collectionArray[i],
@@ -378,12 +379,7 @@
                   noteArray.push(temp);
                 }, '');
               };
-              var newarray = [];
-              newarray.push(CSVHeader.join());
-              for (var i = 0; i<noteArray.length; i++) {
-              	newarray.push(noteArray[i].join());
-              }
-            return newarray.join('\n');
+            return noteArray.join('\n');
           }
         }
       },
