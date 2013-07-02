@@ -367,14 +367,17 @@
         csv: {
           display : 'CSV',
           exporter: function(notebook) {
-            var CSVHeader = ["Contents","Deleted","Modified","ID","Version","Created","Edited","Meta"];
+            var CSVHeader = ["Contents","Collection","Modified","ID","Version","Created","Edited","Meta"];
               var noteArray = [];
-              notebook.get('notes').reduce(function(txt, n) {                
-                var temp = ['"' + n.get('contents').replace(/"/g, '""') + '"', "false",
-                  n.get('modified'), n.get('id'), n.get('version'), new Date(n.get('created')),
-                  new Date(n.get('edited')), '"' + JSON.stringify(n.get('meta')).replace(/"/g, '""') + '"'];
-                noteArray.push(temp);
-              }, '');
+              var collectionArray = ["notes", "deletedNotes"];
+              for (var i = 0; i<collectionArray.length; i++) {
+                notebook.get(collectionArray[i]).reduce(function(txt, n) {                
+                  var temp = ['"' + n.get('contents').replace(/"/g, '""') + '"', collectionArray[i],
+                    n.get('modified'), n.get('id'), n.get('version'), new Date(n.get('created')),
+                    new Date(n.get('edited')), '"' + JSON.stringify(n.get('meta')).replace(/"/g, '""') + '"'];
+                  noteArray.push(temp);
+                }, '');
+              };
               var newarray = [];
               newarray.push(CSVHeader.join());
               for (var i = 0; i<noteArray.length; i++) {
