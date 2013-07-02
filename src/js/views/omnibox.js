@@ -92,7 +92,7 @@
         */
         _onSavePinClicked: function(event) {
           var contents = L.util.strip(this.editor.getText());
-          if (contents[0] != '!') {
+          if (contents[0] !== '!') {
             contents = '! ' + contents;
           }
           this.editor.setText(contents);
