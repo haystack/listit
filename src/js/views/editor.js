@@ -70,7 +70,7 @@
           if (evt)  {
             // It thinks it's propagating but it really isn't
             // Duplicate and edit.
-            var evt = $.event.fix(evt);
+            evt = $.event.fix(evt);
             evt.view = window;
             evt.target = that.el;
             that.$el.trigger(evt);
