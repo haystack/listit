@@ -69,9 +69,11 @@
           that._fixHeight();
           if (evt)  {
             // It thinks it's propagating but it really isn't
-            _.defer(function() {
-              that.el.dispatchEvent(evt);
-            });
+            // Duplicate and edit.
+            var evt = $.event.fix(evt);
+            evt.view = window;
+            evt.target = that.el;
+            that.$el.trigger(evt);
           } else {
             that.$el.trigger(type);
           }
