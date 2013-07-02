@@ -21,11 +21,11 @@
         var sel = '#'+n+'Field';
         var evt = 'change';
         switch(o.type) {
-          case 'hotkey':
-            evt = 'hotkey-changed';
+        case 'hotkey':
+          evt = 'hotkey-changed';
           break;
-          case 'boolean':
-            setView = function(m, v) {
+        case 'boolean':
+          setView = function(m, v) {
             if (v) {
               that.$el.find(sel).attr('checked', 'checked');
             } else {
@@ -36,8 +36,8 @@
             that.model.set(n, that.$el.find(sel).is(':checked'));
           };
           break;
-          case 'number':
-            setModel = function() {
+        case 'number':
+          setModel = function() {
             that.model.set(n, Number(that.$el.find(sel).val()));
           };
           break;

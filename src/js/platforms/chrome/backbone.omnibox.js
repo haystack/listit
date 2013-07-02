@@ -17,84 +17,84 @@
  **/
 
 (function() {
-    'use strict';
-    var _ = this._;
-    var Backbone = this.Backbone;
+  'use strict';
+  var _ = this._;
+  var Backbone = this.Backbone;
 
-    Backbone.ChromeOmniboxView = function(options) {
-        this.cid = _.uniqueId('view');
-        this._configure(options || {});
-        this.initialize.apply(this, arguments);
-        this.delegateEvents();
-    };
+  Backbone.ChromeOmniboxView = function(options) {
+    this.cid = _.uniqueId('view');
+    this._configure(options || {});
+    this.initialize.apply(this, arguments);
+    this.delegateEvents();
+  };
 
-    var eventMap = {
-        'change': 'onInputChanged',
-        'cancel': 'onInputCancelled',
-        'submit': 'onInputEntered',
-        'start': 'onInputStarted'
-    };
+  var eventMap = {
+    'change': 'onInputChanged',
+    'cancel': 'onInputCancelled',
+    'submit': 'onInputEntered',
+    'start': 'onInputStarted'
+  };
 
-    var viewOptions = ['model', 'collection', 'defaultSuggestion', 'omnibox'];
+  var viewOptions = ['model', 'collection', 'defaultSuggestion', 'omnibox'];
 
-    var getValue = function(object, prop) {
-        if (!(object && object[prop])) {
-            return null;
+  var getValue = function(object, prop) {
+    if (!(object && object[prop])) {
+      return null;
+    }
+    return _.isFunction(object[prop]) ? object[prop]() : object[prop];
+  };
+
+  // Too different to bother inheriting
+  _.extend(Backbone.ChromeOmniboxView.prototype, Backbone.Events, {
+    initialize : function() {},
+    _configure : function(options) {
+      if (this.options) {
+        options = _.extend({}, this.options, options);
+      }
+      var that = this;
+      _.each(viewOptions, function(option) {
+        if (options[option]) {
+          that[option] = options[option];
         }
-        return _.isFunction(object[prop]) ? object[prop]() : object[prop];
-    };
+      });
 
-    // Too different to bother inheriting
-    _.extend(Backbone.ChromeOmniboxView.prototype, Backbone.Events, {
-        initialize : function() {},
-        _configure : function(options) {
-            if (this.options) {
-                options = _.extend({}, this.options, options);
-            }
-            var that = this;
-            _.each(viewOptions, function(option) {
-                if (options[option]) {
-                    that[option] = options[option];
-                }
-            });
+      this.options = options;
 
-            this.options = options;
+      if (!this.omnibox) {
+        this.omnibox = chrome.omnibox;
+      }
 
-            if (!this.omnibox) {
-                this.omnibox = chrome.omnibox;
-            }
+      if (this.defaultSuggestion) {
+        this.omnibox.setDefaultSuggestion({description: this.defaultSuggestion});
+      }
+    },
+    delegateEvents: function(events) {
+      if (!(events || (events = getValue(this, 'events'))))  {
+        return;
+      }
 
-            if (this.defaultSuggestion) {
-                this.omnibox.setDefaultSuggestion({description: this.defaultSuggestion});
-            }
-        },
-        delegateEvents: function(events) {
-            if (!(events || (events = getValue(this, 'events'))))  {
-                return;
-            }
+      var that = this;
 
-            var that = this;
+      _.each(events, function(method, key) {
+        var evt = eventMap[key];
 
-            _.each(events, function(method, key) {
-                var evt = eventMap[key];
-
-                if (!evt) {
-                    throw new Error('Event "' + key + '" does not exist');
-                }
-
-                if (!_.isFunction(method)) {
-                    method = that[events[key]];
-                }
-
-                if (!method) {
-                    throw new Error('Method "' + events[key] + '" does not exist');
-                }
-
-                that.omnibox[evt].addListener(_.bind(method, that));
-            });
+        if (!evt) {
+          throw new Error('Event "' + key + '" does not exist');
         }
-    });
 
-    Backbone.ChromeOmniboxView.extend = Backbone.View.extend;
+        if (!_.isFunction(method)) {
+          method = that[events[key]];
+        }
+
+        if (!method) {
+          throw new Error('Method "' + events[key] + '" does not exist');
+        }
+
+        that.omnibox[evt].addListener(_.bind(method, that));
+      });
+    }
+  });
+
+  Backbone.ChromeOmniboxView.extend = Backbone.View.extend;
 
 }).call(this);

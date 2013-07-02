@@ -21,232 +21,232 @@
  * http://stackoverflow.com/questions/1125292/how-to-move-cursor-to-end-of-contenteditable-entity
  */
 (function(L) {
-    'use strict';
-    var keyStr = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
+  'use strict';
+  var keyStr = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
 
-    /***  Base64 encode / decode http://www.webtoolkit.info/ * **/
+  /***  Base64 encode / decode http://www.webtoolkit.info/ * **/
+
+  /**
+   * Public method for encoding a string.
+   * @param {string} string The string to encode.
+   * @return {string} utftext The encoded string.
+   */
+  var utfEncode = function(string)  {
+    var utftext = '';
+
+    string = string.replace(/\r\n/g,'\n');
+
+    for (var n = 0; n < string.length; n++) {
+      /*jshint bitwise: false*/
+      var c = string.charCodeAt(n);
+      if (c < 128) {
+        utftext += String.fromCharCode(c);
+      }
+      else if((c > 127) && (c < 2048)) {
+        utftext += String.fromCharCode((c >> 6) | 192);
+        utftext += String.fromCharCode((c & 63) | 128);
+      }
+      else {
+        utftext += String.fromCharCode((c >> 12) | 224);
+        utftext += String.fromCharCode(((c >> 6) & 63) | 128);
+        utftext += String.fromCharCode((c & 63) | 128);
+      }
+      /*jshint bitwise: true*/
+    }
+    return utftext;
+  };
+
+  /**
+   * Encodes string in base64.
+   * @param {string} input The string to encode.
+   * @return {string} output The encoded string.
+   */
+  var encodeBase =  function(input) {
+    var output = '';
+    var chr1, chr2, chr3, enc1, enc2, enc3, enc4;
+    var i = 0;
+    input = utfEncode(input);
+    while (i < input.length) {
+      chr1 = input.charCodeAt(i++);
+      chr2 = input.charCodeAt(i++);
+      chr3 = input.charCodeAt(i++);
+
+      /*jshint bitwise: false*/
+      enc1 = chr1 >> 2;
+      enc2 = ((chr1 & 3) << 4) | (chr2 >> 4);
+      enc3 = ((chr2 & 15) << 2) | (chr3 >> 6);
+      enc4 = chr3 & 63;
+      /*jshint bitwise: true*/
+
+      if (isNaN(chr2)) {
+        enc3 = enc4 = 64;
+      } else if (isNaN(chr3)) {
+        enc4 = 64;
+      }
+      output = output + keyStr.charAt(enc1) + keyStr.charAt(enc2) + keyStr.charAt(enc3) + keyStr.charAt(enc4);
+    }
+    return output;
+  };
+
+  L.util = {
+    setCursorAtEnd: function(contentEditableElement) {
+      var range,selection;
+      if (document.createRange) {//Firefox, Chrome, Opera, Safari, IE 9+
+        //Create a range (a range is a like the selection but invisible)
+        range = document.createRange();
+
+        //Select the entire contents of the element with the range
+        range.selectNodeContents(contentEditableElement);
+        range.collapse(false); //collapse the range to the end point.
+        //false means collapse to end rather than the start
+
+        //get the selection object (allows you to change selection)
+        selection = window.getSelection();
+        selection.removeAllRanges(); //remove any selections already made
+        //make the range you have just created the visible selection
+        selection.addRange(range);
+
+      } else if(document.selection) {//IE 8 and lower
+        //Create a range (a range is a like the selection but invisible)
+        range = document.body.createTextRange();
+        //Select the entire contents of the element with the range
+        range.moveToElementText(contentEditableElement);
+        //collapse the range to the end point. false means collapse to end rather than the start
+        range.collapse(false);
+        range.select();//Select the range (make it the visible selection
+      }
+    },
 
     /**
-    * Public method for encoding a string.
-    * @param {string} string The string to encode.
-    * @return {string} utftext The encoded string.
-    */
-    var utfEncode = function(string)  {
-        var utftext = '';
+     * Returns hashpass from email and password combo.
+     * @param {string} email The user's email address.
+     * @param {string} password The user's password.
+     */
+    makeHashpass: function(email, password) {
+      return encodeURIComponent('Basic ' + encodeBase(email + ':' + password));
+    },
 
-        string = string.replace(/\r\n/g,'\n');
 
-        for (var n = 0; n < string.length; n++) {
-            /*jshint bitwise: false*/
-            var c = string.charCodeAt(n);
-            if (c < 128) {
-                utftext += String.fromCharCode(c);
-            }
-            else if((c > 127) && (c < 2048)) {
-                utftext += String.fromCharCode((c >> 6) | 192);
-                utftext += String.fromCharCode((c & 63) | 128);
-            }
-            else {
-                utftext += String.fromCharCode((c >> 12) | 224);
-                utftext += String.fromCharCode(((c >> 6) & 63) | 128);
-                utftext += String.fromCharCode((c & 63) | 128);
-            }
-            /*jshint bitwise: true*/
-        }
-        return utftext;
-    };
+    isTrue: function(input) {
+      if (typeof(input) === 'string') {
+        input = input.toLowerCase();
+        return input === 'true' || input === 'yes' || input === '1';
+      } else {
+        return input ? true : false;
+      }
+    },
+
+    // Slides 'hide' out and 'show' in calling 'cb' once on completion.
+    slideSwitch: function(hide, show, cb) {
+      hide = hide || $();
+      show = show || $();
+      cb = cb ? _.after(show.length+hide.length, cb) : $.noop;
+      show.not(':visible').stop(true, true).fadeIn({queue: false}).not('.noslide').css('display', 'none').slideDown(cb);
+      hide.stop(true, true).fadeOut({queue: false}).not('.noslide').slideUp(cb);
+    },
 
     /**
-    * Encodes string in base64.
-    * @param {string} input The string to encode.
-    * @return {string} output The encoded string.
-    */
-    var encodeBase =  function(input) {
-        var output = '';
-        var chr1, chr2, chr3, enc1, enc2, enc3, enc4;
-        var i = 0;
-        input = utfEncode(input);
-        while (i < input.length) {
-            chr1 = input.charCodeAt(i++);
-            chr2 = input.charCodeAt(i++);
-            chr3 = input.charCodeAt(i++);
+     * Extracts search terms from `text`. Returns null if `text` consists
+     * only of whitespace.
+     *
+     * Input:  ' my   "search terms" -your -"bad terms" '
+     * Output: {
+     *           positive: [ 'my', 'search terms'],
+     *           negative: [ 'your', 'bad terms']
+     *         }
+     *
+     **/
+    extractTerms: function(text) {
+      text = _.str.trim(text);
+      if (text.length === 0) {
+        return null;
+      }
 
-            /*jshint bitwise: false*/
-            enc1 = chr1 >> 2;
-            enc2 = ((chr1 & 3) << 4) | (chr2 >> 4);
-            enc3 = ((chr2 & 15) << 2) | (chr3 >> 6);
-            enc4 = chr3 & 63;
-            /*jshint bitwise: true*/
+      var terms = text.match(/[^\s",]+|"[^"]+"/g),
+          negativeTerms = [],
+          positiveTerms = [],
+          term;
 
-            if (isNaN(chr2)) {
-                enc3 = enc4 = 64;
-            } else if (isNaN(chr3)) {
-                enc4 = 64;
-            }
-            output = output + keyStr.charAt(enc1) + keyStr.charAt(enc2) + keyStr.charAt(enc3) + keyStr.charAt(enc4);
+      for (var i = 0; i < terms.length; i++) {
+        term = _.str.trim(terms[i]);
+        if (term[0] === '-') {
+          term = _.str.trim(term.substring(1), '"').toLowerCase();
+          if (term.length > 0) {
+            negativeTerms.push(term);
+          }
+        } else {
+          term = _.str.trim(term, '"').toLowerCase();
+          if (term.length > 0) {
+            positiveTerms.push(term);
+          }
         }
-        return output;
-    };
+      }
 
-    L.util = {
-        setCursorAtEnd: function(contentEditableElement) {
-            var range,selection;
-            if (document.createRange) {//Firefox, Chrome, Opera, Safari, IE 9+
-                //Create a range (a range is a like the selection but invisible)
-            range = document.createRange();
+      return {
+        positive: positiveTerms,
+        negative: negativeTerms
+      };
+    },
 
-            //Select the entire contents of the element with the range
-            range.selectNodeContents(contentEditableElement);
-            range.collapse(false); //collapse the range to the end point.
-            //false means collapse to end rather than the start
-
-            //get the selection object (allows you to change selection)
-            selection = window.getSelection();
-            selection.removeAllRanges(); //remove any selections already made
-            //make the range you have just created the visible selection
-            selection.addRange(range);
-
-            } else if(document.selection) {//IE 8 and lower
-                //Create a range (a range is a like the selection but invisible)
-                range = document.body.createTextRange();
-                //Select the entire contents of the element with the range
-                range.moveToElementText(contentEditableElement);
-                //collapse the range to the end point. false means collapse to end rather than the start
-                range.collapse(false);
-                range.select();//Select the range (make it the visible selection
-            }
-        },
-
-        /**
-        * Returns hashpass from email and password combo.
-        * @param {string} email The user's email address.
-        * @param {string} password The user's password.
-        */
-        makeHashpass: function(email, password) {
-            return encodeURIComponent('Basic ' + encodeBase(email + ':' + password));
-        },
-
-
-        isTrue: function(input) {
-            if (typeof(input) === 'string') {
-                input = input.toLowerCase();
-                return input === 'true' || input === 'yes' || input === '1';
-            } else {
-                return input ? true : false;
-            }
-        },
-
-        // Slides 'hide' out and 'show' in calling 'cb' once on completion.
-        slideSwitch: function(hide, show, cb) {
-            hide = hide || $();
-            show = show || $();
-            cb = cb ? _.after(show.length+hide.length, cb) : $.noop;
-            show.not(':visible').stop(true, true).fadeIn({queue: false}).not('.noslide').css('display', 'none').slideDown(cb);
-            hide.stop(true, true).fadeOut({queue: false}).not('.noslide').slideUp(cb);
-        },
-
-        /**
-        * Extracts search terms from `text`. Returns null if `text` consists
-        * only of whitespace.
-        *
-        * Input:  ' my   "search terms" -your -"bad terms" '
-        * Output: {
-        *           positive: [ 'my', 'search terms'],
-        *           negative: [ 'your', 'bad terms']
-        *         }
-        *
-        **/
-        extractTerms: function(text) {
-            text = _.str.trim(text);
-            if (text.length === 0) {
-                return null;
-            }
-
-            var terms = text.match(/[^\s",]+|"[^"]+"/g),
-                negativeTerms = [],
-                positiveTerms = [],
-                term;
-
-            for (var i = 0; i < terms.length; i++) {
-                term = _.str.trim(terms[i]);
-                if (term[0] === '-') {
-                    term = _.str.trim(term.substring(1), '"').toLowerCase();
-                    if (term.length > 0) {
-                        negativeTerms.push(term);
-                    }
-                } else {
-                    term = _.str.trim(term, '"').toLowerCase();
-                    if (term.length > 0) {
-                        positiveTerms.push(term);
-                    }
-                }
-            }
-
-            return {
-                positive: positiveTerms,
-                negative: negativeTerms
-            };
-        },
-
-        /**
-        * Matches the given terms object against text.
-        * Returns true if terms is null.
-        **/
-        matchTerms: function(terms, text) {
-            return !terms || _.all(terms.negative, function(term) {
-                return text.indexOf(term) < 0;
-            }) && _.all(terms.positive, function(term) {
-                return text.indexOf(term) >= 0;
-            });
-        },
-        /**
-         * Remove html from text.
-         **/
-        clean: function(text) {
-          text = _.str.stripTags(text);
-          text = text.replace('&nbsp;', ' ');
-          text = _.str.unescapeHTML(text);
-          return text;
-        },
-        /**
-         * Strip breaks/spaces/etc. from the ends of a string.
-         **/
-        strip: function(text) {
-          text = text.replace(/^(<\/?br\s*>|<br\s*\/?>|&nbsp;|\s)+/, '');
-          text = text.replace(/(<\/?br\s*>|<br\s*\/?>|&nbsp;|\s)+$/, '');
-          return text;
-        }
-    };
+    /**
+     * Matches the given terms object against text.
+     * Returns true if terms is null.
+     **/
+    matchTerms: function(terms, text) {
+      return !terms || _.all(terms.negative, function(term) {
+        return text.indexOf(term) < 0;
+      }) && _.all(terms.positive, function(term) {
+        return text.indexOf(term) >= 0;
+      });
+    },
+    /**
+     * Remove html from text.
+     **/
+    clean: function(text) {
+      text = _.str.stripTags(text);
+      text = text.replace('&nbsp;', ' ');
+      text = _.str.unescapeHTML(text);
+      return text;
+    },
+    /**
+     * Strip breaks/spaces/etc. from the ends of a string.
+     **/
+    strip: function(text) {
+      text = text.replace(/^(<\/?br\s*>|<br\s*\/?>|&nbsp;|\s)+/, '');
+      text = text.replace(/(<\/?br\s*>|<br\s*\/?>|&nbsp;|\s)+$/, '');
+      return text;
+    }
+  };
 })(ListIt);
 
 (function($) {
-    'use strict';
-    $.fn.enableFields = function() {
-        this.filter('input').removeAttr('disabled');
-        this.find('input').removeAttr('disabled');
-        return this;
-    };
+  'use strict';
+  $.fn.enableFields = function() {
+    this.filter('input').removeAttr('disabled');
+    this.find('input').removeAttr('disabled');
+    return this;
+  };
 
-    $.fn.disableFields = function() {
-        this.filter('input').attr('disabled', 'disabled');
-        this.find('input').attr('disabled', 'disabled');
-        return this;
-    };
-    $.fn.scrollIntoView = function(toShow, toScroll) {
-        toScroll = toScroll || toShow.parent();
-        var offset = toShow.position().top - toScroll.position().top;
-        if (this.position().top + this.innerHeight() > toShow.position().top + toShow.outerHeight() + 5) {
-            this.scrollTop(offset - 5);
-        } else {
-            this.scrollTop(offset - this.innerHeight() + toShow.outerHeight() + 5);
-        }
+  $.fn.disableFields = function() {
+    this.filter('input').attr('disabled', 'disabled');
+    this.find('input').attr('disabled', 'disabled');
+    return this;
+  };
+  $.fn.scrollIntoView = function(toShow, toScroll) {
+    toScroll = toScroll || toShow.parent();
+    var offset = toShow.position().top - toScroll.position().top;
+    if (this.position().top + this.innerHeight() > toShow.position().top + toShow.outerHeight() + 5) {
+      this.scrollTop(offset - 5);
+    } else {
+      this.scrollTop(offset - this.innerHeight() + toShow.outerHeight() + 5);
+    }
 
-        return this;
-    };
+    return this;
+  };
 
-    $.fn.cut = function(selector) {
-        this.find(selector).contents().unwrap();
-        this.find(selector).remove();
-        return this;
-    };
+  $.fn.cut = function(selector) {
+    this.find(selector).contents().unwrap();
+    this.find(selector).remove();
+    return this;
+  };
 })(jQuery);

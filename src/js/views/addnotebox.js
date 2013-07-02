@@ -24,15 +24,15 @@
       event = event || window.event;
       keyCode = event.keyCode || event.which;
       switch(keyCode) {
-        case KeyCode.ENTER:
-          if (event.shiftKey) {
-            this._onSaveClicked();
-            event.preventDefault(); // Let model update
-          }
-          break;
-        case KeyCode.ESC:
-          this._onCloseClicked();
-          break;
+      case KeyCode.ENTER:
+        if (event.shiftKey) {
+          this._onSaveClicked();
+          event.preventDefault(); // Let model update
+        }
+        break;
+      case KeyCode.ESC:
+        this._onCloseClicked();
+        break;
       }
     },
     _onSaveClicked: function() {
