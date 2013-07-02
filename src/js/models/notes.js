@@ -368,16 +368,25 @@
           display : 'CSV',
           exporter: function(notebook) {
             var noteArray = [];
-            var collectionArray = ["notes", "deletedNotes"];
-            noteArray.push(["Contents","Collection","Modified","ID","Version","Created","Edited","Meta"]);
-            for (var i = 0; i<collectionArray.length; i++) {
-              notebook.get(collectionArray[i]).reduce(function(txt, n) {                
-                noteArray.push(['"' + n.get('contents').replace(/"/g, '""') + '"', collectionArray[i],
-                  n.get('modified'), n.get('id'), n.get('version'), new Date(n.get('created')),
-                  new Date(n.get('edited')), '"' + JSON.stringify(n.get('meta')).replace(/"/g, '""') + '"']);
-              }, '');
-            };
-            return noteArray.join('\n');
+            noteArray.push(["Contents","Deleted","Modified","ID","Version","Created","Edited","Meta"]);
+            var convertCSV = function(collection) {
+              var nb = notebook.get(collection);
+              var isDel = false;
+              if (collection == "deletedNotes") {isDel= true;}
+              nb.map(function(n) {
+                noteArray.push([_.str.q(n.get('contents').replace(/"/g, '""')), 
+                  isDel,
+                  n.get('modified'),
+                  n.get('id'),
+                  n.get('version'),
+                  new Date(n.get('created')),
+                  new Date(n.get('edited')),
+                  _.str.q(JSON.stringify(n.get('meta')).replace(/"/g, '""'))]);
+            	});
+            }
+            convertCSV("notes");
+            convertCSV("deletedNotes");
+            return noteArray.join('\n') + '\n';
           }
         }
       },
