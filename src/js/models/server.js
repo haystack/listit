@@ -64,9 +64,9 @@
           return;
         }
         if (registered) {
-          that._resume();
+          that.resume();
         } else {
-          that._pause();
+          that.pause();
         }
       });
 
