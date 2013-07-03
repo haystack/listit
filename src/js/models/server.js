@@ -480,13 +480,15 @@
         cache: false,
         authToken: hashpass,
         success: function(response) {
-          that.set({
-            studies: _.kmap(_.omit(response, "code"), function(v) { return v !== 0; }),
-            email: email,
-            registered: true,
-            error: undefined
+          // Don't change state really done.
+          L.authmanager.setToken(hashpass, function() {
+            that.set({
+              studies: _.kmap(_.omit(response, "code"), function(v) { return v !== 0; }),
+              email: email,
+              registered: true,
+              error: undefined
+            });
           });
-          L.authmanager.setToken(hashpass);
         },
         error: function(jqXHR) {
           if (jqXHR.status === 401) {
@@ -519,13 +521,14 @@
         },
         cache: false,
         success: function(response) {
-          that.set({
-            studies: _.kmap(_.omit(response, "code"), function(v) { return v !== 0; }),
-            registered: true,
-            error: undefined,
-            email: email
+          L.authmanager.setToken(L.util.makeHashpass(email, password), function() {
+            that.set({
+              studies: _.kmap(_.omit(response, "code"), function(v) { return v !== 0; }),
+              registered: true,
+              error: undefined,
+              email: email
+            });
           });
-          L.authmanager.setToken(L.util.makeHashpass(email, password));
         },
         error: function() {
           that.set('error', 'Failed to register user.');
@@ -564,14 +567,20 @@
      *
      * This method doesn't only needs to be made available to the authentication agent.
      */
-    setToken: function(token) {
+    setToken: function(token, callback) {
       this.ready(function() {
         this.set('hashpass', token);
+        if (callback) {
+          callback();
+        }
       });
     },
-    unsetToken: function() {
+    unsetToken: function(callback) {
       this.ready(function() {
         this.unset('hashpass');
+        if (callback) {
+          callback();
+        }
       });
     }
   });

@@ -35,16 +35,22 @@ var getToken = function(callback) {
   }
 };
 
-var unsetToken = function() {
+var unsetToken = function(callback) {
   var login = getLogin();
   if (login) {
     loginManager.removeLogin(login);
   }
+  if (callback) {
+    callback();
+  }
 };
 
-var setToken = function(token) {
+var setToken = function(token, callback) {
   unsetToken();
   loginManager.addLogin(new LoginInfo(domain, null, realm, '', token, '', ''));
+  if (callback) {
+    callback();
+  }
 };
 
 // Keep the internal rep separate from the exposed interface. No way for the
