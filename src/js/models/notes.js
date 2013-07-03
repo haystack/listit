@@ -114,7 +114,7 @@
       options = options || {};
       var orderMap = _.invert(newOrder),
           posCounter = 0,
-      appendOffset = this.models.length;
+          appendOffset = this.models.length;
 
       this.models.sort(function(note) {
         var pos = orderMap[note.id];
@@ -129,6 +129,12 @@
       if (!options.silent) {
         this.trigger('sort', this, options);
       }
+    },
+    // Reinsert a note in it's sorted position
+    reinsert: function(note) {
+      this.remove(note);
+      var idx = this.sortedIndex(note);
+      this.add(note, {at: idx});
     },
     /**
      * Get the list of in-order note IDs.
@@ -286,8 +292,24 @@
     initialized: function() {
       var that = this;
       var debouncedSave = _.debounce(_.bind(that.save, that), 100);
+      // No need to add this early.
+      // Ensures that pinned notes go on top.
+      this.get('notes').comparator = function(note) {
+        return note.get('meta').pinned ? 0 : 1;
+      };
+
+      // Re-insert note on pinned change.
+      this.listenTo(this.get('notes'), 'change:meta', function(note, meta) {
+        var pMeta = note.previous('meta');
+        if (meta.pinned !== pMeta.pinned) {
+          _.defer(function() {
+            note.collection.reinsert(note);
+          });
+        }
+      });
+
       _.each(that.relations, function(v, k) {
-        that.get(k).on('add remove', function(model, collection, options) {
+        that.listenTo(that.get(k), 'add remove', function(model, collection, options) {
           if (!(options && options.nosave)) {
             debouncedSave();
           }
@@ -427,15 +449,21 @@
       }
     },
     createNote: function(obj, window, options) {
+      var notes = this.get('notes');
       var note = new L.models.Note(obj, options);
-      var noteJSON = note.toJSON();
 
+      // Metadata
+      var noteJSON = note.toJSON();
       // TODO: This should use a different event
       // TODO: Move this into the collection. Call when NEW (unsaved) note is added.
       L.gvent.trigger("note:request:parse note:request:parse:new", noteJSON, window);
       note.set(noteJSON);
       note.save();
-      this.get('notes').unshift(note, options);
+
+      // Gets first insertable position (will add to top).
+      // Insert
+      var idx = notes.sortedIndex(note);
+      notes.add(note, {at: idx});
       this.trigger("create", note);
       return note;
     },

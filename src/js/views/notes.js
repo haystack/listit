@@ -370,7 +370,7 @@
         var collection = this.collection.backingCollection;
         ul.sortable({
           distance: 10,
-          items: '.note',
+          items: '.note:not(.pinned)',
           containment: 'parent',
           stop: function(event, ui) {
             var noteId = ui.item.attr('data-note');
