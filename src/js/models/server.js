@@ -136,7 +136,8 @@
         (options.type === 'POST' ? '/' : '') +
         (options.auth ? ('?HTTP_AUTHORIZATION=' + options.authToken) : '');
 
-      options.crossDomain = true;
+      options.crossDomain = false; // Force same domain
+
       $.ajax(options);
     },
     syncNotes : function() {
