@@ -112,17 +112,19 @@
      **/
     setOrder: function(newOrder, options) {
       options = options || {};
-      var orderMap = _.invert(newOrder),
+      var orderMap = _.kmap(_.invert(newOrder), _.mask(parseInt, 0)),
           posCounter = 0,
-          appendOffset = this.models.length;
 
-      this.models.sort(function(note) {
-        var pos = orderMap[note.id];
+      appendOffset = this.models.length;
+      console.log(orderMap);
+      this.models = _.sortBy(this.models, function(note) {
+        var pos = orderMap[note.attributes.id];
         // Put the note at the beginning if position unknown.
-        //console.log(pos + " " + note.contents;
         if (pos === undefined) {
+          console.log(posCounter + 1, note.attributes.id, "notinlist");
           return posCounter++;
         } else {
+          console.log(pos + appendOffset, note.attributes.id, note.attributes.contents);
           return pos + appendOffset;
         }
       });
