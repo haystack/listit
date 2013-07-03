@@ -27,10 +27,39 @@
         </subant>
     </target>
 
-    <target name="clean">
-        <delete dir="${base-build.dir}" />
-        <delete dir="${base-deploy.dir}" />
+    <target name="clean" depends="-clean.windows,-clean.unix"/>
+
+    <!-- Needs to be separate to handle links (junctions) correctly -->
+    <!-- DO NOT REMOVE -->
+    <target name="-clean.windows" if="-platform-windows">
+      <for param="dir">
+        <filelist refid="tmpdirs" />
+        <sequential>
+          <if>
+            <available file="@{dir}"/>
+            <then>
+              <exec resolveexecutable="true" executable="cmd.exe">
+                <arg value="/C"/>
+                <arg value="rmdir"/>
+                <arg value="@{dir}"/>
+                <arg value="/s"/>
+                <arg value="/q"/>
+              </exec>
+            </then>
+          </if>
+        </sequential>
+      </for>
     </target>
 
+    <target name="-clean.unix" if="-platform-unix">
+      <for param="dir">
+        <filelist refid="tmpdirs" />
+        <sequential>
+          <delete includeemptydirs="true" removeNotFollowedSymlinks="true" verbose="true">
+            <fileset erroronmissingdir="false" followsymlinks="false" dir="@{dir}" includes="**/*" />
+          </delete>
+        </sequential>
+      </for>
+    </target>
 
 </project>

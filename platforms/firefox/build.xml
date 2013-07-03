@@ -110,12 +110,12 @@
         <copy todir="${debug.dir}">
             <fileset dir="${build.dir}" includes="**"/>
         </copy>
-        <symlink overwrite="yes" link="${debug.dir}/chrome/content/extension" resource="${platform.dir}/resources/content" />
-        <symlink overwrite="yes" link="${debug.dir}/chrome/content/webapp/js" resource="${listit.js.dir}" />
-        <symlink overwrite="yes" link="${debug.dir}/chrome/content/webapp/img" resource="${listit.img.dir}" />
-        <symlink overwrite="yes" link="${debug.dir}/chrome/content/webapp/css" resource="${listit.css.dir}" />
-        <symlink overwrite="yes" link="${debug.dir}/chrome/skin" resource="${platform.dir}/resources/skin" />
-        <symlink overwrite="yes" link="${debug.dir}/chrome/locale" resource="${platform.dir}/resources/locale" />
+        <link overwrite="yes" link="${debug.dir}/chrome/content/extension" resource="${platform.dir}/resources/content" />
+        <link overwrite="yes" link="${debug.dir}/chrome/content/webapp/js" resource="${listit.js.dir}" />
+        <link overwrite="yes" link="${debug.dir}/chrome/content/webapp/img" resource="${listit.img.dir}" />
+        <link overwrite="yes" link="${debug.dir}/chrome/content/webapp/css" resource="${listit.css.dir}" />
+        <link overwrite="yes" link="${debug.dir}/chrome/skin" resource="${platform.dir}/resources/skin" />
+        <link overwrite="yes" link="${debug.dir}/chrome/locale" resource="${platform.dir}/resources/locale" />
     </target>
 </project>
 

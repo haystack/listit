@@ -5,6 +5,14 @@
         <equals arg1="${build.target}" arg2="release" />
     </condition>
 
+    <condition property="-platform-windows">
+      <os family="windows" />
+    </condition>
+
+    <condition property="-platform-unix">
+      <os family="unix" />
+    </condition>
+
 
     <property name="tools.dir" location="${root.dir}/tools" />
     <property name="tools.yuicompressor" location="${tools.dir}/yuicompressor-2.4.7.jar" />

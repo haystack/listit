@@ -19,5 +19,11 @@
     <property name="base-platform.dir" location="${root.dir}/platforms" />
     <property name="base-deploy.dir" location="${root.dir}/release" />
 
+    <filelist id="tmpdirs">
+      <file name="${base-deploy.dir}" />
+      <file name="${base-debug.dir}" />
+      <file name="${base-build.dir}" />
+    </filelist>
+
 </project>
 <!-- vim: set ft=ant: -->

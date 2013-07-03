@@ -44,9 +44,9 @@
                 <file name="options.html" />
             </filelist>
         </copy>
-        <symlink overwrite="yes" link="${debug.dir}/js" resource="${listit.dir}/js" />
-        <symlink overwrite="yes" link="${debug.dir}/css" resource="${listit.dir}/css" />
-        <symlink overwrite="yes" link="${debug.dir}/img" resource="${listit.dir}/img" />
+        <link overwrite="yes" link="${debug.dir}/js" resource="${listit.dir}/js" />
+        <link overwrite="yes" link="${debug.dir}/css" resource="${listit.dir}/css" />
+        <link overwrite="yes" link="${debug.dir}/img" resource="${listit.dir}/img" />
         -->
     </target>
 

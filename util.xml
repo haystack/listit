@@ -2,6 +2,60 @@
 <project name="util">
     <taskdef resource="net/sf/antcontrib/antlib.xml"/>
     <dirname property="root.dir" file="${ant.file.util}" />
+    <macrodef name="link">
+        <attribute name="overwrite"/>
+        <attribute name="link"/>
+        <attribute name="resource"/>
+        <!-- Convert paths -->
+        <sequential>
+          <local name="link"/>
+          <property name="link" location="@{link}"/>
+          <local name="resource"/>
+          <property name="resource" location="@{resource}"/>
+          <if>
+              <os family="windows" />
+              <then>
+                  <if>
+                      <and>
+                          <or>
+                              <istrue value="${overwrite}" />
+                              <not>
+                                  <available file="${link}"/>
+                              </not>
+                          </or>
+                          <available file="${resource}"/>
+                      </and>
+                      <then>
+                          <if>
+                              <available file="${resource}" type="dir"/>
+                              <then>
+                                  <exec resolveexecutable="true" executable="cmd.exe">
+                                      <arg value="/C"/>
+                                      <arg value="mklink"/>
+                                      <arg value="/J"/>
+                                      <arg value="${link}"/>
+                                      <arg value="${resource}"/>
+                                  </exec>
+                              </then> 
+                              <else>
+                                  <exec resolveexecutable="true" executable="cmd.exe">
+                                      <arg value="/C"/>
+                                      <arg value="mklink"/>
+                                      <arg value="/H"/>
+                                      <arg value="${link}"/>
+                                      <arg value="${resource}"/>
+                                  </exec>
+                              </else>
+                          </if>
+                      </then>
+                  </if>
+              </then>
+              <else>
+                  <symlink overwrite="${overwrite}" link="${link}" resource="${resource}" />
+              </else>
+          </if>
+        </sequential>
+    </macrodef>
     <macrodef name="jsonpath">
         <attribute name="property" />
         <attribute name="prefix" default="" />

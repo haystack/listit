@@ -14,6 +14,11 @@
     <include file="${root.dir}/resources.xml" />
     <include optional="true" file="${platform.dir}/resources.xml" />
 
+    <condition property="-exists-build.dir">
+      <available file="${build.dir}"/>
+    </condition>
+
+
     <macrodef name="deploy-resource">
         <attribute name="name"/>
         <sequential><parallel>
@@ -121,10 +126,24 @@
 
     <target name="-build.setup" depends="clean,mkdirs,compile-templates,jshint" />
 
-    <target name="clean">
-        <delete includeemptydirs="true">
-            <fileset erroronmissingdir="false" followsymlinks="false" dir="${debug.dir}" includes="**" />
-            <fileset erroronmissingdir="false" followsymlinks="false" dir="${build.dir}" includes="**" />
-        </delete>
+    <target name="clean" if="-exists-build.dir" depends="-clean.windows,-clean.unix"/>
+
+    <!-- Needs to be separate to handle links (junctions) correctly -->
+    <!-- DO NOT REMOVE -->
+    <target name="-clean.windows" if="-platform-windows">
+      <exec resolveexecutable="true" executable="cmd.exe">
+        <arg value="/C"/>
+        <arg value="rmdir"/>
+        <arg value="${build.dir}"/>
+        <arg value="/s"/>
+        <arg value="/q"/>
+      </exec>
     </target>
+
+    <target name="-clean.unix" if="-platform-unix">
+      <delete verbose="true" includeemptydirs="true" removeNotFollowedSymlinks="true">
+        <fileset erroronmissingdir="false" followsymlinks="false" dir="${build.dir}" includes="**/*" />
+      </delete>
+    </target>
+
 </project>
