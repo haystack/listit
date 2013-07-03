@@ -137,6 +137,7 @@
         (options.auth ? ('?HTTP_AUTHORIZATION=' + options.authToken) : '');
 
       options.crossDomain = false; // Force same domain
+      options.jsonp = false; // Don't ever use jsonp XXX JQUERY BUG
 
       $.ajax(options);
     },
