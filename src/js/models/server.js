@@ -424,11 +424,11 @@
 
       // FIXME: don't necessarily clobber order.
       if (magic) {
-        if (magic.order) {
-          L.notebook.get('notes').setOrder(magic.order);
+        if (magic.noteorder) {
+          L.notebook.get('notes').setOrder(magic.noteorder);
         }
         if (magic.version) {
-          L.notebook.set('version');
+          L.notebook.set('version', magic.version);
         }
       }
 

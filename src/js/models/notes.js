@@ -119,6 +119,7 @@
       this.models.sort(function(note) {
         var pos = orderMap[note.id];
         // Put the note at the beginning if position unknown.
+        //console.log(pos + " " + note.contents;
         if (pos === undefined) {
           return posCounter++;
         } else {
