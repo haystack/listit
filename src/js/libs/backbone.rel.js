@@ -25,12 +25,11 @@
       if (!this._relationsInited) {
         this.initializeRelations();
       }
-      // DO NOT PASS OPTIONS (will cause wierd behavior, multiple fetching, etc...)
       _.each(_.pick(attributes, _.keys(this.relations)), function(value, key) {
         if (value instanceof Backbone.Model || value instanceof Backbone.Collection) {
           that.set(key, value, options);
         } else if (_.isArray(value)) {
-          that.get(key).set(_.map(value, _.bind(that._initRelObject, that, key)), options);
+          that.get(key).set(_.map(value, _.bind(that._initRelObject, that, key)), _.defaults({sort: false}, options));
         } else {
           that.get(key).set(that._initRelObject(key, value), options);
         }
