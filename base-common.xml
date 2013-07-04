@@ -18,9 +18,14 @@
     <property name="tools.yuicompressor" location="${tools.dir}/yuicompressor-2.4.7.jar" />
     <property name="tools.underscore" location="${tools.dir}/underscore.js" />
     <property name="tools.jshint" location="${tools.dir}/ant-jshint-0.3.6-SNAPSHOT-deps.jar" />
+    <property name="tools.jstest" location="${tools.dir}/ant-jstestrunner-0.1-deps.jar" />
 
     <taskdef name="jshint" classname="com.philmander.jshint.JsHintAntTask" 
         classpath="${tools.jshint}" />
+
+    <taskdef name="jstesttest"
+        classname="com.philmander.jstest.ant.JsTestRunnerTask"
+        classpath="${tools.jstest}" />
 
     <!-- Properties -->
     <property file="${root.dir}/global.properties" />
@@ -51,5 +56,13 @@
             <exclude name="defines-debug.js" />
             <exclude name="libs/**" />
         </jshint>
+    </target>
+
+    <target name="test">
+        <jstest dir="${listit.tests.dir}"
+            includes="**/*.html"
+            phantomWin="${tools.dir}/windows/phantom.exe"
+            phantomMac="${tools.dir}/mac/phantom"
+            phantomLinux="phantom" />
     </target>
 </project>

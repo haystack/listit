@@ -317,8 +317,9 @@ It's a mess but that describes pretty much every build system.
 ### Requirements
 
 To build list.it, you need both [Apache Ant](https://ant.apache.org/) and
-[Ant Contrib](http://ant-contrib.sourceforge.net/). Everything
-else is included.
+[Ant Contrib](http://ant-contrib.sourceforge.net/). If you are running Windows
+or Mac OS X, that's all you need. On Linux, you will need to install PhantomJS
+with your package manager.
 
 ### Release Builds
 
