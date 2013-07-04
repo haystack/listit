@@ -3,10 +3,11 @@
 List.it is a cross platform note-taking application. It uses
 [Backbone.js](http://backbonejs.org) to manage it's views, models, and
 collections; [jQuery](http://jquery.com) for DOM manipulation;
-[Underscore.js](http://underscorejs.org) for utility functions; a
-[fork](https://github.com/Stebalien/wysihtml5) of
-[wysihtml5](http://xing.github.io/wysihtml5/) for rich-text input; and Apache Ant as
-it's build system.
+[Underscore.js](http://underscorejs.org) and
+[Underscore.string](http://epeli.github.io/underscore.string/) for utility
+functions; a [fork](https://github.com/Stebalien/wysihtml5) of
+[wysihtml5](http://xing.github.io/wysihtml5/) for rich-text input; and Apache
+Ant as it's build system.
 
 At it's core, List.it is a platform independent webapp however, platform
 specific functionality can be added by overriding built-in functions/classes
@@ -15,6 +16,32 @@ into the core application, instead it should be placed in the correct platform
 folder and be hooked in by the build system.
 
 For more information, see: [welist.it](https://welist.it/)
+
+## Coding Style
+
+List.it uses the JSHint static code checker. Please check your code before
+commit to avoid common JavaScript pitfalls.
+
+This project uses 2 space indents, does not insert newlines before/after braces,
+uses mixedCase for variable names, and CamelCase for class names:
+```js
+var myFunction = function(a, b) {
+  if (a > b) {
+    return 1;
+  } else if (b > a) {
+    return -1;
+  } else if (a === b) {
+    return 0;
+  } else {
+    throw new Error("Invalid Comparison");
+  }
+}
+
+var MyClass = function() {};
+```
+
+Also, even if slightly less efficient, please prefer Underscore and
+Underscore.string functions where appropriate for readability and consistency.
 
 ## Library modifications
 
