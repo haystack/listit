@@ -385,6 +385,11 @@
     },
     unbundleNotes: function(result) {
       var magic;
+      var newVersion;
+      var notes = L.notebook.get('notes');
+      var deletedNotes = L.notebook.get('deletedNotes');
+      var toAdd = [];
+      var toAddDeleted = [];
       // Update changed
       _.chain(result)
       .pluck("fields")
@@ -393,6 +398,7 @@
         if (n.id < 0) {
           if (L.notebook.get('version') < n.version) {
             magic = JSON.parse(n.contents);
+            newVersion = n.version;
           }
           return false;
         } else {
@@ -408,30 +414,43 @@
               note.merge(n);
               // On merge, only undelete (safest)
               if (!deleted) {
-                note.moveTo(L.notebook.get('notes'), {nosave: true});
+                note.moveTo(notes, {nosave: true});
               }
             } else {
               note.set(n, {nomodify: true});
               // delete/undelete based on latest version.
-              note.moveTo(L.notebook.get(deleted ? 'deletedNotes' : 'notes'), {nosave: true});
+              note.moveTo(deleted ? deletedNotes : notes, {nosave: true});
             }
             note.save();
           }
         } else {
-          L.notebook.get(deleted ? 'deletedNotes' : 'notes').create(n, {nosave: true});
+          (deleted ? toAddDeleted : toAdd).push(new L.models.Note(n));
         }
       });
-
-      // FIXME: don't necessarily clobber order.
-      if (magic) {
-        if (magic.noteorder) {
-          L.notebook.get('notes').setOrder(magic.noteorder);
-        }
-        if (magic.version) {
-          L.notebook.set('version', magic.version);
-        }
+      
+      if (toAddDeleted) {
+        toAddDeleted.reverse();
+        deletedNotes.add(toAddDeleted, {at: 0, nosave: true});
+        _.each(toAddDeleted, function(n) {n.save();});
       }
-
+      if (toAdd) {
+        toAdd.reverse();
+        notes.add(toAdd, {at: 0, silent: true});
+        _.each(toAdd, function(n) {n.save();});
+      }
+      // FIXME: don't necessarily clobber order.
+      if (magic && magic.noteorder) {
+        notes.setOrder(magic.noteorder, {silent: true});
+      }
+      notes.sort({silent: true});
+      _.each(toAdd, function(n) {
+        notes.trigger('add', n, notes, {nosave: true});
+      });
+      notes.trigger('sort', notes, {nosave: true})
+             
+      if (newVersion !== undefined) {
+        L.notebook.set('version', newVersion);
+      }
       // Save collections
       L.notebook.save();
     },

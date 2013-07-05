@@ -114,17 +114,13 @@
       options = options || {};
       var orderMap = _.kmap(_.invert(newOrder), _.mask(parseInt, 0)),
           posCounter = 0,
-
       appendOffset = this.models.length;
-      console.log(orderMap);
       this.models = _.sortBy(this.models, function(note) {
-        var pos = orderMap[note.attributes.id];
+        var pos = orderMap[note.id];
         // Put the note at the beginning if position unknown.
         if (pos === undefined) {
-          console.log(posCounter + 1, note.attributes.id, "notinlist");
           return posCounter++;
         } else {
-          console.log(pos + appendOffset, note.attributes.id, note.attributes.contents);
           return pos + appendOffset;
         }
       });
@@ -298,7 +294,7 @@
       // No need to add this early.
       // Ensures that pinned notes go on top.
       this.get('notes').comparator = function(note) {
-        return note.get('meta').pinned ? 0 : 1;
+        return (note.get('meta') || {}).pinned ? 0 : 1;
       };
 
       // Re-insert note on pinned change.
