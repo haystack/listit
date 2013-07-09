@@ -1,3 +1,4 @@
+/*globals LISTIT_CREDITS: false, LISTIT_EMAIL: false*/
 (function(L) {
   'use strict';
 
@@ -13,12 +14,8 @@
       return this;
     },
     info : {
-      credits: [
-        'Wolfe Styke',
-        'electronic max',
-        'Prof. David Karger'
-      ],
-      email: 'listit@csail.mit.edu'
+      credits: LISTIT_CREDITS,
+      email: LISTIT_EMAIL
     }
   });
 })(ListIt);

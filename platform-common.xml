@@ -26,17 +26,35 @@
         <debug-assets name="wysihtml5" />
     </target>
 
-    <target name="-build.assets">
-        <jsonpath property="assets.wysihtml5.json" basedir="${assets.dir}" prefix="${assets.prefix}">
-            <resources refid="assets.wysihtml5.css.compiled"/>
-        </jsonpath>
-    </target>
+    <target name="-build.release.assets" depends="build.release.wysihtml5"></target>
 
-    <target name="-build.release.assets" depends="build.release.wysihtml5,-build.assets"> </target>
+    <macrodef name="generate-defines">
+        <attribute name="property"/>
+        <attribute name="debug" default="false"/>
+        <sequential>
+            <local name="wysihtml5_json" />
+            <local name="authors_json" />
+            <jsonpath property="wysihtml5_json" basedir="${assets.dir}" prefix="${assets.prefix}">
+                <resources refid="assets.wysihtml5.css.compiled"/>
+            </jsonpath>
+            <script language="javascript">
+                var authors = project.getProperty("listit.authors");
+                var authorList = String(authors).split(/,\s*/);
+                project.setProperty("authors_json", JSON.stringify(authorList));
+            </script>
+            <property name="@{property}">
+                DEBUG_MODE=@{debug};
+                WYSIHTML5_CSS=${wysihtml5_json};
+                LISTIT_CREDITS=${authors_json};
+                LISTIT_EMAIL="${listit.email}";
+            </property>
+        </sequential>
+    </macrodef>
 
-    <target name="-build.debug.assets" depends="build.debug.wysihtml5,-build.assets">
-        <echo message="DEBUG_MODE=true; WYSIHTML5_CSS=${assets.wysihtml5.json};"
-            file="${assets.js.dir}/defines-debug.js" />
+    <target name="-build.debug.assets" depends="build.debug.wysihtml5">
+        <local name="js_text"/>
+        <generate-defines property="js_text" />
+        <echo message="${js_text}" file="${assets.js.dir}/defines-debug.js" />
     </target>
 
     <extension-point name="build.debug.assets" depends="-build.debug.assets" />
@@ -45,8 +63,10 @@
     <macrodef name="release-assets">
         <attribute name="name" />
         <sequential>
-            <var name="css_text" value="" />
-            <var name="js_text" value="DEBUG_MODE=false;WYSIHTML5_CSS=${assets.wysihtml5.json};" />
+            <local name="css_text"/>
+            <local name="js_text"/>
+            <property name="css_text" value="" />
+            <generate-defines property="js_text" />
             <for list="css,js" param="type">
                 <sequential>
                     <if>
