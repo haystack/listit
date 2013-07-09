@@ -83,11 +83,15 @@
                             <if>
                                 <isset property="assets.@{name}.@{type}.concat" />
                                 <then>
-                                    <resources id="assets.@{name}.@{type}.compiled">
+                                    <local name="output_file" />
+                                    <pathconvert property="output_file">
                                         <filelist dir="${assets.@{type}.dir}"
                                             files="${assets.@{name}.@{type}.concat}"/>
+                                    </pathconvert>
+                                    <resources id="assets.@{name}.@{type}.compiled">
+                                        <fileset file="${output_file}"/>
                                     </resources>
-                                    <yuicompress type="@{type}" output="${assets.@{name}.@{type}.concat}">
+                                    <yuicompress type="@{type}" output="${output_file}">
                                         ${@{type}_text}
                                         <resources refid="assets.@{name}.@{type}" />
                                     </yuicompress>
