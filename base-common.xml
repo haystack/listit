@@ -18,9 +18,13 @@
     <property name="tools.yuicompressor" location="${tools.dir}/yuicompressor-2.4.7.jar" />
     <property name="tools.underscore" location="${tools.dir}/underscore.js" />
     <property name="tools.jshint" location="${tools.dir}/ant-jshint-0.3.6-SNAPSHOT-deps.jar" />
+    <property name="tools.pngtastic" location="${tools.dir}/pngtastic-0.5.jar" />
 
     <taskdef name="jshint" classname="com.philmander.jshint.JsHintAntTask" 
         classpath="${tools.jshint}" />
+
+    <taskdef name="pngtastic" classname="com.googlecode.pngtastic.ant.PngOptimizerTask" 
+        classpath="${tools.pngtastic}" />
 
     <!-- Properties -->
     <property file="${root.dir}/global.properties" />

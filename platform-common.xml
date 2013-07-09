@@ -240,13 +240,11 @@
     </target>
 
     <target name="build.release.images" depends="build.release.setup">
-        <copy todir="${assets.img.dir}">
+        <pngtastic todir="${assets.img.dir}">
             <fileset dir="${listit.img.dir}">
                 <include name="**/*.png"/>
-                <include name="**/*.jpg"/>
-                <include name="**/*.gif"/>
             </fileset>
-        </copy>
+        </pngtastic>
     </target>
 
     <target name="-build.setup" depends="clean,templates">
