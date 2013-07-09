@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <project>
+    <fileset id="templates" dir="${listit.templates.dir}" includes="**/*.html" />
 
     <resources id="js.libs.jquery">
         <filelist dir="${listit.js.dir}/libs">
@@ -147,14 +148,6 @@
         <resources refid="js.setup" />
     </resources>
 
-    <resources id="css.wysihtml5">
-        <filelist dir="${listit.css.dir}">
-            <file name="reset.css" />
-            <file name="wysihtml5-iframe.css" />
-            <file name="note-content.css" />
-        </filelist>
-    </resources>
-
     <resources id="css.all">
         <filelist dir="${listit.css.dir}">
             <file name="reset.css" />
@@ -168,6 +161,15 @@
             <file name="page-addnotebox.css" />
         </filelist>
     </resources>
+
+    <resources id="assets.wysihtml5.css">
+        <filelist dir="${listit.css.dir}">
+            <file name="reset.css" />
+            <file name="wysihtml5-iframe.css" />
+            <file name="note-content.css" />
+        </filelist>
+    </resources>
+
 </project>
 
 

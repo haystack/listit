@@ -1,44 +1,11 @@
 <project>
     <import file="../../platform-common.xml"/>
 
-    <target name="-build.img" depends="-build.setup">
-        <deploy-img dest="${build.img.dir}"/>
+    <target name="release" depends="build.release">
+        <zip destfile="${deploy.dir}/list_it.zip" basedir="${build.dir}" />
     </target>
 
-    <target name="-build.assets" depends="-build.setup">
-        <mkdir dir="${build.css.dir}" />
-        <mkdir dir="${build.js.dir}" />
-        <property name="assets.dir" location="${build.dir}" />
-        <deploy-resource name="wysihtml5" />
-        <deploy-resource name="index" />
-    </target>
-
-    <target name="-build.html" depends="-build.setup">
-        <deploy-html resource="index" />
-    </target>
-
-    <target name="release" depends="-build.setup,-build.img,-build.assets,-build.html">
-        <copy todir="${deploy.dir}">
-            <fileset dir="${build.dir}" />
-        </copy>
-    </target>
-
-    <target name="debug" depends="-build.setup">
-        <property name="assets.dir" location="${listit.dir}" />
-        <deploy-resource-debug name="index" />
-        <deploy-html resource="index" />
-
-        <mkdir dir="${debug.dir}" />
-        <copy todir="${debug.dir}" overwrite="true" flatten="true">
-            <filelist dir="${build.dir}">
-                <file name="index.html" />
-            </filelist>
-        </copy>
-        <link overwrite="yes" link="${debug.dir}/js" resource="${listit.dir}/js" />
-        <link overwrite="yes" link="${debug.dir}/css" resource="${listit.dir}/css" />
-        <link overwrite="yes" link="${debug.dir}/img" resource="${listit.dir}/img" />
-    </target>
-
+    <target name="debug" depends="build.debug" />
 </project>
 
 

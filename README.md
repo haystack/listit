@@ -109,8 +109,7 @@ In addition to the standard underscore functions, list.it adds the following:
 
 Directory                       | Description
 --------------------------------|------------
-`build/<platform>/`             | Build cache
-`debug/<platform>/`               | Debug build destination.
+`build/<platform>/`             | Build cache/debug build destination
 `platforms/<platform>/build.xml`  | Platform specific build file
 `release/<platform>/`             | Release build destination
 `src/`                          | Application source code (see [Source Layout](#source-layout))
@@ -337,8 +336,8 @@ To build a debug build, switch to the platforms directory and then run:
 
     ant debug
 
-Debug builds generally appear under `debug/<platform>` and generally allow one
-to edit code without rebuilding. However,the following exceptions apply:
+Debug builds are generally left in the build folder and generally allow one to
+edit code without rebuilding. However,the following exceptions apply:
 
   * Chrome debug builds appear under the `src/` directory. This is unavoidable
     for the moment as chrome does not allow symlinks in extensions

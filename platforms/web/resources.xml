@@ -5,12 +5,15 @@
     <property name="build.js.dir" location="${build.dir}/js" />
     <property name="build.img.dir" location="${build.dir}/img" />
 
-    <property name="build.index.html.file" location="${build.dir}/index.html" />
-    <property name="build.index.tmpl.file" location="${listit.templates.paged}" />
+    <property name="pages.index.html" location="${build.dir}/index.html" />
+    <property name="pages.index.tmpl" location="${listit.templates.paged}" />
 
-    <resources id="css.index" refid="css.all"/>
+    <property name="asses" value="index" />
+    <property name="pages" value="index" />
 
-    <resources id="js.index">
+    <resources id="assets.index.css" refid="css.all"/>
+
+    <resources id="assets.index.js">
         <resources refid="js.libs" />
         <resources refid="js.common" />
         <resources refid="js.storage" />
@@ -23,4 +26,9 @@
         <fileset file="${listit.js.platforms.dir}/web/web-setup.js" />
         <resources refid="js.setup" />
     </resources>
+
+    <!-- Concatinate release files -->
+    <property name="assets.index.css.concat" value="index.css" />
+    <property name="assets.wysihtml5.concat" value="wysihtml5.css" />
+    <property name="assets.index.js.concat" value="index.js" />
 </project>

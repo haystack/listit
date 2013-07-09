@@ -1,0 +1,41 @@
+// vim: ft=javascript
+// Processed by ant.
+
+this.EXPORTED_SYMBOLS = ["ListIt"];
+
+var addons = @addons@,
+    scripts = @scripts@;
+
+// Imports
+Components.utils.import("resource://gre/modules/Services.jsm");
+var appShellService = Components.classes["@mozilla.org/appshell/appShellService;1"]
+                      .getService(Components.interfaces.nsIAppShellService),
+    systemPrincipal = Components.classes["@mozilla.org/systemprincipal;1"]
+                      .createInstance(Components.interfaces.nsIPrincipal);
+
+// Make the window
+var window = appShellService.hiddenDOMWindow;
+window.document.body = window.document.createElement('body');
+
+// Make Context
+var ctx = Components.utils.Sandbox(systemPrincipal, {
+  wantXray: false,
+  sandboxPrototype: window,
+  sandboxName: "listit-background",
+  wantComponents: false,
+  wantXHRConstructor: true
+});
+
+// Load addons
+ctx.ListItAddons = {};
+for (var i = 0; i < addons.length; i++) {
+    Components.utils.import(addons[i], ctx.ListItAddons);
+}
+
+// Load scripts
+for (var i = 0; i < scripts.length; i++) {
+    Services.scriptloader.loadSubScript(scripts[i], ctx, 'UTF-8');
+}
+
+// Extract listit
+var ListIt = ctx.ListIt;

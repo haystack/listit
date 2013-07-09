@@ -1,24 +1,7 @@
 <project name="List.it Chrome Extension">
     <import file="../../platform-common.xml"/>
-    <target name="build.img" depends="-build.setup">
-        <deploy-img dest="${build.img.dir}"/>
-    </target>
 
-    <target name="build.assets-debug" depends="-build.setup">
-        <property name="assets.dir" location="${listit.dir}" />
-        <deploy-resource-debug name="wysihtml5" />
-
-        <mk-defines-debug />
-
-        <parallel>
-            <deploy-resource-debug name="sidebar" />
-            <deploy-resource-debug name="options" />
-            <deploy-resource-debug name="addnotebox" />
-            <deploy-resource-debug name="background" />
-        </parallel>
-    </target>
-
-    <target name="release" depends="-build.setup,build.img,build.assets,build.html,build.manifest">
+    <target name="build.release.package" depends="build.release,build.manifest">
         <exec executable="chromium">
             <arg value="--pack-extension=${build.dir}" />
             <arg value="--pack-extension-key=${privatekey}" />
@@ -26,7 +9,9 @@
         <move file="${build.dir}/../chrome.crx" todir="${deploy.dir}" />
     </target>
 
-    <target name="debug" depends="-build.setup,build.assets-debug,build.html,build.manifest">
+    <target name="release" depends="build.release.package" />
+
+    <target name="debug" depends="build.debug,build.manifest">
         <copy todir="${listit.dir}" overwrite="true" flatten="true">
             <filelist dir="${build.dir}">
                 <file name="manifest.json" />
@@ -35,46 +20,20 @@
                 <file name="addnotebox.html" />
             </filelist>
         </copy>
-        <!--
-        <mkdir dir="${debug.dir}" />
-        <copy todir="${debug.dir}" overwrite="true" flatten="true">
-            <filelist dir="${build.dir}">
-                <file name="manifest.json" />
-                <file name="index.html" />
-                <file name="options.html" />
-            </filelist>
-        </copy>
-        <link overwrite="yes" link="${debug.dir}/js" resource="${listit.dir}/js" />
-        <link overwrite="yes" link="${debug.dir}/css" resource="${listit.dir}/css" />
-        <link overwrite="yes" link="${debug.dir}/img" resource="${listit.dir}/img" />
-        -->
     </target>
 
-    <target name="build.assets" depends="-build.setup">
-        <property name="assets.dir" location="${build.dir}" />
-        <mkdir dir="${build.css.dir}" />
-        <mkdir dir="${build.js.dir}" />
-
-        <!-- Compiles given resources and stores their paths in buid.@resource.@type.path -->
-        <deploy-resource name="wysihtml5" />
-        <parallel>
-            <deploy-resource name="sidebar" />
-            <deploy-resource name="background" />
-            <deploy-resource name="options" />
-            <deploy-resource name="addnotebox" />
-        </parallel>
+    <target name="build.debug.background" extensionOf="build.debug.assets">
+        <debug-assets name="background" />
     </target>
 
-    <target name="build.html" depends="-build.setup">
-        <deploy-html resource="sidebar" />
-        <deploy-html resource="options" />
-        <deploy-html resource="addnotebox" />
+    <target name="build.release.background" extensionOf="build.release.assets">
+        <release-assets name="background" />
     </target>
 
     <target name="build.manifest" depends="-build.setup">
         <local name="background_path" />
-        <jsonpath property="background_path">
-            <resources refid="build.background.js.files" />
+        <jsonpath property="background_path" basedir="${assets.dir}" prefix="${assets.prefix}">
+            <resources refid="assets.background.js.compiled" />
         </jsonpath>
         <copy file="${platform.dir}/manifest.json.tmpl" tofile="${build.dir}/manifest.json">
             <filterchain>
@@ -90,7 +49,7 @@
         </copy>
     </target>
 
-    <target name="install">
+    <target name="install" depends="release">
         <exec executable="chromium">
             <arg value="--install-extension=${build.dir}/../chrome.crx" />
         </exec>

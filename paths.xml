@@ -15,13 +15,11 @@
     <property name="listit.img.dir" location="${listit.dir}/img" />
 
     <property name="base-build.dir" location="${root.dir}/build" />
-    <property name="base-debug.dir" location="${root.dir}/debug" />
     <property name="base-platform.dir" location="${root.dir}/platforms" />
     <property name="base-deploy.dir" location="${root.dir}/release" />
 
     <filelist id="tmpdirs">
       <file name="${base-deploy.dir}" />
-      <file name="${base-debug.dir}" />
       <file name="${base-build.dir}" />
     </filelist>
 

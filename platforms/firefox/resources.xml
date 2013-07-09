@@ -1,21 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- vim: set ft=ant: -->
 <project>
-    <property name="build.css.dir" location="${build.dir}/css" />
-    <property name="build.js.dir" location="${build.dir}/js" />
-    <property name="build.img.dir" location="${build.dir}/img" />
 
-    <property name="build.content.dir" location="${build.dir}/chrome/content/" />
+    <property name="build.chrome.dir" location="${build.dir}/chrome/" />
+    <property name="build.content.dir" location="${build.chrome.dir}/content/" />
     <property name="build.webapp.dir" location="${build.content.dir}/webapp/" />
-    <property name="build.sidebar.html.file" location="${build.webapp.dir}/sidebar.html" />
-    <property name="build.sidebar.tmpl.file" location="${listit.templates.paged}" />
 
-    <property name="build.options.html.file" location="${build.webapp.dir}/options.html" />
-    <property name="build.options.tmpl.file" location="${listit.templates.paged}" />
+    <property name="assets.dir" location="${build.webapp.dir}" />
 
-    <property name="build.background.js.file" location="${build.content.dir}/background.jsm" />
+    <property name="pages.sidebar.html" location="${build.webapp.dir}/sidebar.html" />
+    <property name="pages.sidebar.tmpl" location="${listit.templates.paged}" />
 
-    <resources id="js.sidebar">
+    <property name="pages.options.html" location="${build.webapp.dir}/options.html" />
+    <property name="pages.options.tmpl" location="${listit.templates.paged}" />
+
+    <property name="pages.background.tmpl" location="${platform.dir}/background.jsm.tmpl" />
+    <property name="pages.background.jsm" location="${build.content.dir}/background.jsm" />
+
+    <resources id="assets.sidebar.js">
         <resources refid="js.libs" />
         <resources refid="js.common" />
         <filelist dir="${listit.js.platforms.dir}/firefox">
@@ -28,7 +30,7 @@
         <resources refid="js.setup" />
     </resources>
 
-    <resources id="js.options">
+    <resources id="assets.options.js">
         <resources refid="js.libs" />
         <resources refid="js.common" />
         <filelist dir="${listit.js.platforms.dir}/firefox">
@@ -41,11 +43,18 @@
         <resources refid="js.setup" />
     </resources>
 
-    <resources id="js.background">
+    <resources id="assets.firefox_modules.js">
+        <filelist dir="${listit.js.platforms.dir}/firefox">
+            <file name="authmanager.js" />
+            <file name="firefoxStorage.js" />
+        </filelist>
+    </resources>
+
+    <resources id="assets.background.js">
+        <fileset file="${listit.js.platforms.dir}/firefox/background-before.js" />
         <resources refid="js.libs" />
         <resources refid="js.common" />
         <resources refid="js.storage" />
-        <resources refid="js.router" />
         <resources refid="js.models" />
         <resources refid="js.templates" />
         <resources refid="js.collectors" />
@@ -55,6 +64,6 @@
         <resources refid="js.setup" />
     </resources>
 
-    <resources id="css.sidebar" refid="css.all"/>
-    <resources id="css.options" refid="css.all"/>
+    <resources id="assets.sidebar.css" refid="css.all"/>
+    <resources id="assets.options.css" refid="css.all"/>
 </project>

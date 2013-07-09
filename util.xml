@@ -51,20 +51,21 @@
                   </if>
               </then>
               <else>
-                  <symlink overwrite="${overwrite}" link="${link}" resource="${resource}" />
+                  <symlink overwrite="@{overwrite}" link="${link}" resource="${resource}" />
               </else>
           </if>
         </sequential>
     </macrodef>
     <macrodef name="jsonpath">
         <attribute name="property" />
+        <attribute name="basedir" default="${basedir}" />
         <attribute name="prefix" default="" />
-        <attribute name="basedir" default="${assets.dir}"/>
-        <element name="files" implicit="true"/>
+        <element name="paths" implicit="true" />
         <sequential>
             <local name="contents" />
             <pathconvert dirsep="/" property="contents" pathsep='", "'>
-                <files />
+                <paths />
+                <!-- Relative -->
                 <map from="@{basedir}/" to="@{prefix}" />
             </pathconvert>
             <property name="@{property}" value='["${contents}"]' />
@@ -77,39 +78,50 @@
         <element name="yuiel" implicit="true"/>
         <text name="text"/>
         <sequential>
-            <local name="input" />
-            <loadresource property="input">
-                <concat>
-                    <header trim="true">@{text}</header>
-                    <yuiel />
-                </concat>
-            </loadresource>
-            <java inputstring="${input}" jar="${tools.yuicompressor}" fork="true" logError="true" failonerror="true" output="@{output}">
-                <arg value="--type"/>
-                <arg value="@{type}"/>
-            </java>
+            <if>
+                <not>
+                    <uptodate targetfile="@{output}">
+                        <srcresources>
+                            <resources>
+                                <yuiel />
+                            </resources>
+                        </srcresources>
+                    </uptodate>
+                </not>
+                <then>
+                    <local name="input" />
+                    <loadresource property="input">
+                        <concat>
+                            <header trim="true">@{text}</header>
+                            <yuiel />
+                        </concat>
+                    </loadresource>
+                    <local name="output_directory" />
+                    <dirname property="output_directory" file="@{output}" />
+                    <mkdir dir="${output_directory}" />
+
+                    <echo level="verbose"
+                        message="Writing: ${dest_file}" />
+                    <java inputstring="${input}" jar="${tools.yuicompressor}" fork="true" logError="true" failonerror="true" output="@{output}">
+                        <arg value="--type"/>
+                        <arg value="@{type}"/>
+                    </java>
+                </then>
+            </if>
         </sequential>
     </macrodef> 
 
     <macrodef name="htmltemplate">
         <attribute name="output" />
         <attribute name="input" />
-        <attribute name="prefix" default='' />
-        <attribute name="basedir" default='${assets.dir}' />
-        <element name="scripts" optional="true"/>
-        <element name="stylesheets" optional="true"/>
+        <attribute name="scripts"/>
+        <attribute name="stylesheets"/>
         <element name="variables" optional="true"/>
         <sequential>
             <parallel>
                 <sequential>
-                    <local name="scripts_list" />
-                    <pathconvert property="scripts_list"
-                        dirsep="/" pathsep=",">
-                        <scripts/>
-                        <map from="@{basedir}/" to="@{prefix}" />
-                    </pathconvert>
                     <var name="html_scripts" value=""/>
-                    <for param="src" list="${scripts_list}">
+                    <for param="src" list="@{scripts}" delimiter=":">
                         <sequential>
                             <var
                                 name="html_scripts"
@@ -119,14 +131,8 @@
                     </for>
                 </sequential>
                 <sequential>
-                    <local name="stylesheets_list" />
-                    <pathconvert property="stylesheets_list"
-                        dirsep="/" pathsep=",">
-                        <stylesheets/>
-                        <map from="@{basedir}/" to="@{prefix}" />
-                    </pathconvert>
                     <var name="html_stylesheets" value=""/>
-                    <for param="src" list="${stylesheets_list}">
+                    <for param="src" list="@{stylesheets}" delimiter=":">
                         <sequential>
                             <var
                                 name="html_stylesheets"
@@ -136,7 +142,7 @@
                     </for>
                 </sequential>
             </parallel>
-            <copy file="@{input}" tofile="@{output}" overwrite="true">
+            <copy verbose="true" file="@{input}" tofile="@{output}" overwrite="true">
                 <filterchain>
                     <replacetokens>
                         <token key="scripts" value="${html_scripts}"/>
@@ -148,7 +154,7 @@
         </sequential>
     </macrodef>
 
-    <scriptdef name="compiletemplates" language="javascript">
+    <scriptdef name="jstmpl" language="javascript">
         <attribute name="output" />
         <attribute name="object" />
         <element name="fileset" type="fileset"/>
@@ -185,6 +191,7 @@
                 var file = new File(basedir, filename);
                 var contents = readFile(file);
                 var basename = String(filename).replace(/\\/g, '/').slice(0, -5);
+                self.log("Compiling " + filename);
                 src += objectName + "['" + basename + "'] = " + _.template(contents).source + ";\n";
             }
         }

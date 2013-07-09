@@ -6,8 +6,8 @@
     <dirname property="platform.dir" file="${ant.file}" />
     <basename property="platform" file="${platform.dir}" />
     <property name="deploy.dir" location="${base-deploy.dir}/${platform}" />
+    <echo message="${ant.project.invoked-targets}" />
     <property name="build.dir" location="${base-build.dir}/${platform}" />
-    <property name="debug.dir" location="${base-debug.dir}/${platform}" />
     <property file="${platform.dir}/platform.properties" />
 
     <!-- Resources -->
@@ -18,119 +18,226 @@
       <available file="${build.dir}"/>
     </condition>
 
-
-    <macrodef name="deploy-resource">
-        <attribute name="name"/>
-        <sequential><parallel>
-            <if>
-                <isreference refid="js.@{name}"/>
-                <then>
-                    <property name="build.@{name}.js.file" location="${build.js.dir}/@{name}.js" />
-                    <resources id="build.@{name}.js.files">
-                        <file name="${build.@{name}.js.file}" />
-                    </resources>
-                    <local name="wysihtml5_json"/>
-                    <jsonpath property="wysihtml5_json">
-                        <resources refid="build.wysihtml5.css.files" />
-                    </jsonpath>
-
-                    <yuicompress type="js" output="${build.@{name}.js.file}">
-                        <resources refid="js.@{name}" />
-                        DEBUG_MODE=false;
-                        WYSIHTML5_CSS=${wysihtml5_json};
-                    </yuicompress>
-                </then>
-            </if>
-            <if>
-                <isreference refid="css.@{name}"/>
-                <then>
-                    <property name="build.@{name}.css.file" location="${build.css.dir}/@{name}.css" />
-                    <resources id="build.@{name}.css.files">
-                        <file name="${build.@{name}.css.file}" />
-                    </resources>
-
-                    <yuicompress type="css" output="${build.@{name}.css.file}">
-                        <resources refid="css.@{name}" />
-                    </yuicompress>
-                </then>
-            </if>
-        </parallel></sequential>
-    </macrodef>
-
-    <macrodef name="deploy-resource-debug">
-        <attribute name="name"/>
-        <sequential><parallel>
-            <if>
-                <isreference refid="js.@{name}"/>
-                <then>
-                    <resources id="build.@{name}.js.files">
-                        <fileset file="${listit.js.dir}/defines-debug.js"/>
-                        <resources refid="js.@{name}" />
-                    </resources>
-                </then>
-            </if>
-            <if>
-                <isreference refid="css.@{name}"/>
-                <then>
-                    <resources id="build.@{name}.css.files" refid="css.@{name}" />
-                </then>
-            </if>
-        </parallel></sequential>
-    </macrodef>
-
-    <macrodef name="mk-defines-debug">
-        <sequential>
-            <local name="wysihtml5_json" />
-            <jsonpath basedir="${listit.dir}" property="wysihtml5_json">
-                <resources refid="build.wysihtml5.css.files" />
-            </jsonpath>
-            <echo message="DEBUG_MODE=true; WYSIHTML5_CSS=${wysihtml5_json};" 
-                file="${listit.js.dir}/defines-debug.js" />
-        </sequential>
-    </macrodef>
-
-    <macrodef name="deploy-html">
-        <attribute name="resource"/>
-        <sequential>
-            <htmltemplate input="${build.@{resource}.tmpl.file}" output="${build.@{resource}.html.file}">
-                <scripts>
-                    <resources refid="build.@{resource}.js.files" />
-                </scripts>
-                <stylesheets>
-                    <resources refid="build.@{resource}.css.files" />
-                </stylesheets>
-            </htmltemplate>
-        </sequential>
-    </macrodef>
-
-    <target name="mkdirs">
-        <mkdir dir="${deploy.dir}" />
-        <mkdir dir="${build.dir}" />
+    <target name="build.release.wysihtml5" depends="build.release.setup">
+        <release-assets name="wysihtml5" />
     </target>
 
-    <globmapper id="resource-mapper" from="${listit.dir}/*" to="*"/>
+    <target name="build.debug.wysihtml5" depends="build.debug.setup">
+        <debug-assets name="wysihtml5" />
+    </target>
 
-    <macrodef name="deploy-img">
-        <attribute name="dest" />
+    <target name="-build.assets">
+        <jsonpath property="assets.wysihtml5.json" basedir="${assets.dir}" prefix="${assets.prefix}">
+            <resources refid="assets.wysihtml5.css.compiled"/>
+        </jsonpath>
+    </target>
+
+    <target name="-build.release.assets" depends="build.release.wysihtml5,-build.assets"> </target>
+
+    <target name="-build.debug.assets" depends="build.debug.wysihtml5,-build.assets">
+        <echo message="DEBUG_MODE=true; WYSIHTML5_CSS=${assets.wysihtml5.json};"
+            file="${assets.js.dir}/defines-debug.js" />
+    </target>
+
+    <extension-point name="build.debug.assets" depends="-build.debug.assets" />
+    <extension-point name="build.release.assets" depends="-build.release.assets" />
+
+    <macrodef name="release-assets">
+        <attribute name="name" />
         <sequential>
-            <mkdir dir="@{dest}" />
-            <copy todir="@{dest}">
-                <fileset dir="${listit.img.dir}">
-                    <include name="**/*.png"/>
-                    <include name="**/*.jpg"/>
-                    <include name="**/*.gif"/>
-                </fileset>
-            </copy>
+            <var name="css_text" value="" />
+            <var name="js_text" value="DEBUG_MODE=false;WYSIHTML5_CSS=${assets.wysihtml5.json};" />
+            <for list="css,js" param="type">
+                <sequential>
+                    <if>
+                        <and>
+                            <isreference refid="assets.@{name}.@{type}"/>
+                            <not>
+                                <isreference refid="assets.@{name}.@{type}.compiled" />
+                            </not>
+                        </and>
+                        <then>
+                            <echo level="verbose" message="Compiling @{type}: @{name}" />
+                            <if>
+                                <isset property="assets.@{name}.@{type}.concat" />
+                                <then>
+                                    <resources id="assets.@{name}.@{type}.compiled">
+                                        <filelist dir="${assets.@{type}.dir}"
+                                            files="${assets.@{name}.@{type}.concat}"/>
+                                    </resources>
+                                    <yuicompress type="@{type}" output="${assets.@{name}.@{type}.concat}">
+                                        ${@{type}_text}
+                                        <resources refid="assets.@{name}.@{type}" />
+                                    </yuicompress>
+                                </then>
+                                <else>
+                                    <local name="tmp_path" />
+                                    <pathconvert property="tmp_path" refid="assets.@{name}.@{type}">
+                                        <map from="${listit.dir}" to="${assets.dir}" />
+                                    </pathconvert>
+                                    <resources id="assets.@{name}.@{type}.compiled">
+                                        <path path="${tmp_path}" />
+                                    </resources>
+                                    <for param="file">
+                                        <resources refid="assets.@{name}.@{type}" />
+                                        <sequential>
+                                            <local name="dest_file" />
+                                            <pathconvert property="dest_file">
+                                                <path location="@{file}" />
+                                                <map from="${listit.dir}" to="${assets.dir}" />
+                                            </pathconvert>
+                                            <yuicompress type="@{type}" output="${dest_file}">
+                                                ${@{type}_text}
+                                                <fileset file="@{file}" />
+                                            </yuicompress>
+                                        </sequential>
+                                    </for>
+                                </else>
+                            </if>
+                            <pathconvert pathsep=":"
+                                dirsep="/" property="assets.@{name}.@{type}.path">
+                                <map from="${assets.dir}/" to="${assets.prefix}" />
+                                <resources refid="assets.@{name}.@{type}.compiled" />
+                            </pathconvert>
+                        </then>
+                    </if>
+                </sequential>
+            </for>
         </sequential>
     </macrodef>
 
-    <target name="-build.setup" depends="clean,mkdirs,compile-templates,jshint" />
+    <macrodef name="debug-assets">
+        <attribute name="name" />
+        <attribute name="includeDefines" default="true"/>
+        <sequential>
+            <for list="css,js" param="type">
+                <sequential>
+                    <if>
+                        <and>
+                            <isreference refid="assets.@{name}.@{type}"/>
+                            <not>
+                                <isreference refid="assets.@{name}.@{type}.compiled" />
+                            </not>
+                        </and>
+                        <then>
+                            <echo level="info" message="Compiling @{type}: @{name}" />
+                            <local name="tmp_path" />
+                            <pathconvert property="tmp_path" refid="assets.@{name}.@{type}">
+                                <map from="${listit.dir}" to="${assets.dir}" />
+                            </pathconvert>
+                            <if>
+                                <istrue value="@{includeDefines}" />
+                                <then>
+                                    <resources id="assets.@{name}.@{type}.compiled">
+                                        <fileset file="${assets.@{type}.dir}/defines-debug.@{type}" />
+                                        <path path="${tmp_path}" />
+                                    </resources>
+                                </then>
+                                <else>
+                                    <resources id="assets.@{name}.@{type}.compiled">
+                                        <path path="${tmp_path}" />
+                                    </resources>
+                                </else>
+                            </if>
+                            <pathconvert pathsep=":" dirsep="/" property="assets.@{name}.@{type}.path">
+                                <map from="${assets.dir}/" to="${assets.prefix}" />
+                                <resources refid="assets.@{name}.@{type}.compiled" />
+                            </pathconvert>
+                        </then>
+                    </if>
+                </sequential>
+            </for>
+        </sequential>
+    </macrodef>
 
-    <target name="clean" if="-exists-build.dir" depends="-clean.windows,-clean.unix"/>
+    <macrodef name="html-build-common">
+        <attribute name="name" />
+        <sequential>
+            <property name="pages.@{name}.tmpl" value="${listit.templates.empty}" />
+            <fail message="Template '${pages.@{name}.tmpl}' missing for page '@{name}'.">
+                <condition>
+                    <not>
+                        <available file="${pages.@{name}.tmpl}" />
+                    </not>
+                </condition>
+            </fail>
+            <htmltemplate
+                input="${pages.@{name}.tmpl}"
+                output="${pages.@{name}.html}"
+                scripts="${assets.@{name}.js.path}"
+                stylesheets="${assets.@{name}.css.path}" />
+        </sequential>
+    </macrodef>
+
+    <target name="-build.html">
+        <propertyselector property="html-pages"
+            delimiter=" "
+            match="pages\.([^\.]+)\.html"
+            select="\1"
+            casesensitive="true" />
+    </target>
+
+    <target name="build.debug.html" depends="build.debug.setup,build.debug.assets,-build.html">
+        <for list="${html-pages}" delimiter=" " param="name">
+            <sequential>
+                <debug-assets name="@{name}" />
+                <html-build-common name="@{name}" />
+            </sequential>
+        </for>
+    </target>
+
+    <target name="build.release.html" depends="build.release.setup,build.release.assets,-build.html">
+        <for list="${html-pages}" delimiter=" " param="name">
+            <sequential>
+                <echo level="info" message="Compiling page @{name}" />
+                <release-assets name="@{name}" />
+                <html-build-common name="@{name}" />
+            </sequential>
+        </for>
+    </target>
+
+    <target name="build.release.setup" depends="-build.release.before,-build.setup">
+        <mkdir dir="${deploy.dir}" />
+        <mkdir dir="${assets.js.dir}" />
+        <mkdir dir="${assets.img.dir}" />
+        <mkdir dir="${assets.css.dir}" />
+    </target>
+
+    <extension-point name="-build.before" />
+    <extension-point name="-build.debug.before" depends="-build.before" />
+    <extension-point name="-build.release.before" depends="-build.before" />
+
+    <target name="build.debug.setup" depends="-build.debug.before,-build.setup">
+        <link overwrite="yes" link="${assets.js.dir}"  resource="${listit.js.dir}" />
+        <link overwrite="yes" link="${assets.css.dir}" resource="${listit.css.dir}" />
+        <link overwrite="yes" link="${assets.img.dir}" resource="${listit.img.dir}" />
+    </target>
+
+    <target name="build.release.images" depends="build.release.setup">
+        <copy todir="${assets.img.dir}">
+            <fileset dir="${listit.img.dir}">
+                <include name="**/*.png"/>
+                <include name="**/*.jpg"/>
+                <include name="**/*.gif"/>
+            </fileset>
+        </copy>
+    </target>
+
+    <target name="-build.setup" depends="clean,templates">
+        <property name="assets.dir" value="${build.dir}" />
+        <property name="assets.prefix" value="" />
+        <property name="assets.js.dir" value="${assets.dir}/js" />
+        <property name="assets.css.dir" value="${assets.dir}/css" />
+        <property name="assets.img.dir" value="${assets.dir}/img" />
+        <mkdir dir="${build.dir}" />
+        <mkdir dir="${assets.dir}" />
+    </target>
+
+    <extension-point name="clean" if="-exists-build.dir"/>
 
     <!-- Needs to be separate to handle links (junctions) correctly -->
     <!-- DO NOT REMOVE -->
-    <target name="-clean.windows" if="-platform-windows">
+    <target name="-clean.windows" if="-platform-windows" extensionOf="clean">
       <exec resolveexecutable="true" executable="cmd.exe">
         <arg value="/C"/>
         <arg value="rmdir"/>
@@ -140,10 +247,12 @@
       </exec>
     </target>
 
-    <target name="-clean.unix" if="-platform-unix">
+    <target name="-clean.unix" if="-platform-unix" extensionOf="clean">
       <delete verbose="true" includeemptydirs="true" removeNotFollowedSymlinks="true">
         <fileset erroronmissingdir="false" followsymlinks="false" dir="${build.dir}" includes="**/*" />
       </delete>
     </target>
 
+    <target name="build.release" depends="build.release.images,build.release.assets,build.release.html" />
+    <target name="build.debug" depends="build.debug.assets,build.debug.html" />
 </project>

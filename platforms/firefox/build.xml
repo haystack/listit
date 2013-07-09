@@ -1,68 +1,28 @@
 <project name="List.it Firefox Extension">
     <import file="../../platform-common.xml"/>
 
-    <target name="-build.img" depends="-build.setup">
-        <deploy-img dest="${build.img.dir}"/>
-    </target>
-
-    <target name="-build.assets-debug" depends="-build.setup">
-        <property name="assets.dir" location="${listit.dir}" />
-        <deploy-resource-debug name="wysihtml5" />
-        <mk-defines-debug />
-        <deploy-resource-debug name="sidebar" />
-        <deploy-resource-debug name="options" />
-        <concat overwrite="yes" destfile="${build.background.js.file}">
-            <header trimleading="yes" filtering="no">
-                <![CDATA[
-                this.EXPORTED_SYMBOLS = ["ListIt"];
-
-                // TODO: Don't hardcode this!
-                var ListItAddons = {};
-                Components.utils.import("chrome://listit/content/webapp/js/platforms/firefox/firefoxStorage.js", ListItAddons);
-                Components.utils.import("chrome://listit/content/webapp/js/platforms/firefox/authmanager.js", ListItAddons);
-
-                // Don't expose firefox stuff
-                var window = (function() {
-                    var appShellService = Components.classes["@mozilla.org/appshell/appShellService;1"]
-                          .getService(Components.interfaces.nsIAppShellService);
-                    var window = appShellService.hiddenDOMWindow;
-                    //window.document.html = window.document.createElement('html');
-                    window.document.body = window.document.createElement('body');
-                    // Allow CORS
-                    window.XMLHttpRequest = function() {
-                        return Components.classes["@mozilla.org/xmlextras/xmlhttprequest;1"]
-                        .createInstance(Components.interfaces.nsIXMLHttpRequest);
-                    }
-                    return window;
-                })();
-                with (window) {
-                ]]>
-            </header>
-            <resources refid="js.background" />
-            <footer trimleading="yes" filtering="no">
-                <![CDATA[
-                }
-                var ListIt = window.ListIt;
-                ]]>
-            </footer>
-        </concat>
-    </target>
-
-    <target name="-build.assets" depends="-build.setup">
-        <property name="assets.dir" location="${build.dir}" />
-        <mkdir dir="${build.css.dir}" />
-        <mkdir dir="${build.js.dir}" />
-        <parallel>
-            <deploy-resource name="sidebar" />
-            <deploy-resource name="options" />
-            <deploy-resource name="background" />
-            <deploy-resource name="wysihtml5" />
-        </parallel>
-    </target>
-
-    <target name="-build.html" depends="-build.setup">
-        <deploy-html resource="sidebar" />
-        <deploy-html resource="options" />
+    <target name="debug" depends="build.debug,build.install,build.manifest">
+        <link overwrite="yes" link="${build.dir}/chrome/content/extension" resource="${platform.dir}/resources/content" />
+        <link overwrite="yes" link="${build.dir}/chrome/skin" resource="${platform.dir}/resources/skin" />
+        <link overwrite="yes" link="${build.dir}/chrome/locale" resource="${platform.dir}/resources/locale" />
+        <debug-assets name="firefox_modules" includeDefines="false"/>
+        <debug-assets name="background" />
+        <local name="addon_path"/>
+        <local name="script_path"/>
+        <jsonpath basedir="${build.chrome.dir}" prefix="chrome://listit/" property="addon_path">
+            <resources refid="assets.firefox_modules.js.compiled" />
+        </jsonpath>
+        <jsonpath basedir="${build.chrome.dir}" prefix="chrome://listit/" property="script_path">
+            <resources refid="assets.background.js.compiled" />
+        </jsonpath>
+        <copy file="${platform.dir}/background.jsm.tmpl" tofile="${build.content.dir}/background.jsm">
+            <filterchain>
+                <filterreader classname="org.apache.tools.ant.filters.ReplaceTokens">
+                    <param type="token" name="scripts" value="${script_path}" />
+                    <param type="token" name="addons" value="${addon_path}" />
+                </filterreader>
+            </filterchain>
+        </copy>
     </target>
 
     <target name="build.install" depends="-build.setup">
@@ -82,40 +42,6 @@
 
     <target name="build.manifest" depends="-build.setup">
         <copy file="${platform.dir}/chrome.manifest" tofile="${build.dir}/chrome.manifest" />
-    </target>
-
-    <target name="-build.framework" depends="-build.setup">
-        <mkdir dir="${build.dir}/chrome" />
-        <mkdir dir="${build.dir}/chrome/content" />
-        <mkdir dir="${build.dir}/chrome/content/webapp" />
-    </target>
-
-    <target name="release"
-        depends="-build.setup,-build.framework,-build.img,-build.assets,-build.html,build.install,build.manifest">
-        <parallel>
-            <copy todir="${build.dir}/chrome/content/extension">
-                <fileset dir="${platform.dir}/resources/content" />
-            </copy>
-            <copy todir="${build.dir}/chrome/">
-                <fileset dir="${platform.dir}/resources/skin" />
-                <fileset dir="${platform.dir}/resources/locale" />
-            </copy>
-        </parallel>
-    </target>
-
-    <target name="debug"
-        depends="-build.setup,-build.framework,-build.assets-debug,build.install,build.manifest">
-        <deploy-html resource="sidebar" />
-        <deploy-html resource="options" />
-        <copy todir="${debug.dir}">
-            <fileset dir="${build.dir}" includes="**"/>
-        </copy>
-        <link overwrite="yes" link="${debug.dir}/chrome/content/extension" resource="${platform.dir}/resources/content" />
-        <link overwrite="yes" link="${debug.dir}/chrome/content/webapp/js" resource="${listit.js.dir}" />
-        <link overwrite="yes" link="${debug.dir}/chrome/content/webapp/img" resource="${listit.img.dir}" />
-        <link overwrite="yes" link="${debug.dir}/chrome/content/webapp/css" resource="${listit.css.dir}" />
-        <link overwrite="yes" link="${debug.dir}/chrome/skin" resource="${platform.dir}/resources/skin" />
-        <link overwrite="yes" link="${debug.dir}/chrome/locale" resource="${platform.dir}/resources/locale" />
     </target>
 </project>
 

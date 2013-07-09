@@ -30,10 +30,19 @@
     <include file="${root.dir}/util.xml" />
 
 
-    <target name="compile-templates">
-        <compiletemplates output="${listit.templates.file}" object="ListIt.templates">
-            <fileset dir="${listit.templates.dir}" includes="**/*.html" />
-        </compiletemplates>
+    <target name="templates">
+        <if>
+            <not>
+                <uptodate targetfile="${listit.templates.file}">
+                    <srcfiles refid="templates" />
+                </uptodate>
+            </not>
+            <then>
+                <jstmpl output="${listit.templates.file}" object="ListIt.templates">
+                    <fileset refid="templates" />
+                </jstmpl>
+            </then>
+        </if>
     </target>
 
     <target name="jshint">
