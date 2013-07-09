@@ -26,7 +26,9 @@
         <debug-assets name="wysihtml5" />
     </target>
 
-    <target name="-build.release.assets" depends="build.release.wysihtml5"></target>
+    <target name="-build.release.assets" depends="build.release.wysihtml5">
+        <generate-defines property="defines_js" />
+    </target>
 
     <macrodef name="generate-defines">
         <attribute name="property"/>
@@ -66,7 +68,7 @@
             <local name="css_text"/>
             <local name="js_text"/>
             <property name="css_text" value="" />
-            <generate-defines property="js_text" />
+            <property name="js_text" value="${defines_js}" />
             <for list="css,js" param="type">
                 <sequential>
                     <if>
