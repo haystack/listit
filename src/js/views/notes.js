@@ -160,7 +160,7 @@
       }
     },
     onKeyDown: function(event) {
-      if (event.keyCode === KeyCode.ESC && this.editor && !this.editor.isShowingDialog()) {
+      if ((event.keyCode === KeyCode.ESC || (event.keyCode === KeyCode.ENTER && event.shiftKey)) && this.editor && !this.editor.isShowingDialog()) {
         this.closeEditor();
       }
     },
