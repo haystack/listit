@@ -55,7 +55,7 @@
 
     <target name="-build.debug.assets" depends="build.debug.wysihtml5">
         <local name="js_text"/>
-        <generate-defines property="js_text" />
+        <generate-defines debug="true" property="js_text" />
         <echo message="${js_text}" file="${assets.js.dir}/defines-debug.js" />
     </target>
 
