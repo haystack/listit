@@ -2,7 +2,7 @@
     <import file="../../platform-common.xml"/>
 
     <target name="release" depends="build.release">
-        <zip destfile="${deploy.dir}/list_it.zip" basedir="${build.dir}" />
+        <zip destfile="${deploy.dir}/listit-${listit.version}.zip" basedir="${build.dir}" />
     </target>
 
     <target name="debug" depends="build.debug" />
