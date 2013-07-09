@@ -1,4 +1,12 @@
 <a class="clickable">
+    <img id="searchIcon" class="settingIcon" src="img/controls/search.png" width="16" height="16"
+    <% if (searchState) { %>
+    title="Close separate searchbar, note creator will now search again.">
+    <% } else { %>
+    title="Open a separate searchbar.">
+    <% } %>
+</a>
+<a class="clickable">
     <img id="syncIcon" class="<% if (syncState) print("spinner"); %> settingIcon" src="img/controls/sync.png" width="16" height="16" title="Save a backup copy of your notes on our server.">
 </a>
 <a href="#/options" class="clickable">

@@ -1,3 +1,7 @@
+#omnibox {
+  padding: 0px 11px;
+}
+
 .note-creator .editor {
   background: #FFF;
   cursor: text;
@@ -10,7 +14,7 @@
   border-top-right-radius: 3px;
   border-bottom-left-radius: 3px;
   padding: 7px 7px 0px 7px;
-  margin: 0px 7px;
+  margin: 0px -3px;
 }
 
 
@@ -35,6 +39,24 @@
   top: 0;
   left: 0;
   width: 100%;
+}
+
+.searchbar {
+  font: inherit;
+  width: 100%;
+  overflow: hidden;
+  resize: none;
+  border: 1px solid rgba(128,128,128,.5);
+  border-top-right-radius: 3px;
+  border-bottom-left-radius: 3px;
+  height: 18px;
+  margin: 0px 0px 7px -3px;
+  padding: 2px;
+  background-color: #ccc;
+}
+
+.searchbar:focus {
+  outline: 1px solid black;
 }
 
 #controls {
