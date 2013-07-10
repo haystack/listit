@@ -160,7 +160,7 @@ List.it uses [underscore.js](http://underscorejs.org) as it's underlying
 templating engine. Templates are stored in `src/templates` as html files. Before
 using a template, it must be compiled. Templates are automatically compiled when
 compiling list.it but can be compiled separately by issuing `ant
-compile-templates`.
+templates`.
 
 To render a template stored in `src/templates/<path>.html`, with the context
 `<ctx>`, call `ListIt.templates[<path>](<ctx>)`. For example, the main page
@@ -357,7 +357,7 @@ The following additional targets are available:
 
 Task                    | Description
 ------------------------|-------------------------------------------------------------
-`ant compile-templates` | Recompile the templates without recompiling everything else.
+`ant templates`         | Recompile the templates without recompiling everything else.
 `ant jshint`            | Run the jshint static code checker.
 `ant clean`             | Remove temporary build files.
 
