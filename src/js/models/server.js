@@ -571,6 +571,10 @@
     // Singleton
     url: '/authmanager',
     isNew: function() {return false;},
+    initialized: function() {
+      // Autosave
+      this.on('change', _.mask(this.save), this);
+    },
     /**
      * Call the callback with the auth token.
      *
