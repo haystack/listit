@@ -66,6 +66,11 @@
       case KeyCode.ESC:
         this.reset();
         break;
+      case 83:
+        if (event.ctrlKey){
+          event.preventDefault();
+          this.save();
+        }
       }
     },
     // Store text on change.
