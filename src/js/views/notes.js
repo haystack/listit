@@ -163,10 +163,10 @@
       if ((
         event.keyCode === KeyCode.ESC ||
         (event.keyCode === KeyCode.ENTER && event.shiftKey) ||
-        (event.which === 83 && event.ctrlKey)
+        (event.which === KeyCode.A && event.ctrlKey)
         ) && this.editor && !this.editor.isShowingDialog()) {
-          event.preventDefault();
-          this.closeEditor();
+        event.preventDefault();
+        this.closeEditor();
       }
     },
     storeText: function() {
