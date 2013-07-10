@@ -82,6 +82,7 @@
     },
     onLinkOpen: function(event) {
       this.model.trigger('user:open-bookmark', this.model, this, event.target.href);
+      this.stopPropagation();
     },
     onRemoveClicked: function() {
       L.notebook.trashNote(this.model);
@@ -142,10 +143,8 @@
       $contentsEl.show();
     },
     onClick: function(e) {
-      if (!e.target.href) {
-        this.expand();
-        this.openEditor();
-      }
+      this.expand();
+      this.openEditor();
     },
     /**
      * Scroll List so note selected with tab is at top.
