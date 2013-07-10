@@ -107,3 +107,7 @@
     display: none;
 }
 
+.listit_tag:hover {
+  cursor: pointer;
+}
+

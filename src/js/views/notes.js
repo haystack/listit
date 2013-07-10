@@ -69,16 +69,17 @@
       this.$el.children('.contents').html(this.model.get('contents'));
     },
     events: {
-      'click     .close-btn':   'onRemoveClicked',
-      'click     .contents':    'onClick',
-      'click     .contents a':  'onLinkOpen',
-      'keyup     .contents':    'onKeyUp',
-      'blur      .editor':      'onBlur',
-      'keydown   .editor':      'onKeyDown',
-      'click     .pin-icon':    'onPinToggle',
-      'mousedown .pin-icon':    function(event){event.preventDefault();},
-      'click     .save-icon':   'onSaveToggle',
-      'mousedown .save-icon':   function(event){event.preventDefault();}
+      'click     .close-btn':             'onRemoveClicked',
+      'click     .contents':              'onClick',
+      'click     .contents a':            'onLinkOpen',
+      'click     .contents .listit_tag':  'onTagClick',
+      'keyup     .contents':              'onKeyUp',
+      'blur      .editor':                'onBlur',
+      'keydown   .editor':                'onKeyDown',
+      'click     .pin-icon':              'onPinToggle',
+      'mousedown .pin-icon':              function(event){event.preventDefault();},
+      'click     .save-icon':             'onSaveToggle',
+      'mousedown .save-icon':             function(event){event.preventDefault();}
     },
     onLinkOpen: function(event) {
       this.model.trigger('user:open-bookmark', this.model, this, event.target.href);
@@ -86,6 +87,10 @@
     },
     onRemoveClicked: function() {
       L.notebook.trashNote(this.model);
+      return false;
+    },
+    onTagClick: function(event) {
+      L.omnibox.set('text', event.target.textContent);
       return false;
     },
     expand: function() {
