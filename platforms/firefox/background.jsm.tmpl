@@ -13,14 +13,23 @@ var appShellService = Components.classes["@mozilla.org/appshell/appShellService;
     systemPrincipal = Components.classes["@mozilla.org/systemprincipal;1"]
                       .createInstance(Components.interfaces.nsIPrincipal);
 
-// Make the window
+// Get the hidden window
 var window = appShellService.hiddenDOMWindow;
-window.document.body = window.document.createElement('body');
+
+// In case the iframe wasn't properly unloaded, unload it.
+var frame = window.document.getElementById("listitBackgroundPage");
+if (frame) {
+  window.document.documentElement.removeChild(frame);
+}
+frame = window.document.createElement('iframe');
+frame.setAttribute("class", "listit");
+frame.setAttribute("id", "listitBackgroundPage");
+window.document.documentElement.appendChild(frame);
 
 // Make Context
 var ctx = Components.utils.Sandbox(systemPrincipal, {
   wantXray: false,
-  sandboxPrototype: window,
+  sandboxPrototype: frame.contentWindow,
   sandboxName: "listit-background",
   wantComponents: false,
   wantXHRConstructor: true
