@@ -65,23 +65,44 @@
             return;
           } else if (_.isString(relation.includeInJSON)) {
             if (value instanceof Backbone.Collection) {
-              json[name] = value.map(function(m) { return m.get(relation.includeInJSON);});
+              // Filter out unsaved
+              var models;
+              if (!relation.includeUnsaved) {
+                models = value.filter(function(m) { return !m.isNew(); });
+              } else {
+                models = value.models;
+              }
+              json[name] = _.map(models, function(m) { return m.get(relation.includeInJSON);});
             } else if (value instanceof Backbone.Model) {
-              json[name] = value.get(relation.includeInJSON);
+              if (!relation.includeUnsaved && value.isNew()) {
+                json[name] = null;
+              } else {
+                json[name] = value.get(relation.includeInJSON);
+              }
             } else {
               null;
             }
           } else if (_.isArray(value.includeInJSON)) {
             if (value instanceof Backbone.Collection) {
-              json[name] = value.map(function(m) {
+              var models;
+              if (!relation.includeUnsaved) {
+                models = value.filter(function(m) { return !m.isNew(); });
+              } else {
+                models = value.models;
+              }
+              json[name] = _.map(models, function(m) {
                 return _.kmap(value.includeInJSON, function(k) {
                   return m.get(k);
                 });
               });
             } else if (value instanceof Backbone.Model) {
-              json[name] = _.kmap(value.includeInJSON, function(k) {
-                return m.get(k);
-              });
+              if (!relation.includeUnsaved && value.isNew()) {
+                json[name] = null;
+              } else {
+                json[name] = _.kmap(value.includeInJSON, function(k) {
+                  return m.get(k);
+                });
+              }
             } else {
               json[name] = null;
             }
