@@ -17,6 +17,8 @@
     },
     remove : function(options) {
       if (this._rendered) {
+        this.closeEditor();
+        this.cleanupEditor();
         var el = this.$el;
         if (options && options.animate) {
           el.stop().fadeOut({queue: false}, 200).slideUp(300, function() {
@@ -38,16 +40,11 @@
       this.$el.attr("data-note", this.model.id);
 
       if (this._rendered) {
-        this.cleanupEditor();
+        this.closeEditor();
         this.undelegateEvents();
         this.delegateEvents();
       } else {
         this._rendered = true;
-        this.$el.on('DOMNodeRemoved', function(evt) {
-          if (evt.srcElement === that.el) {
-            that.cleanupEditor();
-          }
-        });
         this.$el.html(this.template(this.model.toJSON()));
         this.updateMeta();
       }
@@ -135,14 +132,14 @@
     closeEditor: function() {
       var $contentsEl = this.$('.contents'),
           $editorEl = this.$('.editor-container');
-      if (!$editorEl.is(":visible")) {
-        return; // Already closed
+      if ($editorEl.is(":visible")) {
+        this.storeText();
+        this.collapse();
+        $editorEl.hide();
+        this.$el.trigger('stopediting');
       }
-      this.storeText();
-      this.collapse();
-      $editorEl.hide();
+      // Always show contents.
       $contentsEl.show();
-      this.$el.trigger('stopediting');
     },
     onClick: function(e) {
       if (!e.target.href) {
