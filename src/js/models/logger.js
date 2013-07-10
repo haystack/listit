@@ -25,7 +25,7 @@
       });
     },
     validate: function(attrs, options) {
-      if (typeof(attrs.action) !== 'string'){  
+      if (typeof(attrs.action) !== 'string'){
         return "Undefined action";
       }
     }
@@ -37,9 +37,9 @@
   L.models.Log = Backbone.Collection.extend({
     model: L.models.LogEvent,
     initialize: function() {
-      this.on('invalid', function(model, my_error) {
+      this.on('invalid', function(model, e) {
         model.destroy();
-        debug(my_error, model);
+        debug(e, model);
       });
     },
     clearUntil: function(time) {

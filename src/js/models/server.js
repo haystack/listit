@@ -427,7 +427,7 @@
           (deleted ? toAddDeleted : toAdd).push(new L.models.Note(n));
         }
       });
-      
+
       if (toAddDeleted) {
         toAddDeleted.reverse();
         deletedNotes.add(toAddDeleted, {at: 0, nosave: true});
@@ -446,8 +446,8 @@
       _.each(toAdd, function(n) {
         notes.trigger('add', n, notes, {nosave: true});
       });
-      notes.trigger('sort', notes, {nosave: true})
-             
+      notes.trigger('sort', notes, {nosave: true});
+
       if (newVersion !== undefined) {
         L.notebook.set('version', newVersion);
       }
