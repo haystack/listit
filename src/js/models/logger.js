@@ -38,7 +38,6 @@
     model: L.models.LogEvent,
     initialize: function() {
       this.on('invalid', function(model, e) {
-        model.destroy();
         debug(e, model);
       });
     },

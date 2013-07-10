@@ -311,6 +311,8 @@
       var excluded = _.union(this.logTopLevelAttributes, this.logExcludedAttributes);
       var toplevel = this.logTopLevelAttributes;
       return L.logger.get('log').chain()
+      // Don't include invalid entries
+      .filter(function(e) { return e.isValid(); })
       // Convert to object.
       .map(function(e) {
         return e.toJSON();
@@ -348,7 +350,9 @@
         'contents': JSON.stringify({noteorder:L.notebook.get('notes').getOrder()}),
         'deleted': true
       });
-      L.notebook.get('notes').each(function(n) { bundleNote(n, false); });
+      L.notebook.get('notes').chain()
+      .filter(function(n) { return n.isValid(); })
+      .each(function(n) { bundleNote(n, false); });
       L.notebook.get('deletedNotes').each(function(n) { bundleNote(n, true); });
 
       return bundle;
