@@ -300,7 +300,8 @@
       // Re-insert note on pinned change.
       this.listenTo(this.get('notes'), 'change:meta', function(note, meta) {
         var pMeta = note.previous('meta');
-        if (meta.pinned !== pMeta.pinned) {
+        // The nots make this work when pinned is null/undefined.
+        if (!meta.pinned !== !pMeta.pinned) {
           _.defer(function() {
             note.collection.reinsert(note);
           });
