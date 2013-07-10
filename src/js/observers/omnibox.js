@@ -51,14 +51,12 @@
       this.pendingEntries.push(new L.models.LogEvent(data));
     },
     addEntry: function(data) {
-      L.logger.add(data);
+      L.logger.create(data);
     },
     commitPendingEntries: function() {
       var pending = this.clearPendingEntries();
-      L.logger.add(pending);
-      _.each(pending, function(m) {
-        // TODO: Move to logger + autosave
-        m.save();
+      _.each(pending, function(p) {
+        L.logger.create(p);
       });
     },
     clearPendingEntries: function() {

@@ -6,7 +6,7 @@
     },
     setup: function() {
       L.preferences.on('change:shrinkNotes', function(model, state) {
-        L.logger.add({action: LogType[state ? "SHRINK" : "EXPAND"]});
+        L.logger.create({action: LogType[state ? "SHRINK" : "EXPAND"]});
       });
     },
     destroy: function() {

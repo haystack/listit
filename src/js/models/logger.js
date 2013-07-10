@@ -87,9 +87,6 @@
           }
         });
       });
-      this.listenTo(this.get('log'), 'add', function(m, c) {
-        m.save();
-      });
     },
     /**
      * Start logging
@@ -131,13 +128,13 @@
       return log.clearUntil.apply(log, arguments);
     },
     /**
-     * Add the passed LogEvent models to the log.
+     * Add the passed LogEvent model to the log and save it.
      *
-     * @see Backbone.Collection#add
+     * @see Backbone.Collection#create
      **/
-    add: function(/* model[s], [options] */) {
+    create: function(/* model, [options] */) {
       var log = this.get('log');
-      return log.add.apply(log, arguments);
+      return log.create.apply(log, arguments);
     }
   });
 })(ListIt);
