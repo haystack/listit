@@ -332,12 +332,14 @@
       if (json.notes) {
         var notes = this.get('notes');
         _.each(json.notes, function(note) {
+          note.modified = true;
           notes.create(note);
         });
       }
       if (json.deletedNotes) {
         var deletedNotes = this.get('deletedNotes');
         _.each(json.deletedNotes, function(note) {
+          note.modified = true;
           deletedNotes.create(note);
         });
       }
