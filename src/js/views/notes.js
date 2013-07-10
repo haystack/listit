@@ -160,8 +160,13 @@
       }
     },
     onKeyDown: function(event) {
-      if ((event.keyCode === KeyCode.ESC || (event.keyCode === KeyCode.ENTER && event.shiftKey)) && this.editor && !this.editor.isShowingDialog()) {
-        this.closeEditor();
+      if ((
+        event.keyCode === KeyCode.ESC ||
+        (event.keyCode === KeyCode.ENTER && event.shiftKey) ||
+        (event.which === 83 && event.ctrlKey)
+        ) && this.editor && !this.editor.isShowingDialog()) {
+          event.preventDefault();
+          this.closeEditor();
       }
     },
     storeText: function() {
