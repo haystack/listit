@@ -1,9 +1,7 @@
 <?xml version="1.0"?>
-<?xml-stylesheet href="chrome://global/skin/" type="text/css" ?>
 <?xml-stylesheet href="chrome://browser/skin/browser.css" type="text/css" ?>
-<!DOCTYPE page SYSTEM "chrome://listit/locale/listit.dtd">
 
-<page id="listitSidebar" title="&listit.title;"
+<page id="listitSidebar" title="list.it"
     xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" >
     <browser src="chrome://listit/content/webapp/sidebar.html" flex="1" />
 </page>

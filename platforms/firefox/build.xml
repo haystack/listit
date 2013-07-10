@@ -2,9 +2,8 @@
     <import file="../../platform-common.xml"/>
 
     <target name="debug" depends="build.debug,build.install,build.manifest">
-        <link overwrite="yes" link="${build.dir}/chrome/content/extension" resource="${platform.dir}/resources/content" />
-        <link overwrite="yes" link="${build.dir}/chrome/skin" resource="${platform.dir}/resources/skin" />
-        <link overwrite="yes" link="${build.dir}/chrome/locale" resource="${platform.dir}/resources/locale" />
+        <link overwrite="yes" link="${build.content.dir}/extension" resource="${platform.dir}/resources/content" />
+        <link overwrite="yes" link="${build.dir}/bootstrap.js" resource="${platform.dir}/resources/bootstrap.js" />
         <debug-assets name="firefox_modules" includeDefines="false"/>
         <debug-assets name="background" />
         <local name="addon_path"/>

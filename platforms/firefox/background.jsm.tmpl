@@ -48,3 +48,10 @@ for (var i = 0; i < scripts.length; i++) {
 
 // Extract listit
 var ListIt = ctx.ListIt;
+
+// Destroy the listit backend.
+ListIt.destroy = function() {
+  Components.utils.nukeSandbox(ctx);
+  window.document.documentElement.removeChild(frame);
+  Components.utils.unload("chrome://listit/content/background.jsm");
+};
