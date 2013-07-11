@@ -374,10 +374,22 @@
         this.$el.html(ul);
 
         var collection = this.collection.backingCollection;
+
+        // Prevent clicks from getting triggered when sorting.
+        var sorting = false;
+        ul.get(0).addEventListener("click", function(e) {
+          if (sorting) {
+            e.stopImmediatePropagation();
+          }
+        }, true);
+
         ul.sortable({
           distance: 10,
           items: '.note:not(.pinned)',
           containment: 'parent',
+          start: function(event, ui) {
+            sorting = true;
+          },
           stop: function(event, ui) {
             var noteId = ui.item.attr('data-note');
             var previousId = ui.item.prev().attr('data-note');
@@ -390,6 +402,9 @@
               insertIndex = 0;
             }
             collection.add(note, {at: insertIndex});
+
+            // This needs to be set after the click event has been triggered.
+            _.defer(function() { sorting = false; });
           }
         });
 
