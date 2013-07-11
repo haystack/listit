@@ -173,43 +173,21 @@
     border-color: #000;
 }
 
-
-.wysihtml5-dialogs .input:focus:invalid {
-    background-color: #FFC0CB;
-}
-
-.wysihtml5-dialogs .input:required:valid {
-    background-color: #BEFFCE;
-}
-
 .wysihtml5-dialogs [data-wysihtml5-dialog] {
-    display: box;
-    box-orient: horizontal;
-    box-align: center;
-
-    display: -webkit-box;
-    -webkit-box-orient: horizontal;
-    -webkit-box-align: center;
-
-    display: -moz-box;
-    -moz-box-orient: horizontal;
-    -moz-box-align: center;
-
-    display: -o-box;
-    -o-box-orient: horizontal;
-    -o-box-align: center;
-    
+  padding: 10px;
+  padding-right: 16px;
 }
 .wysihtml5-dialogs [data-wysihtml5-dialog] > * {
-    display: block;
-    margin: 0 4px;
+  display: block;
+  margin-bottom: 5px;
+}
+.wysihtml5-dialogs .linkButtons {
+  text-align: right;
+  margin-right: -7px;
 }
 
 .wysihtml5-dialogs .input{
-    box-flex: 1;
-    -webkit-box-flex: 1;
-    -moz-box-flex: 1;
-    -o-box-flex: 1;
+    width: 100%;
 }
 
 .wysihtml5-editor {
