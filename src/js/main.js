@@ -8,8 +8,6 @@
 // Setup debugging
 // Also lets me throw errors without breaking things.
 
-window.DEBUG_MODE = true;
-
 window.debug = function() {};
 window.error = function() {};
 if (window.DEBUG_MODE) {
