@@ -26,13 +26,6 @@
   margin-top: -0.3em;
 }
 
-#notes.shrink .note .contents >*{
-  display: none;
-}
-#notes.shrink .note .contents >*:first-child {
-  display: inherit;
-}
-
 #notes.shrink .note .contents * {
   max-height: 16px;
 }
