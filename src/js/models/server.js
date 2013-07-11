@@ -361,27 +361,27 @@
       // For each
       _.chain(committed)
       // Ignore magic note
-      .filter(function(note) {
-        return note.jid >= 0;
+      .filter(function(noteResponse) {
+        return noteResponse.jid >= 0;
       })
       // Check status
-      .filter(function(note) {
-        if (!(note.status === 201 || note.status === 200)) {
-          debug("syncNotes::error", "Invalid Note", note.jid);
-          return false;
+      .each(function(noteResponse) {
+        if (!(noteResponse.status === 201 || noteResponse.status === 200)) {
+          debug("syncNotes::error", "Invalid Note", noteResponse);
+          return;
         }
-        return true;
-      })
-      // Lookup note
-      .pluck('jid')
-      .map(_.bind(L.notebook.getNote, L.notebook))
-      .reject(_.isUndefined)
-      .each(function(note) {
-        // Set unmodified and increment version (server does the same).
-        note.set({
-          modified: false,
-          version: note.get('version') + 1
-        });
+        var note = L.notebook.getNote(noteResponse.jid);
+        if (!note) {
+          debug("syncNotes::error", "Received response for non-existant note", noteResponse);
+          return;
+        }
+        note.set("modified", false);
+
+        // Incriment version iff note already existed.
+        if (noteResponse.status === 200) {
+          note.set("version", note.get('version')+1);
+        }
+
         note.save();
       });
       // Update note collection version.
@@ -423,7 +423,7 @@
             } else {
               note.set(n, {nomodify: true});
               // delete/undelete based on latest version.
-              note.moveTo(deleted ? deletedNotes : notes, {nosave: true});
+              note.moveTo(deleted ? deletedNotes : notes, {nomodify: true, nosave: true});
             }
             note.save();
           }

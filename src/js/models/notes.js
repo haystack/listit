@@ -95,7 +95,9 @@
 
       this.collection.remove(this, options);
       collection.unshift(this, options);
-      this.set('modified', true, options);
+      if (!(options && options.nomodify)) {
+        this.set('modified', true, options);
+      }
       if (!(options && options.nosave)) {
         this.save();
       }
