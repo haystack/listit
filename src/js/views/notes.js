@@ -164,7 +164,7 @@
       if ((
         event.keyCode === KeyCode.ESC ||
         (event.keyCode === KeyCode.ENTER && event.shiftKey) ||
-        (event.which === KeyCode.A && event.ctrlKey)
+        (event.which === KeyCode.S && event.ctrlKey)
         ) && this.editor && !this.editor.isShowingDialog()) {
         event.preventDefault();
         this.closeEditor();

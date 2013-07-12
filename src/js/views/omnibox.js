@@ -66,7 +66,7 @@
       case KeyCode.ESC:
         this.reset();
         break;
-      case KeyCode.A:
+      case KeyCode.S:
         if (event.ctrlKey){
           event.preventDefault();
           this.save();
