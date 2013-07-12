@@ -170,6 +170,7 @@
         }
 
         function writeFile(file, text) {
+            text = text.replace(/\n/g, br);
             var fw = new FileWriter(file);
             fw.write(text);
             fw.close();
@@ -195,7 +196,7 @@
                 var contents = readFile(file);
                 var basename = String(filename).replace(/\\/g, '/').slice(0, -5);
                 self.log("Compiling " + filename);
-                src += objectName + "['" + basename + "'] = " + _.template(contents).source + ";" + br;
+                src += objectName + "['" + basename + "'] = " + _.template(contents).source + ";" + '\n';
             }
         }
         writeFile(outputFile, src);
