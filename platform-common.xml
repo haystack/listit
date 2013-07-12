@@ -64,11 +64,20 @@
 
     <macrodef name="release-assets">
         <attribute name="name" />
+        <attribute name="includeDefines" default="true"/>
         <sequential>
             <local name="css_text"/>
             <local name="js_text"/>
             <property name="css_text" value="" />
-            <property name="js_text" value="${defines_js}" />
+            <if>
+                <istrue value="@{includeDefines}" />
+                <then>
+                    <property name="js_text" value="${defines_js}" />
+                </then>
+                <else>
+                    <property name="js_text" value="" />
+                </else>
+            </if>
             <for list="css,js" param="type">
                 <sequential>
                     <if>
