@@ -161,9 +161,12 @@
         <![CDATA[
         importPackage(Packages.java.io);
         importPackage(Packages.org.apache.tools.ant.util);
+        var br = String(project.getProperty("line.separator"));
         
         function readFile(file) {
-            return String(new java.lang.String(FileUtils.readFully(new FileReader(file))));
+            var contents = String(new java.lang.String(FileUtils.readFully(new FileReader(file))));
+            contents = contents.replace(br, '\n');
+            return contents;
         }
 
         function writeFile(file, text) {
@@ -192,7 +195,7 @@
                 var contents = readFile(file);
                 var basename = String(filename).replace(/\\/g, '/').slice(0, -5);
                 self.log("Compiling " + filename);
-                src += objectName + "['" + basename + "'] = " + _.template(contents).source + ";\n";
+                src += objectName + "['" + basename + "'] = " + _.template(contents).source + ";" + br;
             }
         }
         writeFile(outputFile, src);
