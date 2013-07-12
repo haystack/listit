@@ -1,11 +1,7 @@
 <project name="List.it Firefox Extension">
     <import file="../../platform-common.xml"/>
 
-    <target name="debug" depends="build.debug,build.install,build.manifest">
-        <link overwrite="yes" link="${build.content.dir}/extension" resource="${platform.dir}/resources/content" />
-        <link overwrite="yes" link="${build.dir}/bootstrap.js" resource="${platform.dir}/resources/bootstrap.js" />
-        <debug-assets name="firefox_modules" includeDefines="false"/>
-        <debug-assets name="background" />
+    <target name="-common">
         <local name="addon_path"/>
         <local name="script_path"/>
         <jsonpath basedir="${build.chrome.dir}" prefix="chrome://listit/" property="addon_path">
@@ -22,6 +18,32 @@
                 </filterreader>
             </filterchain>
         </copy>
+    </target>
+
+    <target name="-release">
+        <mkdir dir="${build.content.dir}/extension" />
+        <copy todir="${build.content.dir}/extension">
+            <fileset dir="${platform.dir}/resources/content" />
+        </copy>
+        <!-- I could compress this, but I don't really care that much -->
+        <copy tofile="${build.dir}/bootstrap.js" file="${platform.dir}/resources/bootstrap.js" />
+        <release-assets name="firefox_modules" includeDefines="false"/>
+        <release-assets name="background" />
+    </target>
+
+    <target name="-debug">
+        <link overwrite="yes" link="${build.content.dir}/extension" resource="${platform.dir}/resources/content" />
+        <link overwrite="yes" link="${build.dir}/bootstrap.js" resource="${platform.dir}/resources/bootstrap.js" />
+        <debug-assets name="firefox_modules" includeDefines="false"/>
+        <debug-assets name="background" />
+    </target>
+
+    <target name="debug"
+        depends="build.debug,build.install,build.manifest,-debug,-common" />
+
+    <target name="release"
+        depends="build.release,build.install,build.manifest,-release,-common">
+        <zip destfile="${deploy.dir}/listit-${listit.version}.xpi" basedir="${build.dir}" />
     </target>
 
     <target name="build.install" depends="-build.setup">
