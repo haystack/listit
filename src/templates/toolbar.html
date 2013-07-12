@@ -22,10 +22,14 @@
 <% }}); %>
 </ul>
 <div class="wysihtml5-dialogs">
-    <form data-wysihtml5-dialog="createLink" style="display: none;">
-        <label>Link: </label>
-        <input required="required" data-wysihtml5-dialog-field="href" value="http://" class="input" type="url" />
-        <input class="button" type="submit" data-wysihtml5-dialog-action="save" value="Save" />
-        <div class="close-btn clickable" data-wysihtml5-dialog-action="cancel"></div>
-    </form>
+  <form data-wysihtml5-dialog="createLink" style="display: none;">
+    <label>Text: </label>
+    <input data-wysihtml5-dialog-field="text" class="input" type="text" placeholder="(optional)" />
+    <label>Link: </label>
+      <input required="required" data-wysihtml5-dialog-field="href" value="http://" class="input" type="url" />
+    <div class="linkButtons">
+      <input class="button" type="submit" data-wysihtml5-dialog-action="cancel" value="Cancel">
+      <input class="button" type="submit" data-wysihtml5-dialog-action="save" value="Save" />
+    </div>
+  </form>
 </div>
