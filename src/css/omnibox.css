@@ -90,8 +90,9 @@
 
 .update-icon {
   position: relative;
-  top: -2px;
+  top: 2px;
   margin-right: -10px;
+  margin-left: 5px;
 }
 
 .editor-toolbar [data-wysihtml5-dialog] {

@@ -79,7 +79,9 @@
       'click     .pin-icon':              'onPinToggle',
       'mousedown .pin-icon':              function(event){event.preventDefault();},
       'click     .save-icon':             'onSaveToggle',
-      'mousedown .save-icon':             function(event){event.preventDefault();}
+      'mousedown .save-icon':             function(event){event.preventDefault();},
+      'click     .cancel-icon':           'onCancel',
+      'mousedown .cancel-icon':           function(event){event.preventDefault();}
     },
     onLinkOpen: function(event) {
       this.model.trigger('user:open-bookmark', this.model, this, event.target.href);
@@ -195,6 +197,10 @@
       }
     },
     onSaveToggle: function(event) {
+      this.closeEditor();
+    },
+    onCancel: function(event){
+      this.editor.setText(this.editor.initialContent);
       this.closeEditor();
     },
     openLink: function() {
