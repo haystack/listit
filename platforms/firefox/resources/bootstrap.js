@@ -58,10 +58,19 @@ var WindowListener = {
     var menu = document.getElementById('viewSidebarMenu');
     var menuitem = document.createElement('menuitem');
     menuitem.setAttribute("observes", "viewListitSidebar");
+    menuitem.setAttribute("key", "key_viewListitSidebar");
     menuitem.classList.add("listit");
     menu.appendChild(menuitem);
 
+    var hotkeys = document.getElementById("mainKeyset");
+    var openHotkey = document.createElement('key');
+    openHotkey.classList.add('listit');
+    openHotkey.setAttribute("command", "viewListitSidebar");
+    openHotkey.setAttribute("key", "l");
+    openHotkey.setAttribute("id", "key_viewListitSidebar");
+    openHotkey.setAttribute("modifiers", "shift accel");
 
+    hotkeys.appendChild(openHotkey);
   },
 
   tearDownBrowserUI: function(window) {
