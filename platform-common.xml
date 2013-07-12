@@ -6,7 +6,6 @@
     <dirname property="platform.dir" file="${ant.file}" />
     <basename property="platform" file="${platform.dir}" />
     <property name="deploy.dir" location="${base-deploy.dir}/${platform}" />
-    <echo message="${ant.project.invoked-targets}" />
     <property name="build.dir" location="${base-build.dir}/${platform}" />
     <property file="${platform.dir}/platform.properties" />
 
