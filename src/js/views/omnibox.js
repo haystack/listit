@@ -89,7 +89,9 @@
      * @private
      */
     _onSaveClicked: function(event) {
-      this.save();
+      if (this.getText() !== "") {
+        this.save();
+      }
     },
     /**
      * Handles New Note Save w/ Place & URL Relevance Info:
@@ -97,12 +99,14 @@
      * @private
      */
     _onSavePinClicked: function(event) {
-      var contents = L.util.strip(this.editor.getText());
-      if (contents[0] !== '!') {
-        contents = '! ' + contents;
+      if (this.getText() !== "") {
+        var contents = L.util.strip(this.editor.getText());
+        if (contents[0] !== '!') {
+          contents = '! ' + contents;
+        }
+        this.editor.setText(contents);
+        this.save();
       }
-      this.editor.setText(contents);
-      this.save();
     },
     save: function() {
       this.assertRendered();
