@@ -153,6 +153,7 @@
     clear: function() {
       if (this._rendered) {
         this.wysihtml5entry.clear();
+        this._fixHeight();
       } else {
         this.initialContent = "";
       }
