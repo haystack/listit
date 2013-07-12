@@ -284,6 +284,8 @@
       <delete verbose="true" includeemptydirs="true" removeNotFollowedSymlinks="true">
         <fileset erroronmissingdir="false" followsymlinks="false" dir="${build.dir}" includes="**/*" />
       </delete>
+      <!-- remove broken symlinks -->
+      <delete dir="${build.dir}" verbose="true" includeemptydirs="true"/>
     </target>
 
     <target name="build.release" depends="build.release.images,build.release.assets,build.release.html" />
