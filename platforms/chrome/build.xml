@@ -38,7 +38,7 @@
         <copy file="${platform.dir}/manifest.json.tmpl" tofile="${build.dir}/manifest.json">
             <filterchain>
                 <filterreader classname="org.apache.tools.ant.filters.ReplaceTokens">
-                    <param type="propertiesfile" value="manifest.properties" />
+                    <param type="propertiesfile" value="${platform.dir}/manifest.properties" />
                     <param type="token" name="background_js" value="${background_path}" />
                     <param type="token" name="version" value="${listit.version}" />
                     <param type="token" name="name" value="${listit.name}" />
