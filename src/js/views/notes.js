@@ -116,8 +116,9 @@
           actions: L.templates['edit-actions']()
         });
         $editorEl.html(this.editor.render().el);
+      } else {
+        this.editor.setText(this.model.get('contents'));
       }
-      this.editor.setText(this.model.get('contents'));
       $editorEl.show();
       $contentsEl.hide();
       this.$el.trigger('startediting');
