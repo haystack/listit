@@ -108,7 +108,7 @@
             if (this.tmp_key.isValid()) {
                 this.key = new Hotkey(this.tmp_key);
                 refresh(this);
-                //$(this).trigger("hotkey-changed");
+                $(this).trigger("hotkey-changed");
             } else {
                 refresh(this);
             }
