@@ -79,7 +79,9 @@
       'click     .pin-icon':              'onPinToggle',
       'mousedown .pin-icon':              function(event){event.preventDefault();},
       'click     .save-icon':             'onSaveToggle',
-      'mousedown .save-icon':             function(event){event.preventDefault();}
+      'mousedown .save-icon':             function(event){event.preventDefault();},
+      'click     .cancel-icon':           'onCancel',
+      'mousedown .cancel-icon':           function(event){event.preventDefault();}
     },
     onLinkOpen: function(event) {
       this.model.trigger('user:open-bookmark', this.model, this, event.target.href);
@@ -115,6 +117,7 @@
         });
         $editorEl.html(this.editor.render().el);
       }
+      this.editor.setText(this.model.get('contents'));
       $editorEl.show();
       $contentsEl.hide();
       this.$el.trigger('startediting');
@@ -196,6 +199,17 @@
     },
     onSaveToggle: function(event) {
       this.closeEditor();
+    },
+    onCancel: function(event){
+      var $contentsEl = this.$('.contents'),
+          $editorEl = this.$('.editor-container');
+      if ($editorEl.is(":visible")) {
+        this.collapse();
+        $editorEl.hide();
+        this.$el.trigger('stopediting');
+      }
+      // Always show contents.
+      $contentsEl.show();
     },
     openLink: function() {
       window.debug('READY');
