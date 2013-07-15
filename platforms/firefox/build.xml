@@ -1,7 +1,7 @@
 <project name="List.it Firefox Extension">
     <import file="../../platform-common.xml"/>
 
-    <target name="-common">
+    <target name="-firefox.common.after">
         <local name="addon_path"/>
         <local name="script_path"/>
         <jsonpath basedir="${build.chrome.dir}" prefix="chrome://listit/" property="addon_path">
@@ -20,7 +20,7 @@
         </copy>
     </target>
 
-    <target name="-release">
+    <target name="-firefox.release.build">
         <mkdir dir="${build.content.dir}/extension" />
         <copy todir="${build.content.dir}/extension">
             <fileset dir="${platform.dir}/resources/content" />
@@ -31,18 +31,21 @@
         <release-assets name="background" />
     </target>
 
-    <target name="-debug">
+    <target name="-firefox.debug.build">
         <link overwrite="yes" link="${build.content.dir}/extension" resource="${platform.dir}/resources/content" />
         <link overwrite="yes" link="${build.dir}/bootstrap.js" resource="${platform.dir}/resources/bootstrap.js" />
         <debug-assets name="firefox_modules" includeDefines="false"/>
         <debug-assets name="background" />
     </target>
 
-    <target name="debug"
-        depends="build.debug,build.install,build.manifest,-debug,-common" />
+    <target name="-firefox.common.before" depends="build.install,build.manifest" />
+    <target name="firefox.debug"
+        depends="-firefox.common.before,-firefox.debug.build,-firefox.common.after"
+        extensionOf="build.debug"/>
 
-    <target name="release"
-        depends="build.release,build.install,build.manifest,-release,-common">
+    <target name="firefox.release"
+        depends="-firefox.common.before,-firefox.release.build,-firefox.common.after"
+        extensionOf="build.release">
         <zip destfile="${deploy.dir}/listit-${listit.version}.xpi" basedir="${build.dir}" />
     </target>
 

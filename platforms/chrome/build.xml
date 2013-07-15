@@ -1,7 +1,7 @@
 <project name="List.it Chrome Extension">
     <import file="../../platform-common.xml"/>
 
-    <target name="build.release.package" depends="build.release,build.manifest">
+    <target name="build.release.package" depends="build.manifest">
         <exec executable="chromium">
             <arg value="--pack-extension=${build.dir}" />
             <arg value="--pack-extension-key=${privatekey}" />
@@ -9,9 +9,9 @@
         <move file="${build.dir}/../chrome.crx" todir="${deploy.dir}" />
     </target>
 
-    <target name="release" depends="build.release.package" />
+    <target name="chrome.release" depends="build.release.package" extensionOf="build.release" />
 
-    <target name="debug" depends="build.debug,build.manifest">
+    <target name="chrome.debug" depends="build.manifest" extensionOf="build.debug">
         <copy todir="${listit.dir}" overwrite="true" flatten="true">
             <filelist dir="${build.dir}">
                 <file name="manifest.json" />
