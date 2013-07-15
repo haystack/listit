@@ -10,32 +10,57 @@ const Cc = Components.classes;
 const Ci = Components.interfaces;
 const Cu = Components.utils;
 
-var ListItContext = {
-  inited: false,
-  timer: Components.classes["@mozilla.org/timer;1"].createInstance(Components.interfaces.nsITimer),
-  start: function() {
-    Cu.import("chrome://listit/content/background.jsm", ListItContext);
-  }
-};
+const SIDEBAR_URL = "chrome://listit/content/extension/sidebar.xul";
 
-var startBackground = function() {
-  if (!ListItContext.inited) {
-    ListItContext.inited = true;
-    ListItContext.timer.initWithCallback(
-      ListItContext.start, 10, Components.interfaces.nsITimer.TYPE_ONE_SHOT);
-  }
-};
-
-var stopBackground = function() {
-  try {
-    if (ListItContext.inited) {
-      ListItContext.inited = false;
-      ListItContext.ListIt.destroy();
-      delete ListItContext.ListIt;
+var ListItManager = {
+  _inited: false,
+  _ready: false,
+  _timer: Components.classes["@mozilla.org/timer;1"].createInstance(Components.interfaces.nsITimer),
+  _cbs: [],
+  _startCb: function() {
+    Cu.import("chrome://listit/content/background.jsm", ListItManager);
+    if (ListItManager.ListIt.status === "ready") {
+      ListItManager._ready = true;
+      var cbs = ListItManager._cbs;
+      ListItManager._cbs = [];
+      cbs.forEach(function(cb) {
+        cb(ListItManager.ListIt);
+      });
+    } else {
+      ListItManager.ListIt.lvent.on('status:ready', function() {
+        var cbs = ListItManager._cbs;
+        ListItManager._cbs = [];
+        cbs.forEach(function(cb) {
+          cb(ListItManager.ListIt);
+        });
+      });
     }
-  } catch (e) {}
+  },
+  ready: function(cb) {
+    if (ListItManager._ready) {
+      cb(ListItManager.ListIt);
+    } else {
+      ListItManager._cbs.push(cb);
+    }
+  },
+  start: function() {
+    if (!ListItManager._inited) {
+      ListItManager._inited = true;
+      ListItManager._timer.initWithCallback(
+        ListItManager._startCb, 10, Components.interfaces.nsITimer.TYPE_ONE_SHOT);
+    }
+  },
+  stop: function() {
+    try {
+      if (ListItManager._inited) {
+        ListItManager._ready = false;
+        ListItManager._inited = false;
+        ListItManager.ListIt.destroy();
+        delete ListItManager.ListIt;
+      }
+    } catch (e) {}
+  }
 };
-
 
 
 var WindowListener = {
@@ -50,7 +75,7 @@ var WindowListener = {
     broadcaster.setAttribute("type", "checkbox");
     broadcaster.setAttribute("autoCheck", "false");
     broadcaster.setAttribute("group", "sidebar");
-    broadcaster.setAttribute("sidebarurl", "chrome://listit/content/extension/sidebar.xul");
+    broadcaster.setAttribute("sidebarurl", SIDEBAR_URL);
     broadcaster.setAttribute("sidebartitle", "list.it");
     broadcaster.setAttribute("oncommand", "toggleSidebar('viewListitSidebar')");
     broadcasters.appendChild(broadcaster);
@@ -62,20 +87,62 @@ var WindowListener = {
     menuitem.classList.add("listit");
     menu.appendChild(menuitem);
 
-    var hotkeys = document.getElementById("mainKeyset");
-    var openHotkey = document.createElement('key');
-    openHotkey.classList.add('listit');
-    openHotkey.setAttribute("command", "viewListitSidebar");
-    openHotkey.setAttribute("key", "l");
-    openHotkey.setAttribute("id", "key_viewListitSidebar");
-    openHotkey.setAttribute("modifiers", "shift accel");
 
-    hotkeys.appendChild(openHotkey);
+    ListItManager.ready(function(L) {
+      var cb = function() {
+        try {
+          var hotkey = L.preferences.get('openHotkey');
+          if (!hotkey) {
+            return;
+          }
+          var pieces = hotkey.split('+');
+          var key = pieces.pop();
+          var modifiers = pieces.map(function(p) {
+            if (p === "ctrl") {
+              return "accel";
+            } else {
+              return p;
+            }
+          }).join(' ');
+
+          var hotkeys = document.getElementById("ListItKeys");
+          if (hotkeys) {
+            document.documentElement.removeChild(hotkeys);
+          }
+          hotkeys = document.createElement('keyset');
+          hotkeys.setAttribute("id", "ListItKeys");
+          hotkeys.classList.add('listit');
+
+          var openHotkey = document.createElement('key');
+
+          openHotkey.classList.add('listit');
+          openHotkey.setAttribute("command", "viewListitSidebar");
+          openHotkey.setAttribute("id", "key_viewListitSidebar");
+
+          openHotkey.setAttribute("key", key.toUpperCase());
+          openHotkey.setAttribute("modifiers", modifiers);
+
+          hotkeys.appendChild(openHotkey);
+
+          document.documentElement.appendChild(hotkeys);
+        } catch (e) {
+          Cu.reportError(e);
+        }
+      };
+      var hotkey = L.preferences.get('openHotkey');
+      if (hotkey) {
+        cb(hotkey);
+      }
+      L.preferences.on('change:openHotkey', cb);
+    });
   },
 
   tearDownBrowserUI: function(window) {
     let document = window.document;
-    // TODO: Close things.
+    var sidebarWindow = document.getElementById("sidebar").contentWindow;
+    if (sidebarWindow.location.href === SIDEBAR_URL) {
+      window.toggleSidebar();
+    }
     Array.slice(document.getElementsByClassName("listit"), 0).forEach(function(el) {
       el.parentNode.removeChild(el);
     });
@@ -93,7 +160,7 @@ var WindowListener = {
       domWindow.removeEventListener("load", listener, false);
       // Only start after a window has been loaded (the hidden window needs to
       // be loaded). Also, don't block.
-      startBackground();
+      ListItManager.start();
 
       // If this is a browser window then setup its UI
       if (domWindow.document.documentElement.getAttribute("windowtype") == "navigator:browser")
@@ -115,7 +182,7 @@ function startup(data, reason) {
   // Get the list of browser windows already open
   let windows = wm.getEnumerator("navigator:browser");
   if (windows.hasMoreElements()) {
-    startBackground();
+    ListItManager.start();
   }
 
   while (windows.hasMoreElements()) {
@@ -129,7 +196,6 @@ function startup(data, reason) {
 }
 
 function shutdown(data, reason) {
-  stopBackground();
 
   // When the application is shutting down we normally don't have to clean
   // up any UI changes made
@@ -149,4 +215,5 @@ function shutdown(data, reason) {
 
   // Stop listening for any new browser windows to open
   wm.removeListener(WindowListener);
+  ListItManager.stop();
 }

@@ -56,6 +56,7 @@
         <resources refid="js.common" />
         <resources refid="js.storage" />
         <resources refid="js.models" />
+        <fileset dir="${listit.js.platforms.dir}/firefox/models" includes="**.js" />
         <resources refid="js.templates" />
         <resources refid="js.collectors" />
         <resources refid="js.observers" />
