@@ -13,10 +13,6 @@
     <include file="${root.dir}/resources.xml" />
     <include optional="true" file="${platform.dir}/resources.xml" />
 
-    <condition property="-exists-build.dir">
-      <available file="${build.dir}"/>
-    </condition>
-
     <target name="build.release.wysihtml5" depends="build.release.setup">
         <release-assets name="wysihtml5" />
     </target>
@@ -265,27 +261,12 @@
         <mkdir dir="${assets.dir}" />
     </target>
 
-    <extension-point name="clean" if="-exists-build.dir"/>
+    <extension-point name="build.clean"/>
 
-    <!-- Needs to be separate to handle links (junctions) correctly -->
-    <!-- DO NOT REMOVE -->
-    <target name="-clean.windows" if="-platform-windows" extensionOf="clean">
-      <exec resolveexecutable="true" executable="cmd.exe">
-        <arg value="/C"/>
-        <arg value="rmdir"/>
-        <arg value="${build.dir}"/>
-        <arg value="/s"/>
-        <arg value="/q"/>
-      </exec>
+    <target name="clean" depends="build.clean">
+        <rmdir dir="${build.dir}" />
     </target>
 
-    <target name="-clean.unix" if="-platform-unix" extensionOf="clean">
-      <delete verbose="true" includeemptydirs="true" removeNotFollowedSymlinks="true">
-        <fileset erroronmissingdir="false" followsymlinks="false" dir="${build.dir}" includes="**/*" />
-      </delete>
-      <!-- remove broken symlinks -->
-      <delete dir="${build.dir}" verbose="true" includeemptydirs="true"/>
-    </target>
 
     <target name="build.release" depends="build.release.images,build.release.assets,build.release.html" />
     <target name="build.debug" depends="build.debug.assets,build.debug.html" />

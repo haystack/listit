@@ -154,6 +154,45 @@
         </sequential>
     </macrodef>
 
+    <macrodef name="rmdir">
+        <attribute name="dir" />
+        <sequential>
+            <if>
+                <available file="@{dir}" />
+                <then>
+                    <fail message="Not a directory: @{dir}">
+                        <condition>
+                            <not>
+                                <available type="dir" file="@{dir}" />
+                            </not>
+                        </condition>
+                    </fail>
+                    <if>
+                        <os family="windows" />
+                        <then>
+                            <exec resolveexecutable="true" executable="cmd.exe">
+                                <arg value="/C"/>
+                                <arg value="rmdir"/>
+                                <arg value="@{dir}"/>
+                                <arg value="/s"/>
+                                <arg value="/q"/>
+                            </exec>
+                        </then>
+                        <else>
+                            <delete verbose="true"
+                                includeemptydirs="true" removeNotFollowedSymlinks="true">
+                                <fileset erroronmissingdir="false"
+                                    followsymlinks="false" dir="@{dir}" includes="**/*" />
+                            </delete>
+                            <!-- remove broken symlinks -->
+                            <delete dir="@{dir}" verbose="true" includeemptydirs="true"/>
+                        </else>
+                    </if>
+                </then>
+            </if>
+        </sequential>
+    </macrodef>
+
     <scriptdef name="jstmpl" language="javascript">
         <attribute name="output" />
         <attribute name="object" />
@@ -202,4 +241,5 @@
         writeFile(outputFile, src);
         ]]>
     </scriptdef>
+
 </project>
