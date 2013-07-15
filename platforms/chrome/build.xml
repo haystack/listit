@@ -6,7 +6,8 @@
             <arg value="--pack-extension=${build.dir}" />
             <arg value="--pack-extension-key=${privatekey}" />
         </exec>
-        <move file="${build.dir}/../chrome.crx" todir="${deploy.dir}" />
+        <move file="${build.dir}/../chrome.crx"
+            tofile="${deploy.base}.crx" />
     </target>
 
     <target name="chrome.release" depends="build.release.package" extensionOf="build.release" />
