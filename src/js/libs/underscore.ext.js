@@ -1,5 +1,6 @@
 (function() {
   var _ = this._;
+  var idCounter = Math.random();
   _.mixin({
     // Delete and return o[key]
     pop: function(o, key, def) {
@@ -10,6 +11,11 @@
       } else {
         return def;
       }
+    },
+    // Override uniqueId. We need it to be unique within the entire browser.
+    uniqueId: function(prefix) {
+      var id = ++idCounter + '';
+      return prefix ? prefix + id : id;
     },
     // Like map but works on objects.
     kmap: function(obj, iterator, context) {
