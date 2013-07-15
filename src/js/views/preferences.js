@@ -76,12 +76,6 @@
       });
       this.$el.html(L.templates["options/preferences"]({preferences: opts}));
       return this;
-    },
-    openHotkeyChanged: function(evt) {
-      this.model.set('openHotkey', this.$('#openHotkey').val());
-    },
-    shrinkToggled: function(evt) {
-      this.model.set('shrinkNotes', this.$('#shrink').val());
     }
   });
 
