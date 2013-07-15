@@ -17,12 +17,15 @@
       this.listenTo(this, 'change:text', function() {
         slowSearch.call(that, {user: true});
       });
+      this.listenTo(this, 'change:searchText', function() {
+        slowSearch.call(that, {user:true});
+      });
       this.listenTo(this, 'change', _.mask(this.throttledSave));
       this.requestSearch();
     },
     throttledSave: _.debounce(function() { this.save.apply(this, arguments); }, 500),
     requestSearch: function(options) {
-      var text = L.util.clean(this.get('text') || '');
+      var text = L.util.clean(this.get('searchText') || this.get('text') || '');
       var searchID = L.sidebar.search(text);
       this.trigger("user:search", this, text, searchID);
     },
