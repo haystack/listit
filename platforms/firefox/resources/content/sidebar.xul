@@ -3,5 +3,5 @@
 
 <page id="listitSidebar" title="list.it"
     xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" >
-    <browser src="chrome://listit/content/webapp/sidebar.html" flex="1" />
+    <browser disablehistory="true" src="chrome://listit/content/webapp/sidebar.html" flex="1" />
 </page>
