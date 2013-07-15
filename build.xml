@@ -4,6 +4,7 @@
     <property file="${root.dir}/global.properties" />
 
     <import file="base-common.xml" />
+    <import file="resources.xml" />
 
     <target name="-set.target.release">
         <property name="build.target" value="release" />
