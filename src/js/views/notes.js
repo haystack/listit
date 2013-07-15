@@ -117,6 +117,7 @@
         });
         $editorEl.html(this.editor.render().el);
       }
+      this.editor.setText(this.model.get('contents'));
       $editorEl.show();
       $contentsEl.hide();
       this.$el.trigger('startediting');
@@ -200,8 +201,15 @@
       this.closeEditor();
     },
     onCancel: function(event){
-      this.editor.setText(this.editor.initialContent);
-      this.closeEditor();
+      var $contentsEl = this.$('.contents'),
+          $editorEl = this.$('.editor-container');
+      if ($editorEl.is(":visible")) {
+        this.collapse();
+        $editorEl.hide();
+        this.$el.trigger('stopediting');
+      }
+      // Always show contents.
+      $contentsEl.show();
     },
     openLink: function() {
       window.debug('READY');
