@@ -9,3 +9,8 @@
    (causing memory leaks).
     - It also makes window point to the background page (not good).
 
+## Firefox Extension ##
+
+ * XUL Keysets can't be changed at runtime. To bind a new hotkey, remove and
+   recreate the keyset.
+  
