@@ -56,7 +56,7 @@
     // Event handlers
     passwordUpdated: function(el) {
       // Set second password field validation pattern.
-      this.$('#pw2').attr('pattern', el.target.value);
+      this.$('#pw2').prop('pattern', el.target.value);
     },
     showRegisterForm : function() {
       this.setMode('register');

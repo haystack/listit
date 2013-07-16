@@ -16,6 +16,7 @@
 
     <resources id="js.libs.compatability">
         <filelist dir="${listit.js.dir}/libs/">
+            <file name="modernizr.js" />
             <file name="Blob.js" />
             <file name="FileSaver.js" />
         </filelist>

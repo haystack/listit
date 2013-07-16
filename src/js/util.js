@@ -222,14 +222,14 @@
 (function($) {
   'use strict';
   $.fn.enableFields = function() {
-    this.filter('input').removeAttr('disabled');
-    this.find('input').removeAttr('disabled');
+    this.filter('input').prop('disabled', false);
+    this.find('input').prop('disabled', false);
     return this;
   };
 
   $.fn.disableFields = function() {
-    this.filter('input').attr('disabled', 'disabled');
-    this.find('input').attr('disabled', 'disabled');
+    this.filter('input').prop('disabled', true);
+    this.find('input').prop('disabled', true);
     return this;
   };
   $.fn.scrollIntoView = function(toShow, toScroll) {

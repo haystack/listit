@@ -1,8 +1,7 @@
 (function($) {
-    $.fn.fastclick = function() {
-        var that = this;
-
-        $(document).on({ 'touchstart.fastclick' : handler }, that.selector);
+    $.fn.fastclick = function(selector) {
+        this.on({ 'touchstart.fastclick' : handler }, selector);
+        return this;
     };
 
     var clickbuster = {

@@ -2,7 +2,7 @@
 (function(L) {
   'use strict';
   $(document).ready(function() {
-    $('.editable, .clickable').fastclick();
+    $(document).fastclick('.editable, .clickable');
     // Check if android.
     if (typeof Android === 'undefined') {
       return;

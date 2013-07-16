@@ -26,14 +26,10 @@
           break;
         case 'boolean':
           setView = function(m, v) {
-            if (v) {
-              that.$el.find(sel).attr('checked', 'checked');
-            } else {
-              that.$el.find(sel).removeAttr('checked');
-            }
+            that.$el.find(sel).prop('checked', v);
           };
           setModel = function() {
-            that.model.set(n, that.$el.find(sel).is(':checked'));
+            that.model.set(n, that.$el.find(sel).prop('checked'));
           };
           break;
         case 'number':

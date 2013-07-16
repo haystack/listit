@@ -36,7 +36,7 @@
     },
     render: function(options) {
       var that = this;
-      this.$el.attr("id", "note-"+this.model.id);
+      this.$el.prop("id", "note-"+this.model.id);
       this.$el.attr("data-note", this.model.id);
 
       if (this._rendered) {
@@ -58,7 +58,7 @@
       }
     },
     updateMeta: function(options) {
-      this.$el.attr('class', this.className);
+      this.$el.prop('className', this.className);
       if (this.model.get('meta', {}).pinned) {
         this.$el.addClass('pinned');
       } else {
@@ -385,7 +385,7 @@
     render: function() {
       if (!this._rendered) {
         var ul = $('<ul>');
-        ul.attr({ 'class': 'notelist', 'id': 'notes-container' });
+        ul.prop({ className: 'notelist', id: 'notes-container' });
         this.$el.html(ul);
 
         var collection = this.collection.backingCollection;

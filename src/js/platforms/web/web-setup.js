@@ -6,7 +6,7 @@ ListIt.lvent.once('setup:views', function(L, barr) {
   // Ugly hack for firefox -moz-box. Need this event to fixup page header
   // (omnibox) /content (notelist) heights.
   // BUG: https://bugzil.la/579776 (the workarround doesn't work).
-  if ($.browser.mozilla) {
+  if (!Modernizr.flexbox) {
     var fixSize = function() {
       var h = $(this);
       var p = h.parent();
