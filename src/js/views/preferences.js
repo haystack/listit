@@ -55,7 +55,6 @@
         that.listenTo(that.model, 'change:'+n, setView);
       });
       this.delegateEvents();
-      $('.hotkey-field').hotkeyinput();
     },
     render: function() {
       var that = this;
@@ -71,6 +70,7 @@
         };
       });
       this.$el.html(L.templates["options/preferences"]({preferences: opts}));
+      this.$('.hotkey-field').hotkeyinput();
       return this;
     }
   });

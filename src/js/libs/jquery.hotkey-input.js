@@ -60,7 +60,7 @@
 
     $.fn.hotkeyinput = function() {
 
-        $(document).on("keydown.hotkeyinput", this.selector, function(evt) {
+        this.on("keydown.hotkeyinput", function(evt) {
             this.tmp_key || (this.tmp_key = new Hotkey(this.key || {}));
 
             switch(evt.which) {
@@ -113,7 +113,7 @@
                 refresh(this);
             }
             return false;
-        }).on("keyup.hotkeyinput", this.selector, function(evt) {
+        }).on("keyup.hotkeyinput", function(evt) {
             this.tmp_key || (this.tmp_key = new Hotkey(this.key));
 
             if (this.tmp_key.isValid()) return true;
@@ -145,7 +145,7 @@
             }
             refresh(this);
             return false;
-        }).on("blur.hotkeyinput", this.selector, function(evt) {
+        }).on("blur.hotkeyinput", function(evt) {
             this.tmp_key = new Hotkey(this.key || {});
             refresh(this);
         });
