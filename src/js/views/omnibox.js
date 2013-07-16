@@ -124,6 +124,10 @@
       keyCode = event.keyCode || event.which;
       switch(keyCode) {
       case KeyCode.X:
+        if (event.ctrlKey) {
+          this.model.set('searchState', false);
+        }
+        break;
       case KeyCode.ESC:
         this.model.set('searchState', false);
         break;
