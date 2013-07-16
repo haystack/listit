@@ -25,17 +25,15 @@
           this.setText(t);
         }
       });
-      this.listenTo(this.model, 'change:searchText', function(m, t, o) {
+      this.listenTo(this.model, 'change:searchText', function(m, search, o) {
         if (o.source !== this) {
-          if (!this.model.get('searchState')) {
-            this.model.set('searchState', true);
-          }
-          this.setSearch(t);
+          this.model.set('searchState', true);
+          this.setSearch(search);
           this._fixSearchHeight();
         }
       });
-      this.listenTo(this.model, 'change:searchState', function(m,t,o) {
-        if (this.model.get('searchState')) {
+      this.listenTo(this.model, 'change:searchState', function(m,state) {
+        if (state) {
           this.showSearch();
           this.$searchbar.focus();
         } else {
@@ -128,7 +126,6 @@
       case KeyCode.X:
       case KeyCode.ESC:
         this.model.set('searchState', false);
-        this.editor.focus();
         break;
       case KeyCode.F:
         if (event.ctrlKey) {
