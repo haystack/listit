@@ -25,24 +25,20 @@
           this.setText(t);
         }
       });
-      this.listenTo(this.model, 'change:searchText', function(m, t, o) {
+      this.listenTo(this.model, 'change:searchText', function(m, search, o) {
         if (o.source !== this) {
-          if (this.$searchbar[0].hidden) {
-            this.showSearch();
-          }
-          this.setSearch(t);
+          this.model.set('searchState', true);
+          this.setSearch(search);
           this._fixSearchHeight();
         }
       });
-      this.listenTo(this.model, 'change:searchState', function(m,t,o) {
-        if (o.source !== this) {
-          if (this.model.get('searchState')) {
-            this.showSearch();
-            this.$searchbar.focus();
-          } else {
-            this.hideSearch();
-            this.editor.focus();
-          }
+      this.listenTo(this.model, 'change:searchState', function(m,state) {
+        if (state) {
+          this.showSearch();
+          this.$searchbar.focus();
+        } else {
+          this.hideSearch();
+          this.editor.focus();
         }
       });
       this.initialSearchState = this.model.get('searchState');
@@ -81,7 +77,7 @@
       });
       $(window).on('keydown', null, 'ctrl+x', function(event) {
         if (!that.$el.hidden) {
-          that.hideSearch();
+          that.model.set('searchState', false);
         }
       });
       return this;
@@ -128,9 +124,12 @@
       keyCode = event.keyCode || event.which;
       switch(keyCode) {
       case KeyCode.X:
+        if (event.ctrlKey) {
+          this.model.set('searchState', false);
+        }
+        break;
       case KeyCode.ESC:
-        this.hideSearch();
-        this.editor.focus();
+        this.model.set('searchState', false);
         break;
       case KeyCode.F:
         if (event.ctrlKey) {
@@ -221,8 +220,8 @@
       });
     },
     toggleSearch: function() {
-      if (this.$searchbar[0].hidden) {
-        this.showSearch();
+      if (!this.model.get('searchState')) {
+        this.model.set('searchState', true);
         if (this.getText()) {
           this.setSearch(L.util.clean(this.getText()));
         } else {
@@ -235,15 +234,11 @@
     },
     showSearch: function() {
       this.$searchbar.show();
-      this.$searchbar[0].hidden = false;
-      this.model.set("searchState", true, {source: this});
       this._fixSearchHeight();
     },
     hideSearch: function() {
       this.setSearch("");
       this.$searchbar.hide();
-      this.$searchbar[0].hidden = true;
-      this.model.set("searchState", false, {source: this});
     },
     getSearch: function() {
       return this.$searchbar[0].value;
@@ -251,9 +246,6 @@
     setSearch: function(text) {
       this.$searchbar[0].value = text;
       this.storeSearch();
-    },
-    getSearchState: function() {
-      return !this.$searchbar[0].hidden;
     }
   });
 
