@@ -5,6 +5,8 @@
     <property name="pages.sidebar.tmpl" location="${listit.templates.paged}" />
     <property name="pages.options.html" location="${build.dir}/options.html" />
     <property name="pages.options.tmpl" location="${listit.templates.paged}" />
+    <property name="pages.help.html" location="${build.dir}/help.html" />
+    <property name="pages.help.tmpl" location="${listit.templates.paged}" />
     <property name="pages.addnotebox.html" location="${build.dir}/addnotebox.html" />
 
     <property name="privatekey" location="${platform.dir}/key.pem" />
@@ -56,6 +58,23 @@
     <resources id="assets.options.css">
         <resources refid="css.all" />
         <fileset file="${listit.css.platform.dir}/options.css" />
+    </resources>
+    
+    <resources id="assets.help.js">
+      <resources refid="js.libs" />
+        <resources refid="js.common" />
+        <filelist dir="${listit.js.platforms.dir}/chrome">
+            <file name="client-setup.js" />
+            <file name="help-setup.js" />
+        </filelist>
+        <resources refid="js.router" />
+        <resources refid="js.templates" />
+        <resources refid="js.views" />
+        <resources refid="js.setup"/>
+    </resources>
+        <resources id="assets.help.css">
+        <resources refid="css.all" />
+        <fileset file="${listit.css.platforms.dir}/chrome/help.css" />
     </resources>
 
     <resources id="assets.background.js">

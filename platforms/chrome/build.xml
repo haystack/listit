@@ -18,6 +18,7 @@
                 <file name="manifest.json" />
                 <file name="index.html" />
                 <file name="options.html" />
+                <file name="help.html" />
                 <file name="addnotebox.html" />
             </filelist>
         </copy>
