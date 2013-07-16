@@ -28,22 +28,19 @@
       this.listenTo(this.model, 'change:searchText', function(m, t, o) {
         if (o.source !== this) {
           if (!this.model.get('searchState')) {
-            this.showSearch();
-            this.model.set('searchState', true, {source: this});
+            this.model.set('searchState', true);
           }
           this.setSearch(t);
           this._fixSearchHeight();
         }
       });
       this.listenTo(this.model, 'change:searchState', function(m,t,o) {
-        if (o.source !== this) {
-          if (this.model.get('searchState')) {
-            this.showSearch();
-            this.$searchbar.focus();
-          } else {
-            this.hideSearch();
-            this.editor.focus();
-          }
+        if (this.model.get('searchState')) {
+          this.showSearch();
+          this.$searchbar.focus();
+        } else {
+          this.hideSearch();
+          this.editor.focus();
         }
       });
       this.initialSearchState = this.model.get('searchState');
@@ -82,8 +79,7 @@
       });
       $(window).on('keydown', null, 'ctrl+x', function(event) {
         if (!that.$el.hidden) {
-          that.hideSearch();
-          that.model.set('searchState', false, {source: this});
+          that.model.set('searchState', false);
         }
       });
       return this;
@@ -131,8 +127,7 @@
       switch(keyCode) {
       case KeyCode.X:
       case KeyCode.ESC:
-        this.hideSearch();
-        this.model.set('searchState', false, {source: this});
+        this.model.set('searchState', false);
         this.editor.focus();
         break;
       case KeyCode.F:
@@ -225,8 +220,7 @@
     },
     toggleSearch: function() {
       if (!this.model.get('searchState')) {
-        this.showSearch();
-        this.model.set('searchState', true, {source: this});
+        this.model.set('searchState', true);
         if (this.getText()) {
           this.setSearch(L.util.clean(this.getText()));
         } else {

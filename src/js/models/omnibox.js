@@ -30,12 +30,7 @@
     },
     throttledSave: _.debounce(function() { this.save.apply(this, arguments); }, 500),
     requestSearch: function(options) {
-      var text;
-      if (this.get('searchState')) {
-        text = L.util.clean(this.get('searchText') || '');
-      } else {
-        text = L.util.clean(this.get('text') || '');
-      }
+      var text = L.util.clean(this.get(this.get('searchState') ? 'searchText' : 'text') || '');
       var searchID = L.sidebar.search(text);
       this.trigger("user:search", this, text, searchID);
     },
@@ -49,7 +44,7 @@
     },
     appendSearch: function(text) {
       var search = this.get('searchText');
-      if (_.last(search) === " ") {
+      if (_.str.endsWith(search, " ")) {
         this.set('searchText', this.get('searchText') + text);
       } else {
         this.set('searchText', this.get('searchText') + " " + text);
