@@ -23,9 +23,9 @@
     </resources>
 
     <resources id="js.libs.wysihtml5">
-        <filelist dir="${listit.js.dir}/libs/wysihtml5">
-            <file name="parser_rules/advanced.js" />
-            <file name="dist/wysihtml5-0.4.0pre.js" />
+        <filelist dir="${listit.js.dir}/libs/">
+            <file name="wysihtml5.parser_rules.js" />
+            <file name="wysihtml5.js" />
         </filelist>
     </resources>
 
