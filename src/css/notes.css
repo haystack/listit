@@ -28,6 +28,7 @@
 
 #notes.shrink .note .contents * {
   max-height: 16px;
+  width: auto;
 }
 
 .note.pinned {
