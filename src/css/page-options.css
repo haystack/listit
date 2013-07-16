@@ -111,9 +111,6 @@ a, .tabbar a {
 #options-login[data-mode=register] :required:valid {
     background-color: #BEFFCE;
 }
-#options-login[data-mode=register] :after:required:valid {
-    content: "a";
-}
 #options-login[data-mode=register] :focus:required:invalid {
     background-color: #FFC0CB;
 }
