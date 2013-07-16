@@ -139,6 +139,9 @@
       options.crossDomain = false; // Force same domain
       options.jsonp = false; // Don't ever use jsonp XXX JQUERY BUG
 
+      // Ajax uses method internally
+      delete options.method;
+
       $.ajax(options);
     },
     syncNotes : function() {
