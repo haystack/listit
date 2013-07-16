@@ -92,7 +92,7 @@
       return false;
     },
     onTagClick: function(event) {
-      L.omnibox.set('text', event.target.textContent);
+      L.omnibox.appendSearch(event.target.textContent);
       return false;
     },
     expand: function() {

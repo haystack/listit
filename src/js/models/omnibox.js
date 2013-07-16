@@ -15,9 +15,14 @@
       var that = this;
       // Stop search when typing but don't start next search until stop.
       this.listenTo(this, 'change:text', function() {
-        slowSearch.call(that, {user: true});
+        if (!this.get('searchState')) {
+          slowSearch.call(that, {user: true});
+        }
       });
       this.listenTo(this, 'change:searchText', function() {
+        slowSearch.call(that, {user:true});
+      });
+      this.listenTo(this, 'change:searchState', function() {
         slowSearch.call(that, {user:true});
       });
       this.listenTo(this, 'change', _.mask(this.throttledSave));
@@ -25,7 +30,12 @@
     },
     throttledSave: _.debounce(function() { this.save.apply(this, arguments); }, 500),
     requestSearch: function(options) {
-      var text = L.util.clean(this.get('searchText') || this.get('text') || '');
+      var text;
+      if (this.get('searchState')) {
+        text = L.util.clean(this.get('searchText') || '');
+      } else {
+        text = L.util.clean(this.get('text') || '');
+      }
       var searchID = L.sidebar.search(text);
       this.trigger("user:search", this, text, searchID);
     },
@@ -36,6 +46,14 @@
       }, window);
       this.trigger("note-created", this, note);
       return note;
+    },
+    appendSearch: function(text) {
+      var search = this.get('searchText');
+      if (_.last(search) === " ") {
+        this.set('searchText', this.get('searchText') + text);
+      } else {
+        this.set('searchText', this.get('searchText') + " " + text);
+      }
     }
   });
 })(ListIt);
