@@ -127,6 +127,7 @@
       event = event || window.event;
       keyCode = event.keyCode || event.which;
       switch(keyCode) {
+      case KeyCode.X:
       case KeyCode.ESC:
         this.hideSearch();
         this.editor.focus();
