@@ -42,8 +42,6 @@
           this.editor.focus();
         }
       });
-      this.initialSearchState = this.model.get('searchState');
-      this.initialSearch = this.model.get('searchText') || '';
     },
     assertRendered: function() {
       if (!this._rendered) {
@@ -55,12 +53,12 @@
         return this;
       }
 
-      this.$el.html(L.templates['omnibox/searchbar']());
+      // Searchbar
+      this.$el.append(L.templates['omnibox/searchbar']({text: this.model.get('searchText')}));
       this.$searchbar = this.$('.searchbar');
-      if (this.initialSearchState) {
-        this.setSearch(this.initialSearch);
-      } else {
-        this.hideSearch();
+
+      if (!this.model.get('searchState')) {
+        this.$searchbar.hide();
       }
 
       this.editor = new L.views.Editor({
