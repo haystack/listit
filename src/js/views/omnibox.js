@@ -16,6 +16,7 @@
         that.stopListening();
         //that.model.set('selection', rangy.saveSelection().rangeInfos);
         that.storeText();
+        that.storeSearch();
       });
 
       this.model.set('untouched', true); // View untouched by user.
