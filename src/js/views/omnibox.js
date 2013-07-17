@@ -233,12 +233,12 @@
       }
     },
     showSearch: function() {
-      this.$searchbar.show();
+      this.$searchbar.slideDown('fast');
       this._fixSearchHeight();
     },
     hideSearch: function() {
       this.setSearch("");
-      this.$searchbar.hide();
+      this.$searchbar.slideUp('fast');
     },
     getSearch: function() {
       return this.$searchbar[0].value;
