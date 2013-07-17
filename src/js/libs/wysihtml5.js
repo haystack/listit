@@ -3395,11 +3395,11 @@ wysihtml5.browser = (function() {
       isOpera     = userAgent.indexOf("Opera/")       !== -1;
   
   function iosVersion(userAgent) {
-    return +((/ipad|iphone|ipod/.test(userAgent) && userAgent.match(/ os (\d+).+? like mac os x/)) || [, 0])[1];
+    return +((/ipad|iphone|ipod/.test(userAgent) && userAgent.match(/ os (\d+).+? like mac os x/)) || [undefined, 0])[1];
   }
   
   function androidVersion(userAgent) {
-    return +(userAgent.match(/android (\d+)/) || [, 0])[1];
+    return +(userAgent.match(/android (\d+)/) || [undefined, 0])[1];
   }
   
   return {
@@ -3679,7 +3679,7 @@ wysihtml5.browser = (function() {
      *    }
      */
     supportsSpeechApiOn: function(input) {
-      var chromeVersion = userAgent.match(/Chrome\/(\d+)/) || [, 0];
+      var chromeVersion = userAgent.match(/Chrome\/(\d+)/) || [undefined, 0];
       return chromeVersion[1] >= 11 && ("onwebkitspeechchange" in input || "speech" in input);
     },
     
@@ -3737,9 +3737,16 @@ wysihtml5.browser = (function() {
      */
     createsNestedInvalidMarkupAfterPaste: function() {
       return isWebKit;
+    },
+    hasMutationObserverSupport: function() {
+      return window.hasOwnProperty("MutationObserver");
+    },
+    hasMutationEventSupport: function() {
+      return window.hasOwnProperty("MutationEvent");
     }
   };
-})();wysihtml5.lang.array = function(arr) {
+})();
+wysihtml5.lang.array = function(arr) {
   return {
     /**
      * Check whether a given object exists in an array
@@ -8575,18 +8582,38 @@ wysihtml5.views.View = Base.extend(
         pasteEvents         = ["drop", "paste"];
 
     // --------- destroy:composer event ---------
-    dom.observe(iframe, "DOMNodeRemoved", function() {
-      clearInterval(domNodeRemovedInterval);
-      that.parent.fire("destroy:composer");
-    });
+    if (wysihtml5.browser.hasMutationObserverSupport()) {
+      var observer = new MutationObserver(function(mutations) {
+        for (var i = 0; i < mutations.length; i++) {
+          var mutation = mutations[i];
+          if (mutation.type === 'childList') {
+            var nodes = mutation.removedNodes,
+                len = nodes.length;
+            for (var j = 0; j < len; j++) {
+              var node = nodes[j];
+              if (node === iframe || node.contains(iframe)) {
+                that.parent.fire("destroy:composer");
+                return;
+              }
+            }
+          }
+        }
+      });
+      observer.observe(document.body, {childList: true, subtree: true});
 
-    // DOMNodeRemoved event is not supported in IE 8
-    var domNodeRemovedInterval = setInterval(function() {
-      if (!dom.contains(document.documentElement, iframe)) {
-        clearInterval(domNodeRemovedInterval);
+    } else if (wysihtml5.browser.hasMutationEventSupport()) {
+      dom.observe(iframe, "DOMNodeRemovedFromDocument", function() {
         that.parent.fire("destroy:composer");
-      }
-    }, 250);
+      });
+    } else {
+      // DOMNodeRemoved event is not supported in IE 8
+      var domNodeRemovedInterval = setInterval(function() {
+        if (!dom.contains(document.documentElement, iframe)) {
+          clearInterval(domNodeRemovedInterval);
+          that.parent.fire("destroy:composer");
+        }
+      }, 250);
+    }
 
     // --------- Focus & blur logic ---------
     dom.observe(focusBlurElement, "focus", function() {
@@ -9071,7 +9098,7 @@ wysihtml5.views.Textarea = wysihtml5.views.View.extend(
         }
         
         fieldName = field.getAttribute(ATTRIBUTE_FIELDS);
-        newValue  = this.elementToChange ? (this.elementToChange[fieldName] || "") : field.defaultValue;
+        newValue  = this.elementToChange ? (this.elementToChange.getAttribute(fieldName) || "") : field.defaultValue;
         field.value = newValue;
       }
     },
