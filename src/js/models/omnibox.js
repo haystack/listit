@@ -19,10 +19,20 @@
           slowSearch.call(that, {user: true});
         }
       });
-      this.listenTo(this, 'change:searchText', function() {
-        slowSearch.call(that, {user:true});
+      this.listenTo(this, 'change:searchText', function(m, text) {
+        if (this.get('searchState')) {
+          slowSearch.call(that, {user:true});
+        }
       });
-      this.listenTo(this, 'change:searchState', function() {
+      this.listenTo(this, 'change:searchState', function(m, state) {
+        if (state) {
+          // Default to current omnibox text.
+          if (!this.get('searchText')) {
+            this.set('searchText', _.str.trim(_.str.stripTags(this.get('text') || '')));
+          }
+        } else {
+          this.set('searchText', '');
+        }
         slowSearch.call(that, {user:true});
       });
       this.listenTo(this, 'change', _.mask(this.throttledSave));
@@ -49,6 +59,7 @@
       } else {
         this.set('searchText', this.get('searchText') + " " + text);
       }
+      this.set('searchState', true);
     }
   });
 })(ListIt);

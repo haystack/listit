@@ -28,9 +28,7 @@
       });
       this.listenTo(this.model, 'change:searchText', function(m, search, o) {
         if (o.source !== this) {
-          this.model.set('searchState', true);
           this.setSearch(search);
-          this._fixSearchHeight();
         }
       });
       this.listenTo(this.model, 'change:searchState', function(m,state) {
@@ -61,17 +59,23 @@
         this.$searchbar.hide();
       }
 
+      // Editor
       this.editor = new L.views.Editor({
         text: this.model.get('text')||'',
         actions: L.templates['create-actions']()
       });
       this.$el.append(this.editor.render().el);
+
+      // Done
       this._rendered = true;
+
+      // Bind
       var that = this;
       $(window).on('keydown', null, 'ctrl+f', function(event) {
         if (that.$el.is(':visible')) {
-          event.preventDefault();
-          that.toggleSearch();
+          event.preventDefault(); // Don't open the findbar
+          that.model.set('searchState', true);
+          that.$searchbar.select().focus();
         }
       });
       $(window).on('keydown', null, 'ctrl+x', function(event) {
@@ -133,7 +137,8 @@
       case KeyCode.F:
         if (event.ctrlKey) {
           event.preventDefault();
-          this.toggleSearch();
+          this.model.set('searchState', true);
+          this.$searchbar.select().focus();
         }
         break;
       }
@@ -218,33 +223,19 @@
         $searchbar.height($searchbar[0].scrollHeight);
       });
     },
-    toggleSearch: function() {
-      if (!this.model.get('searchState')) {
-        this.model.set('searchState', true);
-        if (this.getText()) {
-          this.setSearch(L.util.clean(this.getText()));
-        } else {
-          this.$searchbar.focus();
-        }
-      } else {
-        this.$searchbar.select();
-        this.$searchbar.focus();
-      }
-    },
     showSearch: function() {
       this.$searchbar.slideDown('fast');
       this._fixSearchHeight();
     },
     hideSearch: function() {
-      this.setSearch("");
       this.$searchbar.slideUp('fast');
     },
     getSearch: function() {
       return this.$searchbar[0].value;
     },
     setSearch: function(text) {
-      this.$searchbar[0].value = text;
-      this.storeSearch();
+      this.$searchbar.val(text);
+      this._fixSearchHeight();
     }
   });
 
