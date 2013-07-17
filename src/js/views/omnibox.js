@@ -70,13 +70,13 @@
       this._rendered = true;
       var that = this;
       $(window).on('keydown', null, 'ctrl+f', function(event) {
-        if (!that.$el.hidden) {
+        if (that.$el.is(':visible')) {
           event.preventDefault();
           that.toggleSearch();
         }
       });
       $(window).on('keydown', null, 'ctrl+x', function(event) {
-        if (!that.$el.hidden) {
+        if (that.$el.is(':visible')) {
           that.model.set('searchState', false);
         }
       });
