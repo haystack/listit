@@ -43,6 +43,12 @@ var MyClass = function() {};
 Also, even if slightly less efficient, please prefer Underscore and
 Underscore.string functions where appropriate for readability and consistency.
 
+## Contributors
+
+Contributors are listed in the CONTRIBUTORS file. This file is parsed by the
+build system to generate various author lists so please keep it clean (one name
+per line).
+
 ## Library modifications
 
 ### Backbone Modifications
