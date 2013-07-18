@@ -259,6 +259,7 @@
       this.$el.html(L.templates["omnibox/controls"]({
         searchState: L.omnibox.get('searchState'),
         shrinkState: L.preferences.get('shrinkNotes'),
+        loginState: L.server.get('registered'),
         syncState: L.server.get('syncingNotes')
       }));
       return this;

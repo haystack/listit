@@ -81,10 +81,6 @@
   display: block;
 }
 
-#controls > img:hover {
-  background-color: rgba(128,128,128,.5);
-}
-
 /* Icon Tab Icon Containers! */
 .iconTab {
   height: 22px;

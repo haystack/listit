@@ -111,9 +111,15 @@ __p+='\n    title="Close separate searchbar, note creator will now search again.
  } else { 
 __p+='\n    title="Open a separate searchbar."\n    ';
  } 
-__p+='\n    >\n</a>\n<a class="clickable">\n    <img id="syncIcon" class="';
+__p+='\n    >\n</a>\n';
+ if (loginState) { 
+__p+='\n  <a class="clickable">\n    <img id="syncIcon" class="';
  if (syncState) print("spinner"); 
-__p+=' settingIcon" src="img/controls/sync.png" width="16" height="16" title="Save a backup copy of your notes on our server.">\n</a>\n<a href="#/options" class="clickable">\n    <img id="optionsIcon" class="settingIcon" src="img/controls/options.png" width="16" height="16" title="View Options and Login to save a backup of your notes." >\n</a>\n<a class="clickable">\n  <img id="shrinkIcon" class="settingIcon"\n    ';
+__p+=' settingIcon"\n    src="img/controls/sync.png" width="16" height="16"\n    title="Save a backup copy of your notes on our server.">\n  </a>\n';
+ } else { 
+__p+='\n  <img id="syncIcon" class="settingIcon"\n  src="img/controls/sync-disabled.png" width="16" height="16"\n  title="Syncing is disabled. Please login to enable syncing.">\n';
+ } 
+__p+='\n<a href="#/options" class="clickable">\n    <img id="optionsIcon" class="settingIcon" src="img/controls/options.png" width="16" height="16" title="View Options and Login to save a backup of your notes." >\n</a>\n<a class="clickable">\n  <img id="shrinkIcon" class="settingIcon"\n    ';
  if (shrinkState) { 
 __p+='\n    src="img/controls/arrow-left.png" title="Expand Notes"\n    ';
  } else { 
