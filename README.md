@@ -315,7 +315,64 @@ Pages can be accessed by navigating to `#/<my_page_name>`.
 
 ## Storage
 
-*TODO*
+List.it supports multiple asynchronous storage backends. It uses `localStorage`
+by default but can use alternative storage backends (attached to
+`ListIt.stores`) as long as they implement the following interface:
+
+```js
+/**
+ * Get the value specified by key.
+ * @param {String} key The key (usually a path)
+ * @param {Object} [options] The callbacks
+ *   @property {Function(Object value)} [success] The success callback.
+ *   @property {Function(Object err)} [error]     The error callback.
+ *
+ *
+ * If the operation succeeds this method MUST call the success callback (if
+ * specified) with the object referenced by `key`.
+ *
+ * If the operation fails, this method MUST call the error callback (if
+ * specified) and may pass an optional error value (free-form).
+ *
+ **/
+function get(key, options);
+
+/**
+ * Set the value spefified by key.
+ *
+ * @param {String} key    The key (usually a path).
+ * @param {Object} value  The value to store (must be serializable).
+ * @param {Object} [options] The callbacks
+ *   @property {Function()} [success]         The success callback.
+ *   @property {Function(Object err)} [error] The error callback.
+ *
+ * If the operation succeeds this method MUST call the success callback (if
+ * specified.
+ *
+ * If this operation fails, this method MUST call the error callback and may
+ * pass an optional error object.
+ **/
+function set(key, value, options);
+
+/**
+ * Set the value spefified by key.
+ *
+ * @param {String} key        The key (usually a path).
+ * @param {Object} [options]  The callbacks
+ *   @property {Function()} [success]         The success callback.
+ *   @property {Function(Object err)} [error] The error callback.
+ *
+ * If the operation succeeds this method MUST call the success callback (if
+ * specified.
+ *
+ * If this operation fails, this method MUST call the error callback and may
+ * pass an optional error object.
+ **/
+function unset(key, options);
+```
+
+Set `ListIt.store` to change the global storage backend and set `<model>.store`
+to change a specific model's storage backend.
 
 ## Build System
 
