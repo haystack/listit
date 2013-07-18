@@ -1,6 +1,6 @@
 (function(L) {
   'use strict';
-  L.stores = [];
+  L.stores = {};
 
   // Helper functions from Backbone
   var getValue = function(object, prop) {
