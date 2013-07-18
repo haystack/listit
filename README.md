@@ -108,6 +108,9 @@ In addition to the standard underscore functions, list.it adds the following:
    `_.mask(function() {return arguments;}, 2, 1)('a', 'b', 'c', 'd')` will
    return `['c', 'b']`.
 
+Additionally, list.it uses a modified version of the `_.uniqueID` function that
+should return an ID that is unique across all windows.
+
 
 ## Directory Structure
 
