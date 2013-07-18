@@ -1,9 +1,11 @@
 <a class="clickable">
-    <img id="searchIcon" class="settingIcon" src="img/controls/search.png" width="16" height="16"
+    <img id="searchIcon" src="img/controls/search.png" width="16" height="16"
     <% if (searchState) { %>
     title="Close separate searchbar, note creator will now search again."
+    class="settingIcon activeSearch"
     <% } else { %>
     title="Open a separate searchbar."
+      class="settingIcon inactiveSearch"
     <% } %>
     >
 </a>
