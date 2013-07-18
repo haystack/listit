@@ -308,9 +308,10 @@ it has been released.
 
 Most list.it windows (for lack of a better term), use a page system to allow
 multiple pages in the same window. To add a page to a window, call
-`ListIt.addPage(my_page_view)` where `my_page_view` is the page's Backbone View.
+`ListIt.addPage(my_page_name, my_page_view)` where `my_page_view` is the page's
+Backbone View.
 
-*TODO: More*
+Pages can be accessed by navigating to `#/<my_page_name>`.
 
 ## Storage
 
