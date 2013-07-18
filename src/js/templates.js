@@ -105,11 +105,11 @@ return __p;
 ListIt.templates['omnibox/controls'] = function(obj){
 var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'')};
 with(obj||{}){
-__p+='<a class="clickable">\n    <img id="searchIcon" class="settingIcon" src="img/controls/search.png" width="16" height="16"\n    ';
+__p+='<a class="clickable">\n    <img id="searchIcon" src="img/controls/search.png" width="16" height="16"\n    ';
  if (searchState) { 
-__p+='\n    title="Close separate searchbar, note creator will now search again."\n    ';
+__p+='\n    title="Close separate searchbar, note creator will now search again."\n    class="settingIcon activeSearch"\n    ';
  } else { 
-__p+='\n    title="Open a separate searchbar."\n    ';
+__p+='\n    title="Open a separate searchbar."\n      class="settingIcon inactiveSearch"\n    ';
  } 
 __p+='\n    >\n</a>\n';
  if (loginState) { 
