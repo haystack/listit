@@ -35,7 +35,6 @@
       return this.el && this.el.parentNode;
     },
     render: function(options) {
-      var that = this;
       this.$el.prop("id", "note-"+this.model.id);
       this.$el.attr("data-note", this.model.id);
 

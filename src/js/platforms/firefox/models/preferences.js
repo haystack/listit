@@ -8,7 +8,7 @@
   }, L.models.Preferences.prototype.schema);
 
   L.models.Preferences.prototype.defaults = _.defaults({
-    openHotkey: "ctrl+shift+l",
+    openHotkey: "ctrl+shift+l"
   }, L.models.Preferences.prototype.defaults);
 })(ListIt);
 
