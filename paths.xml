@@ -2,6 +2,7 @@
 
 <project>
     <property name="listit.dir" location="${root.dir}/src" />
+    <property name="contributors" location="${root.dir}/CONTRIBUTORS" />
     <property name="listit.templates.paged" location="${listit.dir}/paged.html.tmpl" />
     <property name="listit.templates.empty" location="${listit.dir}/empty.html.tmpl" />
     <property name="listit.js.dir" location="${listit.dir}/js" />
