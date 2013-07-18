@@ -44,10 +44,19 @@
       var searchID = L.sidebar.search(text);
       this.trigger("user:search", this, text, searchID);
     },
-    saveNote: function(window) {
+    saveNote: function(options, window) {
+      options = options || {};
+      var contents = L.util.strip(this.get('text'));
+      var meta = options.meta || {}
+      if (options.includeSearch) {
+        contents = this.get('searchText') + '<br/>' + contents;
+      }
+      if (options.pinned) {
+        contents = '! ' + contents;
+      }
       var note = L.notebook.createNote({
-        contents: L.util.strip(this.get('text')),
-        meta: {}
+        contents: contents,
+        meta: meta
       }, window);
       this.trigger("note-created", this, note);
       return note;

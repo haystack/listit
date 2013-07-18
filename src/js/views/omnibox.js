@@ -105,7 +105,7 @@
           this.save();
           event.preventDefault(); // Let model update
         } else if (event.ctrlKey) { // control+enter for save with search text
-          this.saveWithSearch();
+          this.save({includeSearch: true});
           event.preventDefault();
         }
         break;
@@ -160,9 +160,7 @@
      * @private
      */
     _onSaveClicked: function(event) {
-      if (this.getText() !== "") {
-        this.save();
-      }
+      this.save();
     },
     /**
      * Handles New Note Save w/ Place & URL Relevance Info:
@@ -170,27 +168,12 @@
      * @private
      */
     _onSavePinClicked: function(event) {
-      if (this.getText() !== "") {
-        var contents = L.util.strip(this.editor.getText());
-        if (contents[0] !== '!') {
-          contents = '! ' + contents;
-        }
-        this.editor.setText(contents);
-        this.save();
-      }
+      this.save({pinned: true});
     },
-    saveWithSearch: function() {
-      var contents = this.editor.getText();
-      var searchContents = this.getSearch();
-      this.editor.setText(searchContents + "<br>" + contents);
-      this.save();
-    },
-    save: function() {
+    save: function(options) {
       this.assertRendered();
-      this.model.unset('selection');
-      // Clean
       this.storeText();
-      this.model.saveNote(window);
+      this.model.saveNote(options||{}, window);
       this.reset();
     },
 
