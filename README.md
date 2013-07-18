@@ -20,7 +20,7 @@ For more information, see: [welist.it](https://welist.it/)
 ## Coding Style
 
 List.it uses the JSHint static code checker. Please check your code before
-commit to avoid common JavaScript pitfalls.
+committing to avoid common JavaScript pitfalls.
 
 This project uses 2 space indents, does not insert newlines before/after braces,
 uses mixedCase for variable names, and CamelCase for class names:
@@ -221,7 +221,7 @@ be used to broadcast information that is relevant to the entire extension.
 ## Setup
 
 On startup (global and per page), list.it sets up the environment by issuing
-setup events on the local event interface (`ListIt.gvent`). The events are
+setup events on the local event interface (`ListIt.lvent`). The events are
 triggered in the following order:
 
 Event | Description
