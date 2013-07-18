@@ -14,6 +14,10 @@
     box-align: stretch;
     -webkit-box-align: stretch;
     -moz-box-align: stretch;
+    
+  -webkit-transition: margin-top 0.1s ease-in;
+  -moz-transition: margin-top 0.1s ease-in;
+  transition: margin-top 0.1s ease-in;
 }
 
 .note > *{
