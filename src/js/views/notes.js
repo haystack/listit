@@ -408,9 +408,9 @@
             sorting = true;
             ui.placeholder.height(ui.item.height() / 2);
             current = ui.placeholder.next();
-          },        
+          },
           change: function(event, ui) {
-            current.css('margin-top', '2px'); 
+            current.css('margin-top', '2px');
             current = ui.placeholder.next();
             current.css('margin-top', ui.placeholder.height());
           },
@@ -418,7 +418,7 @@
             current.css({'-webkit-transition': 'none',
                          '-moz-transition': 'none',
                          'transition': 'none',
-                        'margin-top': '2px'});                         
+                        'margin-top': '2px'});
             var noteId = ui.item.attr('data-note');
             var previousId = ui.item.prev().attr('data-note');
             var note = collection.get(noteId);
