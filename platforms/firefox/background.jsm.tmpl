@@ -51,7 +51,15 @@ var ListIt = ctx.ListIt;
 
 // Destroy the listit backend.
 ListIt.destroy = function() {
-  Components.utils.nukeSandbox(ctx);
-  window.document.documentElement.removeChild(frame);
-  Components.utils.unload("chrome://listit/content/background.jsm");
+  try {
+    Components.utils.nukeSandbox(ctx);
+  } catch (e) { Components.utils.reportError(e); }
+  try {
+    window.document.documentElement.removeChild(frame);
+  } catch (e) { Components.utils.reportError(e); }
+  for (var i = 0; i < addons.length; i++) {
+    try {
+      Components.utils.unload(addons[i]);
+    } catch (e) { Components.utils.reportError(e); }
+  }
 };
