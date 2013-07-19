@@ -288,7 +288,7 @@
     <target name="debug" depends="build.debug">
         <rmdir dir="${debug.dir}" />
         <mkdir dir="${base-debug.dir}" />
-        <move file="${build.dir}" tofile="${debug.dir}"/>
+        <move file="${build.dir}" todir="${base-debug.dir}"/>
     </target>
     <target name="release" depends="build.release" />
 </project>
