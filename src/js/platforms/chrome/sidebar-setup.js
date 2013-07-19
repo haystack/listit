@@ -12,7 +12,7 @@ ListIt.lvent.once('setup:views:after', function(L, barr) {
     this.navigate('', {trigger: false});
     window.open('/options.html', '_new');
   });
-  
+
   L.router.route('help', 'help', function() {
     this.navigate('', {trigger: false});
     window.open('/help.html', '_new');

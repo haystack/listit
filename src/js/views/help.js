@@ -11,13 +11,13 @@
     },
     render: function() {
       this.$el.html(L.templates["pages/help"]());
-      
+
       if(this.platform) {
         var main = this.$('#help-main');
         var platformHelp = L.templates["platforms/" + this.platform + "/help"]();
         main.append(platformHelp);
       }
-      
+
       return this;
     }
   });

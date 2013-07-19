@@ -85,6 +85,10 @@
   opacity: 0.5;
 }
 
+#helpIcon {
+  margin-left: 1px;
+}
+
 #controls > a {
   display: block;
 }

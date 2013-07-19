@@ -14,6 +14,9 @@
     <property name="pages.options.html" location="${build.webapp.dir}/options.html" />
     <property name="pages.options.tmpl" location="${listit.templates.paged}" />
 
+    <property name="pages.help.html" location="${build.webapp.dir}/help.html" />
+    <property name="pages.help.tmpl" location="${listit.templates.paged}" />
+
     <property name="pages.background.tmpl" location="${platform.dir}/background.jsm.tmpl" />
     <property name="pages.background.jsm" location="${build.content.dir}/background.jsm" />
 
@@ -45,6 +48,19 @@
         <resources refid="js.setup" />
     </resources>
 
+    <resources id="assets.help.js">
+        <resources refid="js.libs" />
+        <resources refid="js.common" />
+        <filelist dir="${listit.js.platforms.dir}/firefox">
+            <file name="client-setup.js" />
+            <file name="help-setup.js" />
+        </filelist>
+        <resources refid="js.router" />
+        <resources refid="js.templates" />
+        <resources refid="js.views" />
+        <resources refid="js.setup" />
+    </resources>
+
     <resources id="assets.firefox_modules.js">
         <filelist dir="${listit.js.platform.dir}">
             <file name="authmanager.js" />
@@ -69,4 +85,5 @@
 
     <resources id="assets.sidebar.css" refid="css.all"/>
     <resources id="assets.options.css" refid="css.all"/>
+    <resources id="assets.help.css" refid="css.all"/>
 </project>

@@ -59,7 +59,7 @@
         <resources refid="css.all" />
         <fileset file="${listit.css.platform.dir}/options.css" />
     </resources>
-    
+
     <resources id="assets.help.js">
       <resources refid="js.libs" />
         <resources refid="js.common" />
