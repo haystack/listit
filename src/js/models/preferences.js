@@ -3,7 +3,7 @@
   L.models.Preferences = Backbone.Model.extend({
     autoFetch: true,
     defaults: {
-      shrinkNotes: true,
+      shrinkNotes: false,
       expandVariables: true,
       openHotkey: '',
       notificationTimeout: 5
