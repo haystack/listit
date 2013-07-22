@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <project>
-    <fileset id="templates" dir="${listit.templates.dir}" includes="**/*.html" />
 
     <resources id="js.libs.jquery">
         <filelist dir="${listit.js.dir}/libs">
@@ -72,6 +71,7 @@
 
     <resources id="js.templates">
         <fileset file="${listit.templates.file}" />
+        <fileset file="${listit.js.platform.dir}/templates.js" />
     </resources>
     <resources id="js.models">
         <fileset dir="${listit.js.models.dir}">

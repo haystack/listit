@@ -29,15 +29,38 @@
         <if>
             <not>
                 <uptodate targetfile="${listit.templates.file}">
-                    <srcfiles refid="templates" />
+                    <srcfiles dir="${listit.templates.dir}" includes="**/*.html" excludes="platforms/"/>
                 </uptodate>
             </not>
             <then>
                 <jstmpl output="${listit.templates.file}" object="ListIt.templates">
-                    <fileset refid="templates" />
+                    <fileset dir="${listit.templates.dir}" includes="**/*.html" excludes="platforms/"/>
                 </jstmpl>
             </then>
         </if>
+        <for param="platformDir">
+            <dirset erroronmissingdir="false" dir="${listit.templates.dir}/platforms/" includes="*/"/>
+            <sequential>
+                <local name="platform" />
+                <local name="output_file" />
+                <echo message="@{platformDir}" />
+                <basename property="platform" file="@{platformDir}" />
+                <property name="output_file" location="${listit.js.platforms.dir}/${platform}/templates.js" />
+                <if>
+                    <not>
+                        <uptodate targetfile="${output_file}">
+                            <srcfiles dir="@{platformDir}" includes="**/*.html" />
+                        </uptodate>
+                    </not>
+                    <then>
+                        <mkdir dir="${listit.js.platforms.dir}/${platform}/" />
+                        <jstmpl output="${output_file}" object="ListIt.templates">
+                            <fileset dir="@{platformDir}" includes="**/*.html" />
+                        </jstmpl>
+                    </then>
+                </if>
+            </sequential>
+        </for>
     </target>
 
     <target name="jshint">
