@@ -17,7 +17,6 @@
       }
       var that = this;
       var iframe = this.wysihtml5entry.composer.iframe;
-      iframe.setAttribute("scrolling", "no");
       var $body = $(iframe).contents().find('body'); // Needs document to be loaded.
       var txtbox = this.wysihtml5entry.textareaElement;
       _.delay(function() {
@@ -26,7 +25,6 @@
           iframe.style.height = 'auto';
           iframe.style.height = $body[0].clientHeight + 'px';
           txtbox.style.height = iframe.style.height;
-
         } else {
           // Not using composer
           txtbox.style.height = 'auto';
@@ -62,6 +60,7 @@
         style: false,
         stylesheets: WYSIHTML5_CSS
       });
+      this.wysihtml5entry.composer.iframe.setAttribute("scrolling", "no");
 
 
       // Forward events to parent and resize editor
