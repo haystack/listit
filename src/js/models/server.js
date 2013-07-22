@@ -32,8 +32,6 @@
       'email',
       'noteSyncInterval',
       'logSyncInterval',
-      'syncingNotes',
-      'syncingLogs',
       'logSyncInterval',
       'studies'
     ],
@@ -218,10 +216,11 @@
         dataType: 'json',
         auth: true,
         success: function(results) {
-          that.unbundleNotes(results);
-          if (options.success) {
-            options.success(results);
-          }
+          that.unbundleNotes(results, function() {
+            if (options.success) {
+              options.success(results);
+            }
+          });
         },
         error: options.error,
         complete: options.complete
@@ -426,84 +425,97 @@
         console.timeEnd('commit notes');
       }
     },
-    unbundleNotes: function(result) {
+    unbundleNotes: function(result, cb) {
       if (DEBUG_MODE && window.console) {
         console.time('unbundle notes');
       }
 
-      var magic;
-      var newVersion;
-      var notes = L.notebook.get('notes');
-      var deletedNotes = L.notebook.get('deletedNotes');
-      var toAdd = [];
-      var toAddDeleted = [];
-      // Update changed
-      _.chain(result)
-      .pluck("fields")
-      .map(this.unpackageNote)
-      .filter(function(n) { // Filter out magic note.
-        if (n.id < 0) {
-          if (L.notebook.get('version') < n.version) {
-            magic = JSON.parse(n.contents);
-            newVersion = n.version;
+      var magic,
+          newVersion,
+          that = this,
+          notes = L.notebook.get('notes'),
+          deletedNotes = L.notebook.get('deletedNotes'),
+          toAdd = [],
+          toAddDeleted = [],
+          unbundleQueue = new ActionQueue(10);
+
+      unbundleQueue.start();
+
+      _.each(result, unbundleQueue.wrap(function(noteResult) {
+        // Unpackage
+        var noteJSON = that.unpackageNote(noteResult.fields);
+
+        // Handle magic note.
+        if (noteJSON.id < 0) {
+          if (L.notebook.get('version') < noteJSON.version) {
+            magic = JSON.parse(noteJSON.contents);
+            newVersion = noteJSON.version;
           }
-          return false;
-        } else {
-          return true;
+          return;
         }
-      })
-      .each(function(n) {
-        var deleted = _.pop(n, 'deleted');
-        var note = L.notebook.getNote(n.id);
+
+        // Add or merge
+        var deleted = _.pop(noteJSON, 'deleted');
+        var note = L.notebook.getNote(noteJSON.id);
         if (note) {
-          if (note.get('version') < n.version) {
+          if (note.get('version') < noteJSON.version) {
             if (note.get('modified')) {
-              note.merge(n);
+              note.merge(noteJSON);
               // On merge, only undelete (safest)
               if (!deleted) {
                 note.moveTo(notes, {nosave: true});
               }
             } else {
-              note.set(n, {nomodify: true});
+              note.set(noteJSON, {nomodify: true});
               // delete/undelete based on latest version.
               note.moveTo(deleted ? deletedNotes : notes, {nomodify: true, nosave: true});
             }
             note.save();
           }
         } else {
-          (deleted ? toAddDeleted : toAdd).push(new L.models.Note(n));
+          (deleted ? toAddDeleted : toAdd).push(new L.models.Note(noteJSON));
+        }
+      }));
+
+      unbundleQueue.add(function() {
+        // This section shouldn't be interrupted
+        // We mess with events.
+        if (toAddDeleted) {
+          toAddDeleted.reverse();
+          deletedNotes.add(toAddDeleted, {at: 0, nosave: true});
+        }
+        if (toAdd) {
+          toAdd.reverse();
+          notes.add(toAdd, {at: 0, silent: true});
+        }
+        // FIXME: don't necessarily clobber order.
+        if (magic && magic.noteorder) {
+          notes.setOrder(magic.noteorder, {silent: true});
+        }
+
+        notes.sort({silent: true});
+
+        _.each(toAdd, function(n) {
+          notes.trigger('add', n, notes, {nosave: true});
+        });
+        notes.trigger('sort', notes, {nosave: true});
+
+        if (newVersion !== undefined) {
+          L.notebook.set('version', newVersion, {nosave: true});
         }
       });
 
-      if (toAddDeleted) {
-        toAddDeleted.reverse();
-        deletedNotes.add(toAddDeleted, {at: 0, nosave: true});
-        _.each(toAddDeleted, function(n) {n.save();});
-      }
-      if (toAdd) {
-        toAdd.reverse();
-        notes.add(toAdd, {at: 0, silent: true});
-        _.each(toAdd, function(n) {n.save();});
-      }
-      // FIXME: don't necessarily clobber order.
-      if (magic && magic.noteorder) {
-        notes.setOrder(magic.noteorder, {silent: true});
-      }
-      notes.sort({silent: true});
-      _.each(toAdd, function(n) {
-        notes.trigger('add', n, notes, {nosave: true});
+      // Save everything.
+      _.each(toAdd, unbundleQueue.wrap(function(n) {n.save();}));
+      _.each(toAddDeleted, unbundleQueue.wrap(function(n) {n.save();}));
+      unbundleQueue.add(_.bind(L.notebook.save, L.notebook));
+
+      unbundleQueue.add(function() {
+        if (DEBUG_MODE && window.console) {
+          console.timeEnd('unbundle notes');
+        }
+        cb();
       });
-      notes.trigger('sort', notes, {nosave: true});
-
-      if (newVersion !== undefined) {
-        L.notebook.set('version', newVersion);
-      }
-      // Save collections
-      L.notebook.save();
-
-      if (DEBUG_MODE && window.console) {
-        console.timeEnd('unbundle notes');
-      }
     },
 
     /**
