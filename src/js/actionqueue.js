@@ -33,7 +33,7 @@ window.ActionQueue = (function() {
       this._queueNext();
     },
     _queueNext: function() {
-      if (!this.running && this._timer) {
+      if (!this.running || this._timer) {
         return;
       }
 
