@@ -14,7 +14,7 @@
 
       if(this.platform) {
         var main = this.$('#help-main');
-        var platformHelp = L.templates["platforms/" + this.platform + "/help"]();
+        var platformHelp = L.templates["help"]();
         main.append(platformHelp);
       }
 

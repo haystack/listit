@@ -267,20 +267,6 @@ __p+='<div id="options-header">\n    <h2 class="options-title">List.it</h2>\n   
 }
 return __p;
 };
-ListIt.templates['platforms/chrome/help'] = function(obj){
-var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'')};
-with(obj||{}){
-__p+='<div id="help-chrome">\n    <h3>Chrome</h3>\n    <h4>Your Preferences</h4>\n    <p>\n        On the options page, you can choose your settings to change how List.it functions. The first option\n        is to open List.it in a chrome addon popup instead of a separate window. This will make the List.it\n        sidebar open up on the right side of your Chrome window and it won\'t always be visible.\n    </p>\n    <p>\n        The second option will cause the List.it window to track the Chrome window. This means that the List.it\n        window will stay on the left side of Chrome and if you move your main Chrome window, List.it will move\n        with it. Just be aware that this option may use more power and drain your battery.\n    </p>\n    <h4>Chrome Omnibox</h4>\n    <p>\n        You can access List.it from your urlbar. Type "listit" and hit Tab and then begin typing to\n        create a new note. Just like the note creator in the sidebar, this will search through your notes\n        as you type. When you are finished with your note, hit Enter to save it.\n    </p>\n    <h4>Other Ways To Add Notes</h4>\n    <p>\n        While browsing the web, you can create new notes by right clicking and selecting "Add to \n        List.it" This will open up the new note creator so that you can edit and save it. You can add \n        bookmarks, pictures, and links. But, List.it will only store a reference to these items. This \n        means that if they\'re deleted from the web, they\'ll also be deleted from your notes. \n        So if you want to keep a picture no matter what, save it to your computer.\n    </p>\n    <h4>Additional Hotkeys</h4>\n    <p>\n        For your convenience, we\'ve given you several keyboard shortcuts that you can use anywhere in Chrome.\n        They have default shortcuts, but you can change these if you want. Go to chrome://extensions and scroll\n        to the bottom of the page. There is a link for "Keyboard shortcuts" and there you can change the hotkeys\n        listed below.\n        <table>\n            <tr>\n                <th>Default Shortcut</th><th>Use</th>\n            </tr>\n            <tr>\n                <td><b>Control+L</b></td><td><b>Activate the extension.</b> This will open up the popup or separate\n                window.</td>\n            </tr>\n            <tr>\n                <td><b>Control+M</b></td><td><b>Create a new note.</b> This will bring you to the new note\n                creator.</td>\n            </tr>\n            <tr>\n                <td><b>Control+Shift+M</b></td><td><b>Create a new note with bookmark.</b> This will bring you to\n                the new note creator with a link to the current page included in a note.</td>\n            </tr>\n        </table>\n    </p>\n</div>\n';
-}
-return __p;
-};
-ListIt.templates['platforms/firefox/help'] = function(obj){
-var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'')};
-with(obj||{}){
-__p+='<div id="help-firefox">\n    <h3>Firefox</h3>\n    <h4>Hotkey</h4>\n    <p>\n        For your convenience, we\'ve given you a hotkey that you can use anywhere in Firefox.\n        It has a default keyboard shortcut but you can change it by going to the Options Page \n        and adjusting your settings.\n    </p>\n    <table>\n        <tr>\n            <th>Default Shortcut</th><th>Use</th>\n        </tr>\n        <tr>\n            <td>Control+Shift+L</td><td><b>Open/Close the sidebar</b></td>\n        </tr>\n    </table>\n</div>\n';
-}
-return __p;
-};
 ListIt.templates['toolbar'] = function(obj){
 var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'')};
 with(obj||{}){

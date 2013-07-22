@@ -63,18 +63,19 @@
     <resources id="assets.help.js">
       <resources refid="js.libs" />
         <resources refid="js.common" />
-        <filelist dir="${listit.js.platforms.dir}/chrome">
+        <filelist dir="${listit.js.platform.dir}">
             <file name="client-setup.js" />
             <file name="help-setup.js" />
         </filelist>
         <resources refid="js.router" />
         <resources refid="js.templates" />
         <resources refid="js.views" />
+        <resources refid="js.views.setup"/>
         <resources refid="js.setup"/>
     </resources>
         <resources id="assets.help.css">
         <resources refid="css.all" />
-        <fileset file="${listit.css.platforms.dir}/chrome/help.css" />
+        <fileset file="${listit.css.platforms.dir}help.css" />
     </resources>
 
     <resources id="assets.background.js">
