@@ -203,7 +203,7 @@
         var br = String(project.getProperty("line.separator"));
         
         function readFile(file) {
-            var contents = String(new java.lang.String(FileUtils.readFully(new FileReader(file))));
+            var contents = String(new java.lang.String(FileUtils.readFully(new FileReader(file)) || ""));
             contents = contents.replace(new RegExp(br, 'g'), '\n');
             return contents;
         }
