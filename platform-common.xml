@@ -27,12 +27,12 @@
     </target>
 
     <target name="-build.release.assets" depends="build.release.wysihtml5">
-        <generate-defines property="defines_js" />
+        <generate-defines debug="${DEBUG}" property="defines_js" />
     </target>
 
     <macrodef name="generate-defines">
         <attribute name="property"/>
-        <attribute name="debug" default="false"/>
+        <attribute name="debug" />
         <sequential>
             <local name="wysihtml5_json" />
             <jsonpath property="wysihtml5_json" basedir="${assets.dir}" prefix="${assets.prefix}">
@@ -49,7 +49,7 @@
 
     <target name="-build.debug.assets" depends="build.debug.wysihtml5">
         <local name="js_text"/>
-        <generate-defines debug="true" property="js_text" />
+        <generate-defines debug="${DEBUG}" property="js_text" />
         <echo message="${js_text}" file="${assets.js.dir}/defines-debug.js" />
     </target>
 
@@ -226,6 +226,7 @@
     </target>
 
     <target name="build.release.setup" depends="-build.release.before,-build.setup">
+        <property name="DEBUG" value="false" />
         <mkdir dir="${deploy.dir}" />
         <mkdir dir="${assets.js.dir}" />
         <mkdir dir="${assets.img.dir}" />
@@ -237,6 +238,7 @@
     <extension-point name="-build.release.before" depends="-build.before" />
 
     <target name="build.debug.setup" depends="-build.debug.before,-build.setup">
+        <property name="DEBUG" value="true" />
         <link overwrite="yes" link="${assets.js.dir}"  resource="${listit.js.dir}" />
         <link overwrite="yes" link="${assets.css.dir}" resource="${listit.css.dir}" />
         <link overwrite="yes" link="${assets.img.dir}" resource="${listit.img.dir}" />
