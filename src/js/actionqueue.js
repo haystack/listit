@@ -56,7 +56,7 @@ window.ActionQueue = (function() {
      **/
     stop: function() {
       window.clearTimeout(this._timer);
-      delete this._timer;
+      this._timer = null;
       this.running = false;
     },
     _exec: function() {
@@ -64,13 +64,13 @@ window.ActionQueue = (function() {
       while (this.running && ((Date.now() - start) < this.timeSlice)) {
         task = this._queue.shift();
         if (!task) {
-          delete this._timer;
+          this._timer = null;
           return;
         }
         task.func.apply(task.func, task.args);
       }
       // can't do this at the beginning because we call a user-defined function.
-      delete this._timer;
+      this._timer = null;
       this._queueNext();
     },
     /**
@@ -78,7 +78,7 @@ window.ActionQueue = (function() {
      **/
     clear: function() {
       window.clearTimeout(this._timer);
-      delete this._timer;
+      this._timer = null;
       this._queue = [];
     }
   };
