@@ -8,6 +8,11 @@
 // Setup debugging
 // Also lets me throw errors without breaking things.
 
+
+if (window.DEBUG_MODE && window.console) {
+  console.time('load');
+}
+
 window.debug = function() {};
 window.error = function() {};
 if (window.DEBUG_MODE) {
@@ -19,7 +24,7 @@ if (window.DEBUG_MODE) {
   window.error = function() {
     'use strict';
     Array.prototype.unshift.call(arguments, "ERROR:");
-    window.console.log.apply(window.console, arguments);
+    window.console.error.apply(window.console, arguments);
   };
 }
 

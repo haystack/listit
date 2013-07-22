@@ -32,6 +32,9 @@
       'email',
       'noteSyncInterval',
       'logSyncInterval',
+      'syncingNotes',
+      'syncingLogs',
+      'logSyncInterval',
       'studies'
     ],
     toJSON: function(options) {
@@ -57,6 +60,23 @@
       this.listenTo(this, _.reduce(this.include, function(memo, attr) {
         return memo+" change:"+attr;
       }, ""), _.mask(this.save));
+
+      if (DEBUG_MODE && window.console) {
+        this.listenTo(this, 'change:syncingNotes', function(server, syncing) {
+          if (syncing) {
+            console.time('syncing notes');
+          } else {
+            console.timeEnd('syncing notes');
+          }
+        });
+        this.listenTo(this, 'change:syncingLogs', function(server, syncing) {
+          if (syncing) {
+            console.time('syncing logs');
+          } else {
+            console.timeEnd('syncing logs');
+          }
+        });
+      }
 
       this.listenTo(this, 'change:registered', function(server, registered) {
         // Don't start if not running.
@@ -334,6 +354,9 @@
      * Package and bundle the given notes.
      */
     bundleNotes : function() {
+      if (DEBUG_MODE && window.console) {
+        console.time('bundle notes');
+      }
       var that = this,
           bundle = [],
           bundleNote = function(note, deleted) {
@@ -358,9 +381,18 @@
       .each(function(n) { bundleNote(n, false); });
       L.notebook.get('deletedNotes').each(function(n) { bundleNote(n, true); });
 
+      if (DEBUG_MODE && window.console) {
+        console.timeEnd('bundle notes');
+      }
+
       return bundle;
     },
     commitNotes: function(committed) {
+
+      if (DEBUG_MODE && window.console) {
+        console.time('commit notes');
+      }
+
       // For each
       _.chain(committed)
       // Ignore magic note
@@ -389,8 +421,16 @@
       });
       // Update note collection version.
       L.notebook.set('version', L.notebook.get('version') + 1);
+
+      if (DEBUG_MODE && window.console) {
+        console.timeEnd('commit notes');
+      }
     },
     unbundleNotes: function(result) {
+      if (DEBUG_MODE && window.console) {
+        console.time('unbundle notes');
+      }
+
       var magic;
       var newVersion;
       var notes = L.notebook.get('notes');
@@ -460,6 +500,10 @@
       }
       // Save collections
       L.notebook.save();
+
+      if (DEBUG_MODE && window.console) {
+        console.timeEnd('unbundle notes');
+      }
     },
 
     /**
