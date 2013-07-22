@@ -18,7 +18,12 @@ ListIt.lvent.once('setup:models:after', function(L, barr) {
   L.logger.ready(function() {
     L.logger.start();
   });
-  L.server.ready(function() {
-    L.server.start();
-  });
+
+  // Delay syncing start 10 seconds.
+  // No need to do this immediately
+  _.delay(function() {
+    L.server.ready(function() {
+      L.server.start();
+    });
+  }, 10000);
 });
