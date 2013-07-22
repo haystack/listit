@@ -20,48 +20,50 @@
     <resources id="assets.sidebar.js">
         <resources refid="js.libs" />
         <resources refid="js.common" />
-        <filelist dir="${listit.js.platforms.dir}/firefox">
+        <filelist dir="${listit.js.platform.dir}">
             <file name="client-setup.js" />
             <file name="sidebar-setup.js" />
         </filelist>
         <resources refid="js.router" />
         <resources refid="js.templates" />
         <resources refid="js.views" />
+        <resources refid="js.views.setup" />
         <resources refid="js.setup" />
     </resources>
 
     <resources id="assets.options.js">
         <resources refid="js.libs" />
         <resources refid="js.common" />
-        <filelist dir="${listit.js.platforms.dir}/firefox">
+        <filelist dir="${listit.js.platform.dir}">
             <file name="client-setup.js" />
             <file name="options-setup.js" />
         </filelist>
         <resources refid="js.router" />
         <resources refid="js.templates" />
         <resources refid="js.views" />
+        <resources refid="js.views.setup" />
         <resources refid="js.setup" />
     </resources>
 
     <resources id="assets.firefox_modules.js">
-        <filelist dir="${listit.js.platforms.dir}/firefox">
+        <filelist dir="${listit.js.platform.dir}">
             <file name="authmanager.js" />
             <file name="firefoxStorage.js" />
         </filelist>
     </resources>
 
     <resources id="assets.background.js">
-        <fileset file="${listit.js.platforms.dir}/firefox/background-before.js" />
+        <fileset file="${listit.js.platform.dir}/background-before.js" />
         <resources refid="js.libs" />
         <resources refid="js.common" />
         <resources refid="js.storage" />
         <resources refid="js.models" />
-        <fileset dir="${listit.js.platforms.dir}/firefox/models" includes="**.js" />
+        <resources refid="js.models.setup" />
         <resources refid="js.templates" />
         <resources refid="js.collectors" />
         <resources refid="js.observers" />
         <resources refid="js.migrate" />
-        <fileset file="${listit.js.platforms.dir}/firefox/background-setup.js" />
+        <fileset file="${listit.js.platform.dir}/background-setup.js" />
         <resources refid="js.setup" />
     </resources>
 

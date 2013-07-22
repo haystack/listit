@@ -12,13 +12,14 @@
     <resources id="assets.sidebar.js">
         <resources refid="js.libs" />
         <resources refid="js.common" />
-        <filelist dir="${listit.js.platforms.dir}/chrome">
+        <filelist dir="${listit.js.platform.dir}">
             <file name="client-setup.js" />
             <file name="sidebar-setup.js" />
         </filelist>
         <resources refid="js.router" />
         <resources refid="js.templates" />
         <resources refid="js.views" />
+        <resources refid="js.views.setup"/>
         <resources refid="js.setup"/>
     </resources>
 
@@ -28,54 +29,51 @@
         <resources refid="js.common" />
         <resources refid="js.templates" />
         <!-- don't include setup -->
-        <fileset dir="${listit.js.models.dir}">
-            <include name="*.js" />
-        </fileset>
-        <fileset dir="${listit.js.views.dir}">
-            <include name="*.js" />
-        </fileset>
-        <filelist dir="${listit.js.platforms.dir}/chrome">
+        <resources refid="js.models" />
+        <resources refid="js.views" />
+        <filelist dir="${listit.js.platform.dir}">
             <file name="addnotebox-setup.js" />
         </filelist>
     </resources>
     <resources id="assets.addnotebox.css">
         <resources refid="css.all" />
-        <fileset file="${listit.css.platforms.dir}/chrome/addnotebox.css" />
+        <fileset file="${listit.css.platform.dir}/addnotebox.css" />
     </resources>
 
     <resources id="assets.options.js">
         <resources refid="js.libs" />
         <resources refid="js.common" />
-        <filelist dir="${listit.js.platforms.dir}/chrome">
+        <filelist dir="${listit.js.platform.dir}">
             <file name="client-setup.js" />
             <file name="options-setup.js" />
         </filelist>
         <resources refid="js.router" />
         <resources refid="js.templates" />
         <resources refid="js.views" />
+        <resources refid="js.views.setup"/>
         <resources refid="js.setup"/>
     </resources>
     <resources id="assets.options.css">
         <resources refid="css.all" />
-        <fileset file="${listit.css.platforms.dir}/chrome/options.css" />
+        <fileset file="${listit.css.platform.dir}/options.css" />
     </resources>
 
     <resources id="assets.background.js">
         <resources refid="js.libs" />
-        <fileset file="${listit.js.platforms.dir}/chrome/backbone.omnibox.js" />
+        <fileset file="${listit.js.platform.dir}/backbone.omnibox.js" />
         <resources refid="js.common" />
         <resources refid="js.storage" />
-        <filelist dir="${listit.js.platforms.dir}/chrome">
+        <filelist dir="${listit.js.platform.dir}">
             <file name="chromeStorage.js" />
             <file name="background-setup.js" />
         </filelist>
         <resources refid="js.models" />
+        <resources refid="js.models.setup"/>
         <resources refid="js.templates" />
-        <fileset dir="${listit.js.platforms.dir}/chrome/models" includes="*.js" />
         <resources refid="js.collectors" />
         <resources refid="js.observers" />
         <resources refid="js.migrate"/>
-        <fileset dir="${listit.js.platforms.dir}/chrome/background" includes="*.js" />
+        <fileset dir="${listit.js.platform.dir}/background" includes="*.js" />
         <resources refid="js.setup"/>
     </resources>
 

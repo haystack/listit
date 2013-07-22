@@ -20,10 +20,12 @@
         <resources refid="js.router" />
         <resources refid="js.templates" />
         <resources refid="js.models" />
+        <resources refid="js.models.setup" />
         <resources refid="js.views" />
+        <resources refid="js.views.setup" />
         <resources refid="js.collectors" />
         <resources refid="js.observers" />
-        <fileset file="${listit.js.platforms.dir}/web/web-setup.js" />
+        <fileset file="${listit.js.platform.dir}/web-setup.js" />
         <resources refid="js.setup" />
     </resources>
 

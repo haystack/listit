@@ -77,13 +77,18 @@
         <fileset dir="${listit.js.models.dir}">
             <include name="*.js" />
         </fileset>
-        <fileset file="${listit.js.dir}/setup-models.js" />
+        <fileset erroronmissingdir="false" dir="${listit.js.platform.dir}/models">
+            <include name="*.js" />
+        </fileset>
     </resources>
+
     <resources id="js.views">
         <fileset dir="${listit.js.views.dir}">
             <include name="*.js" />
         </fileset>
-        <fileset file="${listit.js.dir}/setup-views.js" />
+        <fileset erroronmissingdir="false" dir="${listit.js.platform.dir}/views">
+            <include name="*.js" />
+        </fileset>
     </resources>
 
     <resources id="js.common">
@@ -108,6 +113,17 @@
         <fileset dir="${listit.js.dir}/migrations/" excludes="${settings.disabled_migrations}">
             <include name="*.js" />
         </fileset>
+        <fileset erroronmissingdir="false" dir="${listit.js.platform.dir}/migrations">
+            <include name="*.js" />
+        </fileset>
+    </resources>
+
+    <resources id="js.models.setup">
+        <fileset file="${listit.js.dir}/setup-models.js" />
+    </resources>
+
+    <resources id="js.views.setup">
+        <fileset file="${listit.js.dir}/setup-views.js" />
     </resources>
 
     <resources id="js.setup">
@@ -118,22 +134,18 @@
         <fileset dir="${listit.js.dir}/collectors" excludes="${settings.disabled_collectors}">
             <include name="*.js" />
         </fileset>
-        <!--
-        <fileset dir="${listit.js.platforms.dir}/${platform}/collectors" excludes="${settings.disabled_collectors}">
+        <fileset erroronmissingdir="false" dir="${listit.js.platform.dir}/collectors" excludes="${settings.disabled_collectors}">
             <include name="*.js" />
         </fileset>
-        -->
     </resources>
 
     <resources id="js.observers">
         <fileset dir="${listit.js.dir}/observers" excludes="${settings.disabled_observers}">
             <include name="*.js" />
         </fileset>
-        <!--
-        <fileset dir="${listit.js.platforms.dir}/${platform}/observers" excludes="${settings.disabled_observers}">
+        <fileset erroronmissingdir="false" dir="${listit.js.platform.dir}/observers" excludes="${settings.disabled_observers}">
             <include name="*.js" />
         </fileset>
-        -->
     </resources>
 
     <resources id="js.all">
