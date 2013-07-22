@@ -32,6 +32,16 @@ window.ActionQueue = (function() {
       });
       this._queueNext();
     },
+    /**
+     * Wrap a function such that calls to the wrapped function are added to the
+     * action queue (instead of triggering immediately.
+     *
+     * @param {Function} function The function to be wrapped.
+     * @returns {Function} Returns the wrapped function
+     **/
+    wrap: function(fn) {
+      return _.partial(this.add, fn);
+    },
     _queueNext: function() {
       if (!this.running || this._timer) {
         return;
