@@ -76,11 +76,7 @@
       'blur      .editor':                'onBlur',
       'keydown   .editor':                'onKeyDown',
       'click     .pin-icon':              'onPinToggle',
-      'mousedown .pin-icon':              function(event){event.preventDefault();},
-      'click     .save-icon':             'onSaveToggle',
-      'mousedown .save-icon':             function(event){event.preventDefault();},
-      'click     .cancel-icon':           'onCancel',
-      'mousedown .cancel-icon':           function(event){event.preventDefault();}
+      'mousedown .pin-icon':              function(event){event.preventDefault();}
     },
     onLinkOpen: function(event) {
       this.model.trigger('user:open-bookmark', this.model, this, event.target.href);
@@ -111,8 +107,7 @@
       }
       if (!this.editor) {
         this.editor = new ListIt.views.Editor({
-          text: this.model.get('contents'),
-          actions: L.templates['edit-actions']()
+          text: this.model.get('contents')
         });
         $editorEl.html(this.editor.render().el);
       } else {
@@ -197,10 +192,7 @@
         this.model.changeContents(text);
       }
     },
-    onSaveToggle: function(event) {
-      this.closeEditor();
-    },
-    onCancel: function(event){
+    /*onCancel: function(event){
       var $contentsEl = this.$('.contents'),
           $editorEl = this.$('.editor-container');
       if ($editorEl.is(":visible")) {
@@ -210,7 +202,7 @@
       }
       // Always show contents.
       $contentsEl.show();
-    },
+    },*/
     openLink: function() {
       window.debug('READY');
       L.openLinkTimer = setTimeout(function () {
