@@ -1,3 +1,6 @@
+/*jshint globalstrict: true*/
+/*exported EXPORTED_SYMBOLS, ListItWM*/
+/*globals Components: false, ListIt: true*/
 /**
  * This module handles the setup/teardown of windows.
  *
@@ -6,25 +9,25 @@
  *
  **/
 
-this.EXPORTED_SYMBOLS = ["ListItWM"];
+'use strict';
+
+var EXPORTED_SYMBOLS = ["ListItWM"];
 
 
-const SIDEBAR_URL = "chrome://listit/content/extension/sidebar.xul";
-const Cc = Components.classes;
-const Ci = Components.interfaces;
-const Cu = Components.utils;
+var SIDEBAR_URL = "chrome://listit/content/extension/sidebar.xul";
+var Cc = Components.classes,
+    Ci = Components.interfaces,
+    Cu = Components.utils;
 
-var wm = Cc["@mozilla.org/appshell/window-mediator;1"].
-         getService(Ci.nsIWindowMediator),
-    scope = this;
-
-
-this.ListItWM = {};
+var wm = Cc["@mozilla.org/appshell/window-mediator;1"]
+         .getService(Ci.nsIWindowMediator),
+    ListIt,
+    ListItWM = {};
 
 var eachWindow = function(fn) {
-  let windows = wm.getEnumerator("navigator:browser");
+  var windows = wm.getEnumerator("navigator:browser");
   while (windows.hasMoreElements()) {
-    let domWindow = windows.getNext().QueryInterface(Ci.nsIDOMWindow);
+    var domWindow = windows.getNext().QueryInterface(Ci.nsIDOMWindow);
     fn.call(domWindow, domWindow);
   }
 };
@@ -116,13 +119,13 @@ var setupPreferenceListener = function() {
 var windowListener = {
   onOpenWindow: function(xulWindow) {
     // A new window has opened
-    let domWindow = xulWindow.QueryInterface(Ci.nsIInterfaceRequestor)
+    var domWindow = xulWindow.QueryInterface(Ci.nsIInterfaceRequestor)
                              .getInterface(Ci.nsIDOMWindow);
 
     // Wait for it to finish loading
     domWindow.addEventListener("load", function listener() {
       domWindow.removeEventListener("load", listener, false);
-      if (domWindow.document.documentElement.getAttribute("windowtype") == "navigator:browser") {
+      if (domWindow.document.documentElement.getAttribute("windowtype") === "navigator:browser") {
         ListItWM.setupBrowser(domWindow);
       }
     }, false);
@@ -145,8 +148,8 @@ ListItWM.teardownBrowser = function(window) {
 };
 
 
-ListItWM.setup = function(ListIt) {
-  scope.ListIt = ListIt;
+ListItWM.setup = function(realListIt) {
+  ListIt = realListIt;
   eachWindow(function(domWindow) {
     ListItWM.setupBrowser(domWindow);
   });
