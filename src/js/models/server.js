@@ -178,7 +178,7 @@
     },
     _syncNotesEnter: function() {
       // Don't sync if waiting for a past sync.
-      if (this.get('syncingNotes') || !this.get('registered')) {
+      if (this.get('syncingNotes') || !this.get('registered') || navigator.onLine === false) {
         return false;
       }
       clearTimeout(this.get('noteSyncTimer'));
@@ -266,7 +266,7 @@
     },
     _syncLogsEnter: function() {
       // Don't sync if waiting for a past sync.
-      if (this.get('syncingLogs') || !this.get('registered')) {
+      if (this.get('syncingLogs') || !this.get('registered') || navigator.onLine === false) {
         return false;
       }
       clearTimeout(this.get('logSyncTimer'));
