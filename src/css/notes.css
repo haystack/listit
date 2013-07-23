@@ -74,6 +74,10 @@
     max-width: 100%;
 }
 
+.note .wysihtml5-sandbox, .note .editor-entry {
+  min-height: 20px;
+}
+
 .note .editor-bottombar {
   position: absolute;
   background-color: white;
