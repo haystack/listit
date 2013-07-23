@@ -75,6 +75,7 @@
             optionsFile="${options_file}">
             <include name="**/*.js" />
             <exclude name="templates.js" />
+            <exclude name="platforms/*/templates.js" />
             <exclude name="defines-debug.js" />
             <exclude name="libs/**" />
         </jshint>
