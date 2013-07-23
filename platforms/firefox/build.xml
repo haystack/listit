@@ -28,6 +28,7 @@
         <!-- I could compress this, but I don't really care that much -->
         <copy tofile="${build.dir}/bootstrap.js" file="${platform.dir}/resources/bootstrap.js" />
         <release-assets name="firefox_modules" includeDefines="false"/>
+        <release-assets name="window_manager" includeDefines="false"/>
         <release-assets name="background" />
     </target>
 
@@ -35,6 +36,7 @@
         <link overwrite="yes" link="${build.content.dir}/extension" resource="${platform.dir}/resources/content" />
         <link overwrite="yes" link="${build.dir}/bootstrap.js" resource="${platform.dir}/resources/bootstrap.js" />
         <debug-assets name="firefox_modules" includeDefines="false"/>
+        <debug-assets name="window_manager" includeDefines="false"/>
         <debug-assets name="background" />
     </target>
 

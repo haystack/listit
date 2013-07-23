@@ -69,6 +69,12 @@
         </filelist>
     </resources>
 
+    <resources id="assets.window_manager.js">
+        <filelist dir="${listit.js.platform.dir}">
+            <file name="window-manager.js" />
+        </filelist>
+    </resources>
+
     <resources id="assets.background.js">
         <fileset file="${listit.js.platform.dir}/background-before.js" />
         <resources refid="js.libs" />
