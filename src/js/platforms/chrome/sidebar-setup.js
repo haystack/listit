@@ -13,6 +13,11 @@ ListIt.lvent.once('setup:views:after', function(L, barr) {
     window.open('/options.html', '_new');
   });
 
+  L.router.route('help', 'help', function() {
+    this.navigate('', {trigger: false});
+    window.open('/help.html', '_new');
+  });
+
   // Close on hotkey press.
   chrome.commands.getAll(function(cmds) {
     var cmd = _.findWhere(cmds, {name: "_execute_browser_action"});

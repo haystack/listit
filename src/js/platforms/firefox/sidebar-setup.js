@@ -11,6 +11,11 @@ ListIt.lvent.once('setup:views:after', function(L, barr) {
     var browser = window.top.getBrowser();
     browser.selectedTab = browser.addTab('chrome://listit/content/webapp/options.html');
   });
+  L.router.route('help', 'help', function() {
+    this.navigate('', {trigger: false});
+    var browser = window.top.getBrowser();
+    browser.selectedTab = browser.addTab('chrome://listit/content/webapp/help.html');
+  });
   var fixSize = function() {
     var h = $(this);
     var p = h.parent();
