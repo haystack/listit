@@ -49,7 +49,7 @@
       var contents = L.util.strip(this.get('text'));
       var meta = options.meta || {}
       if (options.includeSearch) {
-        contents = this.get('searchText') + '<br/>' + contents;
+        contents = this.get('searchText') + ' ' + contents;
       }
       if (options.pinned) {
         contents = '! ' + contents;
