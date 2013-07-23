@@ -167,6 +167,7 @@
             <file name="main.css" />
             <file name="page-main.css" />
             <file name="page-options.css" />
+            <file name="page-help.css" />
             <file name="omnibox.css" />
             <file name="notes.css" />
             <file name="note-content.css" />

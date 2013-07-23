@@ -2,6 +2,7 @@ ListIt.lvent.once('setup:views', function(L, barr) {
   'use strict';
   L.addPage('main', new L.views.MainPage());
   L.addPage('options', new L.views.OptionsPage());
+  L.addPage('help', new L.views.HelpPage());
 
   // Ugly hack for firefox -moz-box. Need this event to fixup page header
   // (omnibox) /content (notelist) heights.
