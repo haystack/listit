@@ -61,7 +61,7 @@
     </resources>
 
     <resources id="assets.help.js">
-      <resources refid="js.libs" />
+        <resources refid="js.libs" />
         <resources refid="js.common" />
         <filelist dir="${listit.js.platform.dir}">
             <file name="client-setup.js" />
@@ -73,9 +73,9 @@
         <resources refid="js.views.setup"/>
         <resources refid="js.setup"/>
     </resources>
-        <resources id="assets.help.css">
+    <resources id="assets.help.css">
         <resources refid="css.all" />
-        <fileset file="${listit.css.platforms.dir}help.css" />
+        <fileset file="${listit.css.platform.dir}/help.css" />
     </resources>
 
     <resources id="assets.background.js">
