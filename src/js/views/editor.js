@@ -23,13 +23,12 @@
         if (that.wysihtml5entry.currentView === that.wysihtml5entry.composer) {
           // Using composer
           iframe.style.height = 'auto';
-          // TODO: Don't hardcode height here.
-          iframe.style.height = $body.height() + 16 + 'px';
+          iframe.style.height = $body[0].clientHeight + 'px';
           txtbox.style.height = iframe.style.height;
         } else {
           // Not using composer
           txtbox.style.height = 'auto';
-          txtbox.style.height = txtbox.scrollHeight + 16 + 'px';
+          txtbox.style.height = txtbox.scrollHeight + 'px';
           iframe.style.height = txtbox.style.height;
         }
         if (!Modernizr.flexbox) {
@@ -61,6 +60,7 @@
         style: false,
         stylesheets: WYSIHTML5_CSS
       });
+      this.wysihtml5entry.composer.iframe.setAttribute("scrolling", "no");
 
 
       // Forward events to parent and resize editor
