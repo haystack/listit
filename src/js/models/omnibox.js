@@ -64,11 +64,22 @@
     appendSearch: function(text) {
       var search = this.get('searchText');
       if (_.str.endsWith(search, " ")) {
-        this.set('searchText', this.get('searchText') + text);
+        this.set('searchText', search + text);
       } else {
-        this.set('searchText', this.get('searchText') + " " + text);
+        this.set('searchText', search + " " + text);
       }
       this.set('searchState', true);
+    },
+    tagToggle: function(text) {
+      var searchArray = this.get('searchText').split(" ");
+      var location = _.indexOf(searchArray, text);
+      if (location>-1) {
+        searchArray.splice(location, 1);
+        var newSearch = searchArray.join(" ");
+        this.set('searchText', newSearch);
+      } else {
+        this.appendSearch(text);
+      }
     }
   });
 })(ListIt);
