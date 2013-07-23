@@ -22,19 +22,12 @@ __p+='<div class="pin-icon iconTab box center_box clickable">\n    <img src="img
 }
 return __p;
 };
-ListIt.templates['edit-actions'] = function(obj){
-var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'')};
-with(obj||{}){
-__p+='<div class="cancel-icon update-icon clickable iconTab box center_box" unselectable="on">\n  <img src="img/actions/cancel.png" title="Cancel changes" unselectable="on" width="20" height="20">\n</div>\n<div class="save-icon update-icon clickable iconTab box center_box" unselectable="on"> \n  <img src="img/actions/save.png" title="Save changes" unselectable="on" height="20" width="20">\n</div>\n';
-}
-return __p;
-};
 ListIt.templates['editor'] = function(obj){
 var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'')};
 with(obj||{}){
 __p+='<textarea class="editor-entry input-div flex editable" placeholder="Search or Create Note">'+
 ((__t=(text))==null?'':__t)+
-'</textarea>\n<div class="editor-bottombar hbox">\n    <div class="editor-icons hbox"></div>\n</div>\n\n';
+'</textarea>\n<div class="editor-bottombar hbox"></div>\n\n';
 }
 return __p;
 };
