@@ -15,6 +15,31 @@
   border-bottom-left-radius: 3px;
   padding: 7px 7px 0px 7px;
   margin: 0px -3px;
+
+  // Expand
+  display: -webkit-box;
+  display: -moz-box;
+  display: box;
+  -webkit-box-flex: 1;
+  -moz-box-flex: 1;
+  box-flex: 1;
+  -webkit-box-orient: vertical;
+  -moz-box-orient: vertical;
+  box-orient: vertical;
+  -webkit-box-align: stretch;
+  -moz-box-align: stretch;
+  box-align: stretch;
+
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex: 1;
+  flex: 1;
+  -webkit-flex-direction: column;
+  flex-direction: column;
+}
+
+#omnibox .editor-bottombar {
+  margin-top: auto;
 }
 
 .note-creator .editor-entry, .note-creator .wysihtml5-sandbox {

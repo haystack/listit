@@ -8,7 +8,7 @@
 
   L.views.OmniboxView = Backbone.View.extend({
     id: 'omnibox',
-    className: 'flex note-creator',
+    className: 'flex vbox note-creator',
     initialize: function() {
       var that = this;
       $(window).one('beforeunload', function() {
@@ -64,7 +64,9 @@
         text: this.model.get('text')||'',
         actions: L.templates['create-actions']()
       });
-      this.$el.append(this.editor.render().el);
+      this.editor.render();
+
+      this.$el.append(this.editor.el);
 
       // Done
       this._rendered = true;

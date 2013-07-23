@@ -245,7 +245,7 @@ return __p;
 ListIt.templates['pages/main'] = function(obj){
 var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'')};
 with(obj||{}){
-__p+='<div id="controls-container" class="header hbox">\n    <div id="omnibox" class="note-creator flex"></div>\n    <div id="controls"></div>\n</div>\n<div id="notes" class="contents flex"></div>\n';
+__p+='<div id="controls-container" class="header hbox">\n    <div id="omnibox" class="note-creator vbox flex"></div>\n    <div id="controls"></div>\n</div>\n<div id="notes" class="contents flex"></div>\n';
 }
 return __p;
 };
