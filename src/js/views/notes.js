@@ -192,7 +192,7 @@
         this.model.changeContents(text);
       }
     },
-    onCancel: function(event){
+    /*onCancel: function(event){
       var $contentsEl = this.$('.contents'),
           $editorEl = this.$('.editor-container');
       if ($editorEl.is(":visible")) {
@@ -202,7 +202,7 @@
       }
       // Always show contents.
       $contentsEl.show();
-    },
+    },*/
     openLink: function() {
       window.debug('READY');
       L.openLinkTimer = setTimeout(function () {
