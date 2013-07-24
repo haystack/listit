@@ -120,7 +120,12 @@
       if (this._rendered) {
         this.wysihtml5entry.setValue(text);
         // Always focus after setting text. Also puts the cursor after the added text.
-        this.wysihtml5entry.focus(true);
+        try {
+          this.wysihtml5entry.focus(true);
+        } catch (e) {
+          // https://bugzil.la/495230
+          // https://bugzil.la/827585
+        }
         this._fixHeight();
       } else {
         this.initialContent = text;
