@@ -43,7 +43,6 @@
             <sequential>
                 <local name="platform" />
                 <local name="output_file" />
-                <echo message="@{platformDir}" />
                 <basename property="platform" file="@{platformDir}" />
                 <property name="output_file" location="${listit.js.platforms.dir}/${platform}/templates.js" />
                 <if>
