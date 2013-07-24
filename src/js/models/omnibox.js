@@ -71,7 +71,7 @@
       this.set('searchState', true);
     },
     tagToggle: function(text) {
-      var searchArray = this.get('searchText').split(" ");
+      var searchArray = (this.get('searchText') || "").split(" ");
       var location = _.indexOf(searchArray, text);
       if (location>-1) {
         searchArray.splice(location, 1);
