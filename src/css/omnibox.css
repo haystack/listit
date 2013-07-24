@@ -77,10 +77,6 @@
   margin-bottom: 2px;
 }
 
-.activeSearch {
-  opacity: 1.0;
-}
-
 .inactiveSearch{
   opacity: 0.5;
 }
