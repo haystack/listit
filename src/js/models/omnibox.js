@@ -62,13 +62,14 @@
       return note;
     },
     appendSearch: function(text) {
-      var search = this.get('searchText');
-      if (_.str.endsWith(search, " ")) {
-        this.set('searchText', search + text);
-      } else {
-        this.set('searchText', search + " " + text);
+      var search = this.get('searchText') || "";
+      if (search && !_.str.endsWith(search, " ")) {
+        search += " ";
       }
-      this.set('searchState', true);
+      this.set({
+        searchText: search + text,
+        searchState: true
+      });
     },
     tagToggle: function(text) {
       var searchArray = (this.get('searchText') || "").split(" ");
