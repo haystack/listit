@@ -181,13 +181,10 @@
       // Backbone checks the number of arguments (1 = absolute, 2 = compare)
       // Underscore passes an extra argument (the index in the underlying
       // list). The note must be before this index in the filtered list.
-      var lastIndex;
+      var val;
       if (typeof(arguments[1]) === "number") {
-        lastIndex = arguments[1]+1;
+        val = this.backingCollection.lastIndexOf(note, arguments[1]+1);
       }
-
-      var val = this.backingCollection.lastIndexOf(note, lastIndex);
-      // Just in case
       if (val < 0) {
         val = this.backingCollection.indexOf(note);
       }
@@ -200,7 +197,15 @@
      **/
     maybeAddNew: function(note) {
       if (this.matcher(note)) {
-        this.add(note, {'new': true});
+        // Avoid sorting. Optimize for loading.
+        var idx = this.comparator(note, this.backingCollection.length);
+
+        if (idx > 0) {
+          this.add(note, {'new': true, sort: false, at: idx});
+        } else {
+          // This should never happen but check anyways.
+          this.add(note, {'new': true});
+        }
       }
     },
     /**
