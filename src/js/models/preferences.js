@@ -48,9 +48,6 @@
     },
     initialized: function() {
       this.on('change', _.mask(this.save), this);
-    },
-    toggleShrink: function() {
-      this.set('shrinkNotes', !this.get('shrinkNotes'));
     }
   });
 })(ListIt);

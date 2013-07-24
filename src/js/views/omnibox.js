@@ -235,13 +235,11 @@
         L.server.off(null, null, that);
       });
       this.listenTo(L.omnibox, 'change:searchState', this.render);
-      this.listenTo(L.preferences, 'change:shrinkNotes', this.render);
       this.listenTo(L.server, 'change:syncingNotes', this.render);
     },
     render: function() {
       this.$el.html(L.templates["omnibox/controls"]({
         searchState: L.omnibox.get('searchState'),
-        shrinkState: L.preferences.get('shrinkNotes'),
         loginState: L.server.get('registered'),
         syncState: L.server.get('syncingNotes')
       }));
@@ -249,17 +247,13 @@
     },
     events: {
       'click #searchIcon': 'searchClicked',
-      'click #syncIcon': 'syncClicked',
-      'click #shrinkIcon': 'shrinkClicked'
+      'click #syncIcon': 'syncClicked'
     },
     searchClicked: function(event) {
       L.omnibox.set('searchState', !L.omnibox.get('searchState'));
     },
     syncClicked: function(event) {
       L.server.syncNotes();
-    },
-    shrinkClicked: function(event) {
-      L.preferences.toggleShrink();
     }
   });
 

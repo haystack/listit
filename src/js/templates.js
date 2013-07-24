@@ -112,13 +112,7 @@ __p+=' settingIcon"\n    src="img/controls/sync.png" width="16" height="16"\n   
  } else { 
 __p+='\n  <img id="syncIcon" class="settingIcon"\n  src="img/controls/sync-disabled.png" width="16" height="16"\n  title="Syncing is disabled. Please login to enable syncing.">\n';
  } 
-__p+='\n<a href="#/options" class="clickable">\n    <img id="optionsIcon" class="settingIcon" src="img/controls/options.png" width="16" height="16" title="View Options and Login to save a backup of your notes." >\n</a>\n<a class="clickable">\n  <img id="shrinkIcon" class="settingIcon"\n    ';
- if (shrinkState) { 
-__p+='\n    src="img/controls/arrow-left.png" title="Expand Notes"\n    ';
- } else { 
-__p+='\n    src="img/controls/arrow-down.png" title="Minimize Notes"\n    ';
- } 
-__p+='\n    width="16" height="16">\n</a>\n<a href="#/help" class="clickable">\n    <img id="helpIcon" class="settingIcon" src="img/controls/help.png" width="13" height="16" title="View the help page.">\n</a>\n\n';
+__p+='\n<a href="#/options" class="clickable">\n    <img id="optionsIcon" class="settingIcon" src="img/controls/options.png" width="16" height="16" title="View Options and Login to save a backup of your notes." >\n</a>\n<a href="#/help" class="clickable">\n    <img id="helpIcon" class="settingIcon" src="img/controls/help.png" width="13" height="16" title="View the help page.">\n</a>\n\n';
 }
 return __p;
 };
