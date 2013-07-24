@@ -78,9 +78,15 @@
   min-height: 20px;
 }
 
+/* Carry note color down. */
+.note .editor-container,
+.note .editor,
+.note .editor-bottombar {
+  background-color: inherit;
+}
+
 .note .editor-bottombar {
   position: absolute;
-  background-color: white;
   right: 37px;
   width: auto;
   border-bottom-left-radius: 5px;
