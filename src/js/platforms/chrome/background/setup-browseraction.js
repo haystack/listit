@@ -7,37 +7,82 @@ ListIt.lvent.once("setup:views:after", function(L, barr) {
     // Does not check if open.
     _open: function(callback) {
       currentSidebarId = true;
-      chrome.windows.getCurrent(function(cwin) {
+      chrome.windows.getCurrent(function(mainWindow) {
         chrome.windows.create({
           url:"index.html",
           type: "popup",
           width: 350,
-          height: cwin.height,
-          left: cwin.left-360,
-          top: cwin.top,
+          height: mainWindow.height,
+          left: mainWindow.left-360,
+          top: mainWindow.top,
           focused: true
-        }, function(win) {
+        }, function(sidebarWindow) {
+          /**
+           * This is window the tracking code.
+           *
+           * Please put this somewhere else. I don't care enough.
+           *
+           **/
           if (L.preferences.get('sidebarTrackWindow', false)) {
-            currentSidebarResizer = setInterval(function() {
-              chrome.windows.get(cwin.id, function(mainWindow) {
-                chrome.windows.get(win.id, function(sidebarWindow) {
-                  if (mainWindow.height !== cwin.height || mainWindow.left !== cwin.left || mainWindow.top !== cwin.top || sidebarWindow.width !== win.width) {
-                    chrome.windows.update(win.id, {
-                      top: mainWindow.top,
-                      left: mainWindow.left - sidebarWindow.width-10,
-                      height: mainWindow.height
-                    }, function() {
-                      win = sidebarWindow;
-                    });
-                  }
-                  cwin = mainWindow;
-                });
+            var resizing = false;
+            var lastResize = Date.now();
+            var resizer = function() {
+              chrome.windows.get(mainWindow.id, function(newMainWindow) {
+                // This can get triggered before it can be turned off.
+                try {
+                  chrome.windows.get(sidebarWindow.id, function(newSidebarWindow) {
+                    if (!newSidebarWindow) {
+                      clearInterval(currentSidebarResizer);
+                      resizing = false;
+                      return;
+                    }
+                    if ( newMainWindow.height   !== mainWindow.height
+                      || newMainWindow.left     !== mainWindow.left
+                      || newMainWindow.top      !== mainWindow.top
+                      || newSidebarWindow.width !== sidebarWindow.width
+                    ) {
+                      try {
+                        chrome.windows.update(sidebarWindow.id, {
+                          top: newMainWindow.top,
+                          left: newMainWindow.left - newSidebarWindow.width-10,
+                          height: newMainWindow.height
+                        }, function(newSidebarWindow) {
+                          sidebarWindow = newSidebarWindow;
+                        });
+                      } catch (e) {
+                        clearInterval(currentSidebarResizer);
+                        resizing = false;
+                        return;
+                      }
+
+                      mainWindow = newMainWindow;
+
+                      lastResize = Date.now();
+                      if (!resizing) {
+                        debug('Fast sidebar tracking ON');
+                        resizing = true;
+                        clearInterval(currentSidebarResizer);
+                        currentSidebarResizer = setInterval(resizer, 10);
+                      }
+                    } else if (resizing && lastResize + 500 < Date.now()) {
+                      debug('Fast sidebar tracking OFF');
+                      resizing = false;
+                      clearInterval(currentSidebarResizer);
+                      currentSidebarResizer = setInterval(resizer, 500);
+                    }
+                  });
+                } catch (e) {
+                  clearInterval(currentSidebarResizer);
+                  resizing = false;
+                  return;
+                }
               });
-            }, 500);
+            };
+            currentSidebarResizer = setInterval(resizer, 500);
           }
-          currentSidebarId = win.id;
+          currentSidebarId = sidebarWindow.id;
           if (callback) {
-            callback(win);
+            callback(sidebarWindow);
           }
         });
       });
