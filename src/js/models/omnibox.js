@@ -47,7 +47,7 @@
     saveNote: function(options, window) {
       options = options || {};
       var contents = L.util.strip(this.get('text'));
-      var meta = options.meta || {}
+      var meta = options.meta || {};
       if (options.includeSearch) {
         contents = this.get('searchText') + ' ' + contents;
       }

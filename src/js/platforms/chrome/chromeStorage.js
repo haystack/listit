@@ -94,7 +94,7 @@
             }
           });
         }
-      })
+      });
     }, 10, {}),
     set: _.debounceReduce(function(struct, key, object, options) {
       if (!struct) {

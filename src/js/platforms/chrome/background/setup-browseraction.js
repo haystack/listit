@@ -36,10 +36,10 @@ ListIt.lvent.once("setup:views:after", function(L, barr) {
                       resizing = false;
                       return;
                     }
-                    if ( newMainWindow.height   !== mainWindow.height
-                      || newMainWindow.left     !== mainWindow.left
-                      || newMainWindow.top      !== mainWindow.top
-                      || newSidebarWindow.width !== sidebarWindow.width
+                    if ( newMainWindow.height   !== mainWindow.height ||
+                         newMainWindow.left     !== mainWindow.left ||
+                         newMainWindow.top      !== mainWindow.top ||
+                         newSidebarWindow.width !== sidebarWindow.width
                     ) {
                       try {
                         chrome.windows.update(sidebarWindow.id, {
