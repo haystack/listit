@@ -134,7 +134,7 @@
       if (options && (options.success || options.error)) {
         struct.callbacks.push(options);
       }
-      return callbacks;
+      return struct;
     }, function(struct) {
       ChromeStorage.storage.remove(struct.keys, function() {
         if (chrome.runtime.lastError) {
