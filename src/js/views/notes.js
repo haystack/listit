@@ -221,7 +221,7 @@
       var that = this;
       this.subViews = {}; // Note views
       this.renderNext = 0;
-      this.listenTo(this.collection, 'add', this.addNote);
+      this.listenTo(this.collection, 'add', _.mask(this.addNote, 0));
       this.listenTo(this.collection, 'remove', function(note, col, options) {
         that.removeNote(note, _.defaults({}, options));
       });
@@ -303,15 +303,16 @@
       }
       return (scrollTop + 2*containerHeight) > noteOffset;
     },
-    addNote: function(note) {
+    addNote: function(note, idx) {
       var view = this.subViews[note.id];
 
       // Ignore already visible/unrendered
       if (!this._rendered || view && view.isVisible()) {
-        return;
+        return true;
       }
 
-      var index = this.collection.indexOf(note);
+      // Get the index but allow it to be specified manually.
+      var index = (typeof(idx) === "number") ? idx : this.collection.indexOf(note);
 
       if (this.shouldRenderAt(index)) {
         if (!view) {
@@ -321,11 +322,13 @@
         if (index < this.renderNext) {
           this.renderNext += 1;
         }
+        this.fixHeight();
+        return true;
       } else if (index < this.renderNext) {
         // If I choose not to render, fix the render next index.
         this.renderNext = index;
+        return false;
       }
-      this.fixHeight();
     },
     insertAt: function(index, view) {
       var otherEl = this.$el.children('#notes-container').find('.note').eq(index);
@@ -370,7 +373,8 @@
       this.renderNext = 0;
       if (this._rendered) {
         this.$el.children('#notes-container').empty();
-        this.collection.each(_.mask(_.bind(this.addNote, this), 0));
+        // Bail early.
+        this.collection.every(_.mask(_.bind(this.addNote, this), 0, 1));
       }
     },
     render: function() {
