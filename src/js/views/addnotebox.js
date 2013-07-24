@@ -30,6 +30,13 @@
           event.preventDefault(); // Let model update
         }
         break;
+      case KeyCode.S:
+        if (event.ctrlKey) {
+          event.preventDefault();
+          event.stopPropagation();
+          this._onSaveClicked();
+        }
+        break;
       case KeyCode.ESC:
         this._onCloseClicked();
         break;
