@@ -87,7 +87,7 @@
       return false;
     },
     onTagClick: function(event) {
-      L.omnibox.appendSearch(event.target.textContent);
+      L.omnibox.tagToggle(event.target.textContent);
       return false;
     },
     expand: function() {
