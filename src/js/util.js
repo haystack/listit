@@ -232,13 +232,19 @@
     this.find('input').prop('disabled', true);
     return this;
   };
-  $.fn.scrollIntoView = function(toShow, toScroll) {
-    toScroll = toScroll || toShow.parent();
-    var offset = toShow.position().top - toScroll.position().top;
-    if (this.position().top + this.innerHeight() > toShow.position().top + toShow.outerHeight() + 5) {
-      this.scrollTop(offset - 5);
-    } else {
-      this.scrollTop(offset - this.innerHeight() + toShow.outerHeight() + 5);
+  $.fn.scrollIntoView = function(container) {
+    container = container || this.parent();
+    var parent = container.parent();
+
+    var containerTop = parent.position().top - container.position().top;
+    var containerBottom = containerTop + parent.innerHeight();
+    var elTop = this.position().top;
+    var elBottom = elTop + this.outerHeight();
+
+    if (elTop < containerTop) {
+      this.get(0).scrollIntoView();
+    } else if (elBottom > containerBottom) {
+      this.get(0).scrollIntoView(false);
     }
 
     return this;

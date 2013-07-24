@@ -31,12 +31,7 @@
           txtbox.style.height = txtbox.scrollHeight + 'px';
           iframe.style.height = txtbox.style.height;
         }
-        if (!Modernizr.flexbox) {
-          // Ugly hack for firefox -moz-box. Need this event to fixup page header
-          // (omnibox) /content (notelist) heights.
-          // BUG: https://bugzil.la/579776 (the workarround doesn't work).
-          $(txtbox).trigger("resize");
-        }
+        $(txtbox).trigger("resize");
       });
     },
     render: function() {

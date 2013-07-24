@@ -76,6 +76,7 @@
       'blur      .editor':                'onBlur',
       'keydown   .editor':                'onKeyDown',
       'click     .pin-icon':              'onPinToggle',
+      'resize    .editor':                'onResizeEditor',
       'mousedown .pin-icon':              function(event){event.preventDefault();}
     },
     onLinkOpen: function(event) {
@@ -85,6 +86,9 @@
     onRemoveClicked: function() {
       L.notebook.trashNote(this.model);
       return false;
+    },
+    onResizeEditor: function() {
+      this.$el.scrollIntoView();
     },
     onTagClick: function(event) {
       L.omnibox.tagToggle(event.target.textContent);
@@ -154,7 +158,7 @@
      **/
     onKeyUp: function(event) {
       if (event.keyCode === KeyCode.TAB) {
-        event.target.scrollIntoView();
+        this.$el.scrollIntoView();
         $('#notes')[0].scrollTop -= 4;
       }
     },
