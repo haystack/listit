@@ -19,6 +19,11 @@
         edited: Date.now()
       };
     },
+    initialize: function() {
+      this.on('error', function(n, e, o) {
+        error('Note storage failure', n, e, o);
+      });
+    },
     initialized: function() {
       this.on('change:contents change:meta', _.bind(this._onChange, this), this);
     },
@@ -294,6 +299,11 @@
     },
     isNew: function() {
       return false;
+    },
+    initialize: function() {
+      this.on('error', function(n, e, o) {
+        error('NoteBook storage failure', e, o);
+      });
     },
     initialized: function() {
       var that = this;
