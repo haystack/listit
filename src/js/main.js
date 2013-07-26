@@ -15,26 +15,22 @@ if (window.DEBUG_MODE && window.console) {
 
 window.debug = function() {};
 window.error = function() {};
-if (window.DEBUG_MODE) {
-  window.error = function() {
-    'use strict';
-    throw new Error(Array.prototype.join.call(arguments, " "));
-  };
-} else if (window.console) {
+
+if (window.console) {
   window.error = function() {
     'use strict';
     Array.prototype.unshift.call(arguments, "ERROR:");
     window.console.error.apply(window.console, arguments);
   };
+  if (window.DEBUG_MODE) {
+    window.debug = function() {
+      'use strict';
+      Array.prototype.unshift.call(arguments, "DEBUG:");
+      window.console.log.apply(window.console, arguments);
+    };
+  }
 }
 
-if (window.DEBUG_MODE && window.console) {
-  window.debug = function() {
-    'use strict';
-    Array.prototype.unshift.call(arguments, "DEBUG:");
-    window.console.log.apply(window.console, arguments);
-  };
-}
 
 window.ListIt = {VERSION: 1};
 
