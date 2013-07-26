@@ -87,18 +87,20 @@
       return false;
     },
     initialize: function(models, options) {
+      var that = this;
       // Call destructors on exit
       this.listenTo(L.gvent, 'sys:exit', _.bind(this.stop, this));
-    },
-    initialized: function(models, options) {
-      var that = this;
-      var debouncedSave = _.debounce(_.bind(that.save, that), 100);
-      // Autosave
-      _.each(this.relations, function(v, k) {
-        that.get(k).on('add remove', function(model, collection, options) {
-          if (!(options && options.nosave)) {
-            debouncedSave();
-          }
+      this.once('sync error', function() {
+        var debouncedSave = _.debounce(_.bind(that.save, that), 100);
+        // Perform an initial flush to save any changes that might have occured
+        // durring fetch.
+        that.save();
+        _.each(that.relations, function(v, k) {
+          that.listenTo(that.get(k), 'add remove', function(model, collection, options) {
+            if (!(options && options.nosave)) {
+              debouncedSave();
+            }
+          });
         });
       });
     },

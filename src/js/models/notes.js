@@ -301,13 +301,23 @@
       return false;
     },
     initialize: function() {
-      this.on('error', function(n, e, o) {
-        error('NoteBook storage failure', e, o);
+      var that = this;
+      // Start saving immediately after loading before fetching related.
+      this.once('sync error', function() {
+        var debouncedSave = _.debounce(_.bind(that.save, that), 100);
+        // Perform an initial flush to save any changes that might have occured
+        // durring fetch.
+        that.save();
+        _.each(that.relations, function(v, k) {
+          that.listenTo(that.get(k), 'add remove', function(model, collection, options) {
+            if (!(options && options.nosave)) {
+              debouncedSave();
+            }
+          });
+        });
       });
     },
     initialized: function() {
-      var that = this;
-      var debouncedSave = _.debounce(_.bind(that.save, that), 100);
       // No need to add this early.
       // Ensures that pinned notes go on top.
       this.get('notes').comparator = function(note) {
@@ -323,14 +333,6 @@
             note.collection.reinsert(note);
           });
         }
-      });
-
-      _.each(that.relations, function(v, k) {
-        that.listenTo(that.get(k), 'add remove', function(model, collection, options) {
-          if (!(options && options.nosave)) {
-            debouncedSave();
-          }
-        });
       });
     },
     /**
