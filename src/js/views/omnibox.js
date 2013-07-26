@@ -236,9 +236,11 @@
       });
       this.listenTo(L.omnibox, 'change:searchState', this.render);
       this.listenTo(L.server, 'change:syncingNotes', this.render);
+      this.listenTo(L.omnibox, 'change:searchFail', this.render);
     },
     render: function() {
       this.$el.html(L.templates["omnibox/controls"]({
+        searchFail: L.omnibox.get('searchFail'),
         searchState: L.omnibox.get('searchState'),
         loginState: L.server.get('registered'),
         syncState: L.server.get('syncingNotes')

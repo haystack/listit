@@ -267,7 +267,6 @@
       this.searching = true;
       this.searchID = Math.random();
       this.trigger("search:begin", this._terms, this.searchID);
-      console.time('search');
 
       var matched = false;
       this.backingCollection.forEach(function (note, index) {
@@ -275,6 +274,7 @@
           if (that.matcher(note)) {
             if(!matched) {
               matched = true;
+              L.omnibox.set('searchFail', false);
               that.remove(that.backingCollection.slice(0,index));
             }
             that.add(note, {at: that._searchCursor, sort: false});
@@ -289,13 +289,11 @@
         that.searching = false;
         debug('search::end');
         that.trigger('search:complete search:end', that._terms, that.searchID);
-        console.timeEnd('search');
       });
 
       this.searchQueue.add(function() {
         if (!matched) {
-          console.log("No matches, stopped searching:");
-          console.log(that._terms);
+          L.omnibox.set('searchFail', true);
         }
       });
 
