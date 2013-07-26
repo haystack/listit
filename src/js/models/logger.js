@@ -14,7 +14,17 @@
     },
     initialize: function() {
       this.on('error', function(model, e, o) {
-        error("Error syncing log entry", model , e, o);
+        error("Error syncing log entry", model, e, o);
+
+        /* If we fail on load, just remove the entry. It's a log entry so we
+         * really don't care that much.
+         *
+         * Log entries can go missing because their save (or the Logger's save)
+         * may be delayed.
+         */
+        if (o.fetching) {
+          model.destroy();
+        }
       });
     },
     initialized: function() {
