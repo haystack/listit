@@ -12,7 +12,7 @@
         time: Date.now()
       };
     },
-    initialize: function() {
+    initialized: function() {
       var that = this;
       if (this.isNew()) {
         L.gvent.trigger('log:request:data', this);
