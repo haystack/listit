@@ -43,13 +43,13 @@
           fetching: true,
           success: _.wrap(options.success, function(func) {
             if (func) {
-              func(this, _.rest(arguments));
+              func(that, _.rest(arguments));
             }
             complete_cb(that, true);
           }),
           error: _.wrap(options.error, function(func) {
             if (func) {
-              func(this, _.rest(arguments));
+              func(that, _.rest(arguments));
             }
             complete_cb(that, false);
           }),
