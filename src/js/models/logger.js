@@ -12,6 +12,11 @@
         time: Date.now()
       };
     },
+    initialize: function() {
+      this.on('error', function(model, e, o) {
+        error("Error syncing log entry", model , e, o);
+      });
+    },
     initialized: function() {
       var that = this;
       if (this.isNew()) {
