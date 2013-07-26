@@ -25,15 +25,25 @@
       if (!this._relationsInited) {
         this.initializeRelations();
       }
-      _.each(_.pick(attributes, _.keys(this.relations)), function(value, key) {
-        if (value instanceof Backbone.Model || value instanceof Backbone.Collection) {
-          that.set(key, value, options);
-        } else if (_.isArray(value)) {
-          that.get(key).set(_.map(value, _.bind(that._initRelObject, that, key)), _.defaults({sort: false}, options));
-        } else {
-          that.get(key).set(that._initRelObject(key, value), options);
-        }
-      });
+
+      var rels = _.pick(attributes, _.keys(this.relations))
+      if (_.keys(rels).length > 0) {
+        // Not omitting these causes issues (don't pass through bad callbacks)
+        var relOptions = _.omit(options, "fetchRelated", "success", "error");
+        relOptions.sort = false;
+        relOptions.fetch = options.fetchRelated;
+
+        _.each(rels, function(value, key) {
+
+          if (value instanceof Backbone.Model || value instanceof Backbone.Collection) {
+            that.set(key, value, relOptions);
+          } else if (_.isArray(value)) {
+            that.get(key).set(_.map(value, _.bind(that._initRelObject, that, key)), relOptions);
+          } else {
+            that.get(key).set(that._initRelObject(key, value), relOptions);
+          }
+        });
+      }
 
       return Backbone.Model.prototype.set.call(this, _.omit(attributes, _.keys(this.relations)), options);
     },
@@ -141,40 +151,26 @@
       }
     },
     fetch: function(options) {
-      var that = this;
-      var complete_cb = options && options.complete;
+      options = _.clone(options);
+      if (!_.has(options, "fetchRelated")) {
+        options.fetchRelated = this.autoFetchRelated;
+      }
 
-      var fetchRelated = (options && _.has(options, "fetchRelated")) ?
-        options.fetchRelated : this.autoFetchRelated;
-      if (fetchRelated) {
-        var to_fetch;
-        if (_.isArray(fetchRelated)) {
-          to_fetch = fetchRelated;
-        } else if (_.isString(fetchRelated)) {
-          to_fetch = [fetchRelated];
-        } else if (_.isBoolean(fetchRelated)) {
-          to_fetch = _.keys(this.relations);
-        }
-
+      if (options.fetchRelated && options.complete) {
+        var complete_cb = options.complete;
         options = _.defaults({
-          complete: function() {
-            if (complete_cb) {
-              var result = {};
-              var barr = new Barrier(to_fetch.length);
-              _.each(to_fetch, function(key) {
-                that.fetchRelated(key, _.defaults({
-                  complete: function(fn, that, relation, res) {
-                    result[key] = res;
-                    barr.release();
-                  }
-                }, options));
+          complete: function(that, result) {
+            var result = {};
+            var barr = new Barrier();
+            var cb = _.mask(barr.release);
+            _.each(_.keys(that.relations), function(key) {
+              var col = that.get(key)
+              barr.aquire(col.size());
+              col.each(function(m) {
+                m.ready(cb);
               });
-              barr.wait(_.partial(complete_cb, that, result));
-            } else {
-              _.each(to_fetch, function(key) {
-                that.fetchRelated(key, options);
-              });
-            }
+            });
+            barr.wait(_.partial(complete_cb, that, result));
           }
         }, options);
       }

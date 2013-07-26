@@ -3,7 +3,10 @@
   var Model = Backbone.Model.extend({
     constructor: function(attributes, options) {
       // Need to omit complete, fetch as we handle them here.
-      var cleaned_options = _.omit(options, 'complete', 'fetch');
+      //
+      // Omit silent because it doesn't make sense. Allowing silent prevents
+      // change events from getting fired.
+      var cleaned_options = _.omit(options, 'complete', 'fetch', 'silent');
       this.isReady = false;
       Model.__super__.constructor.call(this, attributes, cleaned_options);
       if ((options && _.has(options, "fetch")) ? options.fetch : this.autoFetch) {
@@ -17,7 +20,7 @@
             that.isReady = true;
             that.trigger('ready', that);
           })
-        }, _.omit(options, 'fetch'))); // Prevent unecessary recursion.
+        }, cleaned_options));
       } else {
         this.initialized(attributes, cleaned_options);
         if (options && options.complete) {
@@ -28,10 +31,13 @@
       }
     },
     ready: function(cb, context) {
+      if (_.isUndefined(context)) {
+        context = this;
+      }
       if (this.isReady) {
-        cb.call(context||this, this);
+        cb.call(context, this);
       } else {
-        this.on('ready', cb, context||this);
+        this.once('ready', cb, context);
       }
     },
     initialized: function() { },
