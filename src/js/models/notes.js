@@ -177,6 +177,7 @@
         }
       });
       this.reset();
+      this.searchFail = false;
     },
     _chunk: 10,
     _onRemove: function(note, notes, options) {
@@ -269,7 +270,7 @@
       this.trigger("search:begin", this._terms, this.searchID);
 
       var matched = false;
-      this.backingCollection.forEach(function (note, index) {
+      this.backingCollection.each(function (note, index) {
         that.searchQueue.add(function() {
           if (that.matcher(note)) {
             if(!matched) {
@@ -289,11 +290,9 @@
         that.searching = false;
         debug('search::end');
         that.trigger('search:complete search:end', that._terms, that.searchID);
-      });
-
-      this.searchQueue.add(function() {
-        if (!matched) {
-          L.omnibox.set('searchFail', true);
+        if (that.searchFail == matched) {
+          that.searchFail = !that.searchFail;
+          that.trigger('change:searchFail');
         }
       });
 
