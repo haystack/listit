@@ -12,7 +12,7 @@
     <property name="privatekey" location="${platform.dir}/key.pem" />
 
     <resources id="assets.sidebar.js">
-        <resources refid="js.libs" />
+        <resources refid="js.libs.client" />
         <resources refid="js.common" />
         <filelist dir="${listit.js.platform.dir}">
             <file name="client-setup.js" />
@@ -27,7 +27,7 @@
 
 
     <resources id="assets.addnotebox.js">
-        <resources refid="js.libs" />
+        <resources refid="js.libs.client" />
         <resources refid="js.common" />
         <resources refid="js.templates" />
         <!-- don't include setup -->
@@ -43,7 +43,7 @@
     </resources>
 
     <resources id="assets.options.js">
-        <resources refid="js.libs" />
+        <resources refid="js.libs.client" />
         <resources refid="js.common" />
         <filelist dir="${listit.js.platform.dir}">
             <file name="client-setup.js" />
@@ -61,7 +61,7 @@
     </resources>
 
     <resources id="assets.help.js">
-        <resources refid="js.libs" />
+        <resources refid="js.libs.client" />
         <resources refid="js.common" />
         <filelist dir="${listit.js.platform.dir}">
             <file name="client-setup.js" />
@@ -79,7 +79,7 @@
     </resources>
 
     <resources id="assets.background.js">
-        <resources refid="js.libs" />
+        <resources refid="js.libs.background" />
         <fileset file="${listit.js.platform.dir}/backbone.omnibox.js" />
         <resources refid="js.common" />
         <resources refid="js.storage" />
