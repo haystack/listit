@@ -304,14 +304,13 @@
       var that = this;
       // Start saving immediately after loading before fetching related.
       this.once('sync error', function() {
-        var debouncedSave = _.debounce(_.bind(that.save, that), 100);
         // Perform an initial flush to save any changes that might have occured
         // durring fetch.
         that.save();
         _.each(that.relations, function(v, k) {
           that.listenTo(that.get(k), 'add remove', function(model, collection, options) {
             if (!(options && options.nosave)) {
-              debouncedSave();
+              that.save();
             }
           });
         });
