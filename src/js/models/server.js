@@ -506,15 +506,16 @@
       });
 
       // Save everything.
-      _.each(toAdd, unbundleQueue.wrap(function(n) {n.save();}));
-      _.each(toAddDeleted, unbundleQueue.wrap(function(n) {n.save();}));
-      unbundleQueue.add(_.bind(L.notebook.save, L.notebook));
-
       unbundleQueue.add(function() {
-        if (DEBUG_MODE && window.console) {
-          console.timeEnd('unbundle notes');
-        }
-        cb();
+        _.each(toAdd, unbundleQueue.wrap(function(n) {n.save();}));
+        _.each(toAddDeleted, unbundleQueue.wrap(function(n) {n.save();}));
+        unbundleQueue.add(_.bind(L.notebook.save, L.notebook));
+        unbundleQueue.add(function() {
+          if (DEBUG_MODE && window.console) {
+            console.timeEnd('unbundle notes');
+          }
+          cb();
+        });
       });
     },
 
