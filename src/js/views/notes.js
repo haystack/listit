@@ -195,7 +195,7 @@
         }
         this.model.changeContents(text);
       }
-    },
+    }
     /*onCancel: function(event){
       var $contentsEl = this.$('.contents'),
           $editorEl = this.$('.editor-container');
@@ -207,13 +207,6 @@
       // Always show contents.
       $contentsEl.show();
     },*/
-    openLink: function() {
-      window.debug('READY');
-      L.openLinkTimer = setTimeout(function () {
-        window.debug('FIRE');
-        window.open(this.model.get('meta').fullURL);
-      }, 50);
-    }
   });
 
   L.views.NoteCollectionView = Backbone.View.extend({
