@@ -22,8 +22,16 @@
       }
       options = options || {};
 
+      if (options.fetching) {
+        this._fetching = false;
+      }
+
       if (!this._relationsInited) {
         this.initializeRelations();
+      }
+
+      if (this._fetching) {
+        throw new Error("Set called during fetch");
       }
 
       var rels = _.pick(attributes, _.keys(this.relations))

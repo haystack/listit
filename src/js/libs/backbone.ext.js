@@ -40,8 +40,37 @@
         this.once('ready', cb, context);
       }
     },
+    save: function() {
+      if (this._fetching) {
+        throw new Error("Save called during fetch");
+      }
+      return Model.__super__.save.apply(this, arguments);
+    },
+    set: function(key, value, options) {
+      var attributes;
+
+      if (_.isObject(key) || key == null) {
+        attributes = key;
+        options = value;
+      } else {
+        attributes = {};
+        attributes[key] = value;
+      }
+      if (options && options.fetching) {
+        this._fetching = false;
+      }
+      if (this._fetching) {
+        throw new Error("Set called during fetch");
+      }
+      return Model.__super__.set.call(this, attributes, options);
+    },
     initialized: function() { },
     fetch: function(options) {
+      // Don't fetch twice
+      if (this._fetching) {
+        throw new Error("Fetch in progress");
+      }
+      this._fetching = true;
       if (options && options.complete) {
         var that = this;
         var complete_cb = options.complete;
@@ -54,6 +83,7 @@
             complete_cb(that, true);
           }),
           error: _.wrap(options.error, function(func) {
+            that._fetching = false;
             if (func) {
               func(that, _.rest(arguments));
             }
@@ -63,7 +93,7 @@
       } else {
         options = _.defaults({fetching: true}, options);
       }
-      Model.__super__.fetch.call(this, options);
+      return Model.__super__.fetch.call(this, options);
     }
   });
   Backbone.Model = Model;
