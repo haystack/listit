@@ -81,7 +81,7 @@
     },
     onLinkOpen: function(event) {
       this.model.trigger('user:open-bookmark', this.model, this, event.target.href);
-      this.stopPropagation();
+      event.stopPropagation();
     },
     onRemoveClicked: function() {
       L.notebook.trashNote(this.model);
