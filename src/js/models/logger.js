@@ -91,7 +91,7 @@
       // Call destructors on exit
       this.listenTo(L.gvent, 'sys:exit', _.bind(this.stop, this));
       this.once('sync error', function() {
-        var debouncedSave = _.debounce(_.bind(that.save, that), 100);
+        var debouncedSave = _.debounce(_.bind(that.save, that), 10);
         // Perform an initial flush to save any changes that might have occured
         // durring fetch.
         that.save();
