@@ -5,10 +5,18 @@
     <resources id="js.libs.jquery">
         <filelist dir="${listit.js.dir}/libs">
             <file name="jquery.js" />
-            <file name="jquery-ui.js" />
         </filelist>
         <fileset dir="${listit.js.dir}/libs/">
             <include name="jquery.*.js"/>
+        </fileset>
+    </resources> 
+
+    <resources id="js.libs.jquery-ui">
+        <filelist dir="${listit.js.dir}/libs">
+            <file name="jquery-ui.js" />
+        </filelist>
+        <fileset dir="${listit.js.dir}/libs/">
+            <include name="jquery-ui.*.js"/>
         </fileset>
     </resources> 
 
@@ -61,6 +69,7 @@
 
     <resources id="js.libs">
         <resources refid="js.libs.jquery" />
+        <resources refid="js.libs.jquery-ui" />
         <resources refid="js.libs.compatability" />
         <resources refid="js.libs.barrier" />
         <!--<resources refid="js.libs.rangy" />-->
@@ -71,6 +80,7 @@
 
     <resources id="js.libs.client">
         <resources refid="js.libs.jquery" />
+        <resources refid="js.libs.jquery-ui" />
         <resources refid="js.libs.compatability" />
         <resources refid="js.libs.barrier" />
         <!--<resources refid="js.libs.rangy" />-->
