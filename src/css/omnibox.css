@@ -17,17 +17,7 @@
   margin: 0px -3px;
 }
 
-
-.note-creator .editor.focus {
-  border: 1px solid #d36c00;
-  box-shadow:0px 0px 0px 0px;
-}
-
-.note-creator .editor.focus {
-  min-height: 1.1em; 
-}
-
-.note-creator .editor-entry, .note-creator .editor-entry + .wysihtml5-sandbox {
+.note-creator .editor-entry, .note-creator .wysihtml5-sandbox {
   text-align:left;
   height: 20px;
   min-height: 40px;

@@ -23,25 +23,6 @@ html, body {
   position: absolute;
 }
 
-#statusMsg {
-  position: absolute;
-  bottom: 10px;
-  top: auto;
-  left: 10%;
-  width: 80%;
-  text-align: center;
-  z-index: -10;
-}
-
-#statusMsg > div {
-  width: 300px;
-  background-color: rgba(227, 173, 32, 1);
-  border-radius: 10px;
-}
-#statusMsg.show {
-  z-index: 10;
-}
-
 .jiggly {
     -webkit-animation: jiggle 0.2s infinite;
     -moz-animation: jiggle 0.2s infinite;
@@ -126,29 +107,6 @@ html, body {
 }
 
 
-
-/*.noteContents.oneLine {
-  height: 1.2em;
-}*/
-
-
-
-
-.hide {
-  display: none;
-}
-/* Invalid color for output display */
-.invalid {
-  background:#FAEAE6;
-  border:1px solid #9E2A3F;
-}
-/* Valid color for output display */
-.valid {
-  background:#f1fbe5;
-  border:1px solid #8cce3b;
-}
-
-
 /* CSS3 Box Model */
 .hbox, .vbox, .box {
   display: -webkit-box;
@@ -216,17 +174,6 @@ html, body {
   cursor:pointer; /* FF */
 }
 
-.scroll-x {
-    overflow-x: auto;
-}
-.scroll-y {
-    overflow-y: auto;
-}
-
-/* iOS */
-.scroll-x, .scroll-y {
-    -webkit-overflow-scrolling: touch;
-}
 
 ul.list {
     list-style: disc outside;
@@ -283,20 +230,6 @@ p {
 .ui-state-highlight {
     height: 3em;
     line-height: 1.2em;
-}
-
-.grabable {
-  cursor: hand;
-  cursor: grab !important;
-  cursor: -moz-grab;
-  cursor: -webkit-grab;
-}
-
-.grabbing {
-  cursor:hand;
-  cursor:grabbing !important;
-  cursor:-moz-grabbing;
-  cursor:-webkit-grabbing;
 }
 
 .page {

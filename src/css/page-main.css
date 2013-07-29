@@ -10,12 +10,6 @@
   height: 100%;
 }
 
-.scroll {
-  overflow-x: none;
-  overflow-y: auto;
-  max-height: 100%;
-}
-
 #page-main {
   background-color: hsl(60, 100%, 98%); /*(240, 100%, 99%);*/
   overflow: hidden;
