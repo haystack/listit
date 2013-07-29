@@ -275,7 +275,6 @@
           if (that.matcher(note)) {
             if(!matched) {
               matched = true;
-              L.omnibox.set('searchFail', false);
               that.remove(that.backingCollection.slice(0,index));
             }
             that.add(note, {at: that._searchCursor, sort: false});
