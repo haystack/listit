@@ -106,6 +106,8 @@
 
       var $contentsEl = this.$('.contents'),
           $editorEl = this.$('.editor-container');
+
+      this._editorOpen = true;
       if ($editorEl.is(":visible")) {
         return; // Already open
       }
@@ -140,7 +142,8 @@
     closeEditor: function() {
       var $contentsEl = this.$('.contents'),
           $editorEl = this.$('.editor-container');
-      if ($editorEl.is(":visible")) {
+      if (this._editorOpen) {
+        this._editorOpen = false;
         this.storeText();
         this.collapse();
         $editorEl.hide();
