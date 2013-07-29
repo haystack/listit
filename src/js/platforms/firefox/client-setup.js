@@ -21,4 +21,11 @@ ListIt.lvent.once('setup:before', function(L, barr) {
     _.defaults(L.models, bgL.models);
     _.defaults(L, bgL);
   }
+
+  // Open bookmarks in new tabs.
+  L.views.NoteView.prototype.events['click.firefox .contents a'] = function(e) {
+    var browser = window.top.getBrowser();
+    browser.selectedTab = browser.addTab(e.target.href);
+    e.preventDefault();
+  };
 });
