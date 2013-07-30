@@ -292,7 +292,8 @@
       this.searchQueue.add(function() {
         that.searching = false;
         debug('search::end');
-        if (that.searchFail == matched) {
+        // Use boolean because that.searchFail may not be set
+        if (Boolean(that.searchFail) === matched) {
           that.searchFail = !that.searchFail;
           that.trigger('change:searchFail', that, that.searchFail);
         }
