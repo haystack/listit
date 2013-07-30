@@ -7,7 +7,7 @@ ListIt.lvent.once("setup:models:after", function(L, barr) {
     chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
       var tab = tabs[0];
       // Ignore incognito tabs.
-      if (tab.incognito) {
+      if (tab.incognito || !tab.url) {
         return;
       }
       logEntry.set('tabid', tab.id);
