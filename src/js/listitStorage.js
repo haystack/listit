@@ -13,7 +13,7 @@
     throw new Error('A "url" property or function must be specified');
   };
 
-  if (Modernizr.localStorage) {
+  if (Modernizr.localstorage) {
     var LocalStorage = L.stores['local'] = {
       store: window.localStorage,
       set: function(key, object, options) {
