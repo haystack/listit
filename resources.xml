@@ -186,6 +186,7 @@
         <resources refid="js.views" />
         <resources refid="js.collectors" />
         <resources refid="js.observers" />
+        <resources refid="js.migrate" />
         <resources refid="js.setup" />
     </resources>
 
