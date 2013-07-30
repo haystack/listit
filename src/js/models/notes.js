@@ -177,6 +177,7 @@
         }
       });
       this.reset();
+      this.searchFail = false;
     },
     _chunk: 10,
     _onRemove: function(note, notes, options) {
@@ -268,24 +269,40 @@
       this.searchID = Math.random();
       this.trigger("search:begin", this._terms, this.searchID);
 
-      _.each(_.chunk(this.backingCollection, this._chunk), function(chunk) {
+      var matched = false;
+      this.backingCollection.each(function (note, index) {
         that.searchQueue.add(function() {
-          _.each(chunk, function(note) {
-            if (that.matcher(note)) {
-              that.add(note, {at: that._searchCursor, sort: false});
-              that._searchCursor++;
-            } else {
-              that.remove(note);
+          if (that.matcher(note)) {
+            if(!matched) {
+              matched = true;
+              if (that.searchFail) {
+                that.searchFail = false;
+                that.trigger('change:searchFail', that, that.searchFail);
+              }
+              that.remove(that.backingCollection.slice(0,index));
             }
-          });
+            that.add(note, {at: that._searchCursor, sort: false});
+            that._searchCursor++;
+          } else if (matched) {
+            that.remove(note);
+          }
         });
       });
 
       this.searchQueue.add(function() {
         that.searching = false;
         debug('search::end');
-        that.trigger('search:complete search:end', that._terms, that.searchID);
+        if (that.searchFail == matched) {
+          that.searchFail = !that.searchFail;
+          that.trigger('change:searchFail', that, that.searchFail);
+        }
+        if (that.searchFail) {
+          that.trigger('search:fail search:end', that._terms, that.searchID);
+        } else {
+          that.trigger('search:complete search:end', that._terms, that.searchID);
+        }
       });
+
       return this.searchID;
     }
   });
