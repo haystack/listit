@@ -18,9 +18,12 @@ ListIt.gvent.on('initialize', function(L, version, barr) {
       ' right corner of this sidebar to visit the help page.'
   ];
   L.lvent.once('setup:models:after', function(L, barr) {
-    _.each(defaultNotes, function(s) {
-      L.notebook.get('notes').create({'contents': s});
+    L.notebook.ready(function() {
+      var nts = L.notebook.get('notes');
+      _.each(defaultNotes, function(s) {
+        nts.create({'contents': s});
+      });
+      L.notebook.save();
     });
-    L.notebook.save();
   });
 });
