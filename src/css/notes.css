@@ -2,6 +2,14 @@
     padding:10px;
 }
 
+#notes.search-failed {
+  background-color: #fafafa;
+}
+
+#notes.search-failed #notes-container {
+  opacity: 0.85;
+}
+
 .note {
     margin: 2px 0px 1px 0px;
     border-radius: 5px;

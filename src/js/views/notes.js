@@ -228,6 +228,7 @@
       this.listenTo(this.collection, 'reset', _.mask(this.reset, 1));
       this.listenTo(this.collection, 'sort', _.mask(this.sort));
       this.listenTo(L.preferences, 'change:shrinkNotes', this.updateNoteShrinkState);
+      this.listenTo(L.sidebar, 'change:searchFail', this.updateSearchStatus);
       $(window).one('beforeunload', function() {
         that.undelegateEvents();
         that.stopListening();
@@ -249,6 +250,13 @@
     },
     onStopEditing: function() {
       this.$('#notes-container').sortable("enable");
+    },
+    updateSearchStatus : function(model, state) {
+      if (!this._rendered) {
+        return;
+      }
+
+      this.$el.toggleClass('search-failed', state);
     },
     updateNoteShrinkState : function(model, state) {
       if (!this._rendered) {
