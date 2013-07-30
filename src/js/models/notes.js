@@ -161,7 +161,7 @@
       this.searchQueue.start();
       this._searchCursor = 0;
       this.backingCollection = options.track;
-      this.listenTo(this.backingCollection, 'add', this.maybeAddNew);
+      this.listenTo(this.backingCollection, 'add', this.maybeAdd);
       this.listenTo(this.backingCollection, 'remove', this._onRemove);
       this.listenTo(this.backingCollection, 'reset', _.mask(this.reset));
       this.listenTo(this.backingCollection, 'sort', _.mask(this.sort));
@@ -180,7 +180,7 @@
       // notes as this could be annoying.
       this.listenTo(this.backingCollection, 'change', function(note) {
         if (!this.contains(note)) {
-          this.maybeAddNew(note);
+          this.maybeAdd(note);
         }
       });
       this.reset();
@@ -204,12 +204,21 @@
       return val;
     },
     /**
-     * Add new note iff it matches the current search terms.
+     * Add note iff it matches the current search terms.
      *
      * @param {LisIt.models.Note} note The note to consider adding.
      **/
-    maybeAddNew: function(note) {
+    maybeAdd: function(note) {
       if (this.matcher(note)) {
+        if (this.searchFail) {
+          // Refilter
+          if (!this.searching) {
+            this._filter(this._terms);
+            return;
+          }
+          this.searchFail = false;
+          this.trigger('change:searchFail', this, this.searchFail);
+        }
         // Avoid sorting. Optimize for loading.
         var idx = this.comparator(note, this.backingCollection.length);
 
