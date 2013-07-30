@@ -25,6 +25,7 @@
         <resources refid="js.views.setup" />
         <resources refid="js.collectors" />
         <resources refid="js.observers" />
+        <resources refid="js.migrate" />
         <fileset file="${listit.js.platform.dir}/web-setup.js" />
         <resources refid="js.setup" />
     </resources>
