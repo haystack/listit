@@ -176,6 +176,13 @@
           this._searchCursor++;
         }
       });
+      // Add notes if they change to match the current terms. Do not remove
+      // notes as this could be annoying.
+      this.listenTo(this.backingCollection, 'change', function(note) {
+        if (!this.contains(note)) {
+          this.maybeAddNew(note);
+        }
+      });
       this.reset();
       this.searchFail = false;
     },
