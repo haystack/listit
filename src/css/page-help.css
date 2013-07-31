@@ -57,15 +57,15 @@
 }
 
 #help-main th, td {
-  border: 1px solid rgb(240, 153, 0);
-  padding: 2px;
+  border: 1px solid rgb(253, 150, 91);
+  padding: 2px 8px;
   vertical-align: middle;
 }
 
 #help-main th {
   font-weight: bold;
   text-align: center;
-  background-color: rgb(255, 212, 136);
+  background-color: rgb(255, 189, 128);
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
 }
@@ -76,7 +76,7 @@
 }
 
 #help-main .controltd {
-  background-color: rgb(255, 212, 136);
+  background-color: rgb(240, 127, 64);
 }
 
 #help-main .controltd, #help-main .imgtd {
