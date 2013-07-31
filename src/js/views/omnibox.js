@@ -89,6 +89,7 @@
       'click .save-icon': '_onSaveClicked',
       'click .pin-icon': '_onSavePinClicked',
       'keydown .editor': '_onKeyDown',
+      'keydown .editor-entry': '_onHtmlKeyDown',
       'keyup .editor': '_onKeyUp',
       'change .editor': 'storeText',
       'keydown .searchbar': '_onSearchKeyDown',
@@ -116,6 +117,25 @@
         if (event.ctrlKey){
           event.preventDefault();
           this.save();
+        }
+        break;
+      }
+    },
+    // handle ctrl+f/ctrl+x in raw html mode
+    _onHtmlKeyDown: function(event) {
+      event = event || window.event;
+      var keyCode = event.keyCode || event.which;
+      switch(keyCode) {
+      case KeyCode.F:
+        if (event.ctrlKey) {
+          event.preventDefault();
+          this.model.set('searchState', true);
+          this.$searchbar.select().focus();
+        }
+        break;
+      case KeyCode.X:
+        if (event.ctrlKey) {
+          this.model.set('searchState', false);
         }
         break;
       }
