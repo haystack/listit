@@ -68,16 +68,18 @@
       this.$el.children('.contents').html(this.model.get('contents'));
     },
     events: {
-      'click     .close-btn':             'onRemoveClicked',
-      'click     .contents':              'onClick',
-      'click     .contents a':            'onLinkOpen',
-      'click     .contents .listit_tag':  'onTagClick',
-      'keyup     .contents':              'onKeyUp',
-      'blur      .editor':                'onBlur',
-      'keydown   .editor':                'onKeyDown',
-      'click     .pin-icon':              'onPinToggle',
-      'resize    .editor':                'onResizeEditor',
-      'mousedown .pin-icon':              function(event){event.preventDefault();}
+      'click                  .close-btn'           : 'onRemoveClicked',
+      'click                  .contents'            : 'onClick',
+      'click                  .contents a'          : 'onLinkOpen',
+      'click                  .contents .listit_tag': 'onTagClick',
+      'keyup                  .contents'            : 'onKeyUp',
+      'blur                   .editor'              : 'onBlur',
+      'keydown[shift+return]  .editor'              : 'onCloseTriggered',
+      'keydown[ctrl+s]        .editor'              : 'onCloseTriggered',
+      'keydown[esc]           .editor'              : 'onCloseTriggered',
+      'click                  .pin-icon'            : 'onPinToggle',
+      'resize                 .editor'              : 'onResizeEditor',
+      'mousedown              .pin-icon'            : function(event){event.preventDefault();}
     },
     onLinkOpen: function(event) {
       this.model.trigger('user:open-bookmark', this.model, this, event.target.href);
@@ -139,6 +141,12 @@
         }
       });
     },
+    onCloseTriggered: function(e) {
+      if (this.editor && !this.editor.isShowingDialog()) {
+        e.preventDefault();
+        this.closeEditor();
+      }
+    },
     closeEditor: function() {
       var $contentsEl = this.$('.contents'),
           $editorEl = this.$('.editor-container');
@@ -163,16 +171,6 @@
       if (event.keyCode === KeyCode.TAB) {
         this.$el.scrollIntoView();
         $('#notes')[0].scrollTop -= 4;
-      }
-    },
-    onKeyDown: function(event) {
-      if ((
-        event.keyCode === KeyCode.ESC ||
-        (event.keyCode === KeyCode.ENTER && event.shiftKey) ||
-        (event.which === KeyCode.S && event.ctrlKey)
-        ) && this.editor && !this.editor.isShowingDialog()) {
-        event.preventDefault();
-        this.closeEditor();
       }
     },
     storeText: function() {
