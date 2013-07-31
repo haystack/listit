@@ -86,62 +86,29 @@
       return this;
     },
     events: {
-      'click .save-icon': '_onSaveClicked',
-      'click .pin-icon': '_onSavePinClicked',
-      'keydown .editor': '_onKeyDown',
-      'keyup .editor': '_onKeyUp',
-      'change .editor': 'storeText',
-      'keydown .searchbar': '_onSearchKeyDown',
-      'keyup .searchbar': 'storeSearch'
+      // Buttons
+      'click                  .save-icon' : '_onSaveTriggered',
+      'click                  .pin-icon'  : '_onSavePinTriggered',
+
+      // Hotkeys
+      'keydown[shift+return]  .editor'    : '_onSaveTriggered',
+      'keydown[ctrl+s]        .editor'    : '_onSaveTriggered',
+      'keydown[ctrl+return]   .editor'    : '_onSaveWithSearchTriggered',
+      'keydown[esc]           .editor'    : '_onResetTriggered',
+      'keydown[esc]           .searchbar' : '_onHideSearchbarTriggered',
+
+      // Autosave
+      'keyup                  .searchbar' : 'storeSearch',
+      'change                 .searchbar' : 'storeSearch',
+      'keyup                  .editor'    : 'storeText',
+      'change                 .editor'    : 'storeText'
+    },
+    _onHideSearchbarTriggered: function(event) {
+      this.model.set('searchState', false);
     },
     // Handle esc/shift-enter
-    _onKeyDown: function(event) {
-      var keyCode;
-      event = event || window.event;
-      keyCode = event.keyCode || event.which;
-      switch(keyCode) {
-      case KeyCode.ENTER:
-        if (event.shiftKey) {
-          this.save();
-          event.preventDefault(); // Let model update
-        } else if (event.ctrlKey) { // control+enter for save with search text
-          this.save({includeSearch: true});
-          event.preventDefault();
-        }
-        break;
-      case KeyCode.ESC:
-        this.reset();
-        break;
-      case KeyCode.S:
-        if (event.ctrlKey){
-          event.preventDefault();
-          this.save();
-        }
-        break;
-      }
-    },
-    _onSearchKeyDown: function(event) {
-      this._fixSearchHeight();
-      var keyCode;
-      event = event || window.event;
-      keyCode = event.keyCode || event.which;
-      switch(keyCode) {
-      case KeyCode.X:
-        if (event.ctrlKey) {
-          this.model.set('searchState', false);
-        }
-        break;
-      case KeyCode.ESC:
-        this.model.set('searchState', false);
-        break;
-      case KeyCode.F:
-        if (event.ctrlKey) {
-          event.preventDefault();
-          this.model.set('searchState', true);
-          this.$searchbar.select().focus();
-        }
-        break;
-      }
+    _onResetTriggered: function(event) {
+      this.reset();
     },
     // Store text on change.
     _onKeyUp: function(event) {
@@ -155,20 +122,26 @@
       this.model.set('searchText', this.getSearch(), {source: this});
     },
     /**
-     * Handles new-note save button click event.
-     * @param {object} click event
+     * Handles new-note save trigger events.
+     * @param {object} event event
      * @private
      */
-    _onSaveClicked: function(event) {
+    _onSaveTriggered: function(event) {
       this.save();
+      event.preventDefault();
+    },
+    _onSaveWithSearchTriggered: function(event) {
+      this.save();
+      event.preventDefault();
     },
     /**
      * Handles New Note Save w/ Place & URL Relevance Info:
      * @param {object} event The click event.
      * @private
      */
-    _onSavePinClicked: function(event) {
+    _onSavePinTriggered: function(event) {
       this.save({pinned: true});
+      event.preventDefault();
     },
     save: function(options) {
       this.assertRendered();

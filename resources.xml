@@ -56,6 +56,7 @@
     <resources id="js.libs.backbone">
         <filelist dir="${listit.js.dir}/libs">
             <file name="backbone.js" />
+            <file name="backbone.hotkeys.js"/>
             <file name="backbone.ext.js"/>
             <file name="backbone.rel.js"/>
         </filelist>
