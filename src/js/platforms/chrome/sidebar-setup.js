@@ -17,4 +17,18 @@ ListIt.lvent.once('setup:views:after', function(L, barr) {
     this.navigate('', {trigger: false});
     window.open('/help.html', '_new');
   });
+
+  // Close on hotkey press.
+  // Chrom's hotkey handling is inconsistant. On windows, the global hotkey is
+  // fired even if the sidebar is focused. On linux however, the global hotkey is not fired.
+  chrome.commands.getAll(function(cmds) {
+    var cmd = _.findWhere(cmds, {name: "_execute_browser_action"});
+    if (cmd && cmd.shortcut) {
+      $(document).bind('keydown.close', cmd.shortcut, function(e) {
+        e.stopImmediatePropagation();
+        e.preventDefault();
+        window.close();
+      });
+    }
+  });
 });
