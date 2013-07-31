@@ -164,15 +164,6 @@
       this.expand();
       this.openEditor();
     },
-    /**
-     * Scroll List so note selected with tab is at top.
-     **/
-    onKeyUp: function(event) {
-      if (event.keyCode === KeyCode.TAB) {
-        this.$el.scrollIntoView();
-        $('#notes')[0].scrollTop -= 4;
-      }
-    },
     storeText: function() {
       this.model.changeContents(this.editor.getText(), window);
       this.model.trigger('user:save', this.model, this);
