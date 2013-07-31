@@ -115,14 +115,22 @@ ListIt.lvent.once("setup:views:after", function(L, barr) {
     openOrFocus: function() {
       if (currentSidebarId) {
         if (currentSidebarId !== true) {
-          chrome.windows.update(currentSidebarId, {
-            focused: true
-          }, function(win) {
-            if (!win) {
-              // Window really didn't exist, fix it.
-              currentSidebarId = null;
-              clearInterval(currentSidebarResizer);
-              sidebar._open();
+          chrome.windows.get(currentSidebarId, function(currentSidebar) {
+            if (currentSidebar.focused) {
+              // if sidebar is focused, close it.
+              sidebar.close();
+            } else {
+              // otherwise, focus it.
+              chrome.windows.update(currentSidebarId, {
+                focused: true
+              }, function(win) {
+                if (!win) {
+                  // Window really didn't exist, fix it.
+                  currentSidebarId = null;
+                  clearInterval(currentSidebarResizer);
+                  sidebar._open();
+                }
+              });
             }
           });
         }
