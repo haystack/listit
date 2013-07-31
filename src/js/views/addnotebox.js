@@ -5,10 +5,12 @@
     className: 'note-creator',
     id: 'addnote',
     events: {
-      'click .save-icon': '_onSaveClicked',
-      'click .close-icon': '_onCloseClicked',
-      'click .pin-icon': '_onPinClicked',
-      'keydown .editor': '_onKeyDown'
+      'click                  .save-icon' : '_onSaveClicked',
+      'click                  .close-icon': '_onCloseClicked',
+      'click                  .pin-icon'  : '_onPinClicked',
+      'keydown[shift+return]  .editor'    : '_onSaveTriggered',
+      'keydown[ctrl+s]        .editor'    : '_onSaveTriggered',
+      'keydown[esc]           .editor'    : '_onCloseTriggered',
     },
     initialize: function() {
       var that = this;
@@ -17,38 +19,17 @@
           return "You have an unsaved list.it note open.";
         }
       };
-
     },
-    _onKeyDown: function(event) {
-      var keyCode;
-      event = event || window.event;
-      keyCode = event.keyCode || event.which;
-      switch(keyCode) {
-      case KeyCode.ENTER:
-        if (event.shiftKey) {
-          this._onSaveClicked();
-          event.preventDefault(); // Let model update
-        }
-        break;
-      case KeyCode.S:
-        if (event.ctrlKey) {
-          event.preventDefault();
-          event.stopPropagation();
-          this._onSaveClicked();
-        }
-        break;
-      case KeyCode.ESC:
-        this._onCloseClicked();
-        break;
-      }
-    },
-    _onSaveClicked: function() {
+    _onSaveTriggered: function(event) {
+      event.preventDefault();
       this.saveNote();
     },
-    _onCloseClicked: function() {
+    _onCloseTriggered: function(event) {
+      event.preventDefault();
       this.model.destroy();
     },
-    _onPinClicked: function() {
+    _onPinTriggered: function(event) {
+      event.preventDefault();
       this.editor.setText('! ' + this.editor.getText());
       this.saveNote();
     },
