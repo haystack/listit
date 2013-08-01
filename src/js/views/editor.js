@@ -16,20 +16,24 @@
         return;
       }
       var that = this;
-      var iframe = this.wysihtml5entry.composer.iframe;
-      var $body = $(iframe).contents().find('body'); // Needs document to be loaded.
+      var iframe;
+      if (this.wysihtml5entry.composer) {
+        iframe = this.wysihtml5entry.composer.iframe;
+      }
       var txtbox = this.wysihtml5entry.textareaElement;
       _.delay(function() {
         if (that.wysihtml5entry.currentView === that.wysihtml5entry.composer) {
           // Using composer
           iframe.style.height = 'auto';
-          iframe.style.height = $body[0].clientHeight + 'px';
+          iframe.style.height = $(iframe).contents().find('body')[0].clientHeight + 'px';
           txtbox.style.height = iframe.style.height;
         } else {
           // Not using composer
           txtbox.style.height = 'auto';
           txtbox.style.height = txtbox.scrollHeight + 'px';
-          iframe.style.height = txtbox.style.height;
+          if (iframe) {
+            iframe.style.height = txtbox.style.height;
+          }
         }
         $(txtbox).trigger("resize");
       });
@@ -55,8 +59,10 @@
         style: false,
         stylesheets: WYSIHTML5_CSS
       });
-      this.wysihtml5entry.composer.iframe.setAttribute("scrolling", "no");
 
+      if (this.wysihtml5entry.composer) {
+        this.wysihtml5entry.composer.iframe.setAttribute("scrolling", "no");
+      }
 
       // Forward events to parent and resize editor
       _.each(['keydown', 'keyup', 'blur', 'change', 'focus'], function(type) {
