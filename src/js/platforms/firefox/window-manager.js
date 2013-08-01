@@ -60,6 +60,71 @@ var setupMenu = function(window) {
   menu.appendChild(menuitem);
 };
 
+var setupIcon = function(window) {
+  var document = window.document;
+  var button = document.createElement("toolbarbutton");
+  button.setAttribute("id", "listitButton");
+  button.setAttribute("command", "viewListitSidebar");
+  button.setAttribute("observes", "viewListitSidebar");
+  button.setAttribute("key", "key_viewListitSidebar");
+  button.setAttribute("image", "chrome://listit/content/webapp/img/icon16.png");
+  button.setAttribute("class", "listit toolbarbutton-1 chromeclass-toolbar-additional");
+  restorePosition(document, button);
+};
+
+var restorePosition = function(document, button) {
+  (document.getElementById("navigator-toolbox") || document.getElementById("mail-toolbox")).palette.appendChild(button);
+
+  //check which (if any) toolbar the button should be located in:
+  var toolbars = document.querySelectorAll("toolbar"); // I think you can just use jquery? we'll do this for now.
+  var toolbar, currentset, idx;
+  for (var i = 0; i < toolbars.length; i++) {
+    currentset = toolbars[i].getAttribute("currentset").split(",");
+    idx = currentset.indexOf(button.id);
+    if (idx != -1) { //try changing to !== later to see if it still works.
+      toolbar = toolbars[i];
+      break;
+    }
+  }
+
+  //if the save position wasn't found, use the default one:
+  var defaultToolbar = "addon-bar";
+  var defaultBefore;
+  if (!toolbar) {
+    toolbar = document.getElementById(defaultToolbar);
+    currentset = toolbar.getAttribute("currentset").split(",");
+    //idx = currentset.indexOf(defaultBefore) || -1;
+    var whatwhat = currentset.indexOf(defaultBefore);
+    if (whatwhat) {
+      idx = whatwhat;
+      currentset.splice(idx, 0, button.id);
+    } else {
+      idx = -1;
+      currentset.push(button.id);
+    }
+    toolbar.setAttribute("currentset", currentset.join(","));
+
+  }
+
+  //put the button into the toolbar it belongs in:
+  // when the default happens this is a suuuuper stupid way of doing it but like... oh well.
+  if (toolbar) {
+    if (idx != -1) { //this is necessary in his, I don't think it is necessary in ours yet... until we implement the default guy...
+      for (var q = idx + 1; q <currentset.length; q++) {
+        //oh dear lord why the shit is this a for loop oh my god wat wat wat
+        var before = document.getElementById(currentset[q]);
+        if (before) {
+          toolbar.insertItem(button.id, before);
+          return; //why is it returning? should it be breaking? I. what.
+        }
+      }
+    } else {
+      toolbar.insertItem(button.id);
+    }
+  }
+
+};
+
 var bindKey = function(keyEl, hotkey) {
   var pieces = hotkey.split('+');
   var key = pieces.pop();
@@ -138,6 +203,7 @@ var windowListener = {
 ListItWM.setupBrowser = function(window) {
   setupBroadcaster(window);
   setupMenu(window);
+  setupIcon(window);
   setupBrowserHotkey(window, ListIt.preferences.get('openHotkey'));
 };
 
