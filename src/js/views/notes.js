@@ -20,7 +20,7 @@
         this.closeEditor();
         this.cleanupEditor();
         var el = this.$el;
-        if (options && options.animate) {
+        if (options && options.user) {
           el.stop().fadeOut({queue: false}, 200).slideUp(300, function() {
             el.remove();
           });
@@ -86,7 +86,7 @@
       event.stopPropagation();
     },
     onRemoveClicked: function() {
-      L.notebook.trashNote(this.model);
+      L.notebook.trashNote(this.model, {user: true});
       return false;
     },
     onResizeEditor: function() {

@@ -521,14 +521,14 @@
       this.trigger("create", note);
       return note;
     },
-    trashNote: function(note) {
-      note.moveTo(this.get('deletedNotes'));
-      this.trigger("delete", note);
+    trashNote: function(note, options) {
+      note.moveTo(this.get('deletedNotes'), options);
+      this.trigger("delete", note, options);
       return note;
     },
-    untrashNote: function(note) {
-      note.moveTo(this.get('notes'));
-      this.trigger("undelete", note);
+    untrashNote: function(note, options) {
+      note.moveTo(this.get('notes'), options);
+      this.trigger("undelete", note, options);
       return note;
     },
     getNote: function(id) {
