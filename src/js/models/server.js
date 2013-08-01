@@ -162,7 +162,7 @@
 
       $.ajax(options);
     },
-    syncNotes : function() {
+    syncNotes : function(synchronous) {
       if (this._syncNotesEnter()) {
         var that = this;
         this.pullNotes({
@@ -171,9 +171,9 @@
             that.pushNotes({
               error: that._syncNotesFailure,
               success: that._syncNotesSuccess
-            });
+            }, synchronous);
           }
-        });
+        }, synchronous);
       }
     },
     _syncNotesEnter: function() {
@@ -209,12 +209,13 @@
       this.trigger('sync:success');
       this._syncNotesExit();
     },
-    pullNotes : function(options) {
+    pullNotes : function(options, synchronous) {
       var that = this;
       this.ajax({
         method: 'notes',
         dataType: 'json',
         auth: true,
+        async: !synchronous,
         success: function(results) {
           that.unbundleNotes(results, function() {
             if (options.success) {
@@ -226,12 +227,13 @@
         complete: options.complete
       });
     },
-    pushNotes : function(options) {
+    pushNotes : function(options, synchrounous) {
       var that = this;
       this.ajax({
         method: 'notespostmulti',
         dataType: 'json',
         auth: true,
+        async: !synchrounous,
         data: JSON.stringify(this.bundleNotes()),
         success: function(response) {
           that.commitNotes(response.committed);
@@ -298,6 +300,8 @@
       if (this.get('noteSyncInterval', -1) > 0) {
         L.notebook.ready(function() {
           that.syncNotes();
+          $(window).off('beforeunload.lastSync');
+          $(window).on('beforeunload.lastSync', _.bind(that.syncNotes, that, true));
         });
       }
       if (this.get('logSyncInterval', -1) > 0) {
@@ -308,6 +312,7 @@
     },
     pause: function() {
       clearTimeout(this.get('noteSyncTimer'));
+      $(window).off('beforeunload.lastSync');
       clearTimeout(this.get('logSyncTimer'));
       this.set('paused', true);
     },
