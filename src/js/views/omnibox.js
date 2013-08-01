@@ -131,7 +131,7 @@
       event.preventDefault();
     },
     _onSaveWithSearchTriggered: function(event) {
-      this.save();
+      this.save({includeSearch: true});
       event.preventDefault();
     },
     /**
