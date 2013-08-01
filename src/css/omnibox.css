@@ -55,9 +55,8 @@
   font-size: 1.01em;
   color: rgb(120,120,120);
   padding: 1px 3px;
-  margin: 5px 0px;
   box-shadow: 1px 0px rgb(220,220,220);
-  background: #ccc !important;
+  background: #bbb;
 
   border-top-left-radius: 5px;
   border-bottom-left-radius: 5px;
