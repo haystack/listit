@@ -391,6 +391,7 @@
         }, true);
 
         var current;
+        var height;
         ul.sortable({
           distance: 10,
           items: '.note:not(.pinned)',
@@ -399,19 +400,18 @@
           revert: 100,
           start: function(event, ui) {
             sorting = true;
-            ui.placeholder.height(ui.item.height() / 2);
-            current = ui.placeholder.next();
+            height = ui.item.height();
+            ui.placeholder.css({ 'height': 2, 'top': height/2+1 });
+            current = ui.placeholder.nextAll(':not(.ui-sortable-helper)').first();
+            current.css('margin-top', height);
           },
           change: function(event, ui) {
-            current.css('margin-top', '2px');
-            current = ui.placeholder.next();
-            current.css('margin-top', ui.placeholder.height());
+            current.stop(true).animate({'margin-top': 2}, 100);
+            current = ui.placeholder.nextAll(':not(.ui-sortable-helper)').first();
+            current.stop(true).animate({'margin-top': height}, 100);
           },
           stop: function(event, ui) {
-            current.css({'-webkit-transition': 'none',
-                         '-moz-transition': 'none',
-                         'transition': 'none',
-                        'margin-top': '2px'});
+            current.css('margin-top', 2);
             var noteId = ui.item.attr('data-note');
             var previousId = ui.item.prev().attr('data-note');
             var note = collection.get(noteId);
