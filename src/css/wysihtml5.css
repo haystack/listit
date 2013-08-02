@@ -1,3 +1,7 @@
+.hideWysihtml5Toolbar .wysihtml5-toolbar-buttons {
+  display: none;
+}
+
 .wysihtml5-toolbar-buttons [data-wysihtml5-command=italic] {
     background-image: url("../img/toolbar/format-text-italic.png");
 }

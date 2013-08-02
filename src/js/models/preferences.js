@@ -5,6 +5,7 @@
     defaults: {
       shrinkNotes: false,
       expandVariables: true,
+      hideToolbar: false,
       openHotkey: '',
       notificationTimeout: 5
     },
@@ -39,6 +40,10 @@
       shrinkNotes: {
         type: 'boolean',
         description: 'Collapse Notes' // TODO:Better desc
+      },
+      hideToolbar: {
+        type: 'boolean',
+        description: 'Hide text format buttons'
       }
     },
     // Singleton
