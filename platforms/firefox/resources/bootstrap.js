@@ -58,12 +58,14 @@ var ListItManager = {
       }
     }
   },
-  stop: function() {
+  stop: function(reason) {
     try {
       if (ListItManager._inited) {
         ListItManager._timer.cancel();
         if (ListItManager.ready) {
-          ListItManager.ListItWM.teardown();
+          ListItManager.ListItWM.teardown(reason);
+          //if (reason == ADDON_DISABLE)
+          //  ListItManager.ListItWM.disable();
         }
         ListItManager.ready = false;
         ListItManager._inited = false;
@@ -87,5 +89,5 @@ function shutdown(data, reason) {
   if (reason == APP_SHUTDOWN)
     return;
 
-  ListItManager.stop();
+  ListItManager.stop(reason);
 }
