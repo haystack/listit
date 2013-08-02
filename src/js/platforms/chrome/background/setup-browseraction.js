@@ -3,7 +3,7 @@ ListIt.lvent.once("setup:views:after", function(L, barr) {
   'use strict';
   var currentSidebarId = null;
   var currentSidebarResizer = null;
-  var sidebar = L.chrome.sidebar = {
+  var sidebar = L.chrome.sidebar = _.extend({
     // Does not check if open.
     _open: function(callback) {
       currentSidebarId = true;
@@ -17,6 +17,7 @@ ListIt.lvent.once("setup:views:after", function(L, barr) {
           top: mainWindow.top,
           focused: true
         }, function(sidebarWindow) {
+          sidebar.trigger('open', sidebarWindow);
           /**
            * This is window the tracking code.
            *
@@ -139,8 +140,8 @@ ListIt.lvent.once("setup:views:after", function(L, barr) {
       }
     },
     isOpen: function(callback) {
-      // Yes, this really do double check whether the sidebar is really
-      // open. This would be a really bad place to have a bug.
+      // Yes, this really does double check whether the sidebar is really open.
+      // This would be a really bad place to have a bug.
       if (currentSidebarId) {
         if (currentSidebarId === true) {
           callback(true);
@@ -168,13 +169,14 @@ ListIt.lvent.once("setup:views:after", function(L, barr) {
         callback();
       }
     }
-  };
+  }, Backbone.Events);
 
   // Track sidebar close event
   chrome.windows.onRemoved.addListener(function(windowId) {
     if (windowId === currentSidebarId) {
       currentSidebarId = null;
       clearInterval(currentSidebarResizer);
+      sidebar.trigger('close', windowId);
     }
   });
 
