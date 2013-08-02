@@ -1,3 +1,4 @@
+/*globals chrome: false*/
 (function(L) {
   'use strict';
   L.models.Preferences.prototype.schema = _.defaults({
@@ -23,6 +24,7 @@
 })(ListIt);
 
 ListIt.lvent.once('setup:models:after', function(L, barr) {
+  'use strict';
   L.preferences.ready(function() {
     L.preferences.on('change:recordActiveTab', function(m, v) {
       try {
@@ -30,7 +32,7 @@ ListIt.lvent.once('setup:models:after', function(L, barr) {
           // This only works from event callbacks. This shouldn't be a problem
           // but is kind of hacky.
           chrome.permissions.request({
-            permissions: ['tabs'],
+            permissions: ['tabs']
           }, function(granted) {
             if (!granted) {
               L.preferences.set('recordActiveTab', false);
@@ -38,7 +40,7 @@ ListIt.lvent.once('setup:models:after', function(L, barr) {
           });
         } else {
           chrome.permissions.remove({
-            permissions: ['tabs'],
+            permissions: ['tabs']
           });
         }
       } catch (e) {}
