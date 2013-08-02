@@ -20,8 +20,13 @@ ListIt.gvent.on('initialize', function(L, version, barr) {
   L.lvent.once('setup:models:after', function(L, barr) {
     L.notebook.ready(function() {
       var nts = L.notebook.get('notes');
-      _.each(defaultNotes, function(s) {
-        nts.create({'contents': s});
+      _.each(defaultNotes, function(s, i) {
+        // Give them consistant IDs so they are deleted correctly on sync.
+        // Also, don't bother syncing these notes unless they have been
+        // changed. Setting modified to false also ensures that they are
+        // correctly deleted as we don't delete modified notes on sync.
+        // Also, id 0 is a bad idea (we do some sloppy checks).
+        nts.create({'contents': s, 'id': i+1, 'modified': false});
       });
       L.notebook.save();
     });
