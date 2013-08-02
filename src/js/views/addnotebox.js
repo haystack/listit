@@ -10,7 +10,7 @@
       'click                  .pin-icon'  : '_onPinClicked',
       'keydown[shift+return]  .editor'    : '_onSaveTriggered',
       'keydown[ctrl+s]        .editor'    : '_onSaveTriggered',
-      'keydown[esc]           .editor'    : '_onCloseTriggered',
+      'keydown[esc]           .editor'    : '_onCloseTriggered'
     },
     initialize: function() {
       var that = this;
