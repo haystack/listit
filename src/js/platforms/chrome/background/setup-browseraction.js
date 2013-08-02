@@ -50,7 +50,7 @@ ListIt.lvent.once("setup:views", function(L, barr) {
         callback(false);
       }
     },
-    openOrFocus: function() {
+    toggleOrFocus: function() {
       if (currentSidebarId) {
         if (currentSidebarId !== true) {
           chrome.windows.get(currentSidebarId, function(currentSidebar) {
@@ -120,7 +120,7 @@ ListIt.lvent.once("setup:views", function(L, barr) {
 
 
   chrome.browserAction.onClicked.addListener(function() {
-    L.chrome.sidebar.openOrFocus();
+    L.chrome.sidebar.toggleOrFocus();
   });
 
   L.preferences.on('change:popup', function(model, value) {
