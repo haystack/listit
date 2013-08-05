@@ -21,15 +21,15 @@ var ListItManager = {
     Cu.import("chrome://listit/content/webapp/js/platforms/firefox/window-manager.js", ListItManager);
     if (ListItManager.ListIt.status === "ready") {
       ListItManager.ready = true;
-      ListItManager.ListItWM.setup(ListItManager.ListIt);
+      ListItManager.ListItWM.setup(ListItManager.ListIt, ListItManager.enabling);
     } else {
       ListItManager.ListIt.lvent.on('status:ready', function() {
         ListItManager.ready = true;
-        ListItManager.ListItWM.setup(ListItManager.ListIt);
+        ListItManager.ListItWM.setup(ListItManager.ListIt, ListItManager.enabling);
       });
     }
   },
-  start: function() {
+  start: function(reason) {
     if (!ListItManager._inited) {
       ListItManager._inited = true;
 
@@ -64,8 +64,6 @@ var ListItManager = {
         ListItManager._timer.cancel();
         if (ListItManager.ready) {
           ListItManager.ListItWM.teardown(reason);
-          //if (reason == ADDON_DISABLE)
-          //  ListItManager.ListItWM.disable();
         }
         ListItManager.ready = false;
         ListItManager._inited = false;
@@ -79,6 +77,9 @@ var ListItManager = {
 };
 
 function startup(data, reason) {
+  if (reason === ADDON_ENABLE) {
+    ListItManager.enabling = true;
+  }
   ListItManager.start();
 }
 
