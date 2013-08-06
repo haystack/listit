@@ -3,7 +3,7 @@
   'use strict';
 
   var barr = new Barrier();
-  if (DEBUG_MODE && window.console) {
+  if (DEBUG_MODE && window.console && window.console.time) {
     console.timeEnd('load');
     console.time('startup');
   }
@@ -56,7 +56,7 @@
       debug("setup::end");
     }, function() {
       L.setStatus('ready');
-      if (DEBUG_MODE && window.console) {
+      if (DEBUG_MODE && window.console && window.console.time) {
         console.timeEnd('startup');
       }
     }

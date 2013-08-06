@@ -59,7 +59,7 @@
         return memo+" change:"+attr;
       }, ""), _.mask(this.save));
 
-      if (DEBUG_MODE && window.console) {
+      if (DEBUG_MODE && window.console && window.console.time) {
         this.listenTo(this, 'change:syncingNotes', function(server, syncing) {
           if (syncing) {
             console.time('syncing notes');
@@ -358,7 +358,7 @@
      * Package and bundle the given notes.
      */
     bundleNotes : function() {
-      if (DEBUG_MODE && window.console) {
+      if (DEBUG_MODE && window.console && window.console.time) {
         console.time('bundle notes');
       }
       var that = this,
@@ -385,7 +385,7 @@
       .each(function(n) { bundleNote(n, false); });
       L.notebook.get('deletedNotes').each(function(n) { bundleNote(n, true); });
 
-      if (DEBUG_MODE && window.console) {
+      if (DEBUG_MODE && window.console && window.console.time) {
         console.timeEnd('bundle notes');
       }
 
@@ -393,7 +393,7 @@
     },
     commitNotes: function(committed) {
 
-      if (DEBUG_MODE && window.console) {
+      if (DEBUG_MODE && window.console && window.console.time) {
         console.time('commit notes');
       }
 
@@ -426,12 +426,12 @@
       // Update note collection version.
       L.notebook.set('version', L.notebook.get('version') + 1);
 
-      if (DEBUG_MODE && window.console) {
+      if (DEBUG_MODE && window.console && window.console.time) {
         console.timeEnd('commit notes');
       }
     },
     unbundleNotes: function(result, cb) {
-      if (DEBUG_MODE && window.console) {
+      if (DEBUG_MODE && window.console && window.console.time) {
         console.time('unbundle notes');
       }
 
@@ -516,7 +516,7 @@
         _.each(toAddDeleted, unbundleQueue.wrap(function(n) {n.save();}));
         unbundleQueue.add(_.bind(L.notebook.save, L.notebook));
         unbundleQueue.add(function() {
-          if (DEBUG_MODE && window.console) {
+          if (DEBUG_MODE && window.console && window.console.time) {
             console.timeEnd('unbundle notes');
           }
           cb();

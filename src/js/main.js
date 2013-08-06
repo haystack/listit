@@ -9,7 +9,7 @@
 // Also lets me throw errors without breaking things.
 
 
-if (window.DEBUG_MODE && window.console) {
+if (window.DEBUG_MODE && window.console && window.console.time) {
   console.time('load');
 }
 
