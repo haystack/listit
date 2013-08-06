@@ -219,14 +219,14 @@
           this.searchFail = false;
           this.trigger('change:searchFail', this, this.searchFail);
         }
-        // Avoid sorting. Optimize for loading.
-        var idx = this.comparator(note, this.backingCollection.length);
+        // Avoid sorting.
+        var idx = this.sortedIndex(note);
 
         if (idx > 0) {
-          this.add(note, {'new': true, sort: false, at: idx});
+          this.add(note, {sort: false, at: idx});
         } else {
           // This should never happen but check anyways.
-          this.add(note, {'new': true});
+          this.add(note);
         }
       }
     },
