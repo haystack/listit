@@ -157,6 +157,7 @@
   // assumes this (to reduce flickering).
   L.models.FilterableNoteCollection = L.models.NoteCollection.extend({
     initialize : function(attrs, options) {
+      _.bindAll(this, "comparator");
       this.searchQueue = new ActionQueue(50);
       this.searchQueue.start();
       this._searchCursor = 0;
@@ -194,7 +195,7 @@
       // Backbone checks the number of arguments (1 = absolute, 2 = compare)
       // Underscore passes an extra argument (the index in the underlying
       // list). The note must be before this index in the filtered list.
-      var val;
+      var val = -1;
       if (typeof(arguments[1]) === "number") {
         val = this.backingCollection.lastIndexOf(note, arguments[1]+1);
       }
@@ -219,13 +220,15 @@
           this.searchFail = false;
           this.trigger('change:searchFail', this, this.searchFail);
         }
+
         // Avoid sorting.
         var idx = this.sortedIndex(note);
 
-        if (idx > 0) {
+        if (idx >= 0) {
           this.add(note, {sort: false, at: idx});
         } else {
           // This should never happen but check anyways.
+          debug("WTF")
           this.add(note);
         }
       }
