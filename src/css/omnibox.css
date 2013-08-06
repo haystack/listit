@@ -97,8 +97,14 @@
   margin-bottom: 2px;
 }
 
-.inactiveSearch{
-  opacity: 0.5;
+.searchIcon{
+  padding: 1px 1px;
+}
+
+.activeSearch{
+  border-radius: 5px;
+  background-color: rgb(150,150,150);
+  box-shadow: 1px 1px rgb(120, 120, 120);
 }
 
 #helpIcon {
