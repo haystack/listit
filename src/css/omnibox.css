@@ -16,6 +16,8 @@
   padding: 7px 7px 0px 7px;
   margin: 0px -3px;
 
+  min-height: 60px;
+
   // Expand
   display: -webkit-box;
   display: -moz-box;
@@ -40,6 +42,10 @@
 
 #omnibox .editor-bottombar {
   margin-top: auto;
+  -o-align-items: flex-end;
+  -ms-align-items: flex-end;
+  -webkit-align-items: flex-end;
+  align-items: flex-end;
 }
 
 .note-creator .editor-entry, .note-creator .wysihtml5-sandbox {
