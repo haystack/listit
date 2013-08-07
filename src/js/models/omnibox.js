@@ -8,7 +8,8 @@
       return false;
     },
     defaults: {
-      text: ''
+      text: '',
+      searchText: ''
     },
     initialized: function() {
       var slowSearch = _.debounce(this.requestSearch, 100);
@@ -49,7 +50,10 @@
       var contents = L.util.strip(this.get('text'));
       var meta = options.meta || {};
       if (options.includeSearch) {
-        contents = this.get('searchText') + ' ' + contents;
+        var searchText = _.str.trim(this.get('searchText'));
+        if (searchText) {
+          contents = searchText + ' ' + contents;
+        }
       }
       if (options.pinned) {
         contents = '! ' + contents;
