@@ -37,11 +37,13 @@
   -ms-box-orient: vertical;
   -o-box-orient: vertical;
 
+  display: -ms-flexbox;
   display: -webkit-flex;
   display: flex;
 
   -webkit-flex-direction: column;
   flex-direction: column;
+  -ms-flex-direction: column;
 }
 
 #page-main > .header {
@@ -59,6 +61,7 @@
   -moz-box-flex: 1;
   -ms-box-flex: 1;
   -o-box-flex: 1;
+  -ms-flex: 1;
   -webkit-flex: 1;
   flex: 1;
   overflow-x: auto;
