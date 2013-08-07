@@ -5,9 +5,9 @@
     className: 'note-creator',
     id: 'addnote',
     events: {
-      'click                  .save-icon' : '_onSaveClicked',
-      'click                  .close-icon': '_onCloseClicked',
-      'click                  .pin-icon'  : '_onPinClicked',
+      'click                  .save-icon' : '_onSaveTriggered',
+      'click                  .close-icon': '_onCloseTriggered',
+      'click                  .pin-icon'  : '_onPinTriggered',
       'keydown[shift+return]  .editor'    : '_onSaveTriggered',
       'keydown[ctrl+s]        .editor'    : '_onSaveTriggered',
       'keydown[esc]           .editor'    : '_onCloseTriggered'
