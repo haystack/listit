@@ -431,6 +431,7 @@
 
         this._rendered = true;
         this.updateNoteShrinkState(L.preferences, L.preferences.get('shrinkNotes'));
+        this.updateSearchStatus(L.sidebar, L.sidebar.searchFail);
       }
       _.defer(_.bind(this.reset, this));
       return this;
