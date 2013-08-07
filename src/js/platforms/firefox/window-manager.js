@@ -161,7 +161,7 @@ ListItWM.setup = function(realListIt, enabling) {
   wm.addListener(windowListener);
 };
 
-ListItWM.teardown = function(reason) {
+ListItWM.teardown = function() {
   wm.removeListener(windowListener);
   eachWindow(function(domWindow) {
     var sidebarBox = domWindow.document.getElementById("sidebar-box");
@@ -169,8 +169,5 @@ ListItWM.teardown = function(reason) {
       domWindow.toggleSidebar();
     }
     ListItWM.teardownBrowser(domWindow);
-    if (reason === 4) {
-      ListItWM.ListItIM.destroyButton(domWindow);
-    }
   });
 };

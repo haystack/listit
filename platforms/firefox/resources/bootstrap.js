@@ -58,12 +58,12 @@ var ListItManager = {
       }
     }
   },
-  stop: function(reason) {
+  stop: function() {
     try {
       if (ListItManager._inited) {
         ListItManager._timer.cancel();
         if (ListItManager.ready) {
-          ListItManager.ListItWM.teardown(reason);
+          ListItManager.ListItWM.teardown();
         }
         ListItManager.ready = false;
         ListItManager._inited = false;
@@ -90,5 +90,5 @@ function shutdown(data, reason) {
   if (reason == APP_SHUTDOWN)
     return;
 
-  ListItManager.stop(reason);
+  ListItManager.stop();
 }

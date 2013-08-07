@@ -17,14 +17,10 @@ var createIcon = function(window, enabling) {
   button.setAttribute("image", "chrome://listit/content/webapp/img/icon16.png");
   button.setAttribute("class", "listit toolbarbutton-1 chromeclass-toolbar-additional");
   document.getElementById("navigator-toolbox").palette.appendChild(button);
-  if (enabling) { // Enabling extension, should use default position.
-    useDefaultPosition(document, button);
-  } else {
-    addIcon(document, button);
-  }
+  addIcon(document, button, enabling);
 };
 
-var addIcon = function(document, button) {
+var addIcon = function(document, button, enabling) {
   // check which (if any) toolbar the button should be located in:
   // when restarting firefox, this will allow the position of the icon to persist:
   var toolbars = document.querySelectorAll("toolbar");
@@ -46,6 +42,8 @@ var addIcon = function(document, button) {
     // toolbar.setAttribute("currentset", toolbar.currentSet);
     //currentset.splice(idx, 0, button.id);
     //toolbar.setAttribute("currentset", currentset.join(","));
+  } else if (enabling) {
+    useDefaultPosition(document, button);
   }
 };
 
@@ -63,26 +61,6 @@ var useDefaultPosition = function(document, button) {
   toolbar.collapsed = false;
 };
 
-var removeIcon = function(window) {
-  //need to remove the listitButton from the currentset of whichever toolbar it was in 
-  var toolbars = window.document.querySelectorAll("toolbar");
-  for (var i = 0; i < toolbars.length; i++) {
-    var currentset = toolbars[i].getAttribute("currentset").split(",");
-    var idx = currentset.indexOf("listitButton");
-    if (idx !== -1) {
-      currentset.splice(idx, 1);
-      toolbars[i].setAttribute("currentset", currentset.join(","));
-      toolbars[i].currentSet = currentset.join(","); //necessary???
-      // in bug free code we could break/return/whatever here. but for now I want it to remove the icon from every toolbar just in case.
-      document.persist(toolbars[i].id, "currentset");
-    }
-  }
-};
-
 ListItIM.createButton = function(window, enabling) { // I don't know if this level of functionwhatnotexportationshit is actually necessary. Womp womp womp.
   createIcon(window, enabling);
-};
-
-ListItIM.destroyButton = function(window) {
-  removeIcon(window);
 };
