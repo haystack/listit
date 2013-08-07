@@ -25,7 +25,7 @@ var createIcon = function(window, enabling) {
 };
 
 var addIcon = function(document, button) {
-  //check which (if any) toolbar the button should be located in:
+  // check which (if any) toolbar the button should be located in:
   // when restarting firefox, this will allow the position of the icon to persist:
   var toolbars = document.querySelectorAll("toolbar");
   var toolbar, currentset, idx;
@@ -40,11 +40,12 @@ var addIcon = function(document, button) {
   
   // put the button into the toolbar it belongs in.
   if (toolbar) {
-    // still dunno why this is radically different from the default
     // inserts the button into the toolbar before the item after it.
     var itemAfter = document.getElementById(currentset[idx+1]);
     toolbar.insertItem(button.id, itemAfter);
-    toolbar.setAttribute("currentset", toolbar.currentSet);
+    // toolbar.setAttribute("currentset", toolbar.currentSet);
+    //currentset.splice(idx, 0, button.id);
+    //toolbar.setAttribute("currentset", currentset.join(","));
   }
 };
 
@@ -52,11 +53,13 @@ var addIcon = function(document, button) {
 var useDefaultPosition = function(document, button) {
   var defaultToolbar = "addon-bar";
   var toolbar = document.getElementById(defaultToolbar);
+  toolbar.insertItem(button.id);
+  // I don't need to make this an array, if it is a string I can just append. [well. concat. you know.]
   var currentset = toolbar.getAttribute("currentset").split(",");
   currentset.push(button.id);
   toolbar.setAttribute("currentset", currentset.join(","));
   toolbar.currentSet = currentset.join(",");
-  toolbar.insertItem(button.id);
+  document.persist(defaultToolbar, "currentset");
   toolbar.collapsed = false;
 };
 
@@ -71,6 +74,7 @@ var removeIcon = function(window) {
       toolbars[i].setAttribute("currentset", currentset.join(","));
       toolbars[i].currentSet = currentset.join(","); //necessary???
       // in bug free code we could break/return/whatever here. but for now I want it to remove the icon from every toolbar just in case.
+      document.persist(toolbars[i].id, "currentset");
     }
   }
 };
