@@ -25,7 +25,7 @@ return __p;
 ListIt.templates['editor'] = function(obj){
 var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'')};
 with(obj||{}){
-__p+='<textarea class="editor-entry input-div flex editable" placeholder="Search or Create Note">'+
+__p+='<textarea class="editor-entry input-div editable" placeholder="Search or Create Note">'+
 ((__t=(text))==null?'':__t)+
 '</textarea>\n<div class="editor-bottombar hbox">\n    <div class="editor-icons hbox"></div>\n</div>\n\n';
 }
