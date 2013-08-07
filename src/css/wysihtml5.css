@@ -200,5 +200,6 @@
 }
 
 .editor-entry {
-    min-height: 3em;
+  overflow: hidden;
+  min-height: 3em;
 }
