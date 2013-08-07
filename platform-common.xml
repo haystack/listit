@@ -293,6 +293,11 @@
 
     <target name="debug" depends="build.debug">
         <rmdir dir="${debug.dir}" />
+        <fail message="Failed to delete debug directory: ${debug.dir}">
+            <condition>
+                <available file="${debug.dir}" />
+            </condition>
+        </fail>
         <mkdir dir="${base-debug.dir}" />
         <move file="${build.dir}" todir="${base-debug.dir}"/>
     </target>
