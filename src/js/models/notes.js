@@ -210,8 +210,8 @@
      * @param {LisIt.models.Note} note The note to consider adding.
      **/
     maybeAdd: function(note) {
-      if (this.matcher(note)) {
-        if (this.searchFail) {
+      if (this.searchFail) {
+        if (this.matcher(note)) {
           // Refilter
           if (!this.searching) {
             this._filter(this._terms);
@@ -220,17 +220,18 @@
           this.searchFail = false;
           this.trigger('change:searchFail', this, this.searchFail);
         }
+      } else if (!this.matcher(note)) {
+        return;
+      }
+      // Avoid sorting.
+      var idx = this.sortedIndex(note);
 
-        // Avoid sorting.
-        var idx = this.sortedIndex(note);
-
-        if (idx >= 0) {
-          this.add(note, {sort: false, at: idx});
-        } else {
-          // This should never happen but check anyways.
-          debug("WTF")
-          this.add(note);
-        }
+      if (idx >= 0) {
+        this.add(note, {sort: false, at: idx});
+      } else {
+        // This should never happen but check anyways.
+        debug("WTF")
+        this.add(note);
       }
     },
     /**
