@@ -60,6 +60,7 @@ var setupMenu = function(window) {
   menu.appendChild(menuitem);
 };
 
+// Adds List.it icon to toolbar:
 var setupIcon = function(window, enabling) {
   Cu.import("chrome://listit/content/webapp/js/platforms/firefox/icon-manager.js", ListItWM);
   ListItWM.ListItIM.createButton(window, enabling);
