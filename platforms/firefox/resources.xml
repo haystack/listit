@@ -91,6 +91,12 @@
     </resources>
 
     <resources id="assets.sidebar.css" refid="css.all"/>
-    <resources id="assets.options.css" refid="css.all"/>
-    <resources id="assets.help.css" refid="css.all"/>
+    <resources id="assets.options.css">
+        <resources refid="css.all" />
+        <fileset file="${listit.css.platform.dir}/options.css" />
+    </resources>
+    <resources id="assets.help.css">
+        <resources refid="css.all" />
+        <fileset file="${listit.css.platform.dir}/help.css" />
+    </resources>
 </project>
