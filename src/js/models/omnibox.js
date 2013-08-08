@@ -76,15 +76,15 @@
       });
     },
     tagToggle: function(text) {
-      var searchArray = (this.get('searchText') || "").split(" ");
-      var location = _.indexOf(searchArray, text);
-      if (location>-1) {
-        searchArray.splice(location, 1);
-        var newSearch = searchArray.join(" ");
-        this.set('searchText', newSearch);
-      } else {
-        this.appendSearch(text);
+      var searchText = this.get('searchText');
+      if (searchText) {
+        var newSearchText = searchText.replace(new RegExp("(^|\\s+)"+text+"(\\s+|)", 'i'), "$1");
+        if (newSearchText !== searchText) {
+          this.set('searchText', newSearchText);
+          return;
+        }
       }
+      this.appendSearch(text);
     }
   });
 })(ListIt);
