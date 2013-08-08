@@ -25,7 +25,7 @@
         if (that.wysihtml5entry.currentView === that.wysihtml5entry.composer) {
           // Using composer
           iframe.style.height = 'auto';
-          iframe.style.height = $(iframe).contents().find('body')[0].clientHeight + 'px';
+          iframe.style.height = iframe.contentDocument.body.clientHeight + 'px';
           txtbox.style.height = iframe.style.height;
         } else {
           // Not using composer
