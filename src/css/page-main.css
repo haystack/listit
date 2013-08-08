@@ -19,10 +19,10 @@
 
 #page-main {
   background-color: hsl(60, 100%, 98%); /*(240, 100%, 99%);*/
-  overflow: hidden;
+  overflow: auto;
   top: 0;
   bottom: 0;
-  position: fixed;
+  position: absolute;
 
 
   display: box;
