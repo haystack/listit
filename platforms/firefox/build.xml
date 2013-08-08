@@ -40,7 +40,7 @@
         <debug-assets name="background" />
     </target>
 
-    <target name="-firefox.common.before" depends="build.install,build.manifest" />
+    <target name="-firefox.common.before" depends="build.install,build.manifest,build.icon" />
     <target name="firefox.debug"
         depends="-firefox.common.before,-firefox.debug.build,-firefox.common.after"
         extensionOf="build.debug"/>
@@ -68,6 +68,10 @@
 
     <target name="build.manifest" depends="-build.setup">
         <copy file="${platform.dir}/chrome.manifest" tofile="${build.dir}/chrome.manifest" />
+    </target>
+
+    <target name="build.icon" depends="-build.setup">
+        <copy file="${build.webapp.dir}/img/icon48.png" tofile="${build.dir}/icon.png" />
     </target>
 </project>
 
