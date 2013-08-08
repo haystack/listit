@@ -1,0 +1,15 @@
+@media (max-height: 300px) {
+  #page-main {
+    display: block;
+    overflow: auto;
+  }
+  #notes {
+    display: block;
+    flex: none;
+  }
+  .notelist {
+    position: absolute;
+    height: 100%;
+    display: block;
+  }
+}

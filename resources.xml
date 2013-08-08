@@ -203,6 +203,7 @@
             <file name="note-content.css" />
             <file name="wysihtml5.css" />
             <file name="page-addnotebox.css" />
+            <file name="small-screen.css" />
         </filelist>
     </resources>
 
