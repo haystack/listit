@@ -145,6 +145,9 @@ ListItWM.setupBrowser = function(window, enabling) {
   setupMenu(window);
   setupIcon(window, enabling);
   setupBrowserHotkey(window, ListIt.preferences.get('openHotkey'));
+  if (enabling) {
+    window.top.document.getElementById("sidebar-box").width = "300px";
+  }
 };
 
 ListItWM.teardownBrowser = function(window) {
