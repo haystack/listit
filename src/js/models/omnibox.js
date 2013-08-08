@@ -55,7 +55,7 @@
           contents = searchText + ' ' + contents;
         }
       }
-      if (options.pinned) {
+      if (options.pinned && !_.str.startsWith(contents, '!')) {
         contents = '! ' + contents;
       }
       var note = L.notebook.createNote({
