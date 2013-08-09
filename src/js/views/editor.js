@@ -109,7 +109,7 @@
     },
     getText: function() {
       if (this._rendered) {
-        return this.wysihtml5entry.getValue();
+        return this.wysihtml5entry.getValue(true);
       } else {
         return this.initialContent || "";
       }
