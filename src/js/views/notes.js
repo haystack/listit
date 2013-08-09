@@ -35,14 +35,16 @@
       return this.el && this.el.parentNode;
     },
     render: function(options) {
-      this.$el.prop("id", "note-"+this.model.id);
-      this.$el.attr("data-note", this.model.id);
 
       if (this._rendered) {
         this.closeEditor();
+        // It's either this or detetch. That would cause problems with lots of notes.
         this.undelegateEvents();
         this.delegateEvents();
       } else {
+        // The id had better not change..."
+        this.$el.prop("id", "note-"+this.model.id);
+        this.$el.attr("data-note", this.model.id); // Useful for debugging/matching etc.
         this._rendered = true;
         this.$el.html(this.template(this.model.toJSON()));
         this.updateMeta();
@@ -148,17 +150,17 @@
       }
     },
     closeEditor: function() {
-      var $contentsEl = this.$('.contents'),
-          $editorEl = this.$('.editor-container');
       if (this._editorOpen) {
+        var $contentsEl = this.$('.contents'),
+            $editorEl = this.$('.editor-container');
         this._editorOpen = false;
         this.storeText();
         this.collapse();
         $editorEl.hide();
         this.$el.trigger('stopediting');
+        // Always show contents.
+        $contentsEl.show();
       }
-      // Always show contents.
-      $contentsEl.show();
     },
     onClick: function(e) {
       this.expand();
@@ -235,10 +237,10 @@
       'startediting .note': 'onStartEditing'
     },
     onStartEditing: function() {
-      this.$('#notes-container').sortable("disable");
+      this.$container.sortable("disable");
     },
     onStopEditing: function() {
-      this.$('#notes-container').sortable("enable");
+      this.$container.sortable("enable");
     },
     updateSearchStatus : function(model, state) {
       if (!this._rendered) {
@@ -261,7 +263,7 @@
     checkLoadMore: function() {
       var scrollTop = this.$el.scrollTop(),
           containerHeight = this.$el.parent().height(),
-          listHeight = this.$el.children('#notes-container').height();
+          listHeight = this.$container.height();
 
       return (scrollTop + 2*containerHeight) > listHeight;
     },
@@ -287,14 +289,15 @@
       return this.loadMore();
     }, 100),
     shouldRenderAt: function(index) {
-      var scrollTop = this.$el.scrollTop(),
-          containerHeight = this.$el.parent().height(),
-          notes = this.$('#notes-container .note'),
+      // This is on a hot path. Keep it as fast as possible.
+      var scrollTop = this.el.scrollTop,
+          containerHeight = this.el.parentElement.clientHeight,
+          notes = this.$container.children(),
           noteOffset;
       if (notes.length > index) {
-        noteOffset = notes.eq(index).position().top;
+        noteOffset = notes.eq(index)[0].offsetTop;
       } else if (notes.length > 0) {
-        noteOffset = notes.last().position().top;
+        noteOffset = notes.last()[0].offsetTop;
       } else {
         noteOffset = 0;
       }
@@ -328,9 +331,9 @@
       }
     },
     insertAt: function(index, view) {
-      var otherEl = this.$el.children('#notes-container').find('.note').eq(index);
+      var otherEl = this.$container.find('.note').eq(index);
       if (otherEl.length === 0) {
-        this.$el.children('#notes-container').append(view.render().$el);
+        this.$container.append(view.render().$el);
       } else {
         otherEl.before(view.render().$el);
       }
@@ -345,7 +348,7 @@
         return;
       }
 
-      if (0 < this.$('#notes-container .note').index(view.$el) < this.renderNext) {
+      if (0 < this.$container.children('.note').index(view.$el) < this.renderNext) {
         this.renderNext--;
       }
 
@@ -354,7 +357,7 @@
       this.lazyLoadMore();
     },
     fixHeight: _.throttle(function() {
-      this.$('#notes-container').css("min-height", 36*this.collection.size());
+      this.$container.css("min-height", 36*this.collection.size());
     }, 100),
     sort: _.debounce(function() {
       var that = this;
@@ -369,22 +372,22 @@
     reset: function() {
       this.renderNext = 0;
       if (this._rendered) {
-        this.$el.children('#notes-container').empty();
+        this.$container.empty();
         // Bail early.
         this.collection.every(_.mask(_.bind(this.addNote, this), 0, 1));
       }
     },
     render: function() {
       if (!this._rendered) {
-        var ul = $('<ul>');
-        ul.prop({ className: 'notelist', id: 'notes-container' });
-        this.$el.html(ul);
+        this.$container = $('<ul>');
+        this.$container.prop({ className: 'notelist', id: 'notes-container' });
+        this.$el.html(this.$container);
 
         var collection = this.collection.backingCollection;
 
         // Prevent clicks from getting triggered when sorting.
         var sorting = false;
-        ul.get(0).addEventListener("click", function(e) {
+        this.$container.get(0).addEventListener("click", function(e) {
           if (sorting) {
             e.stopImmediatePropagation();
           }
@@ -392,7 +395,7 @@
 
         var current;
         var height;
-        ul.sortable({
+        this.$container.sortable({
           distance: 10,
           items: '.note:not(.pinned)',
           containment: 'parent',
