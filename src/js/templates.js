@@ -64,7 +64,7 @@ return __p;
 ListIt.templates['link'] = function(obj){
 var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'')};
 with(obj||{}){
-__p+='<a target="_blank" href="'+
+__p+='<a rel="nofollow" target="_blank" href="'+
 ((__t=( url ))==null?'':_.escape(__t))+
 '">';
  if (typeof icon === "string" ) { 
