@@ -303,6 +303,9 @@
       }
       return (scrollTop + 2*containerHeight) > noteOffset;
     },
+    _lazyRefreshSortable: _.debounce(function() {
+      this.$container.sortable('refresh');
+    }, 10),
     addNote: function(note, idx) {
       var view = this.subViews[note.id];
 
@@ -337,6 +340,7 @@
       } else {
         otherEl.before(view.render().$el);
       }
+      this._lazyRefreshSortable();
     },
     // Delay removes just in case we are re-adding the note.
     removeNote: function(note, options) {
