@@ -1,48 +1,75 @@
 /* Options Page CSS */
+
+/*ICON DARK ORANGE rgb(255, 201, 18);
+  ICON LIGHT ORANGE rgb(255, 216, 78);
+  ICON CIRCLE BORDER rgb(207, 167, 28);
+  BACKGROUND ORANGE rgb(255, 250, 233)*/
+
 a, .tabbar a {
   color:#d36c00;
 }
 
 #page-options {
   font-size: 16px;
-  background-color: #FFF;
   width:100%;
   height:100%;
   overflow-y: auto;
   overflow-x: none;
+  font-family: Trebuchet MS, Helvetica, sans-serif;
+  background-color: rgb(255, 250, 233);
 }
 
 #options-header {
-  width: 100%;
-  height: 150px;
-  margin: 0;
-  margin-top: 20px;
-  text-align:center;
+  margin-right: auto;
+  padding: 0em 2em;
+  border-bottom: 1px solid #000000;
+  position: absolute;
+  width: 1000px;
+  z-index: 1;
 }
 .options-title {
-  font:helvetica neue ultralight,helvetica;
+  font-family: Century Gothic, Helvetica, sans-serif;
 /* Looks nice, but collapses in Firefox to cross out 
    "take me back to my notes"
    border-bottom:1px solid #d36c00;*/ 
   font-size: 600%;
   font-weight: 100;
-  text-shadow: rgba(64, 64, 64, 0.496094) 4px 5px 3px;
   line-height: 100%;
 }
 
+#title-circle {
+  background-color: rgb(255, 201, 18);
+  width: 250px;
+  height: 250px;
+  border-radius: 50%;
+  position: relative;
+  z-index: 0;
+  right: 60px;
+  top: -60px;
+}
+
+#options-body {
+  margin-left: 190px;
+  margin-top: -60px;
+  width: 959px;
+}
+
+
+
 .options-item {
-  border: 1px solid #d36c00;
-  margin:0 0.6em 1.2em;
-  border-radius: 4px;
-  box-shadow: 2px 2px 4px #aaaaaa;
+  border: 1px solid black;
+  border-radius: 5px;
+  margin:0 0 1.2em;
+  margin-left: 10px;
+  margin-right: 85px;
   padding: 1em;
   vertical-align:top;
   width: 350px;
   min-width: 280px;
   display: inline-block;
+  background-color: white;
 }
 .options-item h3 {
-  font: helvetica neue ultralight, helvetia; 
   font-weight:100; 
   font-size: 180%; 
   margin-top:0.2em; 
@@ -60,12 +87,6 @@ a, .tabbar a {
 
 .options-item form {
   width:auto;
-}
-
-#options-body {
-  margin-left: auto;
-  margin-right: auto;
-  width: 810px;
 }
 
 @media (max-width: 900px) {

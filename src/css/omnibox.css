@@ -10,7 +10,7 @@
 }
 
 #omnibox .editor {
-  border: 1px solid rgba(128,128,128,.5);   
+  border: 1px solid rgb(207, 167, 28);   
   border-top-right-radius: 3px;
   border-bottom-left-radius: 3px;
   padding: 7px 7px 0px 7px;
@@ -68,26 +68,38 @@
   display: block;
   overflow: hidden;
   resize: none;
-  border: 1px solid rgba(128,128,128,.5);
+  border: 1px solid rgb(207, 167, 28);
   border-top-right-radius: 3px;
   border-bottom-left-radius: 3px;
   height: 18px;
   margin: 0px 0px 7px -3px;
   padding: 2px;
-  background-color: #ccc;
+  background-color: rgb(255, 214, 152);
+  color: black;
 }
 
 .searchbar:focus {
-  outline: 1px solid black;
+  outline: 1px solid rgb(255, 149, 0);
+}
+
+/*placeholder text in searchbar*/
+::-webkit-input-placeholder { /* WebKit browsers */
+  color: black;
+}
+::-moz-placeholder { /* Mozilla Firefox 19+ */
+  color: black;
+}
+:-ms-input-placeholder { /* Internet Explorer 10+ */
+  color: black;
 }
 
 #controls {
   position: relative;
   font-size: 1.01em;
-  color: rgb(120,120,120);
+  color: black;
   padding: 1px 3px;
-  box-shadow: 1px 0px rgb(220,220,220);
-  background: #bbb;
+  box-shadow: 1px 0px black;
+  background: rgb(255, 149, 0);
 
   border-top-left-radius: 5px;
   border-bottom-left-radius: 5px;
@@ -101,10 +113,11 @@
   padding: 1px 1px;
 }
 
+
 .activeSearch{
   border-radius: 5px;
-  background-color: rgb(150,150,150);
-  box-shadow: 1px 1px rgb(120, 120, 120);
+  background-color: rgb(221, 129, 11);
+  box-shadow: 1px 1px rgb(255, 189, 0);
 }
 
 #helpIcon {
