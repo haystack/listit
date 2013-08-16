@@ -19,8 +19,7 @@
     box-align: stretch;
     -webkit-box-align: stretch;
     -moz-box-align: stretch;
-  
-  padding-right: 2px;
+    padding-right: 2px;
 }
 
 .note > *{
@@ -122,7 +121,7 @@
 .note .close-btn {
     margin: 12px;
     right: 0px;
-  margin-right: 10px;
+    margin-right: 10px;
 }
 
 .note.pinned .close-btn{
