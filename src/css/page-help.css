@@ -18,7 +18,7 @@
 #help-header {
   padding: 0em 2em;  
   border-bottom: 1px solid #000000;
-  width: 1300px;
+  width: 86%;
   position: absolute;
   margin-right: auto;
   z-index: 1;
@@ -46,7 +46,7 @@
   border: 1px solid black;
   border-radius: 5px;
   text-align: left;
-  width: 1100px;
+  width: 80%;
   margin: 0px auto;
   margin-bottom: 20px;
   background-color: white;
@@ -104,7 +104,7 @@
 }
 
 #help-main .controltd {
-  background-color: rgb(255, 216, 78);
+  background-color: rgb(255, 149, 0);
 }
 
 #help-main .controltd, #help-main .imgtd {

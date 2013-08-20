@@ -24,7 +24,7 @@ a, .tabbar a {
   padding: 0em 2em;
   border-bottom: 1px solid #000000;
   position: absolute;
-  width: 1000px;
+  width: 86%;
   z-index: 1;
 }
 .options-title {
