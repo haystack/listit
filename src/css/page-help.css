@@ -1,37 +1,65 @@
+/* Help Page CSS */
+
+/*ICON DARK ORANGE rgb(255, 201, 18);
+  ICON LIGHT ORANGE rgb(255, 216, 78);
+  ICON CIRCLE BORDER rgb(207, 167, 28);
+  BACKGROUND ORANGE rgb(255, 250, 233)*/
+
 #page-help {
   font-size: 16px;
-  background-color: #FFF;
   width: 100%;
   height: 100%:
   overflow-y: auto;
   overflow-x: none;
+  font-family: Trebuchet MS, Helvetica, sans-serif;
+  background-color: rgb(255, 250, 233);
 }
 
 #help-header {
-  width: 100%;
-  height: 150px;
-  margin: 0;
-  margin-top: 20px;
-  text-align: center;
+  padding: 0em 2em;  
+  border-bottom: 1px solid #000000;
+  width: 1300px;
+  position: absolute;
+  margin-right: auto;
+  z-index: 1;
 }
 
 .help-title {
-  font-family: helvetica neue ultralight,helvetica;
+  font-family: Century Gothic, Helvetica, sans-serif;
   font-size: 600%;
   font-weight: 100;
-  text-shadow: rgba(64, 64, 64, 0.496094) 4px 5px 3px;
   line-height: 100%;
 }
 
+#title-circle {
+  background-color: rgb(255, 201, 18);
+  width: 250px;
+  height: 250px;
+  border-radius: 50%;
+  position: relative;
+  right: 60px;
+  top: -60px;
+  z-index: 0;
+}
+
 #help-main {
-  background-color: #FFFCED;
-  font-family: Helvetica Neue Ultralight, "Helvetica Neue", "Helvetica", sans-serif;
-  text-align: left;
-  width: 70%;
-  margin: 0px auto;
   border: 1px solid black;
-  border-radius: 12px;
+  border-radius: 5px;
+  text-align: left;
+  width: 1100px;
+  margin: 0px auto;
+  margin-bottom: 20px;
+  background-color: white;
   padding: 1em;
+}
+
+.options-item {
+
+  padding: 1em;
+  vertical-align:top;
+  width: 350px;
+  min-width: 280px;
+  display: inline-block;
 }
 
 #help-main h3 {
@@ -53,11 +81,11 @@
 #help-main table {
   border-collapse: separate;
   margin: 1em auto 1.5em;
-  width: 80%
+  width: 80%;
 }
 
 #help-main th, td {
-  border: 1px solid rgb(253, 150, 91);
+  border: 1px solid black;
   padding: 2px 8px;
   vertical-align: middle;
 }
@@ -65,9 +93,9 @@
 #help-main th {
   font-weight: bold;
   text-align: center;
-  background-color: rgb(255, 189, 128);
-  border-top-left-radius: 10px;
-  border-top-right-radius: 10px;
+  background-color: rgb(255, 201, 18);
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
 }
 
 #help-main td {
@@ -76,16 +104,13 @@
 }
 
 #help-main .controltd {
-  background-color: rgb(240, 127, 64);
+  background-color: rgb(255, 216, 78);
 }
 
 #help-main .controltd, #help-main .imgtd {
   text-align: center;
 }
 
-#help-main table img {
-  height: 1.2em;
-}
 
 #help-main img.inactive {
   opacity: 0.5;

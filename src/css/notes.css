@@ -13,15 +13,13 @@
 .note {
     margin: 2px 0px 1px 0px;
     border-radius: 5px;
-    border-bottom: 1px solid #ccc; /*#A0A0A0; */
-    border-left: 1px solid #B9B9B9;
-    border-right: 1px solid #B9B9B9;
-    border-top: 1px solid #ddd;
+    border: 1px solid black;
     background-color: hsl(240, 100%, 100%);/* hsl(200, 100%, 95%);*/
     width: 100%;
     box-align: stretch;
     -webkit-box-align: stretch;
     -moz-box-align: stretch;
+    padding-right: 2px;
 }
 
 .note > *{
@@ -40,7 +38,8 @@
 }
 
 .note.pinned {
-    background-color:  hsl(240, 40%, 97%) !important; /*hsl(270, 100%, 95%);*/
+  border: 3px solid rgb(255, 201, 18);
+  padding-right: 0px;
 }
 
 .note .contents, .note .editor textarea, .note .editor textarea + .wysihtml5-sandbox {
@@ -95,10 +94,16 @@
   width: auto;
   border-bottom-left-radius: 5px;
   border-bottom-right-radius: 5px;
-  border-bottom: 1px solid #ccc;
-  border-left: 1px solid #B9B9B9;
-  border-right: 1px solid #B9B9B9;
+  border-bottom: 1px solid black;
+  border-left: 1px solid black;
+  border-right: 1px solid black;
   box-shadow: 0 2px 2px 1px rgb(233, 233, 233);
+}
+
+.note.pinned .editor-bottombar {
+  border-bottom: 3px solid rgb(255, 201, 18);
+  border-left: 3px solid rgb(255, 201, 18);
+  border-right: 3px solid rgb(255, 201, 18);
 }
 
 .note .icon {
@@ -116,6 +121,11 @@
 .note .close-btn {
     margin: 12px;
     right: 0px;
+    margin-right: 10px;
+}
+
+.note.pinned .close-btn{
+  margin-right: 12px;
 }
 
 /* Use listt_tag instead of just tag to avoid conflict with pasted html */
