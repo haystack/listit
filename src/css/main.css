@@ -196,7 +196,7 @@ ul.list {
 
 /* Glowing input boxes */
 .input,.button {
-    border: 1px solid #48E;
+    border: 1px solid rgb(255, 201, 18);
     outline:none;
     transition: all 0.1s ease-in-out;
     -webkit-transition: all 0.1s ease-in-out;
@@ -209,17 +209,17 @@ ul.list {
 }
 
 .input:focus,.button:focus {
-    box-shadow: 0 0 4px rgba(85, 153, 255, 100);
-    -webkit-box-shadow: 0 0 4px rgba(85, 153, 255, 100);
-    -moz-box-shadow: 0 0 4px rgba(85, 153, 255, 100);
+    box-shadow: 0 0 4px rgba(207, 167, 28, 100);
+    -webkit-box-shadow: 0 0 4px rgba(207, 167, 28, 100);
+    -moz-box-shadow: 0 0 4px rgba(207, 167, 28, 100);
 }
 
 .button {
-  background-color: #59F;
-  border: 1px solid #48E;
+  background-color: rgb(255, 201, 18);
+  border: 1px solid rgb(207, 167, 28);
   margin: 2px 5px 2px 5px;
   border-radius: 5px;
-  color: white;
+  color: black;
 }
 
 .right {
