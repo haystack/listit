@@ -98,13 +98,23 @@ return __p;
 ListIt.templates['omnibox/controls'] = function(obj){
 var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'')};
 with(obj||{}){
-__p+='<a class="clickable">\n    <img id="searchIcon" width="14" height="14"\n    ';
- if (searchFail) { 
-__p+='\n    title="Search stopped because your terms found no notes."\n    class="settingIcon searchIcon"\n    src="img/controls/search-fail.png"\n    ';
- } else if (searchState) { 
-__p+='}\n    title="Close separate searchbar, note creator will now search again."\n    class="settingIcon activeSearch searchIcon"\n    src="img/controls/search.png"\n    ';
+__p+='<a class="clickable">\n    <img id="searchIcon" width="14" height="14" class="settingIcon searchIcon \n    ';
+ if (searchState) { 
+__p+='\n      activeSearch"\n    ';
  } else { 
-__p+='\n    title="Open a separate searchbar."\n    class="settingIcon inactiveSearch searchIcon"\n    src="img/controls/search.png"\n    ';
+__p+='\n      inactiveSearch"\n    ';
+ } 
+__p+='\n      \n    ';
+ if (searchFail) { 
+__p+='\n      title="Search stopped because your terms found no notes."\n      src="img/controls/search-fail.png"\n    ';
+ } else { 
+__p+='\n      src="img/controls/search.png"\n      ';
+ if (searchState) { 
+__p+='\n        title="Close separate searchbar, note creator will now search again."\n      ';
+ } else { 
+__p+='\n        title="Open a separate searchbar."\n      ';
+ } 
+__p+='\n    ';
  } 
 __p+='\n    >\n</a>\n';
  if (loginState) { 
