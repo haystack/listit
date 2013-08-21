@@ -230,7 +230,7 @@
         this.add(note, {sort: false, at: idx});
       } else {
         // This should never happen but check anyways.
-        debug("WTF")
+        debug("WTF");
         this.add(note);
       }
     },
