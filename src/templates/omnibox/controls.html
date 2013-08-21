@@ -1,17 +1,20 @@
 <a class="clickable">
-    <img id="searchIcon" width="14" height="14"
-    <% if (searchFail) { %>
-    title="Search stopped because your terms found no notes."
-    class="settingIcon searchIcon"
-    src="img/controls/search-fail.png"
-    <% } else if (searchState) { %>}
-    title="Close separate searchbar, note creator will now search again."
-    class="settingIcon activeSearch searchIcon"
-    src="img/controls/search.png"
+    <img id="searchIcon" width="14" height="14" class="settingIcon searchIcon
+    <% if (searchState) { %>
+      activeSearch"
     <% } else { %>
-    title="Open a separate searchbar."
-    class="settingIcon inactiveSearch searchIcon"
-    src="img/controls/search.png"
+      inactiveSearch"
+    <% } %>
+    <% if (searchFail) { %>
+      title="Search stopped because your terms found no notes."
+      src="img/controls/search-fail.png"
+    <% } else { %>
+      src="img/controls/search.png"
+      <% if (searchState) { %>
+        title="Close separate searchbar, note creator will now search again."
+      <% } else { %>
+        title="Open a separate searchbar."
+      <% } %>
     <% } %>
     >
 </a>
