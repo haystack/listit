@@ -98,13 +98,13 @@ return __p;
 ListIt.templates['omnibox/controls'] = function(obj){
 var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'')};
 with(obj||{}){
-__p+='<a class="clickable">\n    <img id="searchIcon" width="14" height="14" class="settingIcon searchIcon \n    ';
+__p+='<a class="clickable">\n    <img id="searchIcon" width="14" height="14" class="settingIcon searchIcon\n    ';
  if (searchState) { 
 __p+='\n      activeSearch"\n    ';
  } else { 
 __p+='\n      inactiveSearch"\n    ';
  } 
-__p+='\n      \n    ';
+__p+='\n    ';
  if (searchFail) { 
 __p+='\n      title="Search stopped because your terms found no notes."\n      src="img/controls/search-fail.png"\n    ';
  } else { 
