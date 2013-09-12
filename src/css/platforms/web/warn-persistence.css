@@ -1,0 +1,12 @@
+.warn-persistence {
+  display: none;
+  background: #FBE3E4;
+  color: #BA1F11;
+  text-align: center;
+  color:#9F6000;
+  padding:5px;
+}
+
+.not-logged-in .warn-persistence {
+  display: block;
+}
