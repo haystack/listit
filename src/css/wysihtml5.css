@@ -43,8 +43,8 @@
     cursor: pointer;
 }
 
-.wysihtml5-toolbar.wysihtml5-commands-disabled [data-wysihtml5-command],
-.wysihtml5-toolbar.wysihtml5-commands-disabled [data-wysihtml5-command-group] {
+.editor-toolbar.wysihtml5-commands-disabled [data-wysihtml5-command],
+.editor-toolbar.wysihtml5-commands-disabled [data-wysihtml5-command-group] {
     opacity: .5;
 }
 
