@@ -95,14 +95,6 @@
       return false;
     },
     // Defines a translation between a packaged note and a local note.
-    noteTransTable : {
-      'jid': { here: 'id' },
-      'version': {},
-      'created': {transIn: Number}, // The server is odd
-      'edited': {transIn: Number},
-      'contents': {},
-      'meta': { transIn: JSON.parse, transOut: JSON.stringify }
-    },
     logTopLevelAttributes: [
       "tabid",
       "action",
@@ -511,36 +503,36 @@
       });
     },
 
+
     /**
      * Convert a note into a package that can be sent to the server.
      */
-    packageNote : function(note, deleted) {
-      var packed = {deleted: deleted };
-
-      _(this.noteTransTable).each(function(trans, field) {
-        packed[field] = note.get(trans.here || field);
-        if (trans.transOut) {
-          packed[field] = trans.transOut(packed[field]);
-        }
-      });
-      return packed;
+    packageNote : function(noteModel, deleted) {
+      var note = noteModel.toJSON();
+      return {
+        deleted: deleted,
+        jid: note.id,
+        version: note.version,
+        created: note.created,
+        edited: note.edited,
+        contents: L.util.metaJoin(note.contents, note.meta)
+      };
     },
     /**
      * Convert a package from the server into a hash of fields that can be used to update/create a note.
      */
     unpackageNote : function(note) {
-      var unpacked = {modified: false, deleted: !!note.deleted};
-      _(this.noteTransTable).each(function(trans, field) {
-        if (!note.hasOwnProperty(field)) {
-          return;
-        }
-        var myField = trans.here || field;
-        unpacked[myField] = note[field];
-        if (trans.transIn) {
-          unpacked[myField] = trans.transIn(unpacked[myField]);
-        }
-      });
-      return unpacked;
+      var extracted = L.util.metaSplit(note.contents);
+      return {
+        modified: false,
+        deleted: !!note.deleted,
+        id: note.jid,
+        version: note.version,
+        created: parseInt(note.created),
+        edited: parseInt(note.edited),
+        contents: extracted.contents,
+        meta: extracted.meta
+      };
     },
     login: function(email, password, options) {
       var hashpass = L.util.makeHashpass(email, password);

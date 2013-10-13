@@ -135,7 +135,46 @@
         return input ? true : false;
       }
     },
+    /**
+     * Takes a string and an object and appends the object to the string as a
+     * series of meta tags (where the values are JSON encoded).
+     **/
+    metaJoin: function(contents, meta) {
+      return meta ? contents + _.map(meta, function(value, key) {
+        // Let the browser do the escaping.
+        var m = $("<meta>");
+        m.attr("name", key);
+        // Support non string values.
+        m.attr("content", JSON.stringify(value));
+        return m[0].outerHTML;
+      }).join("") : contents;
+    },
+    /**
+     * Takes an html fragment and extracts (and removes) top-level meta tag
+     * data.
+     **/
+    metaSplit: function(str) {
+      var doc = $("<div>").html($.parseHTML(str));
+      var meta = {}
+      doc.children("meta").each(function(index, node) {
+        var $node = $(node);
+        var content = $node.attr("content");
+        var name = $node.attr("name");
+        if (_.isUndefined(name) || _.isUndefined(content)) {
+          return;
+        }
 
+        try {
+          content = JSON.parse(content);
+        } catch (e) { }
+
+        meta[name] = content;
+      }).remove();
+      return {
+        contents: doc.html(),
+        meta: meta,
+      };
+    },
     // Slides 'hide' out and 'show' in calling 'cb' once on completion.
     slideSwitch: function(hide, show, cb) {
       hide = hide || $();
