@@ -89,34 +89,6 @@
   };
 
   L.util = {
-    setCursorAtEnd: function(contentEditableElement) {
-      var range,selection;
-      if (document.createRange) {//Firefox, Chrome, Opera, Safari, IE 9+
-        //Create a range (a range is a like the selection but invisible)
-        range = document.createRange();
-
-        //Select the entire contents of the element with the range
-        range.selectNodeContents(contentEditableElement);
-        range.collapse(false); //collapse the range to the end point.
-        //false means collapse to end rather than the start
-
-        //get the selection object (allows you to change selection)
-        selection = window.getSelection();
-        selection.removeAllRanges(); //remove any selections already made
-        //make the range you have just created the visible selection
-        selection.addRange(range);
-
-      } else if(document.selection) {//IE 8 and lower
-        //Create a range (a range is a like the selection but invisible)
-        range = document.body.createTextRange();
-        //Select the entire contents of the element with the range
-        range.moveToElementText(contentEditableElement);
-        //collapse the range to the end point. false means collapse to end rather than the start
-        range.collapse(false);
-        range.select();//Select the range (make it the visible selection
-      }
-    },
-
     /**
      * Returns hashpass from email and password combo.
      * @param {string} email The user's email address.
@@ -126,15 +98,6 @@
       return encodeURIComponent('Basic ' + encodeBase(email + ':' + password));
     },
 
-
-    isTrue: function(input) {
-      if (typeof(input) === 'string') {
-        input = input.toLowerCase();
-        return input === 'true' || input === 'yes' || input === '1';
-      } else {
-        return input ? true : false;
-      }
-    },
     /**
      * Takes a string and an object and appends the object to the string as a
      * series of meta tags (where the values are JSON encoded).
