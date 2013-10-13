@@ -441,7 +441,11 @@
       html: {
         display : 'HTML',
         exporter: function(notebook) {
-          return L.templates['exported-notes']({noteContents: notebook.get('notes').pluck('contents')});
+          return L.templates['exported-notes']({
+            noteContents: notebook.get('notes').map(function(n) {
+              return L.util.metaJoin(n.get("contents"), n.get("meta"));
+            })
+          });
         }
       },
       csv: {
