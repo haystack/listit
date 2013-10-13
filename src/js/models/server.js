@@ -117,19 +117,6 @@
     ajax : function(options) {
       options = _.clone(options);
 
-      if (options.continuation) {
-        var continuation = options.continuation;
-        options.success = function(data) {
-          continuation(true, data);
-        };
-        if (!options.error) {
-          options.error = function(xhdr, stat) {
-            continuation(false, stat);
-          };
-        }
-        delete options.continuation;
-      }
-
       // Call with auth token if needed. Do it this way to allow for
       // asynchronous authentication (password prompts etc.)
       if (options.auth && !options.authToken) {
