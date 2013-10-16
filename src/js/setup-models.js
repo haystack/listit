@@ -14,11 +14,6 @@ ListIt.lvent.once('setup:models', function(L, barr) {
 
 ListIt.lvent.once('setup:models:after', function(L, barr) {
   'use strict';
-  // Don't start logging or server until initialized.
-  L.logger.ready(function() {
-    L.logger.start();
-  });
-
   // Delay syncing start 10 seconds.
   // No need to do this immediately
   _.delay(function() {

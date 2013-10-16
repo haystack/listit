@@ -89,7 +89,12 @@
     initialize: function(models, options) {
       var that = this;
       // Call destructors on exit
-      this.listenTo(L.gvent, 'sys:exit', _.bind(this.stop, this));
+      this.listenTo(L.gvent, 'sys:exit', function() {
+        _.each(that.observers, function(obs) {
+          obs._started = false;
+          obs.stop();
+        });
+      });
       this.once('sync error', function() {
         var debouncedSave = _.debounce(_.bind(that.save, that), 10);
         // Perform an initial flush to save any changes that might have occured
@@ -104,37 +109,36 @@
         });
       });
     },
-    /**
-     * Start logging
-     *
-     * Starts the logging observers.
-     **/
-    start: function() {
-      if (this._started) {
-        return;
-      }
-      this.observers = _.chain(
-        L.observers
-      ).filter(function(obs) {
-        return _.result(obs, "condition");
-      }).map(function(obs) {
+    initialized: function() {
+      // Initialize observers.
+      this.observers = _.kmap(L.observers, function(obs) {
         var Ctor = function() {};
         Ctor.prototype = obs;
         var inst = new Ctor();
-        inst.setup();
         return inst;
       });
+
+      L.server.ready(function() {
+        // React to changes.
+        this.listenTo(L.server, "change:studies", _.mask(this.updateStudies, 1));
+
+        // Initial update
+        this.updateStudies(L.server.get("studies"));
+      }, this);
     },
-    /**
-     * Stop logging
-     *
-     * Stops the logging observers.
-     **/
-    stop: function() {
-      _.each(this.observers, function(inst) {
-        inst.destroy();
+    updateStudies: function(studies) {
+      studies = studies || {};
+      _.each(this.observers, function(obs) {
+        if (Boolean(obs._started) !== Boolean(obs.condition(studies))) {
+          if (obs._started) {
+            obs._started = false;
+            obs.stop();
+          } else {
+            obs._started = true;
+            obs.start();
+          }
+        }
       });
-      delete this.observers;
     },
     /**
      * Clear log events before and including time.

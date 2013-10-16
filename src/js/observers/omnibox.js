@@ -1,10 +1,10 @@
 (function(L) {
   'use strict';
   L.observers.OmniboxObserver = {
-    condition: function() {
-      return L.sidebar && L.omnibox;
+    condition: function(studies) {
+      return studies.study2 && L.sidebar && L.omnibox;
     },
-    setup: function() {
+    start: function() {
       var that = this;
       this.pendingEntries = [];
       // Record that the user triggered a search through the omnibox.
@@ -43,7 +43,7 @@
         });
       }, this);
     },
-    destroy: function() {
+    stop: function() {
       L.omnibox.off(null, null, this);
       L.sidebar.off(null, null, this);
     },

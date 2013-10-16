@@ -1,10 +1,10 @@
 (function(L) {
   'use strict';
   L.observers.NotebookObserver = {
-    condition: function() {
-      return L.notebook;
+    condition: function(studies) {
+      return studies.study2 && L.notebook;
     },
-    setup: function() {
+    start: function() {
       var notes = L.notebook.get('notes');
       notes.on('user:save', function(model) {
         L.logger.create({
@@ -28,7 +28,7 @@
         });
       });
     },
-    destroy: function() {
+    stop: function() {
       L.notebook.get('notes').off(null, null, this);
     }
   };
