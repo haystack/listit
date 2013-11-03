@@ -118,7 +118,7 @@
             options.authToken = token;
             that.ajax(options);
           } else {
-            (options.error || $.noop)(null, 'User not authenticated');
+            (options.error || $.noop)(Server.errors.AUTHENTICATION_FAILURE, 'User not authenticated');
             (options.complete || $.noop)();
           }
         });
@@ -138,6 +138,14 @@
 
       // Ajax uses method internally
       delete options.method;
+
+      // Wrap error:
+      if (options.error) {
+        var old_error = options.error;
+        options.error = function(xhr, status) {
+          old_error(L.models.Server.errors.NETWORK_FAILURE, status, xhr)
+        };
+      }
 
       $.ajax(options);
     },
@@ -215,13 +223,16 @@
         async: !synchrounous,
         data: JSON.stringify(this.bundleNotes()),
         success: function(response) {
-          that.commitNotes(response.committed);
-          if (options.success) {
-            options.success();
+          if (that.commitNotes(response.committed)) {
+            if (options && options.success) {
+              options.success();
+            }
+          } else if (options && options.error) {
+            options.error(L.models.Server.errors.COMMIT_FAILURE);
           }
         },
-        error: options.error,
-        complete: options.complete
+        error: options && options.error,
+        complete: options && options.complete
       });
     },
     syncLogs : function() {
@@ -231,7 +242,7 @@
           method: 'post_json_chrome_logs',
           auth: true,
           data: JSON.stringify(this.bundleLogs()),
-          error: function(xhr, error) {
+          error: function(code, error) {
             debug('syncLogs::failed', error);
           },
           success: function(response) {
@@ -371,6 +382,7 @@
       return bundle;
     },
     commitNotes: function(committed) {
+      var status = true;
 
       if (DEBUG_MODE && window.console && window.console.time) {
         console.time('commit notes');
@@ -385,6 +397,7 @@
       // Check status
       .each(function(noteResponse) {
         if (!(noteResponse.status === 201 || noteResponse.status === 200)) {
+          status = false;
           debug("syncNotes::error", "Invalid Note", noteResponse);
           return;
         }
@@ -408,6 +421,7 @@
       if (DEBUG_MODE && window.console && window.console.time) {
         console.timeEnd('commit notes');
       }
+      return status;
     },
     unbundleNotes: function(result, cb) {
       if (DEBUG_MODE && window.console && window.console.time) {
@@ -557,7 +571,7 @@
             });
           });
         },
-        error: function(jqXHR) {
+        error: function(code, message, jqXHR) {
           if (jqXHR.status === 401) {
             that.set('error', 'Invalid email or password.');
           } else {
@@ -609,6 +623,12 @@
         studies: {}
       });
       L.authmanager.unsetToken();
+    }
+  }, {
+    errors: {
+      COMMIT_FAILURE: 0,
+      NETWORK_FAILURE: 1,
+      AUTHENTICATION_FAILURE: 2
     }
   });
 
