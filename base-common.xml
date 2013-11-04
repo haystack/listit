@@ -25,7 +25,7 @@
             <property name="updates_basename" value="updates-nightly" />
             <tstamp>
                 <!-- Yes, this version is wierd. Chrome is wierd. -->
-                <format property="listit.version" pattern="yyy.M.d.kmm"/>
+                <format property="listit.version" pattern="yyy.M.d"/>
             </tstamp>
         </then>
         <else>
