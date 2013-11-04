@@ -17,11 +17,27 @@
     <taskdef name="pngtastic" classname="com.googlecode.pngtastic.ant.PngOptimizerTask" 
         classpath="${tools.pngtastic}" />
 
+    <taskdef resource="net/sf/antcontrib/antlib.xml"/>
+
+    <if>
+        <isset property="nightly" />
+        <then>
+            <property name="updates_basename" value="updates-nightly" />
+            <tstamp>
+                <!-- Yes, this version is wierd. Chrome is wierd. -->
+                <format property="listit.version" pattern="yyy.M.d.kmm"/>
+            </tstamp>
+        </then>
+        <else>
+            <property name="updates_basename" value="updates" />
+        </else>
+    </if>
+
     <!-- Properties -->
     <property file="${root.dir}/global.properties" />
     <include file="${root.dir}/paths.xml" />
 
-    <taskdef resource="net/sf/antcontrib/antlib.xml"/>
+
     <include file="${root.dir}/util.xml" />
 
 

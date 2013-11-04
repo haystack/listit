@@ -7,7 +7,8 @@
     <basename property="platform" file="${platform.dir}" />
     <property name="build.dir" location="${base-build.dir}/${platform}" />
     <property name="debug.dir" location="${base-debug.dir}/${platform}" />
-    <property name="deploy.base" location="${deploy.dir}/listit-${platform}-${listit.version}" />
+    <property name="deploy.dir" location="${base-deploy.dir}/${platform}" />
+    <property name="deploy.base" location="${deploy.dir}/listit-${listit.version}" />
 
     <property name="listit.js.platform.dir" location="${listit.js.platforms.dir}/${platform}" />
     <property name="listit.css.platform.dir" location="${listit.css.platforms.dir}/${platform}" />
