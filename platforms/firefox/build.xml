@@ -48,7 +48,7 @@
     <target name="firefox.release"
         depends="-firefox.common.before,-firefox.release.build,-firefox.common.after"
         extensionOf="build.release">
-        <zip destfile="${deploy.base}.xpi" basedir="${build.dir}" />
+        <zip destfile="${deploy.dir}/listit-${build.version}.xpi" basedir="${build.dir}" />
     </target>
 
     <target name="build.install" depends="-build.setup">
@@ -56,7 +56,7 @@
             <filterchain>
                 <filterreader classname="org.apache.tools.ant.filters.ReplaceTokens">
                     <param type="propertiesfile" value="${platform.dir}/install.properties" />
-                    <param type="token" name="version" value="${listit.version}" />
+                    <param type="token" name="version" value="${build.version}" />
                     <param type="token" name="id" value="${extension.id}" />
                     <param type="token" name="authors" value="${listit.authors}" />
                     <param type="token" name="name" value="${listit.name}" />

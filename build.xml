@@ -6,16 +6,21 @@
     <import file="base-common.xml" />
     <import file="resources.xml" />
 
-    <target name="-set.target.release">
+    <target name="-setup.target.release">
         <property name="build.target" value="release" />
     </target>
 
-    <target name="-set.target.debug">
+    <target name="-setup.target.nightly">
+        <property name="build.target" value="nightly" />
+    </target>
+
+    <target name="-setup.target.debug">
         <property name="build.target" value="debug" />
     </target>
 
-    <target name="release" depends="-set.target.release,-build" />
-    <target name="debug" depends="-set.target.debug,-build" />
+    <target name="release" depends="-setup.target.release,-build" />
+    <target name="nightly" depends="-setup.target.nightly,-build" />
+    <target name="debug" depends="-setup.target.debug,-build" />
 
     <target name="-build" >
         <subant target="${build.target}">

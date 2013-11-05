@@ -8,7 +8,6 @@
     <property name="build.dir" location="${base-build.dir}/${platform}" />
     <property name="debug.dir" location="${base-debug.dir}/${platform}" />
     <property name="deploy.dir" location="${base-deploy.dir}/${platform}" />
-    <property name="deploy.base" location="${deploy.dir}/listit-${listit.version}" />
 
     <property name="listit.js.platform.dir" location="${listit.js.platforms.dir}/${platform}" />
     <property name="listit.css.platform.dir" location="${listit.css.platforms.dir}/${platform}" />
@@ -292,7 +291,29 @@
     <extension-point name="build.release" depends="build.release.images,build.release.assets,build.release.html" />
     <extension-point name="build.debug" depends="build.debug.assets,build.debug.html" />
 
-    <target name="debug" depends="build.debug">
+    <target name="-prepare.release">
+        <property name="build.is.mode.release" value="true" />
+        <property name="build.version" value="${listit.version}" />
+        <property name="updates_basename" value="updates" />
+    </target>
+
+    <target name="-prepare.nightly">
+        <property name="build.is.mode.release" value="true" />
+        <property name="build.is.mode.nightly" value="true" />
+        <tstamp>
+            <!-- Yes, this version is wierd. Chrome is wierd. -->
+            <format property="build.version" pattern="yyy.M.d"/>
+        </tstamp>
+        <property name="updates_basename" value="updates-nightly" />
+    </target>
+
+    <target name="-prepare.debug">
+        <property name="build.is.mode.debug" value="true" />
+        <property name="build.version" value="${listit.version}" />
+    </target>
+
+
+    <target name="debug" depends="-prepare.debug,build.debug">
         <rmdir dir="${debug.dir}" />
         <fail message="Failed to delete debug directory: ${debug.dir}">
             <condition>
@@ -302,5 +323,7 @@
         <mkdir dir="${base-debug.dir}" />
         <move file="${build.dir}" todir="${base-debug.dir}"/>
     </target>
-    <target name="release" depends="build.release" />
+
+    <target name="release" depends="-prepare.release,build.release" />
+    <target name="nightly" depends="-prepare.nightly,build.release" />
 </project>

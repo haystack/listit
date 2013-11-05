@@ -1,9 +1,6 @@
 <!-- vim: set ft=ant : -->
 <project name="base_common">
     <dirname property="root.dir" file="${ant.file.base_common}" />
-    <condition property="build.is.mode.release">
-        <equals arg1="${build.target}" arg2="release" />
-    </condition>
 
     <property name="tools.dir" location="${root.dir}/tools" />
     <property name="tools.yuicompressor" location="${tools.dir}/yuicompressor-2.4.7.jar" />
@@ -18,20 +15,6 @@
         classpath="${tools.pngtastic}" />
 
     <taskdef resource="net/sf/antcontrib/antlib.xml"/>
-
-    <if>
-        <isset property="nightly" />
-        <then>
-            <property name="updates_basename" value="updates-nightly" />
-            <tstamp>
-                <!-- Yes, this version is wierd. Chrome is wierd. -->
-                <format property="listit.version" pattern="yyy.M.d"/>
-            </tstamp>
-        </then>
-        <else>
-            <property name="updates_basename" value="updates" />
-        </else>
-    </if>
 
     <!-- Properties -->
     <property file="${root.dir}/global.properties" />
