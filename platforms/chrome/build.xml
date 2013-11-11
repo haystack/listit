@@ -1,7 +1,6 @@
 <project name="List.it Chrome Extension">
     <import file="../../platform-common.xml"/>
 
-    <property name="update_url" value="${listit.update_base}/chrome/${updates_basename}.xml" />
 
     <target name="build.release.package" depends="build.manifest">
         <exec executable="chromium">
@@ -9,11 +8,11 @@
             <arg value="--pack-extension-key=${privatekey}" />
         </exec>
         <move file="${build.dir}/../chrome.crx"
-            tofile="${deploy.dir}/listit-${build.version}.crx" />
-        <copy overwrite="true" file="${platform.dir}/updates.xml.tmpl" tofile="${deploy.dir}/${updates_basename}.xml">
+            tofile="${deploy.dir}/${build.basename}-${build.version}.crx" />
+        <copy overwrite="true" file="${platform.dir}/updates.xml.tmpl" tofile="${deploy.dir}/${build.updates_basename}.xml">
             <filterchain>
                 <filterreader classname="org.apache.tools.ant.filters.ReplaceTokens">
-                    <param type="token" name="update_url" value="${listit.update_base}/chrome/listit-${build.version}.crx" />
+                    <param type="token" name="url" value="${listit.update_base}/chrome/${build.basename}-${build.version}.crx" />
                     <param type="token" name="version" value="${build.version}" />
                 </filterreader>
             </filterchain>
@@ -56,7 +55,7 @@
                     <param type="token" name="name" value="${listit.name}" />
                     <param type="token" name="title" value="${listit.title}" />
                     <param type="token" name="description" value="${listit.description}" />
-                    <param type="token" name="update_url" value="${update_url}" />
+                    <param type="token" name="update_url" value="${listit.update_base}/chrome/${build.updates_basename}.xml" />
                 </filterreader>
             </filterchain>
         </copy>

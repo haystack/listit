@@ -2,7 +2,7 @@
     <import file="../../platform-common.xml"/>
 
     <target name="web.release" extensionOf="build.release">
-        <zip destfile="${deploy.dir}/listit-${build.version}.zip" basedir="${build.dir}" />
+        <zip destfile="${deploy.dir}/${build.basename}-${build.version}.zip" basedir="${build.dir}" />
     </target>
 
     <target name="web.debug" extensionOf="build.debug" />

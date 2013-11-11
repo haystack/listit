@@ -294,17 +294,19 @@
     <target name="-prepare.release">
         <property name="build.is.mode.release" value="true" />
         <property name="build.version" value="${listit.version}" />
-        <property name="updates_basename" value="updates" />
+        <property name="build.basename" value="listit-release" />
+        <property name="build.updates_basename" value="updates" />
     </target>
 
     <target name="-prepare.nightly">
         <property name="build.is.mode.release" value="true" />
+        <property name="build.basename" value="listit-nightly" />
         <property name="build.is.mode.nightly" value="true" />
         <tstamp>
             <!-- Yes, this version is wierd. Chrome is wierd. -->
             <format property="build.version" pattern="yyy.M.d"/>
         </tstamp>
-        <property name="updates_basename" value="updates-nightly" />
+        <property name="build.updates_basename" value="updates-nightly" />
     </target>
 
     <target name="-prepare.debug">

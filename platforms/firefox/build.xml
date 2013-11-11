@@ -48,7 +48,7 @@
     <target name="firefox.release"
         depends="-firefox.common.before,-firefox.release.build,-firefox.common.after"
         extensionOf="build.release">
-        <zip destfile="${deploy.dir}/listit-${build.version}.xpi" basedir="${build.dir}" />
+        <zip destfile="${deploy.dir}/${build.basename}-${build.version}.xpi" basedir="${build.dir}" />
     </target>
 
     <target name="build.install" depends="-build.setup">
