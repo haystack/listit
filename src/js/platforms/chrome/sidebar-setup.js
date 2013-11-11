@@ -18,6 +18,11 @@ ListIt.lvent.once('setup:views:after', function(L, barr) {
     window.open('/help.html', '_new');
   });
 
+  L.router.route('trashbin', 'trashbin', function() {
+    this.navigate('', {trigger: false});
+    window.open('/trashbin.html', '_new');
+  });
+
   // Close on hotkey press.
   // Chrom's hotkey handling is inconsistant. On windows, the global hotkey is
   // fired even if the sidebar is focused. On linux however, the global hotkey is not fired.

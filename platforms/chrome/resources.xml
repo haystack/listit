@@ -7,6 +7,8 @@
     <property name="pages.options.tmpl" location="${listit.templates.paged}" />
     <property name="pages.help.html" location="${build.dir}/help.html" />
     <property name="pages.help.tmpl" location="${listit.templates.paged}" />
+    <property name="pages.trashbin.html" location="${build.dir}/trashbin.html" />
+    <property name="pages.trashbin.tmpl" location="${listit.templates.paged}" />
     <property name="pages.addnotebox.html" location="${build.dir}/addnotebox.html" />
 
     <property name="privatekey" location="${platform.dir}/key.pem" />
@@ -76,6 +78,24 @@
     <resources id="assets.help.css">
         <resources refid="css.all" />
         <fileset file="${listit.css.platform.dir}/help.css" />
+    </resources>
+
+    <resources id="assets.trashbin.js">
+        <resources refid="js.libs.client" />
+        <resources refid="js.common" />
+        <filelist dir="${listit.js.platform.dir}">
+            <file name="client-setup.js" />
+            <file name="trashbin-setup.js" />
+        </filelist>
+        <resources refid="js.router" />
+        <resources refid="js.templates" />
+        <resources refid="js.views" />
+        <resources refid="js.views.setup"/>
+        <resources refid="js.setup"/>
+    </resources>
+    <resources id="assets.trashbin.css">
+        <resources refid="css.all" />
+        <fileset file="${listit.css.platform.dir}/trashbin.css" />
     </resources>
 
     <resources id="assets.background.js">

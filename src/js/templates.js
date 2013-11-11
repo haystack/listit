@@ -124,7 +124,7 @@ __p+=' settingIcon"\n    src="img/controls/sync.png" width="16" height="16"\n   
  } else { 
 __p+='\n  <img id="syncIcon" class="settingIcon"\n  src="img/controls/sync-disabled.png" width="16" height="16"\n  title="Syncing is disabled. Please login to enable syncing.">\n';
  } 
-__p+='\n<a href="#/options" class="clickable">\n    <img id="optionsIcon" class="settingIcon" src="img/controls/options.png" width="16" height="16" title="View Options and Login to save a backup of your notes." >\n</a>\n<a href="#/help" class="clickable">\n    <img id="helpIcon" class="settingIcon" src="img/controls/help.png" width="13" height="16" title="View the help page.">\n</a>\n\n';
+__p+='\n<a href="#/options" class="clickable">\n    <img id="optionsIcon" class="settingIcon" src="img/controls/options.png" width="16" height="16" title="View Options and Login to save a backup of your notes." >\n</a>\n<a href="#/help" class="clickable">\n    <img id="helpIcon" class="settingIcon" src="img/controls/help.png" width="13" height="16" title="View the help page.">\n</a>\n<a href="#/trashbin" class="clickable">\n    <img id="trashbinIcon" class="settingIcon" src="img/controls/trashbin.png" width="16" height="16" title="Manage your deleted notes.">\n</a>\n\n';
 }
 return __p;
 };
@@ -263,6 +263,13 @@ ListIt.templates['pages/options'] = function(obj){
 var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'')};
 with(obj||{}){
 __p+='<div id="options-header">\n    <h2 class="options-title">List.it</h2>\n    <a id="showListLink" href="#">Take me back to my notes</a>\n</div>\n<div id="title-circle"></div>\n<div id="options-body"></div>\n\n';
+}
+return __p;
+};
+ListIt.templates['pages/trashbin'] = function(obj){
+var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'')};
+with(obj||{}){
+__p+='<div id="trashbin-header">\n    <h2 class="trashbin-title">List.it</h2>\n    <a id="showListLink" href="#">Take me back to my notes</a>\n</div>\n<div id="title-circle"></div>\n<div id="trashbin-body">\n</div>\n';
 }
 return __p;
 };
