@@ -30,6 +30,10 @@
         body.append(panel.render().el);
       });
       return this;
+    },
+    change_color: function(new_scheme){
+      this.$el.attr("class", "page");
+      this.$el.addClass(new_scheme);
     }
   });
 

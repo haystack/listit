@@ -16,7 +16,6 @@ a, .tabbar a {
   overflow-y: auto;
   overflow-x: none;
   font-family: Trebuchet MS, Helvetica, sans-serif;
-  background-color: rgb(255, 250, 233);
 }
 
 #options-header {
@@ -156,4 +155,25 @@ a, .tabbar a {
     min-width: 120px;
     width: auto;
     height: 30px;
+}
+
+.color-item {
+  height: 30px;
+  width: 30px;
+  cursor: pointer;
+}
+
+.color-scheme #color-scheme-red {
+  background-color: #ff7373;
+  border: 1px solid #ff4040;
+}
+
+.color-scheme #color-scheme-green {
+  background-color: #65E17B;
+  border: 1px solid #38E156;
+}
+
+.color-scheme #color-scheme-blue {
+  background-color: #6899d3;
+  border: 1px solid #4284d3;
 }

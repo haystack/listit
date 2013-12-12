@@ -140,7 +140,7 @@ return __p;
 ListIt.templates['options/color-scheme'] = function(obj){
 var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'')};
 with(obj||{}){
-__p+='<h3>Change Your Color Scheme</h3>\n<p>\nhello world!\n</p>';
+__p+='<h3>Change Your Color Scheme</h3>\n<ul class="color-scheme hlist">\n  <li class="color-item" id="color-scheme-red"></li>\n  <li class="color-item" id="color-scheme-green"></li>\n  <li class="color-item" id="color-scheme-blue"></li>\n</ul>';
 }
 return __p;
 };

@@ -22,6 +22,19 @@ html, body {
   bottom: 0;
   top: 0;
   position: absolute;
+  background-color: rgb(255, 250, 233);
+}
+
+.scheme-red {
+  background-color: #ff7373;
+}
+
+.scheme-green {
+  background-color: #65E17B;
+}
+
+.scheme-blue {
+  background-color: #6899d3;
 }
 
 .jiggly {

@@ -23,7 +23,6 @@
 }
 
 #page-main {
-  background-color: rgb(255, 250, 233); /*(240, 100%, 99%);*/
   overflow: auto;
   top: 0;
   bottom: 0;
