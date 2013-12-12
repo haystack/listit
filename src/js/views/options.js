@@ -17,7 +17,8 @@
           new L.views.ServerView({model: L.server}),
           new L.views.InfoView(),
           new L.views.PreferencesView({model: L.preferences}),
-          new L.views.ImportExportView()
+          new L.views.ImportExportView(),
+          new L.views.ColorSchemeView()
         ];
       }
     },

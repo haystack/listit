@@ -137,6 +137,13 @@ __p+='<textarea class="searchbar" placeholder="Search">'+
 }
 return __p;
 };
+ListIt.templates['options/color-scheme'] = function(obj){
+var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'')};
+with(obj||{}){
+__p+='<h3>Change Your Color Scheme</h3>\n<p>\nhello world!\n</p>';
+}
+return __p;
+};
 ListIt.templates['options/importexport'] = function(obj){
 var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'')};
 with(obj||{}){
