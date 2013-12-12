@@ -7,18 +7,14 @@
     },
 
     render: function() {
-      this.$el.html('<div class="trashbin-note" >'
-        + '<button class="restore-trash-note">Restore</button>' 
-        + '<div class="contents">' 
-        + this.model.attributes.contents
-        + '</div>'
-        
-        + '</div>');
-      return this;
+      if(!this.model.get('deleted') == true){
+        this.$el.html(L.templates["trashbin-note"]({contents: this.model.get('contents')}));
+      }
     },
 
     events: {
-      'click .restore-trash-note': 'restore'
+      'click .restore-trash-note': 'restore',
+      'click .destroy-trash-note': 'destroy'
     },
 
     restore: function(event){
@@ -26,14 +22,26 @@
       this.$el.stop().fadeOut({queue: false}, 200).slideUp(300, function() {
         el.remove();
       });
+    },
+
+    destroy: function(event){
+      this.model.attributes.contents = "";
+      this.model.attributes.deleted = true;
+      this.$el.stop().fadeOut({queue: false}, 200).slideUp(300, function() {
+        el.remove();
+      });
     }
+
+
   });
 
   L.views.TrashbinPage = Backbone.View.extend({
     id: 'page-trashbin',
     className: 'page',
     initialize: function(options) {
+      this.listenTo(this.collection, 'add', _.mask(this.addNote, 0));
     },
+
     render: function() {
       this.$el.html(L.templates["pages/trashbin"]());
       this.addAll();

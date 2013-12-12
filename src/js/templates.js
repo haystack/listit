@@ -298,3 +298,12 @@ __p+='\n</ul>\n<div class="wysihtml5-dialogs">\n  <form data-wysihtml5-dialog="c
 }
 return __p;
 };
+ListIt.templates['trashbin-note'] = function(obj){
+var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'')};
+with(obj||{}){
+__p+='<div class="trashbin-note">\n  <button class="destroy-trash-note">Destroy</button>\n  <button class="restore-trash-note">Restore</button>\n  <div class="contents">'+
+((__t=( contents ))==null?'':__t)+
+'</div>\n</div>';
+}
+return __p;
+};

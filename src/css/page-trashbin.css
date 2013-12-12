@@ -63,6 +63,10 @@
   float:right;
 }
 
+.trashbin-note .destroy-trash-note {
+  float:right;
+}
+
 .trashbin-note .contents {
   max-width: 100%;
   height: auto;
