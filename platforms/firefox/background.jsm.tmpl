@@ -27,16 +27,22 @@ frame.setAttribute("id", "listitBackgroundPage");
 window.document.documentElement.appendChild(frame);
 
 // Make Context
+var XHRConstructor = function() {
+  return Components.classes["@mozilla.org/xmlextras/xmlhttprequest;1"].createInstance();
+}
+
 var ctx = Components.utils.Sandbox(systemPrincipal, {
   wantXray: false,
   sandboxPrototype: frame.contentWindow,
   sandboxName: "listit-background",
   wantComponents: false,
-  wantXHRConstructor: true
+  wantXHRConstructor: false
 });
 
 // Load addons
 ctx.ListItAddons = {};
+ctx.XMLHttpRequest = XHRConstructor;
+
 for (var i = 0; i < addons.length; i++) {
     Components.utils.import(addons[i], ctx.ListItAddons);
 }
