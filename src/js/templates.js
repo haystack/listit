@@ -131,9 +131,13 @@ return __p;
 ListIt.templates['omnibox/searchbar'] = function(obj){
 var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'')};
 with(obj||{}){
-__p+='<textarea class="searchbar" placeholder="Search">'+
+__p+='<div class="searchbar">\n  <input value="'+
 ((__t=( text ))==null?'':_.escape(__t))+
-'</textarea>\n\n';
+'" placeholder="Search" /><div class="clear-btn"\n    ';
+ if (text === "") { 
+__p+=' style="display: none;" ';
+ } 
+__p+='\n  >&times;</div>\n</div>\n';
 }
 return __p;
 };

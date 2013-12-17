@@ -27,7 +27,12 @@
         }
       });
       this.listenTo(this.model, 'change:searchText', function(m, search, o) {
-        if (o.source !== this) {
+        if (search === "") {
+          this.$searchbarClear.hide();
+        } else {
+          this.$searchbarClear.show();
+        }
+        if (o && o.source !== this) {
           this.setSearch(search);
         }
       });
@@ -53,10 +58,12 @@
 
       // Searchbar
       this.$el.append(L.templates['omnibox/searchbar']({text: this.model.get('searchText')}));
-      this.$searchbar = this.$('.searchbar');
+      this.$searchbarContainer = this.$('.searchbar');
+      this.$searchbarClear = this.$searchbarContainer.children('.clear-btn');
+      this.$searchbar = this.$searchbarContainer.children('input');
 
       if (!this.model.get('searchState')) {
-        this.$searchbar.hide();
+        this.$searchbarContainer.hide();
       }
 
       // Editor
@@ -97,11 +104,12 @@
       'keydown[ctrl+s]        .editor'    : '_onSaveTriggered',
       'keydown[ctrl+return]   .editor'    : '_onSaveWithSearchTriggered',
       'keydown[esc]           .editor'    : '_onResetTriggered',
-      'keydown[esc]           .searchbar' : '_onHideSearchbarTriggered',
+      'keydown[esc]           .searchbar input' : '_onHideSearchbarTriggered',
+      'click                  .searchbar .clear-btn' : '_onSearchClear',
 
       // Autosave
-      'keyup                  .searchbar' : 'storeSearch',
-      'change                 .searchbar' : 'storeSearch',
+      'keyup                  .searchbar input' : 'storeSearch',
+      'change                 .searchbar input' : 'storeSearch',
       'keyup                  .editor'    : 'storeText',
       'change                 .editor'    : 'storeText'
     },
@@ -115,6 +123,9 @@
     // Store text on change.
     _onKeyUp: function(event) {
       this.storeText();
+    },
+    _onSearchClear: function() {
+      this.model.set('searchText', '');
     },
     storeText: function() {
       this.assertRendered();
@@ -174,26 +185,17 @@
       this.editor.clear();
       this.storeText();
     },
-    _fixSearchHeight: function() {
-      _.delay(function() {
-        var $searchbar = $('.searchbar');
-        $searchbar.height("12px");
-        $searchbar.height($searchbar[0].scrollHeight);
-      });
-    },
     showSearch: function() {
-      this.$searchbar.slideDown('fast');
-      this._fixSearchHeight();
+      this.$searchbarContainer.slideDown('fast');
     },
     hideSearch: function() {
-      this.$searchbar.slideUp('fast');
+      this.$searchbarContainer.slideUp('fast');
     },
     getSearch: function() {
       return this.$searchbar[0].value;
     },
     setSearch: function(text) {
       this.$searchbar.val(text);
-      this._fixSearchHeight();
     }
   });
 

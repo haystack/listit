@@ -1,2 +1,5 @@
-<textarea class="searchbar" placeholder="Search"><%- text %></textarea>
-
+<div class="searchbar">
+  <input value="<%- text %>" placeholder="Search" /><div class="clear-btn"
+    <% if (text === "") { %> style="display: none;" <% } %>
+  >&times;</div>
+</div>

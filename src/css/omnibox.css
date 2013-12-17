@@ -63,6 +63,28 @@
 }
 
 .searchbar {
+  position: relative;
+  /* Box stuff */
+  display: -webkit-box;
+  display: -moz-box;
+  display: box;
+  -webkit-box-orient: horizontal;
+  -moz-box-orient: horizontal;
+  box-orient: horizontal;
+  -webkit-box-align: stretch;
+  -moz-box-align: stretch;
+  box-align: stretch;
+
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-direction: row;
+  flex-direction: row;
+  align-items: center;
+
+  margin: 0px 0px 7px 0px;
+}
+
+.searchbar input {
   font: inherit;
   width: 100%;
   display: block;
@@ -72,13 +94,28 @@
   border-top-right-radius: 3px;
   border-bottom-left-radius: 3px;
   height: 18px;
-  margin: 0px 0px 7px -3px;
   padding: 2px;
   background-color: rgb(255, 214, 152);
   color: black;
+
+  margin: 0 -3px; /* Padding and stuff? */
+
+  -webkit-box-flex: 1;
+  -moz-box-flex: 1;
+  box-flex: 1;
+  -webkit-flex: 1;
+  flex: 1;
 }
 
-.searchbar:focus {
+.searchbar .clear-btn {
+  right: 10px;
+  width: 0px;
+  color: orange;
+  position: relative;
+  cursor: pointer;
+}
+
+.searchbar input:focus {
   outline: 1px solid rgb(255, 149, 0);
 }
 
