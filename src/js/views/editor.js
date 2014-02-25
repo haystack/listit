@@ -17,6 +17,7 @@
       }
       var that = this;
       var iframe;
+      var windowHeight = $(window).height();
       if (this.wysihtml5entry.composer) {
         iframe = this.wysihtml5entry.composer.iframe;
       }
@@ -24,6 +25,7 @@
       _.delay(function() {
         if (that.wysihtml5entry.currentView === that.wysihtml5entry.composer) {
           // Using composer
+          iframe.contentDocument.body.style.maxHeight = (windowHeight - 60) + 'px';
           iframe.style.height = 'auto';
           iframe.style.height = iframe.contentDocument.body.clientHeight + 'px';
           txtbox.style.height = iframe.style.height;
