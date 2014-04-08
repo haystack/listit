@@ -8,10 +8,11 @@
     <property name="pages.index.html" location="${build.dir}/index.html" />
     <property name="pages.index.tmpl" location="${listit.templates.paged}" />
 
-    <property name="asses" value="index" />
-    <property name="pages" value="index" />
 
-    <resources id="assets.index.css" refid="css.all"/>
+    <resources id="assets.index.css">
+        <resources refid="css.all" />
+        <file name="${listit.css.platform.dir}/warn-persistence.css" />
+    </resources>
 
     <resources id="assets.index.js">
         <resources refid="js.libs" />
