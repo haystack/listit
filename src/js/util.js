@@ -118,7 +118,7 @@
      **/
     metaSplit: function(str) {
       var doc = $("<div>").html($.parseHTML(str));
-      var meta = {}
+      var meta = {};
       doc.children("meta").each(function(index, node) {
         var $node = $(node);
         var content = $node.attr("content");
@@ -135,7 +135,7 @@
       }).remove();
       return {
         contents: doc.html(),
-        meta: meta,
+        meta: meta
       };
     },
     // Slides 'hide' out and 'show' in calling 'cb' once on completion.

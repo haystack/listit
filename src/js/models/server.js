@@ -118,7 +118,7 @@
             options.authToken = token;
             that.ajax(options);
           } else {
-            (options.error || $.noop)(Server.errors.AUTHENTICATION_FAILURE, 'User not authenticated');
+            (options.error || $.noop)(L.models.Server.errors.AUTHENTICATION_FAILURE, 'User not authenticated');
             (options.complete || $.noop)();
           }
         });
@@ -141,9 +141,9 @@
 
       // Wrap error:
       if (options.error) {
-        var old_error = options.error;
+        var oldError = options.error;
         options.error = function(xhr, status) {
-          old_error(L.models.Server.errors.NETWORK_FAILURE, status, xhr)
+          oldError(L.models.Server.errors.NETWORK_FAILURE, status, xhr)
         };
       }
 
@@ -542,8 +542,8 @@
         deleted: !!note.deleted,
         id: note.jid,
         version: note.version,
-        created: parseInt(note.created),
-        edited: parseInt(note.edited),
+        created: parseInt(note.created, 10),
+        edited: parseInt(note.edited, 10),
         contents: extracted.contents,
         meta: extracted.meta
       };
