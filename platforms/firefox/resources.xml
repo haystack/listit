@@ -17,6 +17,9 @@
     <property name="pages.help.html" location="${build.webapp.dir}/help.html" />
     <property name="pages.help.tmpl" location="${listit.templates.paged}" />
 
+    <property name="pages.trashbin.html" location="${build.webapp.dir}/trashbin.html" />
+    <property name="pages.trashbin.tmpl" location="${listit.templates.paged}" />
+
     <property name="pages.background.tmpl" location="${platform.dir}/background.jsm.tmpl" />
     <property name="pages.background.jsm" location="${build.content.dir}/background.jsm" />
 
@@ -62,6 +65,20 @@
         <resources refid="js.setup" />
     </resources>
 
+    <resources id="assets.trashbin.js">
+        <resources refid="js.libs.client" />
+        <resources refid="js.common" />
+        <filelist dir="${listit.js.platform.dir}">
+            <file name="client-setup.js" />
+            <file name="trashbin-setup.js" />
+        </filelist>
+        <resources refid="js.router" />
+        <resources refid="js.templates" />
+        <resources refid="js.views" />
+        <resources refid="js.views.setup" />
+        <resources refid="js.setup" />
+    </resources>
+
     <resources id="assets.firefox_modules.js">
         <filelist dir="${listit.js.platform.dir}">
             <file name="authmanager.js" />
@@ -98,5 +115,9 @@
     <resources id="assets.help.css">
         <resources refid="css.all" />
         <fileset file="${listit.css.platform.dir}/help.css" />
+    </resources>
+    <resources id="assets.trashbin.css">
+        <resources refid="css.all" />
+        <fileset file="${listit.css.platform.dir}/trashbin.css" />
     </resources>
 </project>

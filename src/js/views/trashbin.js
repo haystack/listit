@@ -38,9 +38,9 @@
   L.views.TrashbinPage = Backbone.View.extend({
     id: 'page-trashbin',
     className: 'page',
-    initialize: function(options) {
-      this.listenTo(this.collection, 'add', _.mask(this.addNote, 0));
-    },
+    // initialize: function(options) {
+    //   this.listenTo(this.collection, 'add', _.mask(this.addNote, 0));
+    // },
 
     render: function() {
       this.$el.html(L.templates["pages/trashbin"]());
