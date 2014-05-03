@@ -321,7 +321,9 @@ wysihtml5.browser = (function() {
     },
     
     isAndroid: function() {
-      return this.USER_AGENT.indexOf("Android") !== -1;
+      // https://stackoverflow.com/questions/14403766/how-to-detect-the-stock-android-browser#comment35786655_19915132
+      var rxaosp = window.navigator.userAgent.match(/Android.*AppleWebKit\/([\d.]+)/);
+      return (rxaosp && rxaosp[1]<537);
     },
     
     /**
