@@ -259,6 +259,11 @@
         <property name="assets.css.dir" value="${assets.dir}/css" />
         <property name="assets.img.dir" value="${assets.dir}/img" />
         <script language="javascript">
+            try {
+                // Java 8 Compat.
+                // https://bugs.openjdk.java.net/browse/JDK-8025132
+                load('nashorn:mozilla_compat.js')
+            } catch(e) {}
             importPackage(Packages.java.io);
             importPackage(Packages.org.apache.tools.ant.util);
             var br = String(project.getProperty("line.separator"));
