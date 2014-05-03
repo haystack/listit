@@ -6,7 +6,7 @@
     <property name="build.img.dir" location="${build.dir}/img" />
 
     <property name="pages.index.html" location="${build.dir}/index.html" />
-    <property name="pages.index.tmpl" location="${listit.templates.paged}" />
+    <property name="pages.index.tmpl" location="${listit.templates.cached}" />
 
 
     <resources id="assets.index.css">

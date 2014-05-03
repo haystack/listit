@@ -1,11 +1,28 @@
 <project>
     <import file="../../platform-common.xml"/>
 
-    <target name="web.release" extensionOf="build.release">
+    <target name="web.release" depends="build.appcache" extensionOf="build.release">
         <zip destfile="${deploy.dir}/${build.basename}-${build.version}.zip" basedir="${build.dir}" />
     </target>
 
-    <target name="web.debug" extensionOf="build.debug" />
+    <target name="web.debug" extensionOf="build.debug" depends="build.appcache"/>
+    <target name="build.appcache" depends="-build.setup">
+        <tstamp/>
+        <local name="contents" />
+        <pathconvert dirsep="/" property="contents" pathsep='${line.separator}'>
+            <fileset dir="${assets.dir}/" includes="**/*"/>
+            <!-- Relative -->
+            <map from="${assets.dir}/" to="${assets.prefix}" />
+        </pathconvert>
+        <copy file="${platform.dir}/listit.appcache.tmpl" tofile="${build.dir}/listit.appcache">
+            <filterchain>
+                <filterreader classname="org.apache.tools.ant.filters.ReplaceTokens">
+                    <param type="token" name="cached" value="${contents}" />
+                    <param type="token" name="timestamp" value="${TSTAMP} ${TODAY}" />
+                </filterreader>
+            </filterchain>
+        </copy>
+    </target>
 </project>
 
 

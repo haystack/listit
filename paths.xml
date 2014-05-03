@@ -5,6 +5,7 @@
     <property name="contributors" location="${root.dir}/CONTRIBUTORS" />
     <property name="listit.templates.paged" location="${listit.dir}/paged.html.tmpl" />
     <property name="listit.templates.empty" location="${listit.dir}/empty.html.tmpl" />
+    <property name="listit.templates.cached" location="${listit.dir}/cached.html.tmpl" />
     <property name="listit.js.dir" location="${listit.dir}/js" />
     <property name="listit.js.platforms.dir" location="${listit.js.dir}/platforms" />
     <property name="listit.js.models.dir" location="${listit.js.dir}/models" />
