@@ -107,7 +107,7 @@
                                     <resources id="assets.@{name}.@{type}.compiled">
                                         <path path="${tmp_path}" />
                                     </resources>
-                                    <for param="file">
+                                    <for param="file" parallel="true" threadCount="5">
                                         <resources refid="assets.@{name}.@{type}" />
                                         <sequential>
                                             <local name="dest_file" />
