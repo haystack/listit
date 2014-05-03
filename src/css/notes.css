@@ -119,9 +119,13 @@
 }
 
 .note .close-btn {
-    margin: 12px;
+    margin: 0px;
+    height: 34px;
+    width: 34px;
     right: 0px;
-    margin-right: 10px;
+    background-position: center;
+    background-image: url("../img/close.png");
+    background-repeat: no-repeat;
 }
 
 .note.pinned .close-btn{

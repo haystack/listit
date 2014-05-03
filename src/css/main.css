@@ -284,11 +284,3 @@ p {
 .hlist li {
     display: inline-block;
 }
-
-.close-btn {
-    background-position: center;
-    background-image: url("../img/close.png");
-    height: 10px;
-    width: 10px;
-    background-repeat: no-repeat;
-}
