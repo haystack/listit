@@ -11,6 +11,10 @@
         this.$("#help-main").append(platformHelp);
       }
       return this;
+    },
+    change_color: function(new_scheme){
+      this.$el.attr("class", "page");
+      this.$el.addClass(new_scheme);
     }
   });
 })(ListIt);
