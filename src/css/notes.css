@@ -129,7 +129,7 @@
 }
 
 .note.pinned .close-btn{
-  margin-right: 12px;
+  margin-right: 2px;
 }
 
 /* Use listt_tag instead of just tag to avoid conflict with pasted html */
