@@ -26,9 +26,12 @@ body {
   display: none;
 }
  
- 
 ::-webkit-scrollbar-track-piece {
-  background-color: hsl(60, 100%, 98%);
+  background-color: #eeeeee;
+}
+
+#notes.search-failed::-webkit-scrollbar-track-piece {
+  background-color: #fafafa;
 }
  
 ::-webkit-scrollbar-thumb {

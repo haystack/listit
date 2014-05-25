@@ -12,14 +12,15 @@
 
 .note {
     margin: 2px 0px 1px 0px;
-    border-radius: 5px;
-    border: 1px solid black;
+    border-radius: 4px;
+    border: 1px solid #ccc;
     background-color: hsl(240, 100%, 100%);/* hsl(200, 100%, 95%);*/
     width: 100%;
     box-align: stretch;
     -webkit-box-align: stretch;
     -moz-box-align: stretch;
     padding-right: 2px;
+    box-shadow: 0 2px 2px 1px #ddd;
 }
 
 .note > *{
@@ -38,7 +39,7 @@
 }
 
 .note.pinned {
-  border: 3px solid rgb(255, 201, 18);
+  border: 2px solid rgb(255, 201, 18);
   padding-right: 0px;
 }
 
