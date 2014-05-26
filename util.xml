@@ -217,7 +217,7 @@
         }
 
         function writeFile(file, text) {
-            text = text.replace(/\n/g, br);
+            text = String(text).replace(/\n/g, br);
             var fw = new FileWriter(file);
             fw.write(text);
             fw.close();
