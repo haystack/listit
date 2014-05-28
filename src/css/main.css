@@ -12,6 +12,14 @@ html, body {
   font-family: Helvetica Neue Ultralight, "Helvetica Neue", "Helvetica", sans-serif;
   color: #111;
   font-size: 14px;
+
+  /* Disable text selection (it's annoying) */
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
 .page {
