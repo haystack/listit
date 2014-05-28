@@ -1,13 +1,14 @@
 ListIt.lvent.once('setup:models', function(L, barr) {
   'use strict';
   // Setup Models
+  // Need preferences first.
+  L.preferences = new L.models.Preferences();
 
   L.notebook = new L.models.NoteBook();
 
   L.server      = new L.models.Server();
   L.sidebar     = new L.models.FilterableNoteCollection(null, {track: L.notebook.get('notes')}); // Not saved
   L.omnibox     = new L.models.Omnibox();
-  L.preferences = new L.models.Preferences();
   L.authmanager = new L.models.AuthManager(); // Might not be a backbone model
   L.logger = new L.models.Logger();
 });
