@@ -230,15 +230,25 @@ ul.list {
   color: black;
 }
 
-.right {
+.pull-right {
     float: right;
 }
-.left {
+.pull-left {
     float: left;
 }
 .clear {
     clear: both;
 }
+.align-center {
+    text-align: center;
+}
+.align-right {
+    text-align: right;
+}
+.align-left {
+    text-align: left;
+}
+
 
 p {
     padding-bottom: 1em;
@@ -251,10 +261,6 @@ p {
 
 .page {
     min-width: 300px;
-}
-
-.center {
-    text-align: center;
 }
 
 .off-screen {
