@@ -1,6 +1,34 @@
 (function(L) {
   'use strict';
-  L.models.Omnibox = Backbone.Model.extend({
+
+  L.models.SavedSearch = Backbone.Model.extend({
+    defaults: {
+      text: '',
+      active: false
+    }
+  });
+  L.models.SavedSearchCollection = Backbone.Collection.extend({
+    model: L.models.SavedSearch,
+    initialize: function() {
+      this.listenTo(this, 'change:active',function() {
+        this.trigger('search');
+      });
+      this.listenTo(this, 'change:text', function(model) {
+        if (model.get('active')) {
+          this.trigger('search');
+        }
+      });
+      this.listenTo(this, 'add remove', function(model) {
+        if (model.get('active')) {
+          this.trigger('search');
+        }
+      });
+    },
+    text: function() {
+      return _.map(this.where({'active': true}), function(m) { return m.get('text'); }).join(' ');
+    }
+  });
+  L.models.Omnibox = Backbone.RelModel.extend({
     // Singleton
     autoFetch: true,
     url : '/omnibox',
@@ -11,18 +39,23 @@
       text: '',
       searchText: ''
     },
+    relations: {
+      savedSearches: {
+        type: L.models.SavedSearchCollection,
+        includeInJSON: true
+      }
+    },
     initialized: function() {
-      var slowSearch = _.debounce(this.requestSearch, 100);
       var that = this;
       // Stop search when typing but don't start next search until stop.
       this.listenTo(this, 'change:text', function() {
         if (!this.get('searchState')) {
-          slowSearch.call(that, {user: true});
+          this.requestSearch();
         }
       });
       this.listenTo(this, 'change:searchText', function(m, text) {
         if (this.get('searchState')) {
-          slowSearch.call(that, {user:true});
+          this.requestSearch();
         }
       });
       this.listenTo(this, 'change:searchState', function(m, state) {
@@ -34,17 +67,24 @@
         } else {
           this.set('searchText', '');
         }
-        slowSearch.call(that, {user:true});
+        this.requestSearch();
       });
       this.listenTo(this, 'change', _.mask(this.throttledSave));
+      this.listenTo(this.get('savedSearches'), 'change add remove', _.mask(this.throttledSave));
+      this.listenTo(this.get('savedSearches'), 'search', this.requestSearch);
+      this.listenTo(L.preferences, 'change:showSavedSearches', this.requestSearch);
       this.requestSearch();
     },
     throttledSave: _.debounce(function() { this.save.apply(this, arguments); }, 500),
-    requestSearch: function(options) {
-      var text = L.util.clean(this.get(this.get('searchState') ? 'searchText' : 'text') || '');
-      var searchID = L.sidebar.search(text);
+    requestSearch: _.debounce(function() {
+      var text = this.get(this.get('searchState') ? 'searchText' : 'text') || '';
+      if (L.preferences.get('showSavedSearches')) {
+        text = text + ' ' + this.get('savedSearches').text();
+      }
+      var searchText = L.util.clean(text);
+      var searchID = L.sidebar.search(searchText);
       this.trigger("user:search", this, text, searchID);
-    },
+    }, 100),
     saveNote: function(options, window) {
       options = options || {};
       var contents = L.util.strip(this.get('text'));

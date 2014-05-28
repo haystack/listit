@@ -75,6 +75,9 @@
 
       this.$el.append(this.editor.el);
 
+      // Saved Searches
+      this.$el.append(new L.views.SavedSearchBarView({collection: this.model.get('savedSearches')}).render().$el);
+
       // Done
       this._rendered = true;
 
@@ -236,5 +239,130 @@
     }
   });
 
+  L.views.SavedSearchBarView = Backbone.View.extend({
+    template: L.templates['omnibox/savedsearchbar'],
+    id: 'savedSearchBar',
+    className: 'hbox',
+    initialize: function() {
+      this.subViews = {};
+    },
+    updateShowSavedSearches: function(model, value) {
+      this.$el.toggle(value);
+    },
+    _getOrCreateSubview: function(model) {
+      return this.subViews[model.cid] || (
+        this.subViews[model.cid] = new L.views.SavedSearchView({model: model})
+      );
+    },
+    _removeSubview: function(model) {
+      var subview = this.subViews[model.cid];
+      if (subview) {
+        subview.remove();
+        delete this.subViews[model.cid];
+      }
+    },
+    events: {
+      'click #savedSearchEditButton': 'toggleEditing',
+      'click #savedSearchAddButton': 'addSavedSearch'
+    },
+    addSavedSearch: function() {
+      this.collection.add(new L.models.SavedSearch());
+    },
+    toggleEditing: function() {
+      this.editing = !this.editing;
+      this.$el.toggleClass("editing", this.editing);
+      _.each(this.subViews, function(v) {
+        v.toggleEditing(this.editing);
+      }, this);
+    },
+    render: function() {
+      this.$el.html(this.template());
+      this.collection.each(function(model) {
+        var view = this._getOrCreateSubview(model);
+        this.$("#savedSearches").append(view.render().$el);
+      }, this);
+      if (!L.preferences.get('showSavedSearches')) {
+        this.$el.hide();
+      }
+
+      this.stopListening();
+      this.listenTo(L.preferences, 'change:showSavedSearches', this.updateShowSavedSearches);
+      this.listenTo(this.collection, 'add', function(model) {
+        console.log("then");
+        var view = this._getOrCreateSubview(model);
+        this.$("#savedSearches").append(view.render().$el);
+        // Auto focus empty saved searches on add.
+        if (this.editing) {
+          view.toggleEditing(true);
+          if (model.get("text") === "") {
+            view.focus();
+          }
+        }
+      });
+      this.listenTo(this.collection, 'remove', function(model) {
+        this._removeSubview(model)
+      });
+      return this;
+    }
+  });
+
+  L.views.SavedSearchView = Backbone.View.extend({
+    className: 'hbox savedSearch',
+    template: L.templates['omnibox/savedsearch'],
+    initialize: function() {
+      $(window).one('beforeunload', function() {
+        this.undelegateEvents();
+        this.stopListening();
+        this.toggleEditing(false);
+      }.bind(this));
+    },
+    events: {
+      'click .text': 'onClick',
+      'click .close-btn': 'onDelete'
+    },
+    onClick: function() {
+      if (!this.editing) {
+        this.model.set('active', !this.model.get('active'));
+      }
+    },
+    focus: function() {
+      this.$(".text").focus();
+    },
+    onDelete: function() {
+      this.model.destroy();
+    },
+    toggleEditing: function(value) {
+      if (arguments.length > 0) {
+        if (this.editing === value) {
+          return;
+        }
+        this.editing = value;
+      } else {
+        this.editing = !this.editing;
+      }
+      this.$(".text").attr('contenteditable', this.editing);
+      if (!this.editing) {
+        this.model.set("text", this.$(".text").text());
+      }
+    },
+    render: function() {
+      this.$el.html(this.template(this.model.toJSON()));
+      this.$el.toggleClass("active", this.model.get("active"));
+      if (this.editing) {
+        this.$(".text").attr('contenteditable', true);
+      }
+
+      this.stopListening();
+      this.listenTo(this.model, {
+        'change:active': function(model, active) {
+          this.$el.toggleClass("active", active);
+        },
+        'change:text': function(model, text) {
+          this.$(".text").text(text);
+        }
+      });
+      return this;
+    }
+  });
 
 })(ListIt);

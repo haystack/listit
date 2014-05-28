@@ -5,7 +5,7 @@
 
 #controls-container {
     border-bottom: 1px solid rgb(207, 167, 28);
-    padding: 10px 0px;
+    padding: 10px 0;
     width: 100%;
     background: rgb(255, 216, 78); /* Old browsers */
     background: -moz-linear-gradient(top, rgb(255,216,78) 0%, rgb(255, 207, 39) 100%); /* FF3.6+ */

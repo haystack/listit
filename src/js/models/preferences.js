@@ -7,7 +7,8 @@
       expandVariables: true,
       hideToolbar: false,
       openHotkey: '',
-      notificationTimeout: 5
+      notificationTimeout: 5,
+      showSavedSearches: true
     },
     /**
      * Specify user settable preferences here. The view will automatically
@@ -40,6 +41,10 @@
       shrinkNotes: {
         type: 'boolean',
         description: 'Collapse Notes' // TODO:Better desc
+      },
+      showSavedSearches: {
+        type: 'boolean',
+        description: 'Show saved search bar'
       },
       hideToolbar: {
         type: 'boolean',

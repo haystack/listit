@@ -206,3 +206,69 @@
 .editor-bottombar {
   width: 100%;
 }
+
+#savedSearchBar {
+  margin-top: 5px;
+  margin-bottom: -8px;
+}
+
+.savedSearch {
+  background: #FFE28D;
+  margin-right: 2px;
+  border-radius: 2px;
+  cursor:pointer;
+  display: inline-flex;
+}
+
+#savedSearchBar.editing #savedSearchEditButton,
+#savedSearchBar.editing #savedSearchAddButton,
+.savedSearch.active {
+  background-color: #FFF0C4;
+}
+
+.savedSearch .text {
+  white-space: nowrap;
+  height: 1em;
+  padding: 2px;
+  min-width: 1em;
+  display: block;
+}
+
+#savedSearchBar.editing .savedSearch {
+  cursor:inherit;
+}
+#savedSearchBar.editing .savedSearch .text {
+  background: white;
+  border: 1px solid grey;
+}
+
+#savedSearchBar #savedSearchAddButton {
+  display: none;
+}
+
+#savedSearchBar.editing #savedSearchAddButton, 
+#savedSearchBar #savedSearchEditButton {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  padding: 3px;
+  background-position: center;
+  background-repeat: no-repeat;
+  opacity: 0.5;
+  border-radius: 2px;
+}
+#savedSearchBar.editing #savedSearchAddButton {
+  background-image: url("../img/savedsearchbar/plus.png");
+}
+#savedSearchBar #savedSearchEditButton {
+  background-image: url("../img/savedsearchbar/edit.png");
+}
+#savedSearchBar.editing .close-btn {
+  width: 1em;
+  height: 1em;
+  padding: 3px;
+  background-position: center;
+  background-image: url("../img/close.png");
+  background-repeat: no-repeat;
+}
+

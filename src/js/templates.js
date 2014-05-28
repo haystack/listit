@@ -128,6 +128,22 @@ __p+='\n<a href="#/options" class="clickable">\n    <img id="optionsIcon" class=
 }
 return __p;
 };
+ListIt.templates['omnibox/savedsearch'] = function(obj){
+var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'')};
+with(obj||{}){
+__p+='<span class="text">'+
+((__t=( text ))==null?'':__t)+
+'</span>\n<div class="close-btn clickable"></div>\n';
+}
+return __p;
+};
+ListIt.templates['omnibox/savedsearchbar'] = function(obj){
+var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'')};
+with(obj||{}){
+__p+='<div id="savedSearches"></div>\n<div class="clickable" id="savedSearchAddButton"></div>\n<div class="flex align-right">\n  <div class="clickable" id="savedSearchEditButton"></div>\n</div>\n';
+}
+return __p;
+};
 ListIt.templates['omnibox/searchbar'] = function(obj){
 var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'')};
 with(obj||{}){
@@ -200,7 +216,7 @@ __p+='\n    <label for="'+
 ((__t=(opt.attrs ))==null?'':__t)+
 ' name="'+
 ((__t=(opt.name))==null?'':__t)+
-'" class="hotkey-field input center" type="input" placeholder="No Hotkey" id="'+
+'" class="hotkey-field input align-center" type="input" placeholder="No Hotkey" id="'+
 ((__t=(opt.name))==null?'':__t)+
 'Field" value="'+
 ((__t=(opt.value))==null?'':__t)+
