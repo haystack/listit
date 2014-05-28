@@ -288,7 +288,6 @@
       this.stopListening();
       this.listenTo(L.preferences, 'change:showSavedSearches', this.updateShowSavedSearches);
       this.listenTo(this.collection, 'add', function(model) {
-        console.log("then");
         var view = this._getOrCreateSubview(model);
         this.$("#savedSearches").append(view.render().$el);
         // Auto focus empty saved searches on add.
@@ -300,7 +299,7 @@
         }
       });
       this.listenTo(this.collection, 'remove', function(model) {
-        this._removeSubview(model)
+        this._removeSubview(model);
       });
       return this;
     }

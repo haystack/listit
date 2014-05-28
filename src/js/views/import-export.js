@@ -34,7 +34,7 @@
       var type = this.$el.find('#importSelect').val();
       var file = this.$el.find('#importFile').get()[0].files[0];
       if (!file) {
-        alert('Select a file first.');
+        window.alert('Select a file first.');
       }
       var fr = new FileReader();
       fr.onload = function() {

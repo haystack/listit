@@ -10,7 +10,7 @@
 
 
 if (window.DEBUG_MODE && window.console && window.console.time) {
-  console.time('load');
+  window.console.time('load');
 }
 
 window.debug = function() {};

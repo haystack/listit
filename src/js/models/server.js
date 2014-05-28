@@ -62,16 +62,16 @@
       if (DEBUG_MODE && window.console && window.console.time) {
         this.listenTo(this, 'change:syncingNotes', function(server, syncing) {
           if (syncing) {
-            console.time('syncing notes');
+            window.console.time('syncing notes');
           } else {
-            console.timeEnd('syncing notes');
+            window.console.timeEnd('syncing notes');
           }
         });
         this.listenTo(this, 'change:syncingLogs', function(server, syncing) {
           if (syncing) {
-            console.time('syncing logs');
+            window.console.time('syncing logs');
           } else {
-            console.timeEnd('syncing logs');
+            window.console.timeEnd('syncing logs');
           }
         });
       }
@@ -143,7 +143,7 @@
       if (options.error) {
         var oldError = options.error;
         options.error = function(xhr, status) {
-          oldError(L.models.Server.errors.NETWORK_FAILURE, status, xhr)
+          oldError(L.models.Server.errors.NETWORK_FAILURE, status, xhr);
         };
       }
 
@@ -349,7 +349,7 @@
      */
     bundleNotes : function() {
       if (DEBUG_MODE && window.console && window.console.time) {
-        console.time('bundle notes');
+        window.console.time('bundle notes');
       }
       var that = this,
           bundle = [],
@@ -376,7 +376,7 @@
       L.notebook.get('deletedNotes').each(function(n) { bundleNote(n, true); });
 
       if (DEBUG_MODE && window.console && window.console.time) {
-        console.timeEnd('bundle notes');
+        window.console.timeEnd('bundle notes');
       }
 
       return bundle;
@@ -385,7 +385,7 @@
       var status = true;
 
       if (DEBUG_MODE && window.console && window.console.time) {
-        console.time('commit notes');
+        window.console.time('commit notes');
       }
 
       // For each
@@ -419,13 +419,13 @@
       L.notebook.set('version', L.notebook.get('version') + 1);
 
       if (DEBUG_MODE && window.console && window.console.time) {
-        console.timeEnd('commit notes');
+        window.console.timeEnd('commit notes');
       }
       return status;
     },
     unbundleNotes: function(result, cb) {
       if (DEBUG_MODE && window.console && window.console.time) {
-        console.time('unbundle notes');
+        window.console.time('unbundle notes');
       }
 
       var magic,
@@ -510,7 +510,7 @@
         unbundleQueue.add(_.bind(L.notebook.save, L.notebook));
         unbundleQueue.add(function() {
           if (DEBUG_MODE && window.console && window.console.time) {
-            console.timeEnd('unbundle notes');
+            window.console.timeEnd('unbundle notes');
           }
           cb();
         });

@@ -4,8 +4,8 @@
 
   var barr = new Barrier();
   if (DEBUG_MODE && window.console && window.console.time) {
-    console.timeEnd('load');
-    console.time('startup');
+    window.console.timeEnd('load');
+    window.console.time('startup');
   }
   _.each([
     function() {
@@ -57,7 +57,7 @@
     }, function() {
       L.setStatus('ready');
       if (DEBUG_MODE && window.console && window.console.time) {
-        console.timeEnd('startup');
+        window.console.timeEnd('startup');
       }
     }
   ], function(fn) {

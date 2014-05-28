@@ -46,7 +46,6 @@
       }
     },
     initialized: function() {
-      var that = this;
       // Stop search when typing but don't start next search until stop.
       this.listenTo(this, 'change:text', function() {
         if (!this.get('searchState')) {
