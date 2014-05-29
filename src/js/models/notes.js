@@ -106,7 +106,7 @@
       if (!(options && options.nosave)) {
         this.save();
       }
-    }
+    },
   });
 
   L.models.NoteCollection = Backbone.Collection.extend({
@@ -333,7 +333,8 @@
     autoFetch: true,
     autoFetchRelated: true,
     defaults : {
-      version: 0
+      version: 0,
+      toBeDestroyed: {}
     },
     isNew: function() {
       return false;
@@ -534,6 +535,14 @@
       note.moveTo(this.get('notes'), options);
       this.trigger("undelete", note, options);
       return note;
+    },
+    destroyNote: function(note, options) {
+      var ToBeDestroyed = this.get('toBeDestroyed');
+      ToBeDestroyed[note.get('id')] = note.get('version')
+      this.set({
+        toBeDestroyed: ToBeDestroyed
+      });
+      this.get('deletedNotes').remove(note);
     },
     getNote: function(id) {
       return (this.get('deletedNotes').get(id) || this.get('notes').get(id));

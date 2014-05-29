@@ -1,4 +1,4 @@
 ListIt.lvent.once('setup:views', function(L, barr) {
   'use strict';
-  L.addPage('trashbin', new L.views.TrashbinPage());
+  L.addPage('trashbin', new L.views.TrashbinPage({collection: L.notebook.get('deletedNotes')}));
 });
