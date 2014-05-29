@@ -479,7 +479,7 @@
                                       //set the created field to be -1. 
           var note = L.notebook.getNote(noteJSON.id);
           if (note) {
-            if (note.get('version') <= noteJSON.version) {
+            if (note.get('version') <= noteJSON.version && !note.get('modified')) {
               note.collection.remove(note);
             }
           }
