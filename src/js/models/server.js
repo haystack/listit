@@ -383,18 +383,16 @@
 
       // Push all the toBeDestroyed Notes
       var toBeDestroyed = L.notebook.get('toBeDestroyed');
-      for (var deletedNoteId in toBeDestroyed) {
-        if (toBeDestroyed.hasOwnProperty(deletedNoteId)) {
-          bundle.push({
-            'jid': deletedNoteId,
-            'version': L.notebook.get('version') || 0,
-            'created': -1,
-            'edited': 0,
-            'contents': "",
-            'deleted': true
-          });
-        }
-      }
+      _.each(toBeDestroyed, function(deletedNoteId, version) {
+        bundle.push({
+          'jid': deletedNoteId,
+          'version': version,
+          'created': -1,
+          'edited': 0,
+          'contents': "",
+          'deleted': true
+        });
+      });
 
       L.notebook.get('notes').chain()
       .filter(function(n) { return n.isValid(); })
@@ -481,14 +479,20 @@
                                       //set the created field to be -1. 
           var note = L.notebook.getNote(noteJSON.id);
           if (note) {
-            note.collection.remove(note);
+            if (note.get('version') <= noteJSON.version) {
+              note.collection.remove(note);
+            }
           }
           return;
         }
 
         // ignore a note that should be destroyed
         if (toBeDestroyed.hasOwnProperty(noteJSON.id)) {
-          return;
+          if (toBeDestroyed[noteJSON.id] < noteJSON.version) {
+            delete toBeDestroyed[noteJSON.id]
+          } else {
+            return; 
+          }
         }
 
         // Add or merge

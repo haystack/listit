@@ -106,7 +106,7 @@
       if (!(options && options.nosave)) {
         this.save();
       }
-    },
+    }
   });
 
   L.models.NoteCollection = Backbone.Collection.extend({
@@ -332,9 +332,11 @@
     url: '/notebook',
     autoFetch: true,
     autoFetchRelated: true,
-    defaults : {
-      version: 0,
-      toBeDestroyed: {}
+    defaults: function(){
+      return {
+        version: 0,
+        toBeDestroyed: {}
+      };
     },
     isNew: function() {
       return false;
@@ -537,11 +539,9 @@
       return note;
     },
     destroyNote: function(note, options) {
-      var ToBeDestroyed = this.get('toBeDestroyed');
-      ToBeDestroyed[note.get('id')] = note.get('version')
-      this.set({
-        toBeDestroyed: ToBeDestroyed
-      });
+      var toBeDestroyed = this.get('toBeDestroyed');
+      toBeDestroyed[note.id] = note.get('version')
+      this.set('toBeDestroyed', toBeDestroyed);
       this.get('deletedNotes').remove(note);
     },
     getNote: function(id) {
