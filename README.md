@@ -120,28 +120,30 @@ Directory                       | Description
 --------------------------------|------------
 `build/<platform>/`             | Build cache
 `debug/<platform>/`             | Debug build destination
-`platforms/<platform>/build.xml`  | Platform specific build file
-`release/<platform>/`             | Release build destination
+`platforms/<platform>/build.xml` | Platform specific build file
+`release/<platform>/`            | Release build destination
 `src/`                          | Application source code (see [Source Layout](#source-layout))
 `build.xml`                     | Global build file; builds all platforms
-`common.xml`                    | Common build targets; included in platform build files
+`platform-common.xml`           | Common platform build targets (included by platform build files)
+`base-common.xml`               | Common global build targets
 `global.properties`             | Global build properties
 `resources.xml`                 | Global resource definitions; platforms use these when including javascript/css
 `util.xml`                      | Common utility build macros
 
 
-### Source Layout
+### Source Layout (under `src/`)
 
-Directory               | Description
-------------------------|------------
-`css/`                  | CSS assets
-`css/<platform>/`          | Platform specific CSS assets
-`js/`                   | JavaScript Assets (see [JavaScript Layout](#javascript-layout))
-`js/<platform>/`           | Platform specific JavaScript assets
-`img/`                  | Image assets
-`templates/`            | Underscore HTML templates (see [Templates](#templates))
+Directory                         | Description
+----------------------------------|------------
+`css/`                            | CSS assets
+`css/platforms/<platform>/`       | Platform specific CSS assets
+`js/`                             | JavaScript Assets (see [JavaScript Layout](#javascript-layout))
+`js/platforms/<platform>/`        | Platform specific JavaScript assets
+`img/`                            | Image assets
+`templates/`                      | Underscore HTML templates (see [Templates](#templates))
+`templates/platforms/<platform>/` | Platform specific templates
 
-### JavaScript Layout
+### JavaScript Layout (under `src/js/`)
 
 Directory               | Description
 ------------------------|------------
@@ -157,7 +159,7 @@ Directory               | Description
 `lititStorage.js`       | Fallback model storage cache that uses local storage (see [Storage](#storage))
 `main.js`               | Main setup file run before anything else; used to setup the environment
 `router.js`             | The backbone router (see [Pages](#pages))
-`setup.js`              | Triggers the setup signals (see [Setup](#setup))
+`setup.js`              | Triggers the setup signals (see [Setup](#setup), you probably won't need to mess with this)
 `setup-models.js`       | Model setup file (see [Setup](#setup))
 `setup-views.js`        | View setup file (see [Setup](#setup))
 `templates.js`          | The compiled templates; auto-generated (see [Templates](#templates))
@@ -172,10 +174,14 @@ using a template, it must be compiled. Templates are automatically compiled when
 compiling list.it but can be compiled separately by issuing `ant
 templates`.
 
-To render a template stored in `src/templates/<path>.html`, with the context
-`<ctx>`, call `ListIt.templates[<path>](<ctx>)`. For example, the main page
-template, stored at `src/templates/pages/main.html` can be rendered by calling
-`ListIt.templates['pages/main']()`.
+To render a (non-platform-specific) template stored in
+`src/templates/<path>.html`, with the context `<ctx>`, call
+`ListIt.templates[<path>](<ctx>)`. For example, the main page template, stored
+at `src/templates/pages/main.html` can be rendered by calling
+`ListIt.templates['pages/main']()`. To render a platform specific template,
+just drop the `platforms/<platform>/` prefix. That is, to render
+`src/templates/platforms/firefox/ff-alert.html`, you would call
+`ListIt.templates['ff-alert']()`.
 
 ## Collectors
 
@@ -216,7 +222,7 @@ logging. In general, these code snippets should simply trigger `user:<action>`.
 Observers should listen to for these events and act appropriately. __NOTE:__ A
 `user:<action>` event should never include information specific to logging
 functionality; they should only be used to indicate that the user has performed
-some action.
+some action. Please don't pollute the code base.
 
 ## Event Interfaces
 
@@ -397,6 +403,15 @@ To release a platform, change to the platform's directory
 Release builds appear under `release/<platform>`.
 
 *Note: to build all platforms, issue `ant release` in the root directory.*
+
+To change the version, edit global.properties
+
+#### Nightly Builds
+
+To build a nightly build (using the nightly build versioning system (the date)
+instead of the normal version), run
+
+    ant nightly
 
 ### Debug
 
