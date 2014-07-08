@@ -9,8 +9,6 @@
     <property name="pages.help.tmpl" location="${listit.templates.paged}" />
     <property name="pages.addnotebox.html" location="${build.dir}/addnotebox.html" />
 
-    <property name="privatekey" location="${platform.dir}/key.pem" />
-
     <resources id="assets.sidebar.js">
         <resources refid="js.libs.client" />
         <resources refid="js.common" />

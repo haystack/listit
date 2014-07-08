@@ -16,6 +16,8 @@
     <property name="listit.templates.file" location="${listit.js.dir}/templates.js" />
     <property name="listit.img.dir" location="${listit.dir}/img" />
 
+    <property name="privatekey" location="${root.dir}/key.pem" />
+
     <property name="base-build.dir" location="${root.dir}/build" />
     <property name="base-platform.dir" location="${root.dir}/platforms" />
     <property name="base-debug.dir" location="${root.dir}/debug" />
