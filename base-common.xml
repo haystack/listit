@@ -7,6 +7,7 @@
     <property name="tools.underscore" location="${tools.dir}/underscore.js" />
     <property name="tools.jshint" location="${tools.dir}/ant-jshint-0.3.6-SNAPSHOT-deps.jar" />
     <property name="tools.pngtastic" location="${tools.dir}/pngtastic-0.5.jar" />
+    <property name="tools.antcontrib" location="${tools.dir}/ant-contrib-1.0b3.jar" />
 
     <taskdef name="jshint" classname="com.philmander.jshint.JsHintAntTask" 
         classpath="${tools.jshint}" />
@@ -14,7 +15,8 @@
     <taskdef name="pngtastic" classname="com.googlecode.pngtastic.ant.PngOptimizerTask" 
         classpath="${tools.pngtastic}" />
 
-    <taskdef resource="net/sf/antcontrib/antlib.xml"/>
+    <taskdef resource="net/sf/antcontrib/antlib.xml"
+        classpath="${tools.antcontrib}" />
 
     <!-- Properties -->
     <property file="${root.dir}/global.properties" />

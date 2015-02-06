@@ -1,7 +1,11 @@
 <!-- vim: set ft=ant : -->
 <project name="util">
-    <taskdef resource="net/sf/antcontrib/antlib.xml"/>
     <dirname property="root.dir" file="${ant.file.util}" />
+    <property name="tools.dir" location="${root.dir}/tools" />
+    <property name="tools.antcontrib" location="${tools.dir}/ant-contrib-1.0b3.jar" />
+    <taskdef resource="net/sf/antcontrib/antlib.xml"
+        classpath="${tools.antcontrib}" />
+
     <macrodef name="link">
         <attribute name="overwrite"/>
         <attribute name="link"/>

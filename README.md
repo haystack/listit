@@ -389,9 +389,8 @@ It's a mess but that describes pretty much every build system.
 
 ### Requirements
 
-To build list.it, you need both [Apache Ant](https://ant.apache.org/) and
-[Ant Contrib](http://ant-contrib.sourceforge.net/). Everything
-else is included.
+To build list.it, you need both [Apache Ant](https://ant.apache.org/).
+Everything else is included.
 
 ### Release Builds
 
