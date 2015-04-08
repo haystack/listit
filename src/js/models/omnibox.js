@@ -88,10 +88,11 @@
       options = options || {};
       var contents = L.util.strip(this.get('text'));
       var meta = options.meta || {};
-      if (options.includeSearch) {
-        var searchText = _.str.trim(this.get('searchText'));
+      if (!options.excludeSearch) {
+        // Do this by extracting terms to get rid of negative terms...
+        var searchText = L.util.extractTerms(this.get('searchText')).positive.join(' ');
         if (searchText) {
-          contents = searchText + ' ' + contents;
+          contents = searchText + '<br />' + contents;
         }
       }
       if (options.pinned && !_.str.startsWith(contents, '!')) {

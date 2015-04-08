@@ -105,7 +105,7 @@
       // Hotkeys
       'keydown[shift+return]  .editor'    : '_onSaveTriggered',
       'keydown[ctrl+s]        .editor'    : '_onSaveTriggered',
-      'keydown[ctrl+return]   .editor'    : '_onSaveWithSearchTriggered',
+      'keydown[ctrl+return]   .editor'    : '_onSaveWithoutSearchTriggered',
       'keydown[esc]           .editor'    : '_onResetTriggered',
       'keydown[esc]           .searchbar input' : '_onHideSearchbarTriggered',
       'click                  .searchbar .clear-btn' : '_onSearchClear',
@@ -146,8 +146,8 @@
       this.save();
       event.preventDefault();
     },
-    _onSaveWithSearchTriggered: function(event) {
-      this.save({includeSearch: true});
+    _onSaveWithoutSearchTriggered: function(event) {
+      this.save({excludeSearch: true});
       event.preventDefault();
     },
     /**
