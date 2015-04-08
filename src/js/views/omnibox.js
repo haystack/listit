@@ -84,15 +84,15 @@
       // Bind
       var that = this;
       $(window).on('keydown', null, 'ctrl+f', function(event) {
+        // If the omnibox is actually visible.
         if (that.$el.is(':visible')) {
           event.preventDefault(); // Don't open the findbar
-          that.model.set('searchState', true);
-          that.$searchbar.select().focus();
-        }
-      });
-      $(window).on('keydown', null, 'ctrl+x', function(event) {
-        if (that.$el.is(':visible')) {
-          that.model.set('searchState', false);
+          if (that.$searchbar.is(':focus')) {
+            that.model.set('searchState', false);
+          } else {
+            that.model.set('searchState', true);
+            that.$searchbar.select().focus();
+          }
         }
       });
       return this;
