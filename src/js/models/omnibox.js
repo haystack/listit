@@ -58,12 +58,8 @@
         }
       });
       this.listenTo(this, 'change:searchState', function(m, state) {
-        if (state) {
-          // Default to current omnibox text.
-          if (!this.get('searchText')) {
-            this.set('searchText', _.str.trim(_.str.stripTags(this.get('text') || '')));
-          }
-        } else {
+        // Clear searchText on searchState change.
+        if (!state) {
           this.set('searchText', '');
         }
         this.requestSearch();
