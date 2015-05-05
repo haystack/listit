@@ -17,7 +17,6 @@
       }
       var that = this;
       var iframe;
-      var windowHeight = $(window).height();
       if (this.wysihtml5entry.composer) {
         iframe = this.wysihtml5entry.composer.iframe;
       }
@@ -25,9 +24,19 @@
       _.delay(function() {
         if (that.wysihtml5entry.currentView === that.wysihtml5entry.composer) {
           // Using composer
-          iframe.contentDocument.body.style.maxHeight = (windowHeight - 60) + 'px';
           iframe.style.height = 'auto';
           iframe.style.height = iframe.contentDocument.body.clientHeight + 'px';
+
+          var height = iframe.contentDocument.body.clientHeight;
+          var bottom = height + $(iframe).offset().top;
+          // 60 is a dirty hack but it ensures that this triggers early.
+          var windowHeight = $(window).height() - 60;
+          if (bottom > windowHeight) {
+            iframe.contentDocument.body.style.maxHeight = height - (bottom - windowHeight) + 'px';
+          } else {
+            iframe.contentDocument.body.style.maxHeight = '';
+          }
+
           txtbox.style.height = iframe.style.height;
         } else {
           // Not using composer
