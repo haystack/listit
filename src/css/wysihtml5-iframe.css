@@ -1,8 +1,8 @@
 html, body {
-  padding: 0px;
+  padding: 1px;
   margin: 0px;
   height: auto;
-  overflow: scroll;
+  overflow: auto;
   background-color: transparent;
   line-height: 1.2;
 
