@@ -2,6 +2,7 @@ html, body {
   padding: 0px;
   margin: 0px;
   height: auto;
+  overflow: scroll;
   background-color: transparent;
   line-height: 1.2;
 
