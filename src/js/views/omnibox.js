@@ -87,6 +87,7 @@
         // If the omnibox is actually visible.
         if (that.$el.is(':visible')) {
           event.preventDefault(); // Don't open the findbar
+          event.stopPropagation(); // Otherwise, we close the findbar with the same event...
           if (that.$searchbar.is(':focus')) {
             that.model.set('searchState', false);
           } else {
