@@ -408,11 +408,6 @@
         }
         note.set("modified", false);
 
-        // Incriment version iff note already existed.
-        if (noteResponse.status === 200) {
-          note.set("version", note.get('version')+1);
-        }
-
         note.save();
       });
       // Update note collection version.
