@@ -7,7 +7,7 @@
         "Lock": false,
         "WYSIHTML5_CSS": false,
         "debug": false,
-        "DEBUG": false,
+        "DEBUG_MODE": false,
         "wysihtml5": false,
         "wysihtml5ParserRules": false,
         "KeyCode": false,
