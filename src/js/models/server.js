@@ -410,8 +410,6 @@
 
         note.save();
       });
-      // Update note collection version.
-      L.notebook.set('version', L.notebook.get('version') + 1);
 
       if (DEBUG_MODE && window.console && window.console.time) {
         window.console.timeEnd('commit notes');
