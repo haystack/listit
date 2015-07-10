@@ -26,9 +26,16 @@
       }
     },
     render: function() {
+      var that = this;
       this.$el.html(L.templates["pages/main"]());
 
-      var that = this;
+      $(window).on('keydown', null, 'F5', function(event) {
+        if (that.$el.is(':visible')) {
+          event.preventDefault();
+          L.server.syncNotes();
+        }
+      });
+
       _.each(this.panels, function(view, id) {
         view.setElement(that.$("#"+id));
         view.render();
