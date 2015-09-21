@@ -389,7 +389,7 @@ It's a mess but that describes pretty much every build system.
 
 ### Requirements
 
-To build list.it, you need both [Apache Ant](https://ant.apache.org/).
+To build list.it, you need [Apache Ant](https://ant.apache.org/).
 Everything else is included.
 
 ### Release Builds
