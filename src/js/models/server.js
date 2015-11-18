@@ -377,7 +377,7 @@
         bundle.push({
           'jid': deletedNoteId,
           'version': version,
-          'created': -1,
+          'created': 0,
           'edited': 0,
           'contents': "",
           'deleted': true
