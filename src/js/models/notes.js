@@ -548,6 +548,7 @@
       // Needed to trigger change events.
       this.set('toBeDestroyed', toBeDestroyed);
       note.collection.remove(note);
+      note.destroy();
     },
     getNote: function(id) {
       return (this.get('deletedNotes').get(id) || this.get('notes').get(id));
