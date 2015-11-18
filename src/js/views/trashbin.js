@@ -25,8 +25,6 @@
     },
 
     destroy: function(event){
-      this.model.attributes.contents = "";
-      this.model.attributes.deleted = true;
       this.$el.stop().fadeOut({queue: false}, 200).slideUp(300, function() {
         el.remove();
       });
