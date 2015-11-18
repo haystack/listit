@@ -373,9 +373,9 @@
 
       // Push all the toBeDestroyed Notes
       var toBeDestroyed = L.notebook.get('toBeDestroyed');
-      _.each(toBeDestroyed, function(deletedNoteId, version) {
+      _.each(toBeDestroyed, function(version, deletedNoteId) {
         bundle.push({
-          'jid': deletedNoteId,
+          'jid': parseInt(deletedNoteId, 10),
           'version': version,
           'created': 0,
           'edited': 0,
