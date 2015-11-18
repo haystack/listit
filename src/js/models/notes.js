@@ -544,9 +544,10 @@
     },
     destroyNote: function(note, options) {
       var toBeDestroyed = this.get('toBeDestroyed');
-      toBeDestroyed[note.id] = note.get('version')
+      toBeDestroyed[note.id] = note.get('version');
+      // Needed to trigger change events.
       this.set('toBeDestroyed', toBeDestroyed);
-      this.get('deletedNotes').remove(note);
+      note.collection.remove(note);
     },
     getNote: function(id) {
       return (this.get('deletedNotes').get(id) || this.get('notes').get(id));
