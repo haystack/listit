@@ -332,8 +332,11 @@
     url: '/notebook',
     autoFetch: true,
     autoFetchRelated: true,
-    defaults : {
-      version: 0
+    defaults: function(){
+      return {
+        version: 0,
+        toBeDestroyed: {}
+      };
     },
     isNew: function() {
       return false;
@@ -538,6 +541,12 @@
       note.moveTo(this.get('notes'), options);
       this.trigger("undelete", note, options);
       return note;
+    },
+    destroyNote: function(note, options) {
+      var toBeDestroyed = this.get('toBeDestroyed');
+      toBeDestroyed[note.id] = note.get('version')
+      this.set('toBeDestroyed', toBeDestroyed);
+      this.get('deletedNotes').remove(note);
     },
     getNote: function(id) {
       return (this.get('deletedNotes').get(id) || this.get('notes').get(id));

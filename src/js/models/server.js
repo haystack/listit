@@ -370,6 +370,20 @@
         'contents': JSON.stringify({noteorder:L.notebook.get('notes').getOrder()}),
         'deleted': true
       });
+
+      // Push all the toBeDestroyed Notes
+      var toBeDestroyed = L.notebook.get('toBeDestroyed');
+      _.each(toBeDestroyed, function(deletedNoteId, version) {
+        bundle.push({
+          'jid': deletedNoteId,
+          'version': version,
+          'created': -1,
+          'edited': 0,
+          'contents': "",
+          'deleted': true
+        });
+      });
+
       L.notebook.get('notes').chain()
       .filter(function(n) { return n.isValid(); })
       .each(function(n) { bundleNote(n, false); });
@@ -426,6 +440,7 @@
           that = this,
           notes = L.notebook.get('notes'),
           deletedNotes = L.notebook.get('deletedNotes'),
+          toBeDestroyed = L.notebook.get('toBeDestroyed'),
           toAdd = [],
           toAddDeleted = [],
           unbundleQueue = new ActionQueue(10);
@@ -443,6 +458,27 @@
             newVersion = noteJSON.version;
           }
           return;
+        }
+
+        // Handle toBeDestroyed notes
+        if (noteJSON.created == -1) { //this is a temporary implementation of destroying notes
+                                      //set the created field to be -1. 
+          var note = L.notebook.getNote(noteJSON.id);
+          if (note) {
+            if (note.get('version') <= noteJSON.version && !note.get('modified')) {
+              note.collection.remove(note);
+            }
+          }
+          return;
+        }
+
+        // ignore a note that should be destroyed
+        if (toBeDestroyed.hasOwnProperty(noteJSON.id)) {
+          if (toBeDestroyed[noteJSON.id] < noteJSON.version) {
+            delete toBeDestroyed[noteJSON.id]
+          } else {
+            return; 
+          }
         }
 
         // Add or merge

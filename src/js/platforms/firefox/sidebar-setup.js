@@ -16,4 +16,9 @@ ListIt.lvent.once('setup:views:after', function(L, barr) {
     var browser = window.top.getBrowser();
     browser.selectedTab = browser.addTab('chrome://listit/content/webapp/help.html');
   });
+  L.router.route('trashbin', 'trashbin', function() {
+    this.navigate('', {trigger: false});
+    var browser = window.top.getBrowser();
+    browser.selectedTab = browser.addTab('chrome://listit/content/webapp/trashbin.html');
+  });
 });
