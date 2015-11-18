@@ -460,23 +460,23 @@
           return;
         }
 
-        // Handle toBeDestroyed notes
-        if (noteJSON.created == -1) { //this is a temporary implementation of destroying notes
-                                      //set the created field to be -1. 
+        // Handle remotely destroyed notes.
+        if (noteJSON.deleted && noteJSON.contents === "") {
           var note = L.notebook.getNote(noteJSON.id);
-          if (note) {
-            if (note.get('version') <= noteJSON.version && !note.get('modified')) {
-              note.collection.remove(note);
-            }
+          if (note && note.get('version') <= noteJSON.version && !note.get('modified')) {
+            // Destroy locally if necessary.
+            L.notebook.destroyNote(note);
           }
           return;
         }
 
-        // ignore a note that should be destroyed
+        // Handle locally destroyed notes.
         if (toBeDestroyed.hasOwnProperty(noteJSON.id)) {
           if (toBeDestroyed[noteJSON.id] < noteJSON.version) {
-            delete toBeDestroyed[noteJSON.id]
+            // don't distroy a note modified remotely.
+            delete toBeDestroyed[noteJSON.id];
           } else {
+            // ignore a note that should be destroyed
             return; 
           }
         }
