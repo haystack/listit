@@ -205,13 +205,14 @@
         <attribute name="object" />
         <element name="fileset" type="fileset"/>
         <![CDATA[
-        try {
-            // Java 8 Compat.
-            // https://bugs.openjdk.java.net/browse/JDK-8025132
-            load('nashorn:mozilla_compat.js')
-        } catch(e) {}
-        importPackage(Packages.java.io);
-        importPackage(Packages.org.apache.tools.ant.util);
+        var imports = JavaImporter(Packages.java.io, Packages.org.apache.tools.ant.util);
+
+        var FileWriter = imports.FileWriter;
+        var FileReader = imports.FileReader;
+        var File = imports.File;
+        var FileUtils = imports.FileUtils;
+
+
         var br = String(project.getProperty("line.separator"));
         
         function readFile(file) {
