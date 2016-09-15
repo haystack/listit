@@ -14,9 +14,13 @@
     },
     initialize: function() {
       var that = this;
-      window.onbeforeunload = function() {
+      window.onbeforeunload = function(e) {
         if (that._rendered) {
-          return "You have an unsaved list.it note open.";
+          var message = "You have an unsaved list.it note open.";
+          e.returnValue = message;
+          return message;
+        } else {
+          return undefined;
         }
       };
     },
