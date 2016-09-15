@@ -28,10 +28,8 @@
       this.$el.stop().fadeOut({queue: false}, 200).slideUp(300, function() {
         this.remove();
       });
-      L.notebook.destroyNote(this.model)
+      L.notebook.destroyNote(this.model);
     }
-
-
   });
 
   L.views.TrashbinPage = Backbone.View.extend({
@@ -43,7 +41,7 @@
     },
 
     addNote: function(note) {
-      var noteview = new L.views.TrashbinNoteView({model: note})
+      var noteview = new L.views.TrashbinNoteView({model: note});
       noteview.render();
       this.$el.children('#trashbin-body').prepend(noteview.$el);
     },
