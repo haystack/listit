@@ -60,7 +60,7 @@
     },
     updateMeta: function(options) {
       this.$el.prop('className', this.className);
-      this.$el.toggleClass('pinned', this.model.get('meta', {}).pinned);
+      this.$el.toggleClass('pinned', !!this.model.get('meta', {}).pinned);
     },
     updateContents: function(options) {
       this.$el.children('.contents').html(this.model.get('contents'));
