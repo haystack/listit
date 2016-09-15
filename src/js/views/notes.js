@@ -214,8 +214,8 @@
       });
       this.listenTo(this.collection, 'reset', _.mask(this.reset, 1));
       this.listenTo(this.collection, 'sort', _.mask(this.sort));
-      this.listenTo(L.preferences, 'change:shrinkNotes', this.updateNoteShrinkState);
-      this.listenTo(L.sidebar, 'change:searchFail', this.updateSearchStatus);
+      this.listenTo(L.preferences, 'change:shrinkNotes', _.mask(this.setShrinkNotes, 2));
+      this.listenTo(this.collection, 'change:searchFail', _.mask(this.setSearchFailed, 2));
       $(window).one('beforeunload', function() {
         that.undelegateEvents();
         that.stopListening();
@@ -238,14 +238,14 @@
     onStopEditing: function() {
       this.$container.sortable("enable");
     },
-    updateSearchStatus : function(model, state) {
+    setSearchFailed : function(state) {
       if (!this._rendered) {
         return;
       }
 
       this.$el.toggleClass('search-failed', state);
     },
-    updateNoteShrinkState : function(model, state) {
+    setShrinkNotes : function(state) {
       if (!this._rendered) {
         return;
       }
@@ -428,8 +428,8 @@
         });
 
         this._rendered = true;
-        this.updateNoteShrinkState(L.preferences, L.preferences.get('shrinkNotes'));
-        this.updateSearchStatus(L.sidebar, L.sidebar.searchFail);
+        this.setShrinkNotes(L.preferences.get('shrinkNotes'));
+        this.setSearchFailed(this.collection.searchFail);
       }
       _.defer(_.bind(this.reset, this));
       return this;
