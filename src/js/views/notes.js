@@ -60,11 +60,7 @@
     },
     updateMeta: function(options) {
       this.$el.prop('className', this.className);
-      if (this.model.get('meta', {}).pinned) {
-        this.$el.addClass('pinned');
-      } else {
-        this.$el.removeClass('pinned');
-      }
+      this.$el.toggleClass('pinned', this.model.get('meta', {}).pinned);
     },
     updateContents: function(options) {
       this.$el.children('.contents').html(this.model.get('contents'));
@@ -253,12 +249,7 @@
       if (!this._rendered) {
         return;
       }
-
-      if (state) {
-        this.$el.addClass('shrink');
-      } else {
-        this.$el.removeClass('shrink');
-      }
+      this.$el.toggleClass('shrink', state);
     },
     checkLoadMore: function() {
       var scrollTop = this.$el.scrollTop(),
