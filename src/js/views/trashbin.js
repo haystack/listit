@@ -3,13 +3,11 @@
 
   L.views.TrashbinNoteView = Backbone.View.extend({
     initialize: function(options) {
-      this.listenTo(this.model, 'change:contents', _.mask(this.updateContents, 2));
+      this.listenTo(this.model, 'change:contents', _.mask(this.render));
     },
 
     render: function() {
-      if(!this.model.get('deleted') == true){
-        this.$el.html(L.templates["trashbin-note"]({contents: this.model.get('contents')}));
-      }
+      this.$el.html(L.templates["trashbin-note"]({contents: this.model.get('contents')}));
     },
 
     events: {
@@ -53,7 +51,6 @@
     },
 
     addAll: function() {
-      var deleted_notes = L.notebook.get('deletedNotes');
       var that = this;
       this.collection.each(function(note) {
         that.addNote(note);
