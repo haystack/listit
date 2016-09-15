@@ -35,17 +35,21 @@
         page.css({
           left: sign*(-100)+"%",
           right: sign*(100)+"%",
-          display: 'block'
+          display: 'block',
+          visibility: 'visible'
         });
         $('.page:visible').not(page).animate({
           left: sign*(100)+"%",
           right: sign*(-100)+"%"
+        }, function() {
+          $(this).hide();
         });
         page.animate({
           left: 0,
           right: 0
         });
       } else {
+        $('.page').not(page).css({visibility: 'hidden'});
         page.show();
       }
 
