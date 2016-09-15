@@ -89,6 +89,10 @@ ListIt.lvent.once("setup:models:after", function(L, barr) {
           "iframe.src = chrome.extension.getURL('addnotebox.html');" +
           "iframe.onload = function() { window.setTimeout(function() { iframe.style['display'] = 'block'; },0) };" + // Prevents flickering.
           "document.body.appendChild(iframe);"
+      }, function(results) {
+        if (_.isUndefined(results)) {
+          delete addnotePages[fromTabId];
+        }
       });
     } else if (!addnotePage.port) {
       addnotePage.pending.push(contents);
