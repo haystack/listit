@@ -11,11 +11,6 @@
         that.stopListening();
       });
     },
-    redraw: function() {
-      if (this._rendered) {
-        this.render();
-      }
-    },
     render: function() {
       this.$el.html(L.templates["toolbar"]({
         items: ['mode',

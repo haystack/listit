@@ -12,14 +12,19 @@
         that.closeEditor();
       });
       this.template = L.templates["note"];
-      this.listenTo(this.model, 'change:contents', _.mask(this.updateContents, 2));
-      this.listenTo(this.model, 'change:meta', _.mask(this.updateMeta, 2));
+      this.listenTo(this.model, 'change:contents', _.mask(this._updateContents, 2));
+      this.listenTo(this.model, 'change:meta', _.mask(this._updateMeta, 2));
     },
     remove : function(options) {
       if (this._rendered) {
-        this.closeEditor();
-        this.cleanupEditor();
         var el = this.$el;
+
+        this.closeEditor();
+        if (this.editor) {
+          this.editor.remove();
+          delete this.editor;
+        }
+
         if (options && options.user) {
           el.stop().fadeOut({queue: false}, 200).slideUp(300, function() {
             el.remove();
@@ -47,52 +52,24 @@
         this.$el.attr("data-note", this.model.id); // Useful for debugging/matching etc.
         this._rendered = true;
         this.$el.html(this.template(this.model.toJSON()));
-        this.updateMeta();
+        this._updateMeta();
       }
 
       return this;
     },
-    cleanupEditor: function() {
-      if (this.editor) {
-        this.editor.remove();
-        delete this.editor;
-      }
-    },
-    updateMeta: function(options) {
-      this.$el.prop('className', this.className);
-      this.$el.toggleClass('pinned', !!this.model.get('meta', {}).pinned);
-    },
-    updateContents: function(options) {
-      this.$el.children('.contents').html(this.model.get('contents'));
-    },
     events: {
-      'click                  .close-btn'           : 'onRemoveClicked',
-      'click                  .contents'            : 'onClick',
-      'click                  .contents a'          : 'onLinkOpen',
-      'click                  .contents .listit_tag': 'onTagClick',
-      'keyup                  .contents'            : 'onKeyUp',
-      'blur                   .editor'              : 'onBlur',
-      'keydown[shift+return]  .editor'              : 'onCloseTriggered',
-      'keydown[ctrl+s]        .editor'              : 'onCloseTriggered',
-      'keydown[esc]           .editor'              : 'onCloseTriggered',
-      'click                  .pin-icon'            : 'onPinToggle',
-      'resize                 .editor'              : 'onResizeEditor',
+      'click                  .close-btn'           : '_onRemoveClicked',
+      'click                  .contents'            : '_onNoteClicked',
+      'click                  .contents a'          : '_onLinkOpen',
+      'click                  .contents .listit_tag': '_onTagClicked',
+      'keyup                  .contents'            : '_onKeyUp',
+      'blur                   .editor'              : '_onBlur',
+      'keydown[shift+return]  .editor'              : '_onCloseTriggered',
+      'keydown[ctrl+s]        .editor'              : '_onCloseTriggered',
+      'keydown[esc]           .editor'              : '_onCloseTriggered',
+      'click                  .pin-icon'            : '_onPinToggle',
+      'resize                 .editor'              : '_onResizeEditor',
       'mousedown              .pin-icon'            : function(event){event.preventDefault();}
-    },
-    onLinkOpen: function(event) {
-      this.model.trigger('user:open-bookmark', this.model, this, event.target.href);
-      event.stopPropagation();
-    },
-    onRemoveClicked: function() {
-      L.notebook.trashNote(this.model, {user: true});
-      return false;
-    },
-    onResizeEditor: function() {
-      this.$el.scrollIntoView();
-    },
-    onTagClick: function(event) {
-      L.omnibox.tagToggle(event.target.textContent);
-      return false;
     },
     expand: function() {
       this.$el.css('height', 'auto');
@@ -125,7 +102,7 @@
       this.editor.focus();
       this.model.trigger('user:edit', this.model, this);
     },
-    onBlur: function() {
+    _onBlur: function() {
       var that = this;
       if (!this.editor || this.editor.isShowingDialog()) {
         return;
@@ -139,18 +116,17 @@
         }
       });
     },
-    onCloseTriggered: function(e) {
-      if (this.editor && !this.editor.isShowingDialog()) {
-        e.preventDefault();
-        this.closeEditor();
-      }
-    },
     closeEditor: function() {
       if (this._editorOpen) {
         var $contentsEl = this.$('.contents'),
             $editorEl = this.$('.editor-container');
+
+        // Save Text
+        this.model.changeContents(this.editor.getText(), window);
+        this.model.trigger('user:save', this.model, this);
+
+        // Close the editor
         this._editorOpen = false;
-        this.storeText();
         this.collapse();
         $editorEl.hide();
         this.$el.trigger('stopediting');
@@ -158,16 +134,42 @@
         $contentsEl.show();
       }
     },
-    onClick: function(e) {
+    _updateMeta: function(options) {
+      this.$el.prop('className', this.className);
+      this.$el.toggleClass('pinned', !!this.model.get('meta', {}).pinned);
+    },
+    _updateContents: function(options) {
+      this.$el.children('.contents').html(this.model.get('contents'));
+    },
+    _onLinkOpen: function(event) {
+      this.model.trigger('user:open-bookmark', this.model, this, event.target.href);
+      event.stopPropagation();
+    },
+    _onRemoveClicked: function() {
+      L.notebook.trashNote(this.model, {user: true});
+      // stop jquery click event
+      return false;
+    },
+    _onResizeEditor: function() {
+      this.$el.scrollIntoView();
+    },
+    _onTagClicked: function(event) {
+      L.omnibox.tagToggle(event.target.textContent);
+      // stop jquery click event
+      return false;
+    },
+    _onCloseTriggered: function(e) {
+      if (this.editor && !this.editor.isShowingDialog()) {
+        e.preventDefault();
+        this.closeEditor();
+      }
+    },
+    _onNoteClicked: function(e) {
       this.expand();
       this.openEditor();
     },
-    storeText: function() {
-      this.model.changeContents(this.editor.getText(), window);
-      this.model.trigger('user:save', this.model, this);
-    },
     //if editor is visible, gets/sets text through editor - otherwise, through model
-    onPinToggle: function(event) {
+    _onPinToggle: function(event) {
       if (this.$('.editor-container').is(":visible")) {
         if (L.util.strip(this.editor.getText())[0] === '!') {
           this.editor.replaceText(/!+ */, '');
@@ -186,7 +188,7 @@
         this.model.changeContents(text);
       }
     }
-    /*onCancel: function(event){
+    /*_onCancel: function(event){
       var $contentsEl = this.$('.contents'),
           $editorEl = this.$('.editor-container');
       if ($editorEl.is(":visible")) {
@@ -204,14 +206,12 @@
       var that = this;
       this.subViews = {}; // Note views
       this.renderNext = 0;
-      this.listenTo(this.collection, 'add', _.mask(this.addNote, 0));
-      this.listenTo(this.collection, 'remove', function(note, col, options) {
-        that.removeNote(note, _.defaults({}, options));
-      });
+      this.listenTo(this.collection, 'add', _.mask(this._onAdd, 0));
+      this.listenTo(this.collection, 'remove', _.mask(this._onRemove, 0, 2));
       this.listenTo(this.collection, 'reset', _.mask(this.reset, 1));
       this.listenTo(this.collection, 'sort', _.mask(this.sort));
-      this.listenTo(L.preferences, 'change:shrinkNotes', _.mask(this.setShrinkNotes, 2));
-      this.listenTo(this.collection, 'change:searchFail', _.mask(this.setSearchFailed, 2));
+      this.listenTo(L.preferences, 'change:shrinkNotes', _.mask(this.setShrinkNotes, 1));
+      this.listenTo(this.collection, 'change:searchFail', _.mask(this.setSearchFailed, 1));
       $(window).one('beforeunload', function() {
         that.undelegateEvents();
         that.stopListening();
@@ -219,144 +219,22 @@
       // Load more if needed on window resize.
       $(window).on("resize", function() {
         if (that._rendered) {
-          that.lazyLoadMore();
+          that._lazyLoadMore();
         }
       });
     },
     events: {
-      'scroll': 'onScroll',
-      'stopediting .note': 'onStopEditing',
-      'startediting .note': 'onStartEditing'
+      'scroll': '_onScroll',
+      'stopediting .note': '_onStopEditing',
+      'startediting .note': '_onStartEditing'
     },
-    onStartEditing: function() {
-      this.$container.sortable("disable");
-    },
-    onStopEditing: function() {
-      this.$container.sortable("enable");
-    },
-    setSearchFailed : function(state) {
-      if (!this._rendered) {
-        return;
-      }
-
-      this.$el.toggleClass('search-failed', state);
-    },
-    setShrinkNotes : function(state) {
-      if (!this._rendered) {
-        return;
-      }
-      this.$el.toggleClass('shrink', state);
-    },
-    checkLoadMore: function() {
-      var scrollTop = this.$el.scrollTop(),
-          containerHeight = this.$el.parent().height(),
-          listHeight = this.$container.height();
-
-      return (scrollTop + 2*containerHeight) > listHeight;
-    },
-    onScroll: function() {
-      // Load on scroll.
-      this.loadMore();
-    },
-    loadMore: function() {
-      var view, note;
-      while (this.collection.size() > this.renderNext && this.shouldRenderAt(this.renderNext)) {
-        note = this.collection.at(this.renderNext);
-        view = this.subViews[note.id];
-        if (!view) {
-          view = this.subViews[note.id] = new L.views.NoteView({model: note});
-        }
-        if (!view.isVisible()) {
-          this.insertAt(this.renderNext, view);
-        }
-        this.renderNext += 1;
-      }
-    },
-    lazyLoadMore: _.debounce(function() {
-      return this.loadMore();
-    }, 100),
-    shouldRenderAt: function(index) {
-      // This is on a hot path. Keep it as fast as possible.
-      var scrollTop = this.el.scrollTop,
-          containerHeight = this.el.parentElement.clientHeight,
-          notes = this.$container.children(),
-          noteOffset;
-      if (notes.length > index) {
-        noteOffset = notes.eq(index)[0].offsetTop;
-      } else if (notes.length > 0) {
-        noteOffset = notes.last()[0].offsetTop;
-      } else {
-        noteOffset = 0;
-      }
-      return (scrollTop + 2*containerHeight) > noteOffset;
-    },
-    _lazyRefreshSortable: _.debounce(function() {
-      this.$container.sortable('refresh');
-    }, 10),
-    addNote: function(note, idx) {
-      var view = this.subViews[note.id];
-
-      // Ignore already visible/unrendered
-      if (!this._rendered || view && view.isVisible()) {
-        return true;
-      }
-
-      // Get the index but allow it to be specified manually.
-      var index = (typeof(idx) === "number") ? idx : this.collection.indexOf(note);
-
-      if (this.shouldRenderAt(index)) {
-        if (!view) {
-          view = this.subViews[note.id] = new L.views.NoteView({model: note});
-        }
-        this.insertAt(index, view);
-        if (index < this.renderNext) {
-          this.renderNext += 1;
-        }
-        this.fixHeight();
-        return true;
-      } else if (index < this.renderNext) {
-        // If I choose not to render, fix the render next index.
-        this.renderNext = index;
-        return false;
-      }
-    },
-    insertAt: function(index, view) {
-      var otherEl = this.$container.find('.note').eq(index);
-      if (otherEl.length === 0) {
-        this.$container.append(view.render().$el);
-      } else {
-        otherEl.before(view.render().$el);
-      }
-      this._lazyRefreshSortable();
-    },
-    // Delay removes just in case we are re-adding the note.
-    removeNote: function(note, options) {
-      var id = note.id || note,
-          view = this.subViews[id];
-
-      this.fixHeight();
-      if (!view || !this._rendered) {
-        return;
-      }
-
-      if (0 < this.$container.children('.note').index(view.$el) < this.renderNext) {
-        this.renderNext--;
-      }
-
-
-      view.remove(options);
-      this.lazyLoadMore();
-    },
-    fixHeight: _.throttle(function() {
-      this.$container.css("min-height", 36*this.collection.size());
-    }, 100),
     sort: _.debounce(function() {
       var that = this;
       this.collection.each(function(note, i) {
         var view = that.subViews[note.id];
         if (view) {
           view.remove();
-          that.insertAt(i, view);
+          that._insertAt(i, view);
         }
       });
     }, 100),
@@ -364,8 +242,7 @@
       this.renderNext = 0;
       if (this._rendered) {
         this.$container.empty();
-        // Bail early.
-        this.collection.every(_.mask(_.bind(this.addNote, this), 0, 1));
+        this.collection.every(_.mask(_.bind(this._onAdd, this), 0, 1));
       }
     },
     render: function() {
@@ -429,7 +306,120 @@
       }
       _.defer(_.bind(this.reset, this));
       return this;
-    }
+    },
+    setSearchFailed : function(state) {
+      if (!this._rendered) {
+        return;
+      }
+
+      this.$el.toggleClass('search-failed', state);
+    },
+    setShrinkNotes : function(state) {
+      if (!this._rendered) {
+        return;
+      }
+      this.$el.toggleClass('shrink', state);
+    },
+    _onStartEditing: function() {
+      this.$container.sortable("disable");
+    },
+    _onStopEditing: function() {
+      this.$container.sortable("enable");
+    },
+    _onScroll: function() {
+      // Load on scroll.
+      this._loadMore();
+    },
+    _loadMore: function() {
+      var view, note;
+      while (this.collection.size() > this.renderNext && this._shouldRenderAt(this.renderNext)) {
+        note = this.collection.at(this.renderNext);
+        view = this.subViews[note.id];
+        if (!view) {
+          view = this.subViews[note.id] = new L.views.NoteView({model: note});
+        }
+        if (!view.isVisible()) {
+          this._insertAt(this.renderNext, view);
+        }
+        this.renderNext += 1;
+      }
+    },
+    _lazyLoadMore: _.debounce(function() {
+      return this._loadMore();
+    }, 100),
+    _shouldRenderAt: function(index) {
+      // This is on a hot path. Keep it as fast as possible.
+      var scrollTop = this.el.scrollTop,
+          containerHeight = this.el.parentElement.clientHeight,
+          notes = this.$container.children(),
+          noteOffset;
+      if (notes.length > index) {
+        noteOffset = notes.eq(index)[0].offsetTop;
+      } else if (notes.length > 0) {
+        noteOffset = notes.last()[0].offsetTop;
+      } else {
+        noteOffset = 0;
+      }
+      return (scrollTop + 2*containerHeight) > noteOffset;
+    },
+    _lazyRefreshSortable: _.debounce(function() {
+      this.$container.sortable('refresh');
+    }, 10),
+    _onAdd: function(note, idx) {
+      var view = this.subViews[note.id];
+
+      // Ignore already visible/unrendered
+      if (!this._rendered || view && view.isVisible()) {
+        return;
+      }
+
+      // Get the index but allow it to be specified manually.
+      var index = (typeof(idx) === "number") ? idx : this.collection.indexOf(note);
+
+      if (this._shouldRenderAt(index)) {
+        if (!view) {
+          view = this.subViews[note.id] = new L.views.NoteView({model: note});
+        }
+        this._insertAt(index, view);
+        if (index < this.renderNext) {
+          this.renderNext += 1;
+        }
+        this._fixHeight();
+      } else if (index < this.renderNext) {
+        // If I choose not to render, fix the render next index.
+        this.renderNext = index;
+      }
+    },
+    _insertAt: function(index, view) {
+      var otherEl = this.$container.find('.note').eq(index);
+      if (otherEl.length === 0) {
+        this.$container.append(view.render().$el);
+      } else {
+        otherEl.before(view.render().$el);
+      }
+      this._lazyRefreshSortable();
+    },
+    // Delay removes just in case we are re-adding the note.
+    _onRemove: function(note, options) {
+      var id = note.id || note,
+          view = this.subViews[id];
+
+      this._fixHeight();
+      if (!view || !this._rendered) {
+        return;
+      }
+
+      if (0 < this.$container.children('.note').index(view.$el) < this.renderNext) {
+        this.renderNext--;
+      }
+
+
+      view.remove(options);
+      this._lazyLoadMore();
+    },
+    _fixHeight: _.throttle(function() {
+      this.$container.css("min-height", 36*this.collection.size());
+    }, 100)
   });
 
 })(ListIt);

@@ -11,44 +11,6 @@
       this.autoResize = _.isUndefined(options.autoResize) ? true : options.autoResize;
     },
     className: 'editor',
-    _fixHeight: function() {
-      if (!(this._rendered && this.autoResize)) {
-        return;
-      }
-      var that = this;
-      var iframe;
-      if (this.wysihtml5entry.composer) {
-        iframe = this.wysihtml5entry.composer.iframe;
-      }
-      var txtbox = this.wysihtml5entry.textareaElement;
-      _.delay(function() {
-        if (that.wysihtml5entry.currentView === that.wysihtml5entry.composer) {
-          // Using composer
-          iframe.style.height = 'auto';
-          iframe.style.height = iframe.contentDocument.body.clientHeight + 'px';
-
-          var height = iframe.contentDocument.body.clientHeight;
-          var bottom = height + $(iframe).offset().top;
-          // 60 is a dirty hack but it ensures that this triggers early.
-          var windowHeight = $(window).height() - 60;
-          if (bottom > windowHeight) {
-            iframe.contentDocument.body.style.maxHeight = height - (bottom - windowHeight) + 'px';
-          } else {
-            iframe.contentDocument.body.style.maxHeight = '';
-          }
-
-          txtbox.style.height = iframe.style.height;
-        } else {
-          // Not using composer
-          txtbox.style.height = 'auto';
-          txtbox.style.height = txtbox.scrollHeight + 'px';
-          if (iframe) {
-            iframe.style.height = txtbox.style.height;
-          }
-        }
-        $(txtbox).trigger("resize");
-      });
-    },
     render: function() {
       var that = this;
       this.$el.html(L.templates["editor"]({ text: this.initialContent}));
@@ -178,6 +140,44 @@
     remove: function() {
       this.wysihtml5entry.off();
       return Backbone.View.prototype.remove.call(this);
+    },
+    _fixHeight: function() {
+      if (!(this._rendered && this.autoResize)) {
+        return;
+      }
+      var that = this;
+      var iframe;
+      if (this.wysihtml5entry.composer) {
+        iframe = this.wysihtml5entry.composer.iframe;
+      }
+      var txtbox = this.wysihtml5entry.textareaElement;
+      _.delay(function() {
+        if (that.wysihtml5entry.currentView === that.wysihtml5entry.composer) {
+          // Using composer
+          iframe.style.height = 'auto';
+          iframe.style.height = iframe.contentDocument.body.clientHeight + 'px';
+
+          var height = iframe.contentDocument.body.clientHeight;
+          var bottom = height + $(iframe).offset().top;
+          // 60 is a dirty hack but it ensures that this triggers early.
+          var windowHeight = $(window).height() - 60;
+          if (bottom > windowHeight) {
+            iframe.contentDocument.body.style.maxHeight = height - (bottom - windowHeight) + 'px';
+          } else {
+            iframe.contentDocument.body.style.maxHeight = '';
+          }
+
+          txtbox.style.height = iframe.style.height;
+        } else {
+          // Not using composer
+          txtbox.style.height = 'auto';
+          txtbox.style.height = txtbox.scrollHeight + 'px';
+          if (iframe) {
+            iframe.style.height = txtbox.style.height;
+          }
+        }
+        $(txtbox).trigger("resize");
+      });
     }
   });
 })(ListIt);

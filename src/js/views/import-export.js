@@ -27,10 +27,10 @@
       return this;
     },
     events: {
-      'click #exportButton': 'exportClicked',
-      'click #importButton': 'importClicked'
+      'click #exportButton': '_exportClicked',
+      'click #importButton': '_importClicked'
     },
-    importClicked: function() {
+    _importClicked: function() {
       var type = this.$el.find('#importSelect').val();
       var file = this.$el.find('#importFile').get()[0].files[0];
       if (!file) {
@@ -43,7 +43,7 @@
       fr.readAsText(file);
       return false;
     },
-    exportClicked: function() {
+    _exportClicked: function() {
       var type = this.$('#exportSelect').val();
       //TODO: Set MIME type
       saveAs(new Blob([L.notebook.exportString(type)]), "listit-notes." + type);

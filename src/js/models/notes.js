@@ -162,7 +162,7 @@
       this.searchQueue.start();
       this._searchCursor = 0;
       this.backingCollection = options.track;
-      this.listenTo(this.backingCollection, 'add', this.maybeAdd);
+      this.listenTo(this.backingCollection, 'add', this._onAdd);
       this.listenTo(this.backingCollection, 'remove', this._onRemove);
       this.listenTo(this.backingCollection, 'reset', _.mask(this.reset));
       this.listenTo(this.backingCollection, 'sort', _.mask(this.sort));
@@ -181,7 +181,7 @@
       // notes as this could be annoying.
       this.listenTo(this.backingCollection, 'change', function(note) {
         if (!this.contains(note)) {
-          this.maybeAdd(note);
+          this._onAdd(note);
         }
       });
       this.reset();
@@ -209,7 +209,7 @@
      *
      * @param {LisIt.models.Note} note The note to consider adding.
      **/
-    maybeAdd: function(note) {
+    _onAdd: function(note) {
       if (this.searchFail) {
         if (this.matcher(note)) {
           // Refilter

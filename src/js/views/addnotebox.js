@@ -20,19 +20,6 @@
         }
       };
     },
-    _onSaveTriggered: function(event) {
-      event.preventDefault();
-      this.saveNote();
-    },
-    _onCloseTriggered: function(event) {
-      event.preventDefault();
-      this.model.destroy();
-    },
-    _onPinTriggered: function(event) {
-      event.preventDefault();
-      this.editor.setText('! ' + this.editor.getText());
-      this.saveNote();
-    },
     saveNote: function() {
       this.model.set({contents: L.util.strip(this.editor.getText())});
       this.model.save();
@@ -64,7 +51,20 @@
       }
       this._rendered = true;
       return this;
-    }
+    },
+    _onSaveTriggered: function(event) {
+      event.preventDefault();
+      this.saveNote();
+    },
+    _onCloseTriggered: function(event) {
+      event.preventDefault();
+      this.model.destroy();
+    },
+    _onPinTriggered: function(event) {
+      event.preventDefault();
+      this.editor.setText('! ' + this.editor.getText());
+      this.saveNote();
+    },
   });
 
 })(ListIt);
