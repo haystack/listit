@@ -20,13 +20,13 @@
     restore: function(event){
       L.notebook.untrashNote(this.model, {user: true});
       this.$el.stop().fadeOut({queue: false}, 200).slideUp(300, function() {
-        el.remove();
+        this.remove();
       });
     },
 
     destroy: function(event){
       this.$el.stop().fadeOut({queue: false}, 200).slideUp(300, function() {
-        el.remove();
+        this.remove();
       });
       L.notebook.destroyNote(this.model)
     }
@@ -38,6 +38,7 @@
     id: 'page-trashbin',
     className: 'page',
     initialize: function(options) {
+      this.collection = L.notebook.get('deletedNotes');
       this.listenTo(this.collection, 'add', _.mask(this.addNote, 0));
     },
 
