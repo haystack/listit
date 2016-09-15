@@ -200,10 +200,6 @@
   });
 
   L.views.NoteCollectionView = Backbone.View.extend({
-    defaults: {
-      noteHeight: '1.3em', //L.base.oneLineHeight, //'1.2em',
-      lastFocusedNote: null
-    },
     initialize: function() {
       var that = this;
       this.subViews = {}; // Note views
