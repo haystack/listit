@@ -21,7 +21,7 @@
         this.panels  = {
           'omnibox':      new L.views.OmniboxView({model: L.omnibox}),
           'controls':     new L.views.ControlsView(),
-          'notes':  new L.views.NoteCollectionView({collection: L.sidebar})
+          'notes':        new L.views.NoteCollectionView({collection: L.sidebar})
         };
       }
     },

@@ -299,12 +299,12 @@
                 that.searchFail = false;
                 that.trigger('change:searchFail', that, that.searchFail);
               }
-              that.remove(that.backingCollection.slice(0,index));
+              that.remove(that.backingCollection.slice(0,index), {filtered: true});
             }
             that.add(note, {at: that._searchCursor, sort: false});
             that._searchCursor++;
           } else if (matched) {
-            that.remove(note);
+            that.remove(note, {filtered: true});
           }
         });
       });
@@ -547,8 +547,8 @@
       toBeDestroyed[note.id] = note.get('version');
       // Needed to trigger change events.
       this.set('toBeDestroyed', toBeDestroyed);
-      note.collection.remove(note);
-      note.destroy();
+      note.collection.remove(note, options);
+      note.destroy(options);
     },
     getNote: function(id) {
       return (this.get('deletedNotes').get(id) || this.get('notes').get(id));

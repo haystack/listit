@@ -25,12 +25,12 @@
           delete this.editor;
         }
 
-        if (options && options.user) {
+        if (options && options.filtered) {
+          el.remove();
+        } else {
           el.stop().fadeOut({queue: false}, 200).slideUp(300, function() {
             el.remove();
           });
-        } else {
-          el.remove();
         }
       }
     },
@@ -146,7 +146,7 @@
       event.stopPropagation();
     },
     _onRemoveClicked: function() {
-      L.notebook.trashNote(this.model, {user: true});
+      L.notebook.trashNote(this.model);
       // stop jquery click event
       return false;
     },
