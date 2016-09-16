@@ -289,10 +289,15 @@
       this.searchID = Math.random();
       this.trigger("search:begin", this._terms, this.searchID);
 
-      var matched = false;
+      // Here we Only remove unmatched notes if we have some matching notes.
+      // This keeps us from filtering down to an empty note list when entering a
+      // new note in the omnibox.
+      var matched = false; // Have we matched a note
       this.backingCollection.each(function (note, index) {
         that.searchQueue.add(function() {
           if (that.matcher(note)) {
+            // If this is the first matched note, remove all previous notes in
+            // one go.
             if(!matched) {
               matched = true;
               if (that.searchFail) {
@@ -304,6 +309,7 @@
             that.add(note, {at: that._searchCursor, sort: false});
             that._searchCursor++;
           } else if (matched) {
+            // If we have matched notes, just directly remove the note.
             that.remove(note, {filtered: true});
           }
         });
