@@ -11,11 +11,12 @@ ListIt.lvent.once('setup:views', function(L, barr) {
     },
 
     render: function() {
+      var wasRendered = this._rendered;
       OldMainPage.prototype.render.call(this);
-      this.$el.prepend(L.templates['warn-persistence']());
-      if (!L.server.get('registered')) {
-        this.$el.addClass('not-logged-in');
+      if (!wasRendered) {
+        this.$el.prepend(L.templates['warn-persistence']());
       }
+      this.$el.toggleClass('not-logged-in', !L.server.get('registered'));
       return this;
     },
 

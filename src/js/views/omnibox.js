@@ -7,16 +7,16 @@
    */
 
   L.views.OmniboxView = Backbone.View.extend({
-    id: 'omnibox',
-    className: 'flex vbox note-creator',
+    className: 'omnibox note-creator',
     initialize: function() {
       var that = this;
       $(window).one('beforeunload', function() {
-        that.undelegateEvents();
-        that.stopListening();
-        //that.model.set('selection', rangy.saveSelection().rangeInfos);
-        that.storeText();
-        that.storeSearch();
+        if (that._rendered) {
+          that.undelegateEvents();
+          that.stopListening();
+          that.storeText();
+          that.storeSearch();
+        }
       });
 
       this.model.set('untouched', true); // View untouched by user.
@@ -112,10 +112,8 @@
       'click                  .searchbar .clear-btn' : '_onSearchClear',
 
       // Autosave
-      'keyup                  .searchbar input' : 'storeSearch',
-      'change                 .searchbar input' : 'storeSearch',
-      'keyup                  .editor'    : 'storeText',
-      'change                 .editor'    : 'storeText'
+      'input                  .searchbar input' : 'storeSearch',
+      'input                  .editor'    : 'storeText'
     },
     _onHideSearchbarTriggered: function(event) {
       this.model.set('searchState', false);
@@ -123,10 +121,6 @@
     // Handle esc/shift-enter
     _onResetTriggered: function(event) {
       this.reset();
-    },
-    // Store text on change.
-    _onKeyUp: function(event) {
-      this.storeText();
     },
     _onSearchClear: function() {
       this.model.set('searchText', '');
@@ -207,7 +201,7 @@
   // (Technically it has several).
   // TODO: Go all out MVVM? (make viewmodel)
   L.views.ControlsView = Backbone.View.extend({
-    id: 'controls',
+    className: 'controls',
     initialize: function() {
       var that = this;
       $(window).one('beforeunload', function() {
@@ -243,7 +237,6 @@
   L.views.SavedSearchBarView = Backbone.View.extend({
     template: L.templates['omnibox/savedsearchbar'],
     id: 'savedSearchBar',
-    className: 'hbox',
     initialize: function() {
       this.subViews = {};
     },
@@ -307,7 +300,7 @@
   });
 
   L.views.SavedSearchView = Backbone.View.extend({
-    className: 'hbox savedSearch',
+    className: 'savedSearch',
     template: L.templates['omnibox/savedsearch'],
     initialize: function() {
       $(window).one('beforeunload', function() {

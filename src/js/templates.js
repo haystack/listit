@@ -18,16 +18,32 @@ return __p;
 ListIt.templates['create-actions'] = function(obj){
 var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'')};
 with(obj||{}){
-__p+='<div class="pin-icon iconTab box center_box clickable">\n    <img src="img/actions/add_pinned.png" title="Keep this note at the top of my list." height="22" width="22">\n</div>\n<div class="save-icon clickable iconTab box center_box">\n    <img src="img/actions/add.png" title="Save this note!" height="22" width="22">\n</div>\n\n';
+__p+='<div class="pin-icon clickable iconTab">\n    <img src="img/actions/add_pinned.png" title="Keep this note at the top of my list." height="22" width="22">\n</div>\n<div class="save-icon clickable iconTab">\n    <img src="img/actions/add.png" title="Save this note!" height="22" width="22">\n</div>\n\n';
 }
 return __p;
 };
 ListIt.templates['editor'] = function(obj){
 var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'')};
 with(obj||{}){
-__p+='<textarea class="editor-entry input-div editable" placeholder="Search or Create Note">'+
-((__t=(text))==null?'':__t)+
-'</textarea>\n<div class="editor-bottombar hbox">\n    <div class="editor-icons hbox"></div>\n</div>\n\n';
+__p+='<iframe scrolling="no" height="0" class="editor-entry input-div editable" src="about:blank">'+
+((__t=( content ))==null?'':__t)+
+'</iframe>\n<div class="editor-bottombar">\n    <ul class="editor-toolbar-buttons">\n        ';
+ _.each(items, function(item) { 
+__p+='\n        ';
+ switch(item) { case "italic": 
+__p+='<li title="Italic (ctrl-i)" data-editor-command="italic" class="editor-button"></li>\n        ';
+ break; case "underline": 
+__p+='<li title="Underline (ctrl-u)" data-editor-command="underline" class="editor-button"></li>\n        ';
+ break; case "bold": 
+__p+='<li title="Bold (ctrl-b)" data-editor-command="bold" class="editor-button"></li>\n        ';
+ break; case "link": 
+__p+='<li title="Insert a link." data-editor-command="link" class="editor-button"></li>\n        ';
+ break; case "spacer": 
+__p+='<li class="spacer"></li>\n        ';
+ break; case "foreground": 
+__p+='\n        <!-- <li class="editor-group editor-group-fore-color" title="Color the selected text"> -->\n        <!-- <ul> -->\n        <!-- <li data-wysihtml5-command-value="gray"></li> -->\n        <!-- <li data-wysihtml5-command-value="maroon"></li> -->\n        <!-- <li data-wysihtml5-command-value="red"></li> -->\n        <!-- <li data-wysihtml5-command-value="purple"></li> -->\n        <!-- <li data-wysihtml5-command-value="green"></li> -->\n        <!-- <li data-wysihtml5-command-value="yellow"></li> -->\n        <!-- <li data-wysihtml5-command-value="navy"></li> -->\n        <!-- <li data-wysihtml5-command-value="blue"></li> -->\n        <!-- </ul> -->\n        <!-- </li> -->\n        ';
+ }}); 
+__p+='\n    </ul>\n    <form style="display: none;" class="editor-link-dialog">\n        <input required="required" name="url" value="http://" class="input" type="url" />\n    </form>\n    <div class="editor-icons"></div>\n</div>\n\n';
 }
 return __p;
 };
@@ -89,9 +105,9 @@ return __p;
 ListIt.templates['note'] = function(obj){
 var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'')};
 with(obj||{}){
-__p+='<div class="pin-icon icon clickable"></div>\n<div class="editable contents flex">'+
+__p+='<div class="pin-icon icon clickable"></div>\n<div class="note-body">\n    <div class="contents">'+
 ((__t=(contents))==null?'':__t)+
-'</div>\n<div class="editor-container flex">\n</div>\n<div class="close-btn clickable"></div>\n';
+'</div>\n</div>\n<div class="close-btn clickable"></div>\n';
 }
 return __p;
 };
@@ -140,7 +156,7 @@ return __p;
 ListIt.templates['omnibox/savedsearchbar'] = function(obj){
 var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'')};
 with(obj||{}){
-__p+='<div id="savedSearches"></div>\n<div class="clickable" id="savedSearchAddButton"></div>\n<div class="flex align-right">\n  <div class="clickable" id="savedSearchEditButton"></div>\n</div>\n';
+__p+='<div id="savedSearches"></div>\n<div class="clickable" id="savedSearchAddButton"></div>\n<div id="savedSearchEditContainer">\n  <div class="clickable" id="savedSearchEditButton"></div>\n</div>\n';
 }
 return __p;
 };
@@ -275,7 +291,7 @@ return __p;
 ListIt.templates['pages/main'] = function(obj){
 var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'')};
 with(obj||{}){
-__p+='<div id="controls-container" class="header hbox">\n    <div id="omnibox" class="note-creator vbox flex"></div>\n    <div id="controls"></div>\n</div>\n<div id="notes" class="contents flex"></div>\n';
+__p+='<div id="main-header" class="header">\n    <div id="main-omnibox"></div>\n    <div id="main-controls"></div>\n</div>\n<div id="main-notes" class="contents"></div>\n';
 }
 return __p;
 };
@@ -296,34 +312,34 @@ return __p;
 ListIt.templates['toolbar'] = function(obj){
 var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'')};
 with(obj||{}){
-__p+='<ul class="wysihtml5-toolbar-buttons hlist">\n';
+__p+='<ul class="editor-toolbar-buttons">\n';
  _.each(items, function(item) { 
 __p+='\n    ';
  switch(item) { case "italic": 
-__p+='<li title="Italic (ctrl-i)" data-wysihtml5-command="italic"></li>\n    ';
+__p+='<li title="Italic (ctrl-i)" data-editor-command="italic"></li>\n    ';
  break; case "underline": 
-__p+='<li title="Underline (ctrl-u)" data-wysihtml5-command="underline"></li>\n    ';
+__p+='<li title="Underline (ctrl-u)" data-editor-command="underline"></li>\n    ';
  break; case "bold": 
-__p+='<li title="Bold (ctrl-b)" data-wysihtml5-command="bold"></li>\n    ';
+__p+='<li title="Bold (ctrl-b)" data-editor-command="bold"></li>\n    ';
  break; case "mode": 
-__p+='<li title="Toggle raw HTML mode" data-wysihtml5-action="change_view"></li>\n    ';
+__p+='<li title="Toggle raw HTML mode" data-editor-action="change_view"></li>\n    ';
  break; case "link": 
-__p+='<li title="Insert a link." data-wysihtml5-command="createLink"></li>\n    ';
+__p+='<li title="Insert a link." data-editor-command="createLink"></li>\n    ';
  break; case "spacer": 
 __p+='<li class="spacer"></li>\n    ';
  break; case "foreground": 
-__p+='\n    <li data-wysihtml5-command-group="foreColor" class="fore-color" title="Color the selected text">\n    <ul>\n        <li data-wysihtml5-command="foreColor" data-wysihtml5-command-value="gray"></li>\n        <li data-wysihtml5-command="foreColor" data-wysihtml5-command-value="maroon"></li>\n        <li data-wysihtml5-command="foreColor" data-wysihtml5-command-value="red"></li>\n        <li data-wysihtml5-command="foreColor" data-wysihtml5-command-value="purple"></li>\n        <li data-wysihtml5-command="foreColor" data-wysihtml5-command-value="green"></li>\n        <li data-wysihtml5-command="foreColor" data-wysihtml5-command-value="yellow"></li>\n        <li data-wysihtml5-command="foreColor" data-wysihtml5-command-value="navy"></li>\n        <li data-wysihtml5-command="foreColor" data-wysihtml5-command-value="blue"></li>\n    </ul>\n    </li>\n';
+__p+='\n    <li data-editor-command-group="foreColor" class="fore-color" title="Color the selected text">\n    <ul>\n        <li data-editor-command="foreColor" data-editor-command-value="gray"></li>\n        <li data-editor-command="foreColor" data-editor-command-value="maroon"></li>\n        <li data-editor-command="foreColor" data-editor-command-value="red"></li>\n        <li data-editor-command="foreColor" data-editor-command-value="purple"></li>\n        <li data-editor-command="foreColor" data-editor-command-value="green"></li>\n        <li data-editor-command="foreColor" data-editor-command-value="yellow"></li>\n        <li data-editor-command="foreColor" data-editor-command-value="navy"></li>\n        <li data-editor-command="foreColor" data-editor-command-value="blue"></li>\n    </ul>\n    </li>\n';
  }}); 
-__p+='\n</ul>\n<div class="wysihtml5-dialogs">\n  <form data-wysihtml5-dialog="createLink" style="display: none;">\n    <label>Text: </label>\n    <input data-wysihtml5-dialog-field="text" class="input" type="text" placeholder="(optional)" />\n    <label>Link: </label>\n      <input required="required" data-wysihtml5-dialog-field="href" value="http://" class="input" type="url" />\n    <div class="linkButtons">\n      <input class="button" type="submit" data-wysihtml5-dialog-action="cancel" value="Cancel">\n      <input class="button" type="submit" data-wysihtml5-dialog-action="save" value="Save" />\n    </div>\n  </form>\n</div>\n';
+__p+='\n</ul>\n<div class="editor-dialogs">\n  <form data-editor-dialog="createLink" style="display: none;">\n    <label>Text: </label>\n    <input data-editor-dialog-field="text" class="input" type="text" placeholder="(optional)" />\n    <label>Link: </label>\n      <input required="required" data-editor-dialog-field="href" value="http://" class="input" type="url" />\n    <div class="linkButtons">\n      <input class="button" type="submit" data-editor-dialog-action="cancel" value="Cancel">\n      <input class="button" type="submit" data-editor-dialog-action="save" value="Save" />\n    </div>\n  </form>\n</div>\n';
 }
 return __p;
 };
 ListIt.templates['trashbin-note'] = function(obj){
 var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'')};
 with(obj||{}){
-__p+='<div class="trashbin-note">\n  <button class="destroy-trash-note">Destroy</button>\n  <button class="restore-trash-note">Restore</button>\n  <div class="contents">'+
+__p+='<div class="note-body"><div class="contents">'+
 ((__t=( contents ))==null?'':__t)+
-'</div>\n</div>';
+'</div></div>\n<button class="restore-trash-note">Restore</button>\n<button class="destroy-trash-note">Destroy</button>\n';
 }
 return __p;
 };

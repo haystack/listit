@@ -1,5 +1,30 @@
-<textarea class="editor-entry input-div editable" placeholder="Search or Create Note"><%=text%></textarea>
-<div class="editor-bottombar hbox">
-    <div class="editor-icons hbox"></div>
+<iframe scrolling="no" height="0" class="editor-entry input-div editable" src="about:blank"><%= content %></iframe>
+<div class="editor-bottombar">
+    <ul class="editor-toolbar-buttons">
+        <% _.each(items, function(item) { %>
+        <% switch(item) { case "italic": %><li title="Italic (ctrl-i)" data-editor-command="italic" class="editor-button"></li>
+        <% break; case "underline": %><li title="Underline (ctrl-u)" data-editor-command="underline" class="editor-button"></li>
+        <% break; case "bold": %><li title="Bold (ctrl-b)" data-editor-command="bold" class="editor-button"></li>
+        <% break; case "link": %><li title="Insert a link." data-editor-command="link" class="editor-button"></li>
+        <% break; case "spacer": %><li class="spacer"></li>
+        <% break; case "foreground": %>
+        <!-- <li class="editor-group editor-group-fore-color" title="Color the selected text"> -->
+        <!-- <ul> -->
+        <!-- <li data-wysihtml5-command-value="gray"></li> -->
+        <!-- <li data-wysihtml5-command-value="maroon"></li> -->
+        <!-- <li data-wysihtml5-command-value="red"></li> -->
+        <!-- <li data-wysihtml5-command-value="purple"></li> -->
+        <!-- <li data-wysihtml5-command-value="green"></li> -->
+        <!-- <li data-wysihtml5-command-value="yellow"></li> -->
+        <!-- <li data-wysihtml5-command-value="navy"></li> -->
+        <!-- <li data-wysihtml5-command-value="blue"></li> -->
+        <!-- </ul> -->
+        <!-- </li> -->
+        <% }}); %>
+    </ul>
+    <form style="display: none;" class="editor-link-dialog">
+        <input required="required" name="url" value="http://" class="input" type="url" />
+    </form>
+    <div class="editor-icons"></div>
 </div>
 

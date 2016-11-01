@@ -18,15 +18,15 @@
     <include file="${root.dir}/resources.xml" />
     <include optional="true" file="${platform.dir}/resources.xml" />
 
-    <target name="build.release.wysihtml5" depends="build.release.setup">
-        <release-assets name="wysihtml5" />
+    <target name="build.release.squire" depends="build.release.setup">
+        <release-assets name="squire" />
     </target>
 
-    <target name="build.debug.wysihtml5" depends="build.debug.setup">
-        <debug-assets name="wysihtml5" />
+    <target name="build.debug.squire" depends="build.debug.setup">
+        <debug-assets name="squire" />
     </target>
 
-    <target name="-build.release.assets" depends="build.release.wysihtml5">
+    <target name="-build.release.assets" depends="build.release.squire">
         <generate-defines debug="${DEBUG}" property="defines_js" />
     </target>
 
@@ -34,20 +34,20 @@
         <attribute name="property"/>
         <attribute name="debug" />
         <sequential>
-            <local name="wysihtml5_json" />
-            <jsonpath property="wysihtml5_json" basedir="${assets.dir}" prefix="${assets.prefix}">
-                <resources refid="assets.wysihtml5.css.compiled"/>
+            <local name="squire_json" />
+            <jsonpath property="squire_json" basedir="${assets.dir}" prefix="${assets.prefix}">
+                <resources refid="assets.squire.css.compiled"/>
             </jsonpath>
             <property name="@{property}">
                 DEBUG_MODE=@{debug};
-                WYSIHTML5_CSS=${wysihtml5_json};
+                SQUIRE_CSS=${squire_json};
                 LISTIT_CREDITS=${listit.authors.json};
                 LISTIT_EMAIL="${listit.email}";
             </property>
         </sequential>
     </macrodef>
 
-    <target name="-build.debug.assets" depends="build.debug.wysihtml5">
+    <target name="-build.debug.assets" depends="build.debug.squire">
         <local name="js_text"/>
         <generate-defines debug="${DEBUG}" property="js_text" />
         <echo message="${js_text}" file="${assets.js.dir}/defines-debug.js" />

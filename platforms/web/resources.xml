@@ -34,5 +34,5 @@
     <!-- Concatinate release files -->
     <property name="assets.index.css.concat" value="index.css" />
     <property name="assets.index.js.concat" value="index.js" />
-    <property name="assets.wysihtml5.css.concat" value="wysihtml5.css" />
+    <property name="assets.squire.css.concat" value="squire.css" />
 </project>

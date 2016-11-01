@@ -1,31 +1,51 @@
 (function(L) {
   'use strict';
 
-  L.views.TrashbinNoteView = Backbone.View.extend({
+  L.views.TrashbinNoteView = L.views.AbstractNoteView.extend({
     initialize: function(options) {
       this.listenTo(this.model, 'change:contents', _.mask(this.render));
     },
-
+    events: {
+      'click .restore-trash-note': '_onRestoreClicked',
+      'click .destroy-trash-note': '_onDestroyClicked'
+    },
     render: function() {
       this.$el.html(L.templates["trashbin-note"]({contents: this.model.get('contents')}));
+      if (this._rendered) {
+        // Always reset animations on render.
+        this.$el.stop().css({
+          height: "",
+          opacity: ""
+        });
+        // Reconnect events
+        this.delegateEvents();
+      }
+      this._rendered = true;
+      return this;
     },
-
-    events: {
-      'click .restore-trash-note': 'restore',
-      'click .destroy-trash-note': 'destroy'
+    remove: function(options) {
+      this.undelegateEvents();
+      var el = this.$el;
+      if (options && options.filtered) {
+        el.remove();
+      } else {
+        // Do not use `slideUp`. We don't want to set `display` here.
+        el.stop().animate({
+          opacity: 0,
+          height: 0
+        }, {
+          queue: false,
+          duration: 200,
+          complete: function() {
+            el.remove();
+          }
+        });
+      }
     },
-
-    restore: function(event){
-      L.notebook.untrashNote(this.model, {user: true});
-      this.$el.stop().fadeOut({queue: false}, 200).slideUp(300, function() {
-        this.remove();
-      });
+    _onRestoreClicked: function(event){
+      L.notebook.untrashNote(this.model);
     },
-
-    destroy: function(event){
-      this.$el.stop().fadeOut({queue: false}, 200).slideUp(300, function() {
-        this.remove();
-      });
+    _onDestroyClicked: function(event){
       L.notebook.destroyNote(this.model);
     }
   });
@@ -34,30 +54,15 @@
     id: 'page-trashbin',
     className: 'page',
     initialize: function(options) {
-      this.collection = L.notebook.get('deletedNotes');
-      this.listenTo(this.collection, 'add', _.mask(this.addNote, 0));
-    },
-
-    addNote: function(note) {
-      var noteview = new L.views.TrashbinNoteView({model: note});
-      noteview.render();
-      this.$el.children('#trashbin-body').prepend(noteview.$el);
-    },
-
-    render: function() {
-      this.$el.html(L.templates["pages/trashbin"]());
-      this.addAll();
-      return this;
-    },
-
-    addAll: function() {
-      var that = this;
-      this.collection.each(function(note) {
-        that.addNote(note);
+      this.collection = new L.views.NoteCollectionView({
+        collection: new L.models.FilterableNoteCollection(null, {track: L.notebook.get('deletedNotes')}),
+        noteView: L.views.TrashbinNoteView
       });
-
+    },
+    render: function() {
+      this.$el.append(this.collection.render().$el);
+      return this;
     }
-
   });
 
 })(ListIt);

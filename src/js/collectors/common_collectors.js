@@ -13,10 +13,12 @@
       note.meta['created-hour'] = date.getHours();
     });
 
+    /*
     L.gvent.on('note:request:parse', function(note) {
       var text = _.str.trim(L.util.clean(note.contents));
       note.meta.pinned = _.str.startsWith(text, '!');
     });
+    */
 
     L.gvent.on('note:request:parse', function(note) {
       var n = $('<span>').html(note.contents);

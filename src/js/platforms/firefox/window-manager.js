@@ -1,6 +1,7 @@
 /*jshint globalstrict: true*/
+/**/
 /*exported EXPORTED_SYMBOLS, ListItWM*/
-/*globals Components: false, ListIt: true*/
+/*globals Components: false, -ListIt */
 /**
  * This module handles the setup/teardown of windows.
  *

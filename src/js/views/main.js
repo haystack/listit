@@ -5,7 +5,7 @@
   'use strict';
   L.views.MainPage = Backbone.View.extend({
     id: 'page-main',
-    className: 'page vbox',
+    className: 'page',
     initialize: function(options) {
       var that = this;
 
@@ -26,20 +26,27 @@
       }
     },
     render: function() {
-      var that = this;
-      this.$el.html(L.templates["pages/main"]());
+      if (!this._rendered) {
+        var that = this;
+        this.$el.html(L.templates["pages/main"]());
 
-      $(window).on('keydown', null, 'F5', function(event) {
-        if (that.$el.is(':visible')) {
-          event.preventDefault();
-          L.server.syncNotes();
-        }
-      });
+        $(window).on('keydown', null, 'F5', function(event) {
+          if (that.$el.is(':visible')) {
+            event.preventDefault();
+            L.server.syncNotes();
+          }
+        });
 
-      _.each(this.panels, function(view, id) {
-        view.setElement(that.$("#"+id));
-        view.render();
-      });
+        _.each(this.panels, function(view, id) {
+          that.$("#main-"+id).html(view.render().$el);
+        });
+        this._rendered = true;
+      } else {
+        // Always re-render
+        _.each(this.panels, function(view, id) {
+          view.render();
+        });
+      }
       return this;
     }
   });

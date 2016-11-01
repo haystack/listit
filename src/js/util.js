@@ -161,7 +161,10 @@
     extractTerms: function(text) {
       text = _.str.trim(text);
       if (text.length === 0) {
-        return null;
+        return {
+          positive: [],
+          negative: []
+        };
       }
 
       var terms = text.match(/[^\s",]+|"[^"]+"/g),

@@ -138,9 +138,9 @@
     },
     // Reinsert a note in it's sorted position
     reinsert: function(note) {
-      this.remove(note);
+      this.remove(note, {action: "move"});
       var idx = this.sortedIndex(note);
-      this.add(note, {at: idx});
+      this.add(note, {at: idx, action: "move"});
     },
     /**
      * Get the list of in-order note IDs.
@@ -162,7 +162,7 @@
       this.searchQueue.start();
       this._searchCursor = 0;
       this.backingCollection = options.track;
-      this.listenTo(this.backingCollection, 'add', this._onAdd);
+      this.listenTo(this.backingCollection, 'add', _.mask(this._onAdd, 0, 2));
       this.listenTo(this.backingCollection, 'remove', this._onRemove);
       this.listenTo(this.backingCollection, 'reset', _.mask(this.reset));
       this.listenTo(this.backingCollection, 'sort', _.mask(this.sort));
@@ -205,22 +205,20 @@
       return val;
     },
     /**
-     * Add note iff it matches the current search terms.
+     * Add note if it matches the current search terms or we just created it.
      *
      * @param {LisIt.models.Note} note The note to consider adding.
      **/
-    _onAdd: function(note) {
-      if (this.searchFail) {
-        if (this.matcher(note)) {
-          // Refilter
-          if (!this.searching) {
-            this._filter(this._terms);
-            return;
-          }
-          this.searchFail = false;
-          this.trigger('change:searchFail', this, this.searchFail);
+    _onAdd: function(note, options) {
+      if (this.searchFail && this.matcher(note)) {
+        // Refilter
+        if (!this.searching) {
+          this._filter(this._terms);
+          return;
         }
-      } else if (!this.matcher(note)) {
+        this.searchFail = false;
+        this.trigger('change:searchFail', this, this.searchFail);
+      } else if ((options || {}).action !== "create" && !this.matcher(note)) {
         return;
       }
       // Avoid sorting.
@@ -304,13 +302,13 @@
                 that.searchFail = false;
                 that.trigger('change:searchFail', that, that.searchFail);
               }
-              that.remove(that.backingCollection.slice(0,index), {filtered: true});
+              that.remove(that.backingCollection.slice(0,index), {action: "filter"});
             }
             that.add(note, {at: that._searchCursor, sort: false});
             that._searchCursor++;
           } else if (matched) {
             // If we have matched notes, just directly remove the note.
-            that.remove(note, {filtered: true});
+            that.remove(note, {action: "filter"});
           }
         });
       });
@@ -534,7 +532,7 @@
       // Gets first insertable position (will add to top).
       // Insert
       var idx = notes.sortedIndex(note);
-      notes.add(note, {at: idx});
+      notes.add(note, {at: idx, action: "create"});
       this.trigger("create", note);
       return note;
     },

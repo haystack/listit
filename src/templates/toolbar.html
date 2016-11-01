@@ -1,35 +1,35 @@
-<ul class="wysihtml5-toolbar-buttons hlist">
+<ul class="editor-toolbar-buttons">
 <% _.each(items, function(item) { %>
-    <% switch(item) { case "italic": %><li title="Italic (ctrl-i)" data-wysihtml5-command="italic"></li>
-    <% break; case "underline": %><li title="Underline (ctrl-u)" data-wysihtml5-command="underline"></li>
-    <% break; case "bold": %><li title="Bold (ctrl-b)" data-wysihtml5-command="bold"></li>
-    <% break; case "mode": %><li title="Toggle raw HTML mode" data-wysihtml5-action="change_view"></li>
-    <% break; case "link": %><li title="Insert a link." data-wysihtml5-command="createLink"></li>
+    <% switch(item) { case "italic": %><li title="Italic (ctrl-i)" data-editor-command="italic"></li>
+    <% break; case "underline": %><li title="Underline (ctrl-u)" data-editor-command="underline"></li>
+    <% break; case "bold": %><li title="Bold (ctrl-b)" data-editor-command="bold"></li>
+    <% break; case "mode": %><li title="Toggle raw HTML mode" data-editor-action="change_view"></li>
+    <% break; case "link": %><li title="Insert a link." data-editor-command="createLink"></li>
     <% break; case "spacer": %><li class="spacer"></li>
     <% break; case "foreground": %>
-    <li data-wysihtml5-command-group="foreColor" class="fore-color" title="Color the selected text">
+    <li data-editor-command-group="foreColor" class="fore-color" title="Color the selected text">
     <ul>
-        <li data-wysihtml5-command="foreColor" data-wysihtml5-command-value="gray"></li>
-        <li data-wysihtml5-command="foreColor" data-wysihtml5-command-value="maroon"></li>
-        <li data-wysihtml5-command="foreColor" data-wysihtml5-command-value="red"></li>
-        <li data-wysihtml5-command="foreColor" data-wysihtml5-command-value="purple"></li>
-        <li data-wysihtml5-command="foreColor" data-wysihtml5-command-value="green"></li>
-        <li data-wysihtml5-command="foreColor" data-wysihtml5-command-value="yellow"></li>
-        <li data-wysihtml5-command="foreColor" data-wysihtml5-command-value="navy"></li>
-        <li data-wysihtml5-command="foreColor" data-wysihtml5-command-value="blue"></li>
+        <li data-editor-command="foreColor" data-editor-command-value="gray"></li>
+        <li data-editor-command="foreColor" data-editor-command-value="maroon"></li>
+        <li data-editor-command="foreColor" data-editor-command-value="red"></li>
+        <li data-editor-command="foreColor" data-editor-command-value="purple"></li>
+        <li data-editor-command="foreColor" data-editor-command-value="green"></li>
+        <li data-editor-command="foreColor" data-editor-command-value="yellow"></li>
+        <li data-editor-command="foreColor" data-editor-command-value="navy"></li>
+        <li data-editor-command="foreColor" data-editor-command-value="blue"></li>
     </ul>
     </li>
 <% }}); %>
 </ul>
-<div class="wysihtml5-dialogs">
-  <form data-wysihtml5-dialog="createLink" style="display: none;">
+<div class="editor-dialogs">
+  <form data-editor-dialog="createLink" style="display: none;">
     <label>Text: </label>
-    <input data-wysihtml5-dialog-field="text" class="input" type="text" placeholder="(optional)" />
+    <input data-editor-dialog-field="text" class="input" type="text" placeholder="(optional)" />
     <label>Link: </label>
-      <input required="required" data-wysihtml5-dialog-field="href" value="http://" class="input" type="url" />
+      <input required="required" data-editor-dialog-field="href" value="http://" class="input" type="url" />
     <div class="linkButtons">
-      <input class="button" type="submit" data-wysihtml5-dialog-action="cancel" value="Cancel">
-      <input class="button" type="submit" data-wysihtml5-dialog-action="save" value="Save" />
+      <input class="button" type="submit" data-editor-dialog-action="cancel" value="Cancel">
+      <input class="button" type="submit" data-editor-dialog-action="save" value="Save" />
     </div>
   </form>
 </div>

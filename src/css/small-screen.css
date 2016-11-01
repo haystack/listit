@@ -1,15 +1,15 @@
 @media (max-height: 300px) {
   #page-main {
     display: block;
-    overflow: auto;
+    overflow: auto !important;
   }
-  #notes {
+  #notes-cointainer {
     display: block;
-    flex: none;
+    height: auto;
   }
-  .notelist {
-    position: absolute;
-    height: 100%;
-    display: block;
+
+  #notes-container > .notelist {
+      position: static;
+      min-height: 0 !important;
   }
 }

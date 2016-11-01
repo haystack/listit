@@ -1,4 +1,4 @@
-#omnibox {
+.omnibox {
   padding: 0px 11px;
 }
 
@@ -9,7 +9,7 @@
   margin: 0;
 }
 
-#omnibox .editor {
+.omnibox .editor {
   border: 1px solid rgb(207, 167, 28);   
   border-top-right-radius: 3px;
   border-bottom-left-radius: 3px;
@@ -17,38 +17,19 @@
   margin: 0px -3px;
 
   min-height: 60px;
-
-  // Expand
-  display: -webkit-box;
-  display: -moz-box;
-  display: box;
-  -webkit-box-flex: 1;
-  -moz-box-flex: 1;
-  box-flex: 1;
-  -webkit-box-orient: vertical;
-  -moz-box-orient: vertical;
-  box-orient: vertical;
-  -webkit-box-align: stretch;
-  -moz-box-align: stretch;
-  box-align: stretch;
-
-  display: -webkit-flex;
-  display: flex;
-  -webkit-flex: 1;
-  flex: 1;
-  -webkit-flex-direction: column;
-  flex-direction: column;
 }
 
-#omnibox .editor-bottombar {
+.omnibox .editor-bottombar {
   margin-top: auto;
-  -o-align-items: flex-end;
-  -ms-align-items: flex-end;
-  -webkit-align-items: flex-end;
   align-items: flex-end;
 }
 
-.note-creator .editor-entry, .note-creator .wysihtml5-sandbox {
+.editor-icons {
+  display: flex;
+  margin-left: auto;
+}
+
+.note-creator .editor-entry {
   text-align:left;
   height: 20px;
   min-height: 40px;
@@ -64,24 +45,9 @@
 
 .searchbar {
   position: relative;
-  /* Box stuff */
-  display: -webkit-box;
-  display: -moz-box;
-  display: box;
-  -webkit-box-orient: horizontal;
-  -moz-box-orient: horizontal;
-  box-orient: horizontal;
-  -webkit-box-align: stretch;
-  -moz-box-align: stretch;
-  box-align: stretch;
-
-  display: -webkit-flex;
-  display: flex;
-  -webkit-flex-direction: row;
-  flex-direction: row;
-  align-items: center;
-
   margin: 0px 0px 7px 0px;
+  display: flex;
+  align-items: center;
 }
 
 .searchbar input {
@@ -99,12 +65,6 @@
   color: black;
 
   margin: 0 -3px; /* Padding and stuff? */
-
-  -webkit-box-flex: 1;
-  -moz-box-flex: 1;
-  box-flex: 1;
-  -webkit-flex: 1;
-  flex: 1;
 }
 
 .searchbar .clear-btn {
@@ -130,7 +90,7 @@
   color: black;
 }
 
-#controls {
+.controls {
   position: relative;
   font-size: 1.01em;
   color: black;
@@ -160,7 +120,7 @@
   margin-left: 1px;
 }
 
-#controls > a {
+.controls > a {
   display: block;
 }
 
@@ -183,33 +143,40 @@
   color:black;
 }
 
-.editor-toolbar .wysihtml5-dialogs  {
+.editor-toolbar {
+    flex: 1;
+}
+
+.editor-toolbar .editor-dialogs  {
     position: fixed; /* ick. */
     left: 10px;
     right: 10px;
     z-index: 99;
 }
 
-.editor-toolbar [data-wysihtml5-dialog] {
+.editor-toolbar [data-editor-dialog] {
     margin-top: 10px;
     padding: 10px;
-    -moz-box-shadow: 0 0 10px #888;
-    -webkit-box-shadow: 0 0 10px #888;
     box-shadow: 0 0 10px #888;
-    -moz-border-radius: 5px;
-    -webkit-border-radius: 5px;
-    -o-border-radius: 5px;
     border-radius: 5px;
     background-color: #f5f5f5 !important;
     border: 1px solid gray;
 }
 .editor-bottombar {
   width: 100%;
+  display: flex;
+}
+
+#savedSearchEditContainer {
+    flex: 1;
+    text-align: right;
 }
 
 #savedSearchBar {
   margin-top: 5px;
   margin-bottom: -8px;
+  display: flex;
+  flex-direction: row;
 }
 
 .savedSearch {

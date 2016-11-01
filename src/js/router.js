@@ -10,50 +10,56 @@
      * @param{String} pageName The name of the page to which to switch.
      **/
     go: function(pageName) {
-      var page = $('#page-'+pageName);
+      var page = L.pages[pageName];
+      var pageIndex = _.indexOf(this.stack, pageName);
+      var pageEl;
       var sign;
 
-      if (this.stack[this.stack.length-1] === pageName) {
-        page.show();
-      } else if (this.stack[this.stack.length-2] === pageName) {
-        this.stack.pop();
-        sign = 1;
+      if (_.isUndefined(page)) {
+        pageEl = $('#page-404');
       } else {
+        pageEl = page.render().$el;
+      }
+
+      if (pageIndex == -1) {
         this.stack.push(pageName);
         sign = -1;
+      } else if (pageIndex < (this.stack.length - 1)) {
+        this.stack.splice(pageIndex + 1);
+        sign = 1;
       }
 
-      // 404 page
-      if (page.length === 0) {
-        page = $('#page-404');
-      }
-
-      // Only slide if loaded
-      if (this._loaded) {
+      if (sign && this._initialPageLoaded) {
         // Manually using animate instead of slide to prevent jQueryUI
-        // from taking the page out of the DOM (breaking wysihtml5)
-        page.css({
-          left: sign*(-100)+"%",
-          right: sign*(100)+"%",
-          display: 'block',
-          visibility: 'visible'
-        });
-        $('.page:visible').not(page).animate({
+        // from taking the page out of the DOM (breaking the editor)
+        $('.page:visible').not(pageEl).animate({
           left: sign*(100)+"%",
           right: sign*(-100)+"%"
         }, function() {
-          $(this).hide();
+          $(this).css('visibility', 'hidden');
         });
-        page.animate({
+        pageEl.css({
+          visibility: 'visible',
+          left: sign*(-100)+"%",
+          right: sign*(100)+"%"
+        }).animate({
           left: 0,
           right: 0
         });
       } else {
-        $('.page').not(page).css({visibility: 'hidden'});
-        page.show();
+        // Don't animate on load.
+        this._initialPageLoaded = true;
+        $('.page:visible').not(pageEl).css({
+          left: sign*(100)+"%",
+          right: sign*(-100)+"%",
+          visibility: 'hidden'
+        });
+        pageEl.css({
+          left: 0,
+          right: 0,
+          visibility: 'visible'
+        });
       }
-
-      this._loaded = true;
     }
   });
 })(ListIt);

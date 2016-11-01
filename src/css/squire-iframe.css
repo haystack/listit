@@ -1,5 +1,6 @@
 html, body {
-  padding: 1px;
+  padding-top: 1px;
+  padding-bottom: 1px;
   margin: 0px;
   height: auto;
   overflow: auto;
@@ -11,3 +12,10 @@ html, body {
   font-size: 14px;
 }
 
+body * {
+    vertical-align: middle;
+}
+
+user-selection {
+    display: inline;
+}

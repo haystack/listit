@@ -44,8 +44,8 @@
           actions: L.templates['create-actions']()
         });
         this.$el.append(
-          '<div class="header hbox">' +
-            '<h1 class="flex">List.it: Add Note</h1>' +
+          '<div class="header">' +
+            '<h1 class="title">List.it: Add Note</h1>' +
             '<span class="clickable close-icon">' +
               '<img src="img/close.png" />' +
             '</span>' +
@@ -68,7 +68,7 @@
       event.preventDefault();
       this.editor.setText('! ' + this.editor.getText());
       this.saveNote();
-    },
+    }
   });
 
 })(ListIt);

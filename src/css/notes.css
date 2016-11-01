@@ -1,89 +1,91 @@
-#notes-container { 
-    padding:10px;
+.notes {
+    height: 100%;
+    overflow-x: auto;
+}
+.notelist {
+    padding: 10px;
 }
 
-#notes.search-failed {
-  background-color: #fafafa;
-}
-
-#notes.search-failed #notes-container {
-  opacity: 0.85;
+.notes.search-failed .note {
+    opacity: .9;
+    background: repeating-linear-gradient(
+        45deg,
+        #f8f8f8,
+        #f8f8f8 10px,
+        #ffffff 10px,
+        #ffffff 20px
+    );
 }
 
 .note {
+    display: flex;
     margin: 2px 0px 1px 0px;
     border-radius: 4px;
     border: 1px solid #ccc;
     background-color: hsl(240, 100%, 100%);/* hsl(200, 100%, 95%);*/
     width: 100%;
-    box-align: stretch;
-    -webkit-box-align: stretch;
-    -moz-box-align: stretch;
     padding-right: 2px;
     box-shadow: 0 2px 2px 1px #ddd;
+    padding: 1px;
 }
 
-.note > *{
-    display: block;
+.note.pinned {
+    border: 2px solid rgb(255, 201, 18);
+    padding: 0px;
 }
 
-#notes.shrink .note .contents {
+.note-body * {
+    vertical-align: middle;
+}
+
+.notes.shrink .note .contents {
   height: 1.2em;
   line-height: 1.8em;
   margin-top: -0.3em;
 }
 
-#notes.shrink .note .contents * {
+.notes.shrink .note .contents * {
   max-height: 16px;
   width: auto;
 }
 
-.note.pinned {
-  border: 2px solid rgb(255, 201, 18);
-  padding-right: 0px;
-}
-
-.note .contents, .note .editor textarea, .note .editor textarea + .wysihtml5-sandbox {
+.note > .note-body {
     height: auto;
-    border: none; 
+    border: none;
     resize: none;
     width: 100%;
     display: block;
     background: none;
     outline: none;
-    padding-top: 8px;
-    padding-bottom: 6px;
-    padding-right: 0;
-    padding-left: 0;
+    padding: 0;
     margin: 0;
     color:#000;
 
-    white-space: pre-wrap; /* css-3 */
-    white-space: -moz-pre-wrap; /* Mozilla, since 1999 */
-    white-space: -pre-wrap; /* Opera 4-6 */
-    white-space: -o-pre-wrap; /* Opera 7 */
-    word-wrap: break-word; /* Internet Explorer 5.5+ */ 
-
     hyphens: auto;
-    -webkit-hyphens: auto;
-    -moz-hyphens: auto;
-    -ms-hyphens: auto;
-    -o-hyphens: auto;
-
     line-height: 1.2em;
     text-overflow:ellipsis;
     overflow: hidden;
 }
-.note .contents > * {
+
+.note > .note-body > .contents {
+    padding-top: 8px;
+    padding-bottom: 6px;
+    user-select: auto;
+}
+
+.note > .note-body > .editor {
+    padding-top: 6px;
+    padding-bottom: 5px;
+}
+.note .editor > .editor-entry {
+    width: 100%;
+}
+
+.note .note-body > * {
     max-width: 100%;
 }
 
-.note .wysihtml5-sandbox, .note .editor-entry {
-  min-height: 20px;
-}
-
 /* Carry note color down. */
-.note .editor-container,
 .note .editor,
 .note .editor-bottombar {
   background-color: inherit;
@@ -91,20 +93,23 @@
 
 .note .editor-bottombar {
   position: absolute;
+  background: white;
   right: 37px;
   width: auto;
+  margin-top: 6px;
   border-bottom-left-radius: 5px;
   border-bottom-right-radius: 5px;
-  border-bottom: 1px solid black;
-  border-left: 1px solid black;
-  border-right: 1px solid black;
+  border-bottom: 1px solid #ccc;
+  border-left: 1px solid #ccc;
+  border-right: 1px solid #ccc;
   box-shadow: 0 2px 2px 1px rgb(233, 233, 233);
 }
 
 .note.pinned .editor-bottombar {
-  border-bottom: 3px solid rgb(255, 201, 18);
-  border-left: 3px solid rgb(255, 201, 18);
-  border-right: 3px solid rgb(255, 201, 18);
+  margin-top: 5px;
+  border-bottom: 2px solid rgb(255, 201, 18);
+  border-left: 2px solid rgb(255, 201, 18);
+  border-right: 2px solid rgb(255, 201, 18);
 }
 
 .note .icon {
@@ -121,16 +126,12 @@
 
 .note .close-btn {
     margin: 0px;
-    height: 34px;
-    width: 34px;
+    height: 32px;
+    width: 32px;
     right: 0px;
     background-position: center;
     background-image: url("../img/close.png");
     background-repeat: no-repeat;
-}
-
-.note.pinned .close-btn{
-  margin-right: 2px;
 }
 
 /* Use listt_tag instead of just tag to avoid conflict with pasted html */
@@ -138,12 +139,8 @@
     color: #1B649F;
 }
 
-.notelist {
-    position: relative;
-}
-
-.note .editor-container {
-    display: none;
+.note > .note-body {
+    flex: 1;
 }
 
 .listit_tag:hover {

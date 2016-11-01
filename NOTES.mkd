@@ -1,5 +1,11 @@
 # Words Of Wisdom #
 
+## General ##
+
+* Beware of `_.debounce` and async/lazy operations in general. They can be a
+  useful performance optimization but the added complexity/indeterminism often
+  isn't worth it.
+
 ## Chrome Extension ##
 
  * The background page is listed in getViews

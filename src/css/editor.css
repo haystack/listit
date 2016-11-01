@@ -1,0 +1,179 @@
+.editor-toolbar-buttons {
+    display: flex;
+    flex-direction: row;
+    user-select: none;
+}
+
+.hide-toolbar .editor-toolbar-buttons {
+  display: none;
+}
+
+.editor-toolbar-buttons [data-editor-command=italic] {
+    background-image: url("../img/toolbar/format-text-italic.png");
+}
+
+.editor-toolbar-buttons [data-editor-command=underline] {
+    background-image: url("../img/toolbar/format-text-underline.png");
+}
+
+.editor-toolbar-buttons [data-editor-command=bold] {
+    background-image: url("../img/toolbar/format-text-bold.png");
+}
+
+.editor-toolbar-buttons [data-editor-command=link] {
+    background-image: url("../img/toolbar/link.png");
+}
+
+.editor-toolbar-buttons [data-editor-command-group=foreColor] {
+    background-image: url("../img/toolbar/format-text-color.png");
+}
+
+.editor-toolbar-buttons li.spacer {
+    width: 16px;
+}
+
+.editor-toolbar-buttons [data-editor-command],
+.editor-toolbar-buttons [data-editor-command-group] {
+    background-repeat: no-repeat;
+    width: 16px;
+    height: 16px;
+    margin: 2px;
+    padding: 2px;
+    background-position: center;
+    border-radius: 2px;
+    cursor: pointer;
+}
+
+.editor-toolbar.editor-commands-disabled [data-editor-command],
+.editor-toolbar.editor-commands-disabled [data-editor-command-group] {
+    opacity: .5;
+}
+
+.editor-toolbar-buttons .editor-command-active {
+    border: 2px solid #aaa;
+    background-color: #eee;
+    margin: 0 !important;
+}
+
+.editor-toolbar-buttons [data-editor-command-group] {
+    background-position: center;
+    position: relative;
+    z-index: 99;
+}
+
+.editor-toolbar-buttons [data-editor-command-group]:hover [data-editor-command="foreColor"][data-editor-command-value="red"] {
+    background-color: red;
+}
+
+.editor-toolbar-buttons [data-editor-command-group] [data-editor-command="foreColor"][data-editor-command-value="red"] {
+    border-color: red;
+}
+
+.editor-toolbar-buttons [data-editor-command-group]:hover [data-editor-command="foreColor"][data-editor-command-value="green"] {
+    background-color: green;
+}
+
+.editor-toolbar-buttons [data-editor-command-group] [data-editor-command="foreColor"][data-editor-command-value="green"] {
+    border-color: green;
+}
+
+.editor-toolbar-buttons [data-editor-command-group]:hover [data-editor-command="foreColor"][data-editor-command-value="blue"] {
+    background-color: blue;
+}
+
+.editor-toolbar-buttons [data-editor-command-group] [data-editor-command="foreColor"][data-editor-command-value="blue"] {
+    border-color: blue;
+}
+
+.editor-toolbar-buttons [data-editor-command-group]:hover [data-editor-command="foreColor"][data-editor-command-value="navy"] {
+    background-color: navy;
+}
+
+.editor-toolbar-buttons [data-editor-command-group] [data-editor-command="foreColor"][data-editor-command-value="navy"] {
+    border-color: navy;
+}
+
+.editor-toolbar-buttons [data-editor-command-group]:hover [data-editor-command="foreColor"][data-editor-command-value="maroon"] {
+    background-color: maroon;
+}
+
+.editor-toolbar-buttons [data-editor-command-group] [data-editor-command="foreColor"][data-editor-command-value="maroon"] {
+    border-color: maroon;
+}
+
+.editor-toolbar-buttons [data-editor-command-group]:hover [data-editor-command="foreColor"][data-editor-command-value="purple"] {
+    background-color: purple;
+}
+
+.editor-toolbar-buttons [data-editor-command-group] [data-editor-command="foreColor"][data-editor-command-value="purple"] {
+    border-color: purple;
+}
+
+.editor-toolbar-buttons [data-editor-command-group]:hover [data-editor-command="foreColor"][data-editor-command-value="yellow"] {
+    background-color: yellow;
+}
+
+.editor-toolbar-buttons [data-editor-command-group] [data-editor-command="foreColor"][data-editor-command-value="yellow"] {
+    border-color: yellow;
+}
+
+.editor-toolbar-buttons [data-editor-command-group]:hover [data-editor-command="foreColor"][data-editor-command-value="gray"] {
+    background-color: gray;
+}
+
+.editor-toolbar-buttons [data-editor-command-group] [data-editor-command="foreColor"][data-editor-command-value="gray"] {
+    border-color: gray;
+}
+
+.editor-toolbar-buttons [data-editor-command-group]:hover [data-editor-command="foreColor"][data-editor-command-value="white"] {
+    background-color: white;
+}
+
+.editor-toolbar-buttons [data-editor-command-group] [data-editor-command="foreColor"][data-editor-command-value="white"] {
+    border-color: white;
+}
+
+.editor-toolbar-buttons [data-editor-command-group] > * {
+    border-radius: 2px;
+    position: absolute;
+    background: #f5f5f5;
+    line-height: 0;
+    width: 24px;
+    top: -2px;
+    left: -2px;
+}
+.editor-toolbar-buttons [data-editor-command-group]:hover > * {
+    padding: 1px;
+    left: -6px;
+    top: -6px;
+    border: 1px solid #aaa;
+}
+.editor-toolbar-buttons [data-editor-command-group] [data-editor-command] {
+    display: none;
+    position: absolute;
+}
+
+.editor-toolbar-buttons [data-editor-command-group] .editor-command-active {
+    display: block;
+}
+
+
+.editor-toolbar-buttons [data-editor-command-group]:hover [data-editor-command]{
+    display: inline-block;
+    position: relative;
+    -moz-box-shadow: 0 0 3px #888;
+    -webkit-box-shadow: 0 0 3px #888;
+    box-shadow: 0 0 3px #888;
+}
+.editor-toolbar-buttons [data-editor-command-group]:hover [data-editor-command]:hover{
+    -moz-box-shadow: 0 0 5px #000;
+    -webkit-box-shadow: 0 0 5px #000;
+    box-shadow: 0 0 5px #000;
+}
+.editor-toolbar-buttons [data-editor-command-group="foreColor"] [data-editor-command] {
+    background-color: transparent;
+}
+
+.editor-toolbar-buttons [data-editor-command-group]:hover .editor-command-active {
+    border-color: #000;
+}

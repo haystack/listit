@@ -449,6 +449,7 @@
 
       _.each(result, unbundleQueue.wrap(function(noteResult) {
         // Unpackage
+        var note, deleted;
         var noteJSON = that.unpackageNote(noteResult.fields);
 
         // Handle magic note.
@@ -462,7 +463,7 @@
 
         // Handle remotely destroyed notes.
         if (noteJSON.deleted && noteJSON.contents === "") {
-          var note = L.notebook.getNote(noteJSON.id);
+          note = L.notebook.getNote(noteJSON.id);
           if (note && note.get('version') <= noteJSON.version && !note.get('modified')) {
             // Destroy locally if necessary.
             L.notebook.destroyNote(note);
@@ -477,13 +478,13 @@
             delete toBeDestroyed[noteJSON.id];
           } else {
             // ignore a note that should be destroyed
-            return; 
+            return;
           }
         }
 
         // Add or merge
-        var deleted = _.pop(noteJSON, 'deleted');
-        var note = L.notebook.getNote(noteJSON.id);
+        deleted = _.pop(noteJSON, 'deleted');
+        note = L.notebook.getNote(noteJSON.id);
         if (note) {
           if (note.get('version') < noteJSON.version) {
             if (note.get('modified')) {
