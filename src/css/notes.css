@@ -3,7 +3,7 @@
     overflow-x: auto;
 }
 .notelist {
-    padding: 10px;
+    margin: 10px;
 }
 
 .notes.search-failed .note {
@@ -34,7 +34,7 @@
     padding: 0px;
 }
 
-.note-body * {
+.note-body img {
     vertical-align: middle;
 }
 
@@ -75,7 +75,7 @@
 
 .note > .note-body > .editor {
     padding-top: 6px;
-    padding-bottom: 5px;
+    padding-bottom: 1px;
 }
 .note .editor > .editor-entry {
     width: 100%;
@@ -96,7 +96,7 @@
   background: white;
   right: 37px;
   width: auto;
-  margin-top: 6px;
+  margin-top: 3px;
   border-bottom-left-radius: 5px;
   border-bottom-right-radius: 5px;
   border-bottom: 1px solid #ccc;
@@ -106,22 +106,21 @@
 }
 
 .note.pinned .editor-bottombar {
-  margin-top: 5px;
+  margin-top: 1px;
   border-bottom: 2px solid rgb(255, 201, 18);
   border-left: 2px solid rgb(255, 201, 18);
   border-right: 2px solid rgb(255, 201, 18);
 }
 
-.note .icon {
-  background-image: url("../img/note/star-inactive.png");
+.note .grip {
+  background-image: url("../img/circle.svg");
   margin: 8px;
-  height: 16px;
   width: 16px;
   background-repeat: no-repeat;
 }
 
-.note.pinned .icon {
-  background-image: url("../img/note/star-active.png");
+.note.pinned .star-icon {
+  background-image: url("../img/note/star-active.svg");
 }
 
 .note .close-btn {
@@ -132,11 +131,6 @@
     background-position: center;
     background-image: url("../img/close.png");
     background-repeat: no-repeat;
-}
-
-/* Use listt_tag instead of just tag to avoid conflict with pasted html */
-.note .listit_tag {
-    color: #1B649F;
 }
 
 .note > .note-body {

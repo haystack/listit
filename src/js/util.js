@@ -258,6 +258,7 @@
   $.fn.cut = function(selector) {
     this.find(selector).contents().unwrap();
     this.find(selector).remove();
+    this.each(function() { this.normalize(); });
     return this;
   };
 })(jQuery);

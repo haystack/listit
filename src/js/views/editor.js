@@ -22,6 +22,7 @@
 
       var $bottombar = this.$('.editor-bottombar');
       var $entry = this.$('.editor-entry');
+      this.$el.css("visibility", "collapse");
 
       if (this.actions) {
         $bottombar.find('.editor-icons').html(this.actions);
@@ -43,20 +44,87 @@
         that._fixHeight();
 
         // Forward events to parent and resize editor
-        _.each(['keydown', 'keyup', 'input'], function(type) {
+        _.each(['keydown', 'keyup'], function(type) {
           that.squire.addEventListener(type, function(evt) {
             that._fixHeight();
-            if (evt)  {
-              // It thinks it's propagating but it really isn't
-              // Duplicate and edit.
-              evt = $.event.fix(evt);
-              evt.view = window;
-              evt.target = that.el;
-              that.$el.trigger(evt);
-            } else {
-              that.$el.trigger(type);
-            }
+            evt = $.event.fix(evt);
+            evt.view = window;
+            evt.target = that.el;
+            that.$el.trigger(evt);
           });
+        });
+
+        var matchers = [
+          {
+            regex: /\b()([A-Za-z]{3,9}:(?:\/\/)?(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+(?:(?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)\b()/,
+            action: function(document, text) {
+              var link = document.createElement("a");
+              link.href = text;
+              link.spellcheck = false;
+              return link;
+            }
+          },
+          {
+            regex: /(^|\s|&nbsp;)(#[a-zA-Z][a-zA-Z0-9]{2,}\b)()/,
+            action: function(document, text) {
+              var tag = document.createElement("span");
+              tag.className = "listit_tag";
+              return tag;
+            }
+          },
+        ];
+
+        function highlight(squire, matcher, node) {
+          switch (node.nodeType) {
+          case Node.ELEMENT_NODE:
+            if ($(node).hasClass("auto_format")) {
+              return;
+            }
+            for (var i = 0; i < node.childNodes.length; i++) {
+              // If we wrap a node, we may check it twice but the `auto_format`
+              // check above will catch that.
+              highlight(squire, matcher, node.childNodes[i]);
+            }
+            return;
+          case Node.TEXT_NODE:
+            var match = matcher.regex.exec(node.textContent);
+            if (!match) {
+              return;
+            }
+            var start = match.index + match[1].length;
+            var end = start + match[2].length;
+
+            var currentRange = squire.getSelection();
+            var matchedRange = squire.getDocument().createRange();
+            matchedRange.setStart(node, start);
+            matchedRange.setEnd(node, end);
+            var element = matcher.action(squire.getDocument(), match[2]);
+            $(element).addClass('auto_format');
+            squire._saveRangeToBookmark(currentRange);
+            matchedRange.surroundContents(element);
+            squire._getRangeAndRemoveBookmark(currentRange);
+            squire.setSelection(currentRange);
+          }
+        }
+        // TODO: Extract
+        // TODO: Handle flicker...
+
+        var format = _.throttle(function() {
+          that.squire.modifyDocument(function() {
+            var range = that.squire.getSelection();
+            that.squire._saveRangeToBookmark(range);
+            $(that.squire.getRoot()).cut(".auto_format");
+            that.squire._getRangeAndRemoveBookmark(range);
+            that.squire.setSelection(range);
+            _.each(matchers, function(matcher) {
+              highlight(that.squire, matcher, that.squire.getRoot());
+            });
+          });
+        }, 100);
+        that.squire.addEventListener('input', function(e) {
+          format();
+          that._fixHeight();
+          that.$el.trigger(e);
         });
 
         that.squire.addEventListener('pathChange', _.bind(that._updateFormatState, that));
@@ -80,6 +148,8 @@
             that.$el.trigger("focusin");
           }
         });
+
+        that.$el.css("visibility", "visible");
 
         // Finally, focus.
         that.focus();
@@ -131,21 +201,20 @@
     },
     getText: function() {
       if (this.squire) {
+        var html;
         return this.squire.getHTML();
       } else {
         // Remove selection bounds.
         var wrapper = $("<span>");
         wrapper.html(this.initialContent || "");
         wrapper.children("#squire-selection-start, #squire-selection-end").remove();
-        return wrapper.html();
+        return this.initialContent || ""; // wrapper.html();
       }
     },
     setText: function(text) {
+      var that = this;
       if (this.squire) {
-        var selection = this.squire.getSelection();
-        this.squire.setHTML(text);
-        // Try to restore selection.
-        this.squire.setSelection(selection);
+        that.squire.setHTML(text);
         this._fixHeight();
       } else {
         this.initialContent = text;
@@ -192,7 +261,8 @@
       }
       var iframe = this.$(".editor-entry")[0];
       iframe.style.height = "";
-      iframe.style.height = iframe.contentDocument.body.getClientRects()[0].bottom + "px";
+      // +1 for firefox. Why? Who knows...
+      iframe.style.height = iframe.contentDocument.body.getClientRects()[0].bottom + 1 + "px";
       this.$(".editor").trigger("resize");
     }
   });

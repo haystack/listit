@@ -4,7 +4,7 @@ html, body {
   margin: 0px;
   height: auto;
   overflow: auto;
-  background-color: transparent;
+  background-color: transparent !important;
   line-height: 1.2;
 
   font-family: Helvetica Neue Ultralight, "Helvetica Neue", "Helvetica", sans-serif !important;
@@ -12,7 +12,7 @@ html, body {
   font-size: 14px;
 }
 
-body * {
+body img {
     vertical-align: middle;
 }
 

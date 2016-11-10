@@ -13,19 +13,60 @@
     throw new Error('A "url" property or function must be specified');
   };
 
+
   if (Modernizr.localstorage) {
+    var writeQueue = {};
+    var flush = _.throttle(function() {
+      var q = writeQueue;
+      writeQueue = {};
+      _.each(q, function(key, desc) {
+        try {
+          LocalStorage.store.setItem(key, JSON.stringify(desc.value));
+          _.each(desc.success, function(fn) {
+            fn();
+          });
+        } catch (e) {
+          _.each(desc.error, function(fn) {
+            fn(e);
+          });
+        }
+      });
+    }, 100);
     var LocalStorage = L.stores['local'] = {
       store: window.localStorage,
       set: function(key, object, options) {
-        try {
-          LocalStorage.store.setItem(key, JSON.stringify(object));
-          if (options && options.success) options.success();
-        } catch (e) {
-          if (options && options.error) options.error(e);
+        var entry = writeQueue[key];
+        if (!entry) {
+          entry = writeQueue[key] = {
+            success: [],
+            error: []
+          };
         }
+        entry.value = object;
+        if (options) {
+          if (options.success) {
+            entry.success.push(options.success);
+          }
+          if (options.error) {
+            entry.error.push(options.error);
+          }
+        }
+        flush();
       },
       get: function(key, options) {
         var error, object;
+        // Short-circuit.
+        if (options) {
+          var entry = writeQueue[key];
+          if (entry) {
+            if (_.has(entry, "value")) {
+              if (options.success) options.success(entry.value);
+            } else {
+              if (options.error) options.error("NotFound");
+            }
+            return;
+          }
+        }
         try {
           var json = LocalStorage.store.getItem(key);
           if (json === null) {

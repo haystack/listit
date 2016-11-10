@@ -173,3 +173,17 @@ p {
 .tableform fieldset {
     padding: 10px;
 }
+
+body.gripping, body.gripping * {
+    cursor: move !important;
+    cursor: grabbing !important;
+    cursor: -moz-grabbing !important;
+    cursor: -webkit-grabbing !important;
+}
+
+.grip {
+    cursor: move;
+    cursor: grab;
+    cursor: -moz-grab;
+    cursor: -webkit-grab;
+}

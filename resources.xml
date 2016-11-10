@@ -44,6 +44,12 @@
         </fileset>
     </resources>
 
+    <resources id="js.libs.localforage">
+        <filelist dir="${listit.js.dir}/libs">
+            <file name="localforage.js" />
+        </filelist>
+    </resources>
+
     <resources id="js.libs.backbone">
         <filelist dir="${listit.js.dir}/libs">
             <file name="backbone.js" />
@@ -65,6 +71,7 @@
         <resources refid="js.libs.compatability" />
         <resources refid="js.libs.barrier" />
         <resources refid="js.libs.underscore" />
+        <resources refid="js.libs.localforage" />
         <resources refid="js.libs.backbone" />
         <resources refid="js.libs.squire" />
     </resources>
@@ -75,6 +82,7 @@
         <resources refid="js.libs.compatability" />
         <resources refid="js.libs.barrier" />
         <resources refid="js.libs.underscore" />
+        <resources refid="js.libs.localforage" />
         <resources refid="js.libs.backbone" />
         <resources refid="js.libs.squire" />
     </resources>
@@ -84,6 +92,7 @@
         <resources refid="js.libs.compatability" />
         <resources refid="js.libs.barrier" />
         <resources refid="js.libs.underscore" />
+        <resources refid="js.libs.localforage" />
         <resources refid="js.libs.backbone" />
     </resources>
 

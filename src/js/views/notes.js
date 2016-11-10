@@ -76,9 +76,10 @@
       'keydown[ctrl+s]        .editor'              : '_onCloseTriggered',
       'keydown[esc]           .editor'              : '_onCloseTriggered',
       'input                  .editor'              : '_onChange',
-      'click                  .pin-icon'            : '_onPinToggle',
-      'resize                 .editor'              : '_onResizeEditor',
-      'mousedown              .pin-icon'            : function(event){event.preventDefault();}
+      'resize                 .editor'              : '_onResizeEditor'
+    },
+    isEditing: function() {
+      return !!this.editor;
     },
     expand: function() {
       this.$el.css('height', 'auto');
@@ -87,7 +88,7 @@
       this.$el.css('height', '');
     },
     openEditor: function() {
-      if (this.editor) {
+      if (this.isEditing()) {
         return;
       }
 
@@ -116,7 +117,7 @@
       $contentsEl.replaceWith(this.editor.render().el);
       this.$el.toggleClass("editing", true);
 
-      this.editor.focus();
+      //this.editor.focus();
       this.model.trigger('user:edit:start', this.model, this);
     },
     _onChange: function() {
@@ -140,7 +141,7 @@
      });
     },
     closeEditor: function() {
-      if (this.editor) {
+      if (this.isEditing()) {
         var $contentsEl = $('<div class="contents">');
         $contentsEl.html(this.model.get("contents"));
         this.editor.$el.replaceWith($contentsEl);
@@ -156,12 +157,12 @@
     },
     _updateContents: function(options) {
       var contents = this.model.get('contents', "");
-      if (this.editor) {
+      if (this.isEditing()) {
         if (this.editor.getText() !== contents) {
           this.editor.setText(contents);
         }
       } else {
-        this.$(".contents").html();
+        this.$(".contents").html(contents);
       }
     },
     _onLinkOpen: function(event) {
@@ -182,7 +183,7 @@
       return false;
     },
     _onCloseTriggered: function(e) {
-      if (this.editor) {
+      if (this.isEditing()) {
         e.preventDefault();
         this.closeEditor();
       }
@@ -190,12 +191,6 @@
     _onNoteClicked: function(e) {
       this.expand();
       this.openEditor();
-    },
-    _onPinToggle: function(event) {
-      var meta = _.clone(this.model.get("meta"));
-      meta.pinned = !meta.pinned;
-      this.model.set("meta", meta);
-      this.model.save();
     }
   });
 
@@ -237,7 +232,7 @@
       var that = this;
       this.collection.each(function(note, i) {
         var view = that.subViews[note.id];
-        if (view) {
+        if (view && !view.isEditing()) {
           view.remove();
           that._insertAt(i, view);
         }
@@ -255,6 +250,7 @@
       }
     },
     render: function() {
+      var that = this;
       if (!this._rendered) {
         this.$notelist = $('<ul class="notelist">');
         this.$el.append(this.$notelist);
@@ -271,18 +267,22 @@
         var current;
         var height;
         this.$notelist.sortable({
-          distance: 10,
-          items: '.note:not(.pinned):not(.editing)',
+          items: '.note:not(.pinned)',
           containment: 'parent',
-          handle: '.pin-icon',
+          handle: '.grip',
           tolerance: 'intersect',
           revert: 100,
           start: function(event, ui) {
+            var noteId = ui.item.attr('data-note');
+            that.subViews[noteId].closeEditor();
+
+            $(document.body).toggleClass("gripping", true);
             sorting = true;
             height = ui.item.height();
             ui.placeholder.css({ 'height': 2, 'top': height/2+1 });
             current = ui.placeholder.nextAll(':not(.ui-sortable-helper)').first();
             current.css('margin-top', height);
+
           },
           change: function(event, ui) {
             current.stop(true).animate({'margin-top': 2}, 100);
@@ -290,6 +290,7 @@
             current.stop(true).animate({'margin-top': height}, 100);
           },
           stop: function(event, ui) {
+            $(document.body).toggleClass("gripping", false);
             current.css('margin-top', 2);
             var noteId = ui.item.attr('data-note');
             var previousId = ui.item.prev().attr('data-note');
@@ -410,10 +411,14 @@
         return;
       }
 
+      if (view.isEditing()) {
+        // Never remove a note being edited.
+        return;
+      }
+
       if (0 < this.$notelist.children('.note').index(view.$el) < this.renderNext) {
         this.renderNext--;
       }
-
 
       view.remove(options);
       this._lazyLoadMore();

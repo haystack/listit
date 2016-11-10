@@ -68,3 +68,8 @@ u {
 i {
   font-style: italic;
 }
+
+/* Use listt_tag instead of just tag to avoid conflict with pasted html */
+.listit_tag {
+    color: #1B649F;
+}
