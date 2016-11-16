@@ -19,7 +19,7 @@
     var flush = _.throttle(function() {
       var q = writeQueue;
       writeQueue = {};
-      _.each(q, function(key, desc) {
+      _.each(q, function(desc, key) {
         try {
           LocalStorage.store.setItem(key, JSON.stringify(desc.value));
           _.each(desc.success, function(fn) {

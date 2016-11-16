@@ -25,9 +25,9 @@ return __p;
 ListIt.templates['editor'] = function(obj){
 var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'')};
 with(obj||{}){
-__p+='<iframe scrolling="no" height="0" class="editor-entry input-div editable" src="about:blank">'+
+__p+='<div class="editor-entry input-div editable" src="about:blank">'+
 ((__t=( content ))==null?'':__t)+
-'</iframe>\n<div class="editor-bottombar">\n    <ul class="editor-toolbar-buttons">\n        ';
+'</div>\n<div class="editor-bottombar">\n    <ul class="editor-toolbar-buttons">\n        ';
  _.each(items, function(item) { 
 __p+='\n        ';
  switch(item) { case "italic": 
@@ -105,9 +105,7 @@ return __p;
 ListIt.templates['note'] = function(obj){
 var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'')};
 with(obj||{}){
-__p+='<div class="grip star-icon"></div>\n<div class="note-body">\n    <div class="contents">'+
-((__t=(contents))==null?'':__t)+
-'</div>\n</div>\n<div class="close-btn clickable"></div>\n';
+__p+='<div class="grip star-icon"></div>\n<div class="note-body">\n    <div class="contents"></div>\n</div>\n<div class="close-btn clickable"></div>\n';
 }
 return __p;
 };

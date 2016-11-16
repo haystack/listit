@@ -38,13 +38,13 @@
     vertical-align: middle;
 }
 
-.notes.shrink .note .contents {
+.notes.shrink .note-body {
   height: 1.2em;
   line-height: 1.8em;
   margin-top: -0.3em;
 }
 
-.notes.shrink .note .contents * {
+.notes.shrink .note-body * {
   max-height: 16px;
   width: auto;
 }
@@ -64,21 +64,16 @@
     hyphens: auto;
     line-height: 1.2em;
     text-overflow:ellipsis;
-    overflow: hidden;
-}
-
-.note > .note-body > .contents {
-    padding-top: 8px;
-    padding-bottom: 6px;
-    user-select: auto;
+    overflow: visible;
 }
 
 .note > .note-body > .editor {
-    padding-top: 6px;
-    padding-bottom: 1px;
+    padding-top: 8px;
+    padding-bottom: 6px;
 }
-.note .editor > .editor-entry {
-    width: 100%;
+
+.editor-entry {
+    outline: none;
 }
 
 .note .note-body > * {
@@ -89,6 +84,10 @@
 .note .editor,
 .note .editor-bottombar {
   background-color: inherit;
+}
+
+.note .editor {
+    position: relative;
 }
 
 .note .editor-bottombar {
@@ -110,6 +109,10 @@
   border-bottom: 2px solid rgb(255, 201, 18);
   border-left: 2px solid rgb(255, 201, 18);
   border-right: 2px solid rgb(255, 201, 18);
+}
+
+.note:not(.editing) .editor-bottombar {
+    display: none;
 }
 
 .note .grip {
@@ -137,7 +140,6 @@
     flex: 1;
 }
 
-.listit_tag:hover {
+.note:not(.editing) .note-body .listit_tag:hover, .note:not(.editing) .note-body a:hover {
   cursor: pointer;
 }
-

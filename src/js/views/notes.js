@@ -23,10 +23,14 @@
       this.listenTo(this.model, 'change:contents', _.mask(this._updateContents, 2));
       this.listenTo(this.model, 'change:meta', _.mask(this._updateMeta, 2));
     },
+    isEditing: function(options) {
+      return this.$el.hasClass("editing");
+    },
     remove: function(options) {
       if (this._rendered) {
         var el = this.$el;
-        this.closeEditor();
+        // TODO: Really do this?
+        //this.editor.remove();
 
         if (_.contains(["move", "filter"], (options || {}).action)) {
           el.remove();
@@ -60,65 +64,55 @@
         this.$el.prop("id", "note-"+this.model.id);
         this.$el.attr("data-note", this.model.id); // Useful for debugging/matching etc.
         this._rendered = true;
-        this.$el.html(this.template(this.model.toJSON()));
+
+        this.$el.html(this.template());
+        this.editor = new ListIt.views.Editor({text: this.model.get("contents")});
+        this.$(".note-body").append(this.editor.render().el);
         this._updateMeta();
       }
 
       return this;
     },
     events: {
-      'click                  .close-btn'           : '_onRemoveClicked',
-      'click                  .contents'            : '_onNoteClicked',
-      'click                  .contents a'          : '_onLinkOpen',
-      'click                  .contents .listit_tag': '_onTagClicked',
-      'focusout               .editor'              : '_onBlur',
-      'keydown[shift+return]  .editor'              : '_onCloseTriggered',
-      'keydown[ctrl+s]        .editor'              : '_onCloseTriggered',
-      'keydown[esc]           .editor'              : '_onCloseTriggered',
-      'input                  .editor'              : '_onChange',
-      'resize                 .editor'              : '_onResizeEditor'
+      'click           .close-btn'             : '_onRemoveClicked',
+      'mousedown       .note-body a'           : '_maybePreventFocus',
+      'mousedown       .note-body .listit_tag' : '_maybePreventFocus',
+      'click           .note-body a'           : '_onLinkOpen',
+      'click           .note-body .listit_tag' : '_onTagClicked',
+      'focusin         .editor'                : '_onFocusIn',
+      'focusout'                               : '_onFocusOut',
+      'keydown[ctrl+s] .editor'                : 'blur',
+      'keydown[esc]    .editor'                : 'blur',
+      'input           .editor'                : '_onChange',
+      'resize          .editor'                : '_onResizeEditor'
     },
-    isEditing: function() {
-      return !!this.editor;
-    },
-    expand: function() {
-      this.$el.css('height', 'auto');
-    },
-    collapse: function() {
-      this.$el.css('height', '');
-    },
-    openEditor: function() {
+    _maybePreventFocus(event) {
       if (this.isEditing()) {
         return;
       }
-
-      var $contentsEl = this.$('.contents');
-
-      var selection = document.getSelection();
-      var text = this.model.get('contents');
-
-      if (selection.rangeCount === 1
-          && $contentsEl.html() === text /* should never be false but err on the side of caution */) {
-        var range = selection.getRangeAt(0);
-        if ($contentsEl.get(0).contains(range.commonAncestorContainer)) {
-          // Nice hidden squire feature! Someone should probably document this.
-          range.insertNode($('<input id="squire-selection-start" type="hidden">').get(0));
-          range.collapse(false /* to end */);
-          range.insertNode($('<input id="squire-selection-end" type="hidden">').get(0));
-          text = $contentsEl.html();
-        }
+      event.preventDefault();
+    },
+    _onLinkOpen: function(event) {
+      if (this.isEditing()) {
+        return;
       }
-
-      this.editor = new ListIt.views.Editor({
-        text: text,
-        initialHeight: $contentsEl.height()
-      });
-
-      $contentsEl.replaceWith(this.editor.render().el);
-      this.$el.toggleClass("editing", true);
-
-      //this.editor.focus();
-      this.model.trigger('user:edit:start', this.model, this);
+      this.model.trigger('user:open-bookmark', this.model, this, event.target.href);
+      // It's a content-editable so we need to manually open links.
+      window.open(event.target.href);
+      event.stopPropagation();
+      event.preventDefault();
+    },
+    _onTagClicked: function(event) {
+      if (this.isEditing()) {
+        return;
+      }
+      L.omnibox.tagToggle(event.target.textContent);
+      // stop jquery click event
+      event.stopPropagation();
+      event.preventDefault();
+    },
+    blur: function() {
+      this.editor.blur();
     },
     _onChange: function() {
       // Constantly auto-save.
@@ -126,48 +120,22 @@
       var text = this.editor.getText();
       this.model.changeContents(text, window);
     },
-    _onBlur: function() {
-      var that = this;
-     _.defer(function() {
-       if (!document.hasFocus()) {
-         return;
-       }
-       var focusedEditor = $(document.activeElement).closest('.editor').get(0),
-           myEditor = that.$('.editor').get(0);
-
-       if (focusedEditor !== myEditor) {
-         that.closeEditor();
-       }
-     });
+    _onFocusOut: function() {
+      console.log("focus out");
+      this.$el.toggleClass("editing", false);
     },
-    closeEditor: function() {
-      if (this.isEditing()) {
-        var $contentsEl = $('<div class="contents">');
-        $contentsEl.html(this.model.get("contents"));
-        this.editor.$el.replaceWith($contentsEl);
-        this.$el.toggleClass("editing", false);
-        this.editor.remove();
-        delete this.editor;
-
-        this.model.trigger('user:editor:stop', this.model, this);
-      }
+    _onFocusIn: function(e) {
+      console.log("focus in");
+      this.$el.toggleClass("editing", true);
     },
     _updateMeta: function(options) {
       this.$el.toggleClass('pinned', !!this.model.get('meta', {}).pinned);
     },
     _updateContents: function(options) {
       var contents = this.model.get('contents', "");
-      if (this.isEditing()) {
-        if (this.editor.getText() !== contents) {
-          this.editor.setText(contents);
-        }
-      } else {
-        this.$(".contents").html(contents);
+      if (this.editor.getText() !== contents) {
+        this.editor.setText(contents);
       }
-    },
-    _onLinkOpen: function(event) {
-      this.model.trigger('user:open-bookmark', this.model, this, event.target.href);
-      event.stopPropagation();
     },
     _onRemoveClicked: function() {
       L.notebook.trashNote(this.model);
@@ -176,21 +144,6 @@
     },
     _onResizeEditor: function() {
       this.$el.scrollIntoView();
-    },
-    _onTagClicked: function(event) {
-      L.omnibox.tagToggle(event.target.textContent);
-      // stop jquery click event
-      return false;
-    },
-    _onCloseTriggered: function(e) {
-      if (this.isEditing()) {
-        e.preventDefault();
-        this.closeEditor();
-      }
-    },
-    _onNoteClicked: function(e) {
-      this.expand();
-      this.openEditor();
     }
   });
 
@@ -273,9 +226,6 @@
           tolerance: 'intersect',
           revert: 100,
           start: function(event, ui) {
-            var noteId = ui.item.attr('data-note');
-            that.subViews[noteId].closeEditor();
-
             $(document.body).toggleClass("gripping", true);
             sorting = true;
             height = ui.item.height();

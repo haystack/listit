@@ -22,143 +22,112 @@
 
       var $bottombar = this.$('.editor-bottombar');
       var $entry = this.$('.editor-entry');
-      this.$el.css("visibility", "collapse");
 
       if (this.actions) {
         $bottombar.find('.editor-icons').html(this.actions);
       }
 
-      $entry[0].addEventListener("load", function() {
-        var iframe = this;
-        var iframeDoc = iframe.contentDocument;
-        _.each(SQUIRE_CSS, function(css) {
-          var link = iframeDoc.createElement("link");
-          link.rel  = 'stylesheet';
-          link.type = 'text/css';
-          link.href = css;
-          link.media = 'all';
-          iframeDoc.head.appendChild(link);
-        });
-        that.squire = new Squire(iframeDoc);
-        that.squire.setHTML(that.initialContent);
-        that._fixHeight();
+      that.squire = new Squire($entry.get(0));
+      that.squire.setHTML(that.initialContent);
 
-        // Forward events to parent and resize editor
-        _.each(['keydown', 'keyup'], function(type) {
-          that.squire.addEventListener(type, function(evt) {
-            that._fixHeight();
-            evt = $.event.fix(evt);
-            evt.view = window;
-            evt.target = that.el;
-            that.$el.trigger(evt);
-          });
-        });
+      var matchers = [
+        {
+          regex: /\b()([A-Za-z]{3,9}:(?:\/\/)?(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+(?:(?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)\b()/,
+          action: function(document, text) {
+            var link = document.createElement("a");
+            link.href = text;
+            link.spellcheck = false;
+            return link;
+          }
+        },
+        {
+          regex: /(^|\s|&nbsp;)(#[a-zA-Z][a-zA-Z0-9]{2,}\b)()/,
+          action: function(document, text) {
+            var tag = document.createElement("span");
+            tag.className = "listit_tag";
+            return tag;
+          }
+        },
+      ];
 
-        var matchers = [
-          {
-            regex: /\b()([A-Za-z]{3,9}:(?:\/\/)?(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+(?:(?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)\b()/,
-            action: function(document, text) {
-              var link = document.createElement("a");
-              link.href = text;
-              link.spellcheck = false;
-              return link;
-            }
-          },
-          {
-            regex: /(^|\s|&nbsp;)(#[a-zA-Z][a-zA-Z0-9]{2,}\b)()/,
-            action: function(document, text) {
-              var tag = document.createElement("span");
-              tag.className = "listit_tag";
-              return tag;
-            }
-          },
-        ];
-
-        function highlight(squire, matcher, node) {
-          switch (node.nodeType) {
-          case Node.ELEMENT_NODE:
-            if ($(node).hasClass("auto_format")) {
-              return;
-            }
-            for (var i = 0; i < node.childNodes.length; i++) {
-              // If we wrap a node, we may check it twice but the `auto_format`
-              // check above will catch that.
-              highlight(squire, matcher, node.childNodes[i]);
-            }
+      function highlight(squire, matcher, node) {
+        switch (node.nodeType) {
+        case Node.ELEMENT_NODE:
+          if ($(node).hasClass("auto_format")) {
             return;
-          case Node.TEXT_NODE:
-            var match = matcher.regex.exec(node.textContent);
-            if (!match) {
-              return;
-            }
-            var start = match.index + match[1].length;
-            var end = start + match[2].length;
-
-            var currentRange = squire.getSelection();
-            var matchedRange = squire.getDocument().createRange();
-            matchedRange.setStart(node, start);
-            matchedRange.setEnd(node, end);
-            var element = matcher.action(squire.getDocument(), match[2]);
-            $(element).addClass('auto_format');
-            squire._saveRangeToBookmark(currentRange);
-            matchedRange.surroundContents(element);
-            squire._getRangeAndRemoveBookmark(currentRange);
-            squire.setSelection(currentRange);
           }
+          for (var i = 0; i < node.childNodes.length; i++) {
+            // If we wrap a node, we may check it twice but the `auto_format`
+            // check above will catch that.
+            highlight(squire, matcher, node.childNodes[i]);
+          }
+          return;
+        case Node.TEXT_NODE:
+          var match = matcher.regex.exec(node.textContent);
+          if (!match) {
+            return;
+          }
+          var start = match.index + match[1].length;
+          var end = start + match[2].length;
+
+          var currentRange = squire.getSelection();
+          var matchedRange = squire.getDocument().createRange();
+          matchedRange.setStart(node, start);
+          matchedRange.setEnd(node, end);
+          var element = matcher.action(squire.getDocument(), match[2]);
+          $(element).addClass('auto_format');
+          squire._saveRangeToBookmark(currentRange);
+          matchedRange.surroundContents(element);
+          squire._getRangeAndRemoveBookmark(currentRange);
+          squire.setSelection(currentRange);
         }
-        // TODO: Extract
-        // TODO: Handle flicker...
+      }
+      // TODO: Extract
+      // TODO: Handle flicker...
 
-        var format = _.throttle(function() {
-          that.squire.modifyDocument(function() {
-            var range = that.squire.getSelection();
-            that.squire._saveRangeToBookmark(range);
-            $(that.squire.getRoot()).cut(".auto_format");
-            that.squire._getRangeAndRemoveBookmark(range);
-            that.squire.setSelection(range);
-            _.each(matchers, function(matcher) {
-              highlight(that.squire, matcher, that.squire.getRoot());
-            });
-          });
-        }, 100);
-        that.squire.addEventListener('input', function(e) {
-          format();
-          that._fixHeight();
-          that.$el.trigger(e);
-        });
-
-        that.squire.addEventListener('pathChange', _.bind(that._updateFormatState, that));
-        that._updateFormatState();
-
-        // Manually bind focus. Squire has problems...
-        // FIXME: Clean this up!!! (focus *entire* editor).
-        that._hasFocus = document.activeElement === iframe;
-        iframeDoc.body.addEventListener("blur", function(evt) {
-          // Defer to see if activeElement changes.
-          _.defer(function() {
-            if (that._hasFocus && document.activeElement !== iframe) {
-              that._hasFocus = false;
-              that.$el.trigger("focusout");
-            }
+      var format = _.throttle(function() {
+        that.squire.modifyDocument(function() {
+          var range = that.squire.getSelection();
+          that.squire._saveRangeToBookmark(range);
+          $(that.squire.getRoot()).cut(".auto_format");
+          that.squire._getRangeAndRemoveBookmark(range);
+          that.squire.setSelection(range);
+          _.each(matchers, function(matcher) {
+            highlight(that.squire, matcher, that.squire.getRoot());
           });
         });
-        iframeDoc.body.addEventListener("focus", function() {
-          if (!that._hasFocus) {
-            that._hasFocus = true;
-            that.$el.trigger("focusin");
-          }
-        });
-
-        that.$el.css("visibility", "visible");
-
-        // Finally, focus.
-        that.focus();
+      }, 100);
+      that.squire.addEventListener('input', function(e) {
+        format();
+        that.$el.trigger(e);
       });
+
+      that.squire.addEventListener('pathChange', _.bind(that._updateFormatState, that));
+      that._updateFormatState();
+
+      // Manually bind focus. Squire has problems...
+      // FIXME: Clean this up!!! (focus *entire* editor).
+      //that._hasFocus = document.activeElement === iframe;
+      //iframeDoc.body.addEventListener("blur", function(evt) {
+      //  // Defer to see if activeElement changes.
+      //  _.defer(function() {
+      //    if (that._hasFocus && document.activeElement !== iframe) {
+      //      that._hasFocus = false;
+      //      that.$el.trigger("focusout");
+      //    }
+      //  });
+      //});
+      //iframeDoc.body.addEventListener("focus", function() {
+      //  if (!that._hasFocus) {
+      //    that._hasFocus = true;
+      //    that.$el.trigger("focusin");
+      //  }
+      //});
       return this;
     },
     events: {
-      'click .editor-button': '_onEditorButtonPressed',
-      'click *': 'focus' // Keep focus.
+      'click .editor-button': '_onEditorButtonPressed'
+      //'click *': 'focus' // Keep focus.
     },
     formats: {
       bold: { tag: "b" },
@@ -215,7 +184,6 @@
       var that = this;
       if (this.squire) {
         that.squire.setHTML(text);
-        this._fixHeight();
       } else {
         this.initialContent = text;
       }
@@ -226,7 +194,6 @@
         this.squire.moveCursorToEnd();
         this.squire.insertHTML(text);
         this.squire.setSelection(selection);
-        this._fixHeight();
       } else {
         this.initialContent += text;
       }
@@ -237,7 +204,6 @@
         this.squire.moveCursorToStart();
         this.squire.insertHTML(text);
         this.squire.setSelection(selection);
-        this._fixHeight();
       } else {
         this.initialContent = text + this.initialContent;
       }
@@ -245,7 +211,8 @@
     clear: function() {
       if (this.squire) {
         this.squire.setHTML("");
-        this._fixHeight();
+        // Otherwise, it gets put on the next line?
+        this.squire.moveCursorToStart();
       } else {
         this.initialContent = "";
       }
@@ -254,16 +221,6 @@
       this.squire.destroy();
       delete this.squire;
       return Backbone.View.prototype.remove.call(this);
-    },
-    _fixHeight: function() {
-      if (!(this.squire && this.autoResize)) {
-        return;
-      }
-      var iframe = this.$(".editor-entry")[0];
-      iframe.style.height = "";
-      // +1 for firefox. Why? Who knows...
-      iframe.style.height = iframe.contentDocument.body.getClientRects()[0].bottom + 1 + "px";
-      this.$(".editor").trigger("resize");
     }
   });
 })(ListIt);
