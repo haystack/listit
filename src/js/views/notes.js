@@ -23,15 +23,20 @@
       this.listenTo(this.model, 'change:contents', _.mask(this._updateContents, 2));
       this.listenTo(this.model, 'change:meta', _.mask(this._updateMeta, 2));
     },
+    id: function() {
+      return "note-"+this.model.id;
+    },
+    attributes: function() {
+      return { "data-note": this.model.id };
+    },
     isEditing: function(options) {
       return this.$el.hasClass("editing");
     },
     remove: function(options) {
+      var that = this;
       if (this._rendered) {
+        this._rendered = false;
         var el = this.$el;
-        // TODO: Really do this?
-        //this.editor.remove();
-
         if (_.contains(["move", "filter"], (options || {}).action)) {
           el.remove();
         } else {
@@ -43,6 +48,7 @@
             queue: false,
             duration: 200,
             complete: function() {
+              that.editor.remove();
               el.remove();
             }
           });
@@ -61,13 +67,16 @@
         this.delegateEvents();
       } else {
         // The id had better not change..."
-        this.$el.prop("id", "note-"+this.model.id);
-        this.$el.attr("data-note", this.model.id); // Useful for debugging/matching etc.
         this._rendered = true;
 
         this.$el.html(this.template());
-        this.editor = new ListIt.views.Editor({text: this.model.get("contents")});
+        this.editor = new ListIt.views.Editor({
+          text: this.model.get("contents"),
+          spellcheck: false
+        });
         this.$(".note-body").append(this.editor.render().el);
+        this.editor.undelegateEvents();
+        this.editor.delegateEvents();
         this._updateMeta();
       }
 
@@ -75,8 +84,8 @@
     },
     events: {
       'click           .close-btn'             : '_onRemoveClicked',
-      'mousedown       .note-body a'           : '_maybePreventFocus',
-      'mousedown       .note-body .listit_tag' : '_maybePreventFocus',
+      'mousedown       .note-body a'           : '_swallowIfNotEditing',
+      'mousedown       .note-body .listit_tag' : '_swallowIfNotEditing',
       'click           .note-body a'           : '_onLinkOpen',
       'click           .note-body .listit_tag' : '_onTagClicked',
       'focusin         .editor'                : '_onFocusIn',
@@ -86,7 +95,7 @@
       'input           .editor'                : '_onChange',
       'resize          .editor'                : '_onResizeEditor'
     },
-    _maybePreventFocus(event) {
+    _swallowIfNotEditing(event) {
       if (this.isEditing()) {
         return;
       }
@@ -121,12 +130,17 @@
       this.model.changeContents(text, window);
     },
     _onFocusOut: function() {
-      console.log("focus out");
-      this.$el.toggleClass("editing", false);
+      var that = this;
+      _.defer(function() {
+        if (!jQuery.contains(that.$el.get(0), document.activeElement)) {
+          that.$el.toggleClass("editing", false);
+          that.editor.spellcheck(false);
+        }
+      });
     },
     _onFocusIn: function(e) {
-      console.log("focus in");
       this.$el.toggleClass("editing", true);
+      this.editor.spellcheck(true);
     },
     _updateMeta: function(options) {
       this.$el.toggleClass('pinned', !!this.model.get('meta', {}).pinned);
@@ -319,10 +333,7 @@
       this.$notelist.sortable('refresh');
     }, 10),
     _onAdd: function(note, idx) {
-      var view = this.subViews[note.id];
-
-      // Ignore already visible/unrendered
-      if (!this._rendered || isVisible(view)) {
+      if (!this._rendered || _.has(this.subViews, note.id)) {
         return;
       }
 
@@ -330,9 +341,7 @@
       var index = (typeof(idx) === "number") ? idx : this.collection.indexOf(note);
 
       if (this._shouldRenderAt(index)) {
-        if (!view) {
-          view = this.subViews[note.id] = new this.noteView({model: note});
-        }
+        var view = this.subViews[note.id] = new this.noteView({model: note});
         this._insertAt(index, view);
         if (index < this.renderNext) {
           this.renderNext += 1;
@@ -356,13 +365,7 @@
       var id = note.id || note,
           view = this.subViews[id];
 
-      this._fixHeight();
-      if (!view || !this._rendered) {
-        return;
-      }
-
-      if (view.isEditing()) {
-        // Never remove a note being edited.
+      if (!this._rendered || !view || view.isEditing()) {
         return;
       }
 
@@ -371,6 +374,10 @@
       }
 
       view.remove(options);
+      delete this.subViews[id];
+
+      this._fixHeight();
+
       this._lazyLoadMore();
     },
     _fixHeight: _.throttle(function() {

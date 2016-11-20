@@ -2,10 +2,23 @@
 <div class="editor-bottombar">
     <ul class="editor-toolbar-buttons">
         <% _.each(items, function(item) { %>
-        <% switch(item) { case "italic": %><li title="Italic (ctrl-i)" data-editor-command="italic" class="editor-button"></li>
-        <% break; case "underline": %><li title="Underline (ctrl-u)" data-editor-command="underline" class="editor-button"></li>
-        <% break; case "bold": %><li title="Bold (ctrl-b)" data-editor-command="bold" class="editor-button"></li>
-        <% break; case "link": %><li title="Insert a link." data-editor-command="link" class="editor-button"></li>
+        <% switch(item) { case "italic": %>
+        <li data-editor-command="italic">
+            <input type="button" title="Italic (ctrl-i)" class="editor-button">
+        </li>
+        <% break; case "underline": %>
+        <li data-editor-command="underline">
+            <input type="button" title="Underline (ctrl-u)" class="editor-button">
+        </li>
+        <% break; case "bold": %>
+        <li data-editor-command="bold">
+            <input type="button" title="Bold (ctrl-b)" class="editor-button">
+        </li>
+        <% break; case "link": %>
+        <li data-editor-command="link">
+            <input type="button" title="Insert a link" class="editor-button">
+            <input class="editor-input input" required="required" name="url" value="http://" type="url">
+        </li>
         <% break; case "spacer": %><li class="spacer"></li>
         <% break; case "foreground": %>
         <!-- <li class="editor-group editor-group-fore-color" title="Color the selected text"> -->
@@ -22,9 +35,6 @@
         <!-- </li> -->
         <% }}); %>
     </ul>
-    <form style="display: none;" class="editor-link-dialog">
-        <input required="required" name="url" value="http://" class="input" type="url" />
-    </form>
     <div class="editor-icons"></div>
 </div>
 

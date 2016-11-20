@@ -31,19 +31,19 @@ __p+='<div class="editor-entry input-div editable" src="about:blank">'+
  _.each(items, function(item) { 
 __p+='\n        ';
  switch(item) { case "italic": 
-__p+='<li title="Italic (ctrl-i)" data-editor-command="italic" class="editor-button"></li>\n        ';
+__p+='\n        <li data-editor-command="italic">\n            <input type="button" title="Italic (ctrl-i)" class="editor-button">\n        </li>\n        ';
  break; case "underline": 
-__p+='<li title="Underline (ctrl-u)" data-editor-command="underline" class="editor-button"></li>\n        ';
+__p+='\n        <li data-editor-command="underline">\n            <input type="button" title="Underline (ctrl-u)" class="editor-button">\n        </li>\n        ';
  break; case "bold": 
-__p+='<li title="Bold (ctrl-b)" data-editor-command="bold" class="editor-button"></li>\n        ';
+__p+='\n        <li data-editor-command="bold">\n            <input type="button" title="Bold (ctrl-b)" class="editor-button">\n        </li>\n        ';
  break; case "link": 
-__p+='<li title="Insert a link." data-editor-command="link" class="editor-button"></li>\n        ';
+__p+='\n        <li data-editor-command="link">\n            <input type="button" title="Insert a link" class="editor-button">\n            <input class="editor-input input" required="required" name="url" value="http://" type="url">\n        </li>\n        ';
  break; case "spacer": 
 __p+='<li class="spacer"></li>\n        ';
  break; case "foreground": 
 __p+='\n        <!-- <li class="editor-group editor-group-fore-color" title="Color the selected text"> -->\n        <!-- <ul> -->\n        <!-- <li data-wysihtml5-command-value="gray"></li> -->\n        <!-- <li data-wysihtml5-command-value="maroon"></li> -->\n        <!-- <li data-wysihtml5-command-value="red"></li> -->\n        <!-- <li data-wysihtml5-command-value="purple"></li> -->\n        <!-- <li data-wysihtml5-command-value="green"></li> -->\n        <!-- <li data-wysihtml5-command-value="yellow"></li> -->\n        <!-- <li data-wysihtml5-command-value="navy"></li> -->\n        <!-- <li data-wysihtml5-command-value="blue"></li> -->\n        <!-- </ul> -->\n        <!-- </li> -->\n        ';
  }}); 
-__p+='\n    </ul>\n    <form style="display: none;" class="editor-link-dialog">\n        <input required="required" name="url" value="http://" class="input" type="url" />\n    </form>\n    <div class="editor-icons"></div>\n</div>\n\n';
+__p+='\n    </ul>\n    <div class="editor-icons"></div>\n</div>\n\n';
 }
 return __p;
 };
@@ -105,7 +105,7 @@ return __p;
 ListIt.templates['note'] = function(obj){
 var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'')};
 with(obj||{}){
-__p+='<div class="grip star-icon"></div>\n<div class="note-body">\n    <div class="contents"></div>\n</div>\n<div class="close-btn clickable"></div>\n';
+__p+='<div class="grip star-icon"></div>\n<div class="note-body">\n</div>\n<div class="close-btn clickable"></div>\n';
 }
 return __p;
 };

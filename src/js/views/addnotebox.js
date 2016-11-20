@@ -40,7 +40,6 @@
       if (!this._rendered) {
         this.editor = new L.views.Editor({
           text: this.model.get('contents'),
-          autoResize: false,
           actions: L.templates['create-actions']()
         });
         this.$el.append(

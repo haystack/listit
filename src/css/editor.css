@@ -1,30 +1,48 @@
 .editor-toolbar-buttons {
     display: flex;
     flex-direction: row;
-    user-select: none;
 }
 
 .hide-toolbar .editor-toolbar-buttons {
   display: none;
 }
 
-.editor-toolbar-buttons [data-editor-command=italic] {
+.editor-toolbar-buttons .editor-button {
+    background: none;
+    background-repeat: no-repeat;
+    border: none;
+    cursor: pointer;
+}
+
+
+.editor-toolbar-buttons [data-editor-command] {
+    margin: 2px;
+}
+
+.editor-toolbar-buttons [data-editor-command].editor-command-active {
+    border: 2px solid #aaa;
+    border-radius: 2px;
+    background-color: #eee;
+    margin: 0;
+}
+
+.editor-toolbar-buttons [data-editor-command=italic] .editor-button {
     background-image: url("../img/toolbar/format-text-italic.png");
 }
 
-.editor-toolbar-buttons [data-editor-command=underline] {
+.editor-toolbar-buttons [data-editor-command=underline] .editor-button {
     background-image: url("../img/toolbar/format-text-underline.png");
 }
 
-.editor-toolbar-buttons [data-editor-command=bold] {
+.editor-toolbar-buttons [data-editor-command=bold] .editor-button {
     background-image: url("../img/toolbar/format-text-bold.png");
 }
 
-.editor-toolbar-buttons [data-editor-command=link] {
+.editor-toolbar-buttons [data-editor-command=link] .editor-button {
     background-image: url("../img/toolbar/link.png");
 }
 
-.editor-toolbar-buttons [data-editor-command-group=foreColor] {
+.editor-toolbar-buttons [data-editor-command-group=foreColor] .editor-button {
     background-image: url("../img/toolbar/format-text-color.png");
 }
 
@@ -32,27 +50,9 @@
     width: 16px;
 }
 
-.editor-toolbar-buttons [data-editor-command],
-.editor-toolbar-buttons [data-editor-command-group] {
-    background-repeat: no-repeat;
-    width: 16px;
-    height: 16px;
-    margin: 2px;
-    padding: 2px;
-    background-position: center;
-    border-radius: 2px;
-    cursor: pointer;
-}
-
 .editor-toolbar.editor-commands-disabled [data-editor-command],
 .editor-toolbar.editor-commands-disabled [data-editor-command-group] {
     opacity: .5;
-}
-
-.editor-toolbar-buttons .editor-command-active {
-    border: 2px solid #aaa;
-    background-color: #eee;
-    margin: 0 !important;
 }
 
 .editor-toolbar-buttons [data-editor-command-group] {
@@ -176,4 +176,12 @@
 
 .editor-toolbar-buttons [data-editor-command-group]:hover .editor-command-active {
     border-color: #000;
+}
+
+[data-editor-command] .editor-input {
+    display: none;
+}
+
+[data-editor-command].editor-command-active .editor-input {
+    display: inline;
 }

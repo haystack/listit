@@ -91,11 +91,12 @@
 }
 
 .note .editor-bottombar {
+  z-index: 1;
   position: absolute;
   background: white;
   right: 37px;
   width: auto;
-  margin-top: 3px;
+  margin-top: 7px;
   border-bottom-left-radius: 5px;
   border-bottom-right-radius: 5px;
   border-bottom: 1px solid #ccc;
@@ -105,7 +106,7 @@
 }
 
 .note.pinned .editor-bottombar {
-  margin-top: 1px;
+  margin-top: 6px;
   border-bottom: 2px solid rgb(255, 201, 18);
   border-left: 2px solid rgb(255, 201, 18);
   border-right: 2px solid rgb(255, 201, 18);

@@ -10,9 +10,15 @@
       this.toolbarItems = options.toolbarItems || [
         'bold', 'italic', 'underline', 'foreground', 'link'
       ];
-      this.autoResize = _.isUndefined(options.autoResize) ? true : options.autoResize;
     },
     className: 'editor',
+    attributes: function() {
+      if (_.has(this.options, "spellcheck")) {
+        return { spellcheck: this.options.spellcheck };
+      } else {
+        return {};
+      }
+    },
     render: function() {
       var that = this;
       this.$el.html(L.templates["editor"]({
@@ -45,6 +51,7 @@
           action: function(document, text) {
             var tag = document.createElement("span");
             tag.className = "listit_tag";
+            tag.spellcheck = false;
             return tag;
           }
         },
@@ -82,10 +89,7 @@
           squire.setSelection(currentRange);
         }
       }
-      // TODO: Extract
-      // TODO: Handle flicker...
-
-      var format = _.throttle(function() {
+      that.squire.addEventListener('input', function(e) {
         that.squire.modifyDocument(function() {
           var range = that.squire.getSelection();
           that.squire._saveRangeToBookmark(range);
@@ -96,38 +100,23 @@
             highlight(that.squire, matcher, that.squire.getRoot());
           });
         });
-      }, 100);
-      that.squire.addEventListener('input', function(e) {
-        format();
         that.$el.trigger(e);
       });
 
       that.squire.addEventListener('pathChange', _.bind(that._updateFormatState, that));
       that._updateFormatState();
 
-      // Manually bind focus. Squire has problems...
-      // FIXME: Clean this up!!! (focus *entire* editor).
-      //that._hasFocus = document.activeElement === iframe;
-      //iframeDoc.body.addEventListener("blur", function(evt) {
-      //  // Defer to see if activeElement changes.
-      //  _.defer(function() {
-      //    if (that._hasFocus && document.activeElement !== iframe) {
-      //      that._hasFocus = false;
-      //      that.$el.trigger("focusout");
-      //    }
-      //  });
-      //});
-      //iframeDoc.body.addEventListener("focus", function() {
-      //  if (!that._hasFocus) {
-      //    that._hasFocus = true;
-      //    that.$el.trigger("focusin");
-      //  }
-      //});
       return this;
     },
     events: {
-      'click .editor-button': '_onEditorButtonPressed'
-      //'click *': 'focus' // Keep focus.
+      'mousedown': '_keepFocus',
+      'click [data-editor-command] .editor-button': '_onEditorButtonPressed'
+    },
+    _keepFocus: function(e) {
+      if (!jQuery.contains(this.$(".editor-entry").get(0), e.target) && !$(e.target).hasClass("editor-input")) {
+        e.preventDefault();
+        this.focus();
+      }
     },
     formats: {
       bold: { tag: "b" },
@@ -135,26 +124,33 @@
       underline: { tag: "u" },
       link: { tag: "a", action: '_linkDialog' }
     },
+    /**
+     * Enable or disable spellchecking for this editor. Call without the `state`
+     * argument to query the current spellchecking state.
+     **/
+    spellcheck: function(state) {
+      return this.$(".editor-entry").attr("spellcheck", state);
+    },
     _updateFormatState: function(evt) {
       var that = this;
       _.each(this.formats, function(desc, format) {
-        var button = that.$('.editor-button[data-editor-command="' + format + '"]');
+        var command = that.$('[data-editor-command="' + format + '"] ');
         var hasFormat = that.squire.hasFormat(desc.tag);
-        button.toggleClass("editor-command-active", hasFormat);
+        command.toggleClass("editor-command-active", hasFormat);
         if (desc.action) {
-          that[desc.action](hasFormat);
+          that[desc.action](command, hasFormat);
         }
       });
     },
-    _linkDialog: function(isLink) {
-      console.log(isLink);
+    _linkDialog: function(command, isLink) {
+      console.log("link", isLink);
     },
     _onEditorButtonPressed: function(evt) {
       console.log("button press", document.activeElement);
-      var command = $(evt.target).data('editor-command');
+      evt.preventDefault();
+      var command = $(evt.target).parent("[data-editor-command]").data('editor-command');
       var desc = this.formats[command];
       if (_.isUndefined(desc)) {
-        return;
       }
       if (this.squire.hasFormat(desc.tag)) {
         this.squire.changeFormat(null, {tag: desc.tag});
@@ -163,7 +159,9 @@
       }
     },
     focus: function() {
-      this.squire.focus();
+      if (!this.$(".editor-entry").is(":focus")) {
+        this.squire.focus();
+      }
     },
     blur: function() {
       this.squire.blur();

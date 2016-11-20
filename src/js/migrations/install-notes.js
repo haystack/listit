@@ -6,7 +6,8 @@ ListIt.gvent.on('initialize', function(L, version, barr) {
       'a new note by clicking <img title="Save" width="22" height="22" src="img/actions/add.png">',
     'Pin notes to keep them at the top of your list. Pin a new note by ' +
       'clicking <img title="Pin" width="22" height="22" src="img/actions/add_pinned.png"> to save ' +
-      'with a pin. Change whether an old note is pinned by clicking the star.',
+      'with a pin or by prepending a "!" (an exclamation point). Change whether an' +
+      'old note is pinned by adding/removing the exclamation point.',
     'Delete notes by clicking on <img width="10" height="10" title="x button" src="img/close.png">.',
     'Edit notes by clicking one and typing. They will save automatically.',
     'Reorder notes by clicking and dragging them to new locations.',
