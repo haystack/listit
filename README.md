@@ -1,13 +1,17 @@
 # List.it
 
-List.it is a cross platform note-taking application. It uses
-[Backbone.js](http://backbonejs.org) to manage it's views, models, and
-collections; [jQuery](http://jquery.com) for DOM manipulation;
-[Underscore.js](http://underscorejs.org) and
-[Underscore.string](http://epeli.github.io/underscore.string/) for utility
-functions; a [fork](https://github.com/Stebalien/wysihtml5) of
-[wysihtml5](http://xing.github.io/wysihtml5/) for rich-text input; and Apache
-Ant as it's build system.
+List.it is a cross platform note-taking application. It uses:
+
+* [Backbone.js](http://backbonejs.org) to manage it's views, models, and
+collections.
+
+* [jQuery](http://jquery.com) for DOM manipulation.
+* [Underscore.js](http://underscorejs.org)
+and [Underscore.string](http://epeli.github.io/underscore.string/) for utility
+functions.
+* A [fork](https://github.com/Stebalien/Squire)
+  of [Squire](http://neilj.github.io/Squire/) for rich-text input.
+* Apache Ant as it's build system (sorry).
 
 At it's core, List.it is a platform independent webapp however, platform
 specific functionality can be added by overriding built-in functions/classes

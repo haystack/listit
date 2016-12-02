@@ -18,7 +18,7 @@ var END_TO_END = 2;     // Range.END_TO_END
 var END_TO_START = 3;   // Range.END_TO_START
 
 var HIGHLIGHT_CLASS = 'highlight';
-var COLOUR_CLASS = 'colour';
+var COLOUR_CLASS = 'color';
 var FONT_FAMILY_CLASS = 'font';
 var FONT_SIZE_CLASS = 'size';
 
@@ -3291,8 +3291,8 @@ proto.hasFormat = function ( tag, attributes, range ) {
 proto.getFontInfo = function ( range ) {
     var fontInfo = {
         color: undefined,
-        backgroundColor: undefined,
-        family: undefined,
+        highlight: undefined,
+        font: undefined,
         size: undefined
     };
     var seenAttributes = 0;
@@ -3315,11 +3315,11 @@ proto.getFontInfo = function ( range ) {
                 }
                 if ( !fontInfo.backgroundColor &&
                         ( attr = style.backgroundColor ) ) {
-                    fontInfo.backgroundColor = attr;
+                    fontInfo.highlight = attr;
                     seenAttributes += 1;
                 }
                 if ( !fontInfo.family && ( attr = style.fontFamily ) ) {
-                    fontInfo.family = attr;
+                    fontInfo.font = attr;
                     seenAttributes += 1;
                 }
                 if ( !fontInfo.size && ( attr = style.fontSize ) ) {
@@ -4294,16 +4294,33 @@ proto.setFontSize = function ( size ) {
     return this.focus();
 };
 
+proto.setFontProperty = function (name, value) {
+  switch ( name ) {
+  case "highlight":
+    this.setHighlightColour(value);
+    break;
+  case "color":
+    this.setTextColour(value);
+    break;
+  case "font":
+    this.setFontFace(value);
+    break;
+  case "size":
+    this.setFontSize(value);
+    break;
+  }
+};
+
 proto.setTextColour = function ( colour ) {
     this.changeFormat( colour ? {
         tag: 'SPAN',
         attributes: {
-            'class': 'colour',
+            'class': COLOUR_CLASS,
             style: 'color:' + colour
         }
     } : null, {
         tag: 'SPAN',
-        attributes: { 'class': 'colour' }
+        attributes: { 'class': COLOUR_CLASS }
     });
     return this.focus();
 };
@@ -4312,12 +4329,12 @@ proto.setHighlightColour = function ( colour ) {
     this.changeFormat( colour ? {
         tag: 'SPAN',
         attributes: {
-            'class': 'highlight',
+            'class': HIGHLIGHT_CLASS,
             style: 'background-color:' + colour
         }
     } : colour, {
         tag: 'SPAN',
-        attributes: { 'class': 'highlight' }
+        attributes: { 'class': HIGHLIGHT_CLASS }
     });
     return this.focus();
 };

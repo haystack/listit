@@ -27,23 +27,39 @@ var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments
 with(obj||{}){
 __p+='<div class="editor-entry input-div editable" src="about:blank">'+
 ((__t=( content ))==null?'':__t)+
-'</div>\n<div class="editor-bottombar">\n    <ul class="editor-toolbar-buttons">\n        ';
- _.each(items, function(item) { 
+'</div>\n<div class="editor-bottombar">\n    <div class="editor-toolbar-buttons">\n        ';
+ _.each(toolbarItems, function(item) { 
 __p+='\n        ';
  switch(item) { case "italic": 
-__p+='\n        <li data-editor-command="italic">\n            <input type="button" title="Italic (ctrl-i)" class="editor-button">\n        </li>\n        ';
+__p+='\n        <input class="editor-toggle" data-tag="i" type="button" title="Italic (ctrl-i)">\n        ';
  break; case "underline": 
-__p+='\n        <li data-editor-command="underline">\n            <input type="button" title="Underline (ctrl-u)" class="editor-button">\n        </li>\n        ';
+__p+='\n        <input class="editor-toggle" data-tag="u" type="button" title="Underline (ctrl-u)">\n        ';
  break; case "bold": 
-__p+='\n        <li data-editor-command="bold">\n            <input type="button" title="Bold (ctrl-b)" class="editor-button">\n        </li>\n        ';
- break; case "link": 
-__p+='\n        <li data-editor-command="link">\n            <input type="button" title="Insert a link" class="editor-button">\n            <input class="editor-input input" required="required" name="url" value="http://" type="url">\n        </li>\n        ';
+__p+='\n        <input class="editor-toggle" data-tag="b" type="button" title="Bold (ctrl-b)">\n        ';
  break; case "spacer": 
-__p+='<li class="spacer"></li>\n        ';
- break; case "foreground": 
-__p+='\n        <!-- <li class="editor-group editor-group-fore-color" title="Color the selected text"> -->\n        <!-- <ul> -->\n        <!-- <li data-wysihtml5-command-value="gray"></li> -->\n        <!-- <li data-wysihtml5-command-value="maroon"></li> -->\n        <!-- <li data-wysihtml5-command-value="red"></li> -->\n        <!-- <li data-wysihtml5-command-value="purple"></li> -->\n        <!-- <li data-wysihtml5-command-value="green"></li> -->\n        <!-- <li data-wysihtml5-command-value="yellow"></li> -->\n        <!-- <li data-wysihtml5-command-value="navy"></li> -->\n        <!-- <li data-wysihtml5-command-value="blue"></li> -->\n        <!-- </ul> -->\n        <!-- </li> -->\n        ';
+__p+='<span class="spacer"></span>\n        ';
+ break; case "color": 
+__p+='\n        <div class="editor-select" data-property="color" title="Color the selected text">\n            <div class="editor-select-options">\n                <input class="editor-option" type="button" title="Default">\n            ';
+ _.each(colors, function(color) { 
+__p+='\n                <input class="editor-option" type="button" title="'+
+((__t=( _.str.capitalize(color) ))==null?'':_.escape(__t))+
+'" data-value="'+
+((__t=( color ))==null?'':_.escape(__t))+
+'">\n            ';
+ }); 
+__p+='\n            </div>\n        </div>\n        ';
+ break; case "highlight": 
+__p+='\n        <div class="editor-select" data-property="highlight" title="Color the selected text">\n            <div class="editor-select-options">\n                <input class="editor-option" type="button" title="Default">\n            ';
+ _.each(highlights, function(color) { 
+__p+='\n                <input class="editor-option" type="button" title="'+
+((__t=( _.str.capitalize(color) ))==null?'':_.escape(__t))+
+'" data-value="'+
+((__t=( color ))==null?'':_.escape(__t))+
+'">\n            ';
+ }); 
+__p+='\n            </div>\n        </div>\n        ';
  }}); 
-__p+='\n    </ul>\n    <div class="editor-icons"></div>\n</div>\n\n';
+__p+='\n    </div>\n    <div class="editor-icons"></div>\n</div>\n\n';
 }
 return __p;
 };

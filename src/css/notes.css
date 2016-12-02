@@ -6,8 +6,7 @@
     margin: 10px;
 }
 
-.notes.search-failed .note {
-    opacity: .9;
+.notes.search-failed .note:not(.editing) {
     background: repeating-linear-gradient(
         45deg,
         #f8f8f8,

@@ -7,181 +7,203 @@
   display: none;
 }
 
-.editor-toolbar-buttons .editor-button {
-    background: none;
-    background-repeat: no-repeat;
-    border: none;
-    cursor: pointer;
+.editor-toolbar-buttons input {
+    /* Browsers are weird */
+    display: block;
+    border-style: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    box-sizing: content-box;
 }
 
-
-.editor-toolbar-buttons [data-editor-command] {
-    margin: 2px;
-}
-
-.editor-toolbar-buttons [data-editor-command].editor-command-active {
-    border: 2px solid #aaa;
+.editor-toolbar-buttons .editor-toggle, .editor-toolbar-buttons .editor-select {
+    background: none no-repeat scroll;
+    background-position: center;
+    background-size: 16px;
     border-radius: 2px;
-    background-color: #eee;
-    margin: 0;
+    border-width: 2px;
+    border-color: #aaa;
+    cursor: pointer;
+    width: 20px;
+    height: 20px;
+    margin: 2px;
+    padding: 2px;
 }
 
-.editor-toolbar-buttons [data-editor-command=italic] .editor-button {
+.editor-toolbar-buttons .editor-toggle:hover,
+.editor-toolbar-buttons .editor-select:hover {
+    background-color: #ddd;
+}
+
+.editor-toolbar-buttons .editor-toggle.active,
+.editor-toolbar-buttons .editor-select.active {
+    background-color: #eee;
+}
+
+.editor-toolbar-buttons .editor-toggle:hover,
+.editor-toolbar-buttons .editor-select:hover,
+.editor-toolbar-buttons .editor-toggle.active,
+.editor-toolbar-buttons .editor-select.active {
+    margin: 0;
+    border-style: solid;
+}
+
+
+.editor-toolbar-buttons .editor-toggle[data-tag=i] {
     background-image: url("../img/toolbar/format-text-italic.png");
 }
 
-.editor-toolbar-buttons [data-editor-command=underline] .editor-button {
+.editor-toolbar-buttons .editor-toggle[data-tag=u] {
     background-image: url("../img/toolbar/format-text-underline.png");
 }
 
-.editor-toolbar-buttons [data-editor-command=bold] .editor-button {
+.editor-toolbar-buttons .editor-toggle[data-tag=b] {
     background-image: url("../img/toolbar/format-text-bold.png");
 }
 
-.editor-toolbar-buttons [data-editor-command=link] .editor-button {
-    background-image: url("../img/toolbar/link.png");
-}
-
-.editor-toolbar-buttons [data-editor-command-group=foreColor] .editor-button {
+.editor-toolbar-buttons .editor-select[data-property=color]{
     background-image: url("../img/toolbar/format-text-color.png");
 }
 
-.editor-toolbar-buttons li.spacer {
+.editor-toolbar-buttons .editor-select[data-property=highlight]{
+    background-image: url("../img/toolbar/format-text-highlight.png");
+}
+
+.editor-toolbar-buttons .spacer {
     width: 16px;
 }
 
-.editor-toolbar.editor-commands-disabled [data-editor-command],
-.editor-toolbar.editor-commands-disabled [data-editor-command-group] {
-    opacity: .5;
+.editor-toolbar-buttons .editor-select[data-property=color] .editor-option[data-value=white],
+.editor-toolbar-buttons .editor-select[data-property=highlight] .editor-option[data-value=white] {
+    background-color: white;
 }
-
-.editor-toolbar-buttons [data-editor-command-group] {
-    background-position: center;
-    position: relative;
-    z-index: 99;
+.editor-toolbar-buttons .editor-select[data-property=color] .editor-option[data-value=black],
+.editor-toolbar-buttons .editor-select[data-property=highlight] .editor-option[data-value=black] {
+    background-color: black;
 }
-
-.editor-toolbar-buttons [data-editor-command-group]:hover [data-editor-command="foreColor"][data-editor-command-value="red"] {
+.editor-toolbar-buttons .editor-select[data-property=color] .editor-option[data-value=maroon],
+.editor-toolbar-buttons .editor-select[data-property=highlight] .editor-option[data-value=maroon] {
+    background-color: maroon;
+}
+.editor-toolbar-buttons .editor-select[data-property=color] .editor-option[data-value=red],
+.editor-toolbar-buttons .editor-select[data-property=highlight] .editor-option[data-value=red] {
     background-color: red;
 }
-
-.editor-toolbar-buttons [data-editor-command-group] [data-editor-command="foreColor"][data-editor-command-value="red"] {
-    border-color: red;
+.editor-toolbar-buttons .editor-select[data-property=color] .editor-option[data-value=purple],
+.editor-toolbar-buttons .editor-select[data-property=highlight] .editor-option[data-value=purple] {
+    background-color: purple;
 }
-
-.editor-toolbar-buttons [data-editor-command-group]:hover [data-editor-command="foreColor"][data-editor-command-value="green"] {
+.editor-toolbar-buttons .editor-select[data-property=color] .editor-option[data-value=green],
+.editor-toolbar-buttons .editor-select[data-property=highlight] .editor-option[data-value=green] {
     background-color: green;
 }
-
-.editor-toolbar-buttons [data-editor-command-group] [data-editor-command="foreColor"][data-editor-command-value="green"] {
-    border-color: green;
+.editor-toolbar-buttons .editor-select[data-property=color] .editor-option[data-value=yellow],
+.editor-toolbar-buttons .editor-select[data-property=highlight] .editor-option[data-value=yellow] {
+    background-color: yellow;
 }
-
-.editor-toolbar-buttons [data-editor-command-group]:hover [data-editor-command="foreColor"][data-editor-command-value="blue"] {
+.editor-toolbar-buttons .editor-select[data-property=color] .editor-option[data-value=orange],
+.editor-toolbar-buttons .editor-select[data-property=highlight] .editor-option[data-value=orange] {
+    background-color: orange;
+}
+.editor-toolbar-buttons .editor-select[data-property=color] .editor-option[data-value=navy],
+.editor-toolbar-buttons .editor-select[data-property=highlight] .editor-option[data-value=navy] {
+    background-color: navy;
+}
+.editor-toolbar-buttons .editor-select[data-property=color] .editor-option[data-value=blue],
+.editor-toolbar-buttons .editor-select[data-property=highlight] .editor-option[data-value=blue] {
     background-color: blue;
 }
 
-.editor-toolbar-buttons [data-editor-command-group] [data-editor-command="foreColor"][data-editor-command-value="blue"] {
+.editor-toolbar-buttons .editor-select[data-property=color][data-value=white],
+.editor-toolbar-buttons .editor-select[data-property=highlight][data-value=white] {
+    border-color: white;
+}
+.editor-toolbar-buttons .editor-select[data-property=color][data-value=black],
+.editor-toolbar-buttons .editor-select[data-property=highlight][data-value=black] {
+    border-color: black;
+}
+.editor-toolbar-buttons .editor-select[data-property=color][data-value=maroon],
+.editor-toolbar-buttons .editor-select[data-property=highlight][data-value=maroon] {
+    border-color: maroon;
+}
+.editor-toolbar-buttons .editor-select[data-property=color][data-value=red],
+.editor-toolbar-buttons .editor-select[data-property=highlight][data-value=red] {
+    border-color: red;
+}
+.editor-toolbar-buttons .editor-select[data-property=color][data-value=purple],
+.editor-toolbar-buttons .editor-select[data-property=highlight][data-value=purple] {
+    border-color: purple;
+}
+.editor-toolbar-buttons .editor-select[data-property=color][data-value=green],
+.editor-toolbar-buttons .editor-select[data-property=highlight][data-value=green] {
+    border-color: green;
+}
+.editor-toolbar-buttons .editor-select[data-property=color][data-value=yellow],
+.editor-toolbar-buttons .editor-select[data-property=highlight][data-value=yellow] {
+    border-color: yellow;
+}
+.editor-toolbar-buttons .editor-select[data-property=color][data-value=orange],
+.editor-toolbar-buttons .editor-select[data-property=highlight][data-value=orange] {
+    border-color: orange;
+}
+.editor-toolbar-buttons .editor-select[data-property=color][data-value=navy],
+.editor-toolbar-buttons .editor-select[data-property=highlight][data-value=navy] {
+    border-color: navy;
+}
+.editor-toolbar-buttons .editor-select[data-property=color][data-value=blue],
+.editor-toolbar-buttons .editor-select[data-property=highlight][data-value=blue] {
     border-color: blue;
 }
 
-.editor-toolbar-buttons [data-editor-command-group]:hover [data-editor-command="foreColor"][data-editor-command-value="navy"] {
-    background-color: navy;
+.editor-toolbar-buttons .editor-select-options {
+    display: none;
+    flex-wrap: wrap;
+    width: 60px;
+    flex-direction: row;
+    position: relative;
+    z-index: 99;
+    top: 22px;
+    left: -22px;
+    position: relative;
+    border: 2px solid #888;
+    border-radius: 2px;
 }
 
-.editor-toolbar-buttons [data-editor-command-group] [data-editor-command="foreColor"][data-editor-command-value="navy"] {
-    border-color: navy;
+.editor-toolbar-buttons .editor-select:hover .editor-select-options {
+    display: flex;
 }
 
-.editor-toolbar-buttons [data-editor-command-group]:hover [data-editor-command="foreColor"][data-editor-command-value="maroon"] {
-    background-color: maroon;
+.editor-toolbar-buttons .editor-select .editor-option:not([data-value]) {
+    background-image: url("../img/actions/cancel.png");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 14px;
 }
 
-.editor-toolbar-buttons [data-editor-command-group] [data-editor-command="foreColor"][data-editor-command-value="maroon"] {
-    border-color: maroon;
+.editor-toolbar-buttons .editor-select[data-property=color] .editor-option:not([data-value]) {
+    background-color: black;
 }
 
-.editor-toolbar-buttons [data-editor-command-group]:hover [data-editor-command="foreColor"][data-editor-command-value="purple"] {
-    background-color: purple;
-}
-
-.editor-toolbar-buttons [data-editor-command-group] [data-editor-command="foreColor"][data-editor-command-value="purple"] {
-    border-color: purple;
-}
-
-.editor-toolbar-buttons [data-editor-command-group]:hover [data-editor-command="foreColor"][data-editor-command-value="yellow"] {
-    background-color: yellow;
-}
-
-.editor-toolbar-buttons [data-editor-command-group] [data-editor-command="foreColor"][data-editor-command-value="yellow"] {
-    border-color: yellow;
-}
-
-.editor-toolbar-buttons [data-editor-command-group]:hover [data-editor-command="foreColor"][data-editor-command-value="gray"] {
-    background-color: gray;
-}
-
-.editor-toolbar-buttons [data-editor-command-group] [data-editor-command="foreColor"][data-editor-command-value="gray"] {
-    border-color: gray;
-}
-
-.editor-toolbar-buttons [data-editor-command-group]:hover [data-editor-command="foreColor"][data-editor-command-value="white"] {
+.editor-toolbar-buttons .editor-select[data-property=highlight] .editor-option:not([data-value]) {
     background-color: white;
 }
 
-.editor-toolbar-buttons [data-editor-command-group] [data-editor-command="foreColor"][data-editor-command-value="white"] {
-    border-color: white;
-}
-
-.editor-toolbar-buttons [data-editor-command-group] > * {
-    border-radius: 2px;
-    position: absolute;
-    background: #f5f5f5;
-    line-height: 0;
-    width: 24px;
-    top: -2px;
-    left: -2px;
-}
-.editor-toolbar-buttons [data-editor-command-group]:hover > * {
-    padding: 1px;
-    left: -6px;
-    top: -6px;
-    border: 1px solid #aaa;
-}
-.editor-toolbar-buttons [data-editor-command-group] [data-editor-command] {
-    display: none;
-    position: absolute;
-}
-
-.editor-toolbar-buttons [data-editor-command-group] .editor-command-active {
+.editor-toolbar-buttons .editor-select .editor-option {
+    padding: 0px;
+    height: 20px;
+    width: 20px;
     display: block;
 }
 
-
-.editor-toolbar-buttons [data-editor-command-group]:hover [data-editor-command]{
-    display: inline-block;
-    position: relative;
-    -moz-box-shadow: 0 0 3px #888;
-    -webkit-box-shadow: 0 0 3px #888;
-    box-shadow: 0 0 3px #888;
-}
-.editor-toolbar-buttons [data-editor-command-group]:hover [data-editor-command]:hover{
-    -moz-box-shadow: 0 0 5px #000;
-    -webkit-box-shadow: 0 0 5px #000;
-    box-shadow: 0 0 5px #000;
-}
-.editor-toolbar-buttons [data-editor-command-group="foreColor"] [data-editor-command] {
-    background-color: transparent;
+.editor-toolbar-buttons .editor-option.active {
+    border: solid 2px #555;
+    width: 16px;
+    height: 16px;
 }
 
-.editor-toolbar-buttons [data-editor-command-group]:hover .editor-command-active {
-    border-color: #000;
-}
-
-[data-editor-command] .editor-input {
-    display: none;
-}
-
-[data-editor-command].editor-command-active .editor-input {
-    display: inline;
+.editor-toolbar-buttons .editor-option:hover {
+    border: solid 2px #888;
+    height: 16px;
+    width: 16px;
 }

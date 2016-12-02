@@ -1,17 +1,39 @@
 (function(L) {
   'use strict';
   L.views.Editor = Backbone.View.extend({
+    toolbarItems: [
+      'bold', 'italic', 'underline', 'color', 'highlight'
+    ],
+    colors: [
+      "white", "maroon",
+      "red", "orange", "yellow",
+      "green", "blue", "purple"
+    ],
+    highlights: [
+      "black", "maroon",
+      "red", "orange", "yellow",
+      "green", "blue", "purple"
+    ],
+    className: 'editor',
+    initialContent: '',
     initialize: function(options) {
       if (!options) {
         options = {};
       }
-      this.initialContent = options.text || '';
       this.actions = options.actions;
-      this.toolbarItems = options.toolbarItems || [
-        'bold', 'italic', 'underline', 'foreground', 'link'
-      ];
+      if (_.has(options, "text")) {
+        this.initialContent = options.text;
+      }
+      if (_.has(options, "toolbarItems")) {
+        this.toolbarItems = options.toolbarItems;
+      }
+      if (_.has(options, "colors")) {
+        this.colors = options.colors;
+      }
+      if (_.has(options, "highlights")) {
+        this.highlights = options.highlights;
+      }
     },
-    className: 'editor',
     attributes: function() {
       if (_.has(this.options, "spellcheck")) {
         return { spellcheck: this.options.spellcheck };
@@ -23,7 +45,9 @@
       var that = this;
       this.$el.html(L.templates["editor"]({
         content: this.initialContent,
-        items: this.toolbarItems
+        toolbarItems: this.toolbarItems,
+        colors: this.colors,
+        highlights: this.highlights
       }));
 
       var $bottombar = this.$('.editor-bottombar');
@@ -110,52 +134,59 @@
     },
     events: {
       'mousedown': '_keepFocus',
-      'click [data-editor-command] .editor-button': '_onEditorButtonPressed'
+      'click .editor-toolbar-buttons .editor-toggle': '_onEditorFormatToggle',
+      'click .editor-toolbar-buttons .editor-select .editor-option': '_onEditorFormatSelect'
     },
     _keepFocus: function(e) {
-      if (!jQuery.contains(this.$(".editor-entry").get(0), e.target) && !$(e.target).hasClass("editor-input")) {
+      if (!jQuery.contains(this.$(".editor-entry").get(0), e.target)) {
         e.preventDefault();
         this.focus();
       }
-    },
-    formats: {
-      bold: { tag: "b" },
-      italic: { tag: "i" },
-      underline: { tag: "u" },
-      link: { tag: "a", action: '_linkDialog' }
     },
     /**
      * Enable or disable spellchecking for this editor. Call without the `state`
      * argument to query the current spellchecking state.
      **/
     spellcheck: function(state) {
-      return this.$(".editor-entry").attr("spellcheck", state);
+      return this.$(".editor-entry").prop("spellcheck", state);
     },
     _updateFormatState: function(evt) {
       var that = this;
-      _.each(this.formats, function(desc, format) {
-        var command = that.$('[data-editor-command="' + format + '"] ');
-        var hasFormat = that.squire.hasFormat(desc.tag);
-        command.toggleClass("editor-command-active", hasFormat);
-        if (desc.action) {
-          that[desc.action](command, hasFormat);
+      var fontInfo = this.squire.getFontInfo();
+      this.$(".editor-toolbar-buttons .editor-toggle").each(function() {
+        var tag = $(this).data("tag");
+        var hasFormat = that.squire.hasFormat(tag);
+        $(this).toggleClass("active", hasFormat);
+      });
+      this.$(".editor-toolbar-buttons .editor-select").each(function() {
+        var prop = $(this).data("property");
+        var currentValue = fontInfo[prop];
+        $(".editor-option", this).removeClass("active");
+        if (!!currentValue) {
+          // Using jquery doesn't work here. WTF?
+          this.dataset.value = currentValue;
+          $(this).addClass("active");
+          $(".editor-option[data-value=" + currentValue + "]", this).addClass("active");
+        } else {
+          delete this.dataset["value"];
+          $(this).removeClass("active");
+          $(".editor-option:not([data-value])", this).addClass("active");
         }
       });
     },
-    _linkDialog: function(command, isLink) {
-      console.log("link", isLink);
-    },
-    _onEditorButtonPressed: function(evt) {
-      console.log("button press", document.activeElement);
+    _onEditorFormatSelect: function(evt) {
       evt.preventDefault();
-      var command = $(evt.target).parent("[data-editor-command]").data('editor-command');
-      var desc = this.formats[command];
-      if (_.isUndefined(desc)) {
-      }
-      if (this.squire.hasFormat(desc.tag)) {
-        this.squire.changeFormat(null, {tag: desc.tag});
+      var value = $(evt.target).data("value");
+      var property = $(evt.target).closest(".editor-select").data("property");
+      this.squire.setFontProperty(property, value);
+    },
+    _onEditorFormatToggle: function(evt) {
+      evt.preventDefault();
+      var tag = $(evt.target).data("tag");
+      if (this.squire.hasFormat(tag)) {
+        this.squire.changeFormat(null, {tag: tag});
       } else {
-        this.squire.changeFormat({tag: desc.tag}, null);
+        this.squire.changeFormat({tag: tag}, null);
       }
     },
     focus: function() {

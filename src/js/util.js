@@ -261,4 +261,15 @@
     this.each(function() { this.normalize(); });
     return this;
   };
+
+  $.fn.check = function(check) {
+    if (check === undefined) {
+      check = true;
+    } else {
+      check = !!check;
+    }
+    return this.filter(":radio, :checkbox").each(function() {
+      this.checked = check;
+    });
+  };
 })(jQuery);
