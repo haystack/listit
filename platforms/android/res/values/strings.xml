@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="app_name">List-It</string>
-    <string name="menu_sync">Sync</string>
-    <string name="menu_shrink">Shrink Notes</string>
-    <string name="menu_settings">Settings</string>
-
-</resources>

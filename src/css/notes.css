@@ -6,15 +6,27 @@
     margin: 10px;
 }
 
-.notes.search-failed .note:not(.editing) {
-    background: repeating-linear-gradient(
-        45deg,
-        #f8f8f8,
-        #f8f8f8 10px,
-        #ffffff 10px,
-        #ffffff 20px
-    );
+.notes::before {
+    display: block;
+    height: 0;
+    overflow: hidden;
+    color: white;
+    font-weight: bold;
+    content: "- no notes match search terms -";
+    background: #ED8A00;
+    text-align: center;
+    width: 100%;
+    transition: height .1s ease-in-out, opacity .1s;
+    line-height: 1.2em;
+    opacity: 0;
 }
+
+.notes.search-failed::before {
+    opacity: 1;
+    height: 1.2em;
+    border-bottom: 1px solid #aaa;
+}
+
 
 .note {
     display: flex;
@@ -33,61 +45,34 @@
     padding: 0px;
 }
 
-.note-body img {
+.note-content img {
     vertical-align: middle;
 }
 
-.notes.shrink .note-body {
+.notes.shrink .note:not(.editing) .note-content {
+  white-space: nowrap;
+  overflow: hidden;
   height: 1.2em;
-  line-height: 1.8em;
-  margin-top: -0.3em;
+  position: relative;
 }
 
-.notes.shrink .note-body * {
+.notes.shrink .note:not(.editing) .note-content::after {
+    background: linear-gradient(to left, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0));
+    content: " ";
+    position: absolute;
+    display: block;
+    width: 40px;
+    height: 100%;
+    right: 0;
+    top: 0;
+}
+
+.notes.shrink .note:not(.editing) .note-content * {
   max-height: 16px;
   width: auto;
 }
 
-.note > .note-body {
-    height: auto;
-    border: none;
-    resize: none;
-    width: 100%;
-    display: block;
-    background: none;
-    outline: none;
-    padding: 0;
-    margin: 0;
-    color:#000;
-
-    hyphens: auto;
-    line-height: 1.2em;
-    text-overflow:ellipsis;
-    overflow: visible;
-}
-
-.note > .note-body > .editor {
-    padding-top: 8px;
-    padding-bottom: 6px;
-}
-
-.editor-entry {
-    outline: none;
-}
-
-.note .note-body > * {
-    max-width: 100%;
-}
-
-/* Carry note color down. */
-.note .editor,
-.note .editor-bottombar {
-  background-color: inherit;
-}
-
-.note .editor {
-    position: relative;
-}
+/* Show editor bottombar only when editing */
 
 .note .editor-bottombar {
   z-index: 1;
@@ -95,7 +80,7 @@
   background: white;
   right: 37px;
   width: auto;
-  margin-top: 7px;
+  margin-top: 9px;
   border-bottom-left-radius: 5px;
   border-bottom-right-radius: 5px;
   border-bottom: 1px solid #ccc;
@@ -105,7 +90,7 @@
 }
 
 .note.pinned .editor-bottombar {
-  margin-top: 6px;
+  margin-top: 8px;
   border-bottom: 2px solid rgb(255, 201, 18);
   border-left: 2px solid rgb(255, 201, 18);
   border-right: 2px solid rgb(255, 201, 18);
@@ -136,8 +121,13 @@
     background-repeat: no-repeat;
 }
 
-.note > .note-body {
+.note .note-body {
     flex: 1;
+    /* Prevents overflow */
+    /* https://css-tricks.com/flexbox-truncated-text/ */
+    min-width: 0;
+    padding-top: 8px;
+    padding-bottom: 8px;
 }
 
 .note:not(.editing) .note-body .listit_tag:hover, .note:not(.editing) .note-body a:hover {

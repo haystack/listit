@@ -489,7 +489,7 @@
           var noteStrings;
           var bullet = string[0];
           if ("*-+".indexOf(bullet) >= 0) {
-            string = string.replace(/\n\s*/g, '\n'); // TODO to greedy
+            string = string.replace(/\n\s*/g, '\n'); // TODO too greedy
             string = string.replace(new RegExp("^\\"+bullet+"\\s*"), ""); // Strip first
             noteStrings = string.split(new RegExp("\n\\s*\\"+bullet+"\\s*"));
             noteStrings = _.map(noteStrings, function(str) {

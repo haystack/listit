@@ -59,10 +59,11 @@
 
       that.squire = new Squire($entry.get(0));
       that.squire.setHTML(that.initialContent);
+      that.squire.moveCursorToStart();
 
       var matchers = [
         {
-          regex: /\b()([A-Za-z]{3,9}:(?:\/\/)?(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+(?:(?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)\b()/,
+          regex: /()((:?(:?[A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)(:?(?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)()/,
           action: function(document, text) {
             var link = document.createElement("a");
             link.href = text;

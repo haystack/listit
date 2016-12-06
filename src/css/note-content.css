@@ -1,4 +1,9 @@
-blockquote {
+.note-content {
+    hyphens: auto;
+    line-height: 1.2em;
+}
+
+.note-content blockquote {
   border-left: 3px solid lightgray;
   margin: 5px;
   padding: 5px;
@@ -8,31 +13,24 @@ blockquote {
   white-space: normal;
 }
 
-.source a {
-  color: #333;
-}
-.source {
-  white-space: nowrap;
-}
-
-a img.favicon {
+.note-content a img.favicon {
   padding: 2px;
   vertical-align: middle;
 }
 
-b {
+.note-content b {
   font-weight: bold;
 }
 
-u {
+.note-content u {
   text-decoration: underline;
 }
 
-i {
+.note-content i {
   font-style: italic;
 }
 
 /* Use listt_tag instead of just tag to avoid conflict with pasted html */
-.listit_tag {
+.note-content .listit_tag {
     color: #1B649F;
 }

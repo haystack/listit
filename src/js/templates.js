@@ -25,7 +25,7 @@ return __p;
 ListIt.templates['editor'] = function(obj){
 var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'')};
 with(obj||{}){
-__p+='<div class="editor-entry input-div editable" src="about:blank">'+
+__p+='<div class="editor-entry note-content" src="about:blank">'+
 ((__t=( content ))==null?'':__t)+
 '</div>\n<div class="editor-bottombar">\n    <div class="editor-toolbar-buttons">\n        ';
  _.each(toolbarItems, function(item) { 
