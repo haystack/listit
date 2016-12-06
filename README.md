@@ -1,5 +1,7 @@
 # List.it
 
+[![Join the chat at https://gitter.im/haystack/listit](https://badges.gitter.im/haystack/listit.svg)](https://gitter.im/haystack/listit?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 List.it is a cross platform note-taking application. It uses
 [Backbone.js](http://backbonejs.org) to manage it's views, models, and
 collections; [jQuery](http://jquery.com) for DOM manipulation;
