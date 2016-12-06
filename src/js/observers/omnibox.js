@@ -5,37 +5,36 @@
       return studies.study2 && L.sidebar && L.omnibox;
     },
     start: function() {
-      var that = this;
       this.pendingEntries = [];
       // Record that the user triggered a search through the omnibox.
       L.omnibox.on("user:search", function(m, newSearch, searchID) {
-        that.searchID = searchID;
+        this.searchID = searchID;
       }, this);
 
       // Log completed searches:
       //   at most every .5 seconds
       //   if they were triggered by the omnibox
       L.sidebar.on("search:complete", _.debounce(function(terms, id) {
-        if (that.searchID !== null && that.searchID === id) {
+        if (this.searchID !== null && this.searchID === id) {
           if (terms === null) {
-            if (that.pendingEntries.length > 0) {
-              that.addPendingEntry({action: LogType.SEARCH_CLEAR});
-              that.commitPendingEntries();
+            if (this.pendingEntries.length > 0) {
+              this.addPendingEntry({action: LogType.SEARCH_CLEAR});
+              this.commitPendingEntries();
             }
           } else {
-            that.addPendingEntry({
+            this.addPendingEntry({
               action: LogType.SEARCH,
               terms: terms, // This has both positive and negative terms XXX: Might break stuff.
               noteids: L.sidebar.pluck('id')
             });
           }
-          that.searchID = null;
+          this.searchID = null;
         }
-      }, 500));
+      }.bind(this), 500));
 
       L.omnibox.on("note-created", function(m, note) {
-        that.clearPendingEntries();
-        that.addEntry({
+        this.clearPendingEntries();
+        this.addEntry({
           action: LogType.CREATE_SAVE,
           noteid: note.id,
           contents: note.get('contents'),

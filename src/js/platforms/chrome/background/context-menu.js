@@ -3,12 +3,11 @@
   'use strict';
 
   L.chrome.views.ContextMenu = function() {
-    var that = this;
     this.menuIds = _.kmap(this.menus, function(m) {
       m = _.clone(m);
       _.each(_.functions(m), function(f) {
-        m[f] = _.bind(m[f], that);
-      });
+        m[f] = m[f].bind(this);
+      }, this);
       return chrome.contextMenus.create(m);
     });
   };

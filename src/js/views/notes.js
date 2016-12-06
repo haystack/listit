@@ -14,11 +14,10 @@
 
   L.views.NoteView = L.views.AbstractNoteView.extend({
     initialize: function(options) {
-      var that = this;
       $(window).one('beforeunload', function() {
-        that.undelegateEvents();
-        that.stopListening();
-      });
+        this.undelegateEvents();
+        this.stopListening();
+      }.bind(this));
       this.template = L.templates["note"];
       this.listenTo(this.model, 'change:contents', _.mask(this._updateContents, 2));
       this.listenTo(this.model, 'change:meta', _.mask(this._updateMeta, 2));
@@ -33,7 +32,6 @@
       return this.$el.hasClass("editing");
     },
     remove: function(options) {
-      var that = this;
       if (this._rendered) {
         this._rendered = false;
         var el = this.$el;
@@ -48,9 +46,9 @@
             queue: false,
             duration: 200,
             complete: function() {
-              that.editor.remove();
+              this.editor.remove();
               el.remove();
-            }
+            }.bind(this)
           });
         }
       }
@@ -95,6 +93,9 @@
       'input           .editor'                : '_onChange',
       'resize          .editor'                : '_onResizeEditor'
     },
+    blur: function() {
+      this.editor.blur();
+    },
     _swallowIfNotEditing(event) {
       if (this.isEditing()) {
         return;
@@ -120,9 +121,6 @@
       event.stopPropagation();
       event.preventDefault();
     },
-    blur: function() {
-      this.editor.blur();
-    },
     _onChange: function() {
       // Constantly auto-save.
       // Do not debounce. This avoids various race-conditions.
@@ -130,13 +128,12 @@
       this.model.changeContents(text, window);
     },
     _onFocusOut: function() {
-      var that = this;
       _.defer(function() {
-        if (!jQuery.contains(that.$el.get(0), document.activeElement)) {
-          that.$el.toggleClass("editing", false);
-          that.editor.spellcheck(false);
+        if (!jQuery.contains(this.$el.get(0), document.activeElement)) {
+          this.$el.toggleClass("editing", false);
+          this.editor.spellcheck(false);
         }
-      });
+      }.bind(this));
     },
     _onFocusIn: function(e) {
       this.$el.toggleClass("editing", true);
@@ -165,8 +162,6 @@
     tagName: "div",
     className: "notes",
     initialize: function(options) {
-      var that = this;
-
       // Allow overriding the note view.
       this.noteView = options.noteView || L.views.NoteView;
 
@@ -181,35 +176,34 @@
       this.listenTo(this.collection, 'change:searchFail', _.mask(this.setSearchFailed, 1));
 
       $(window).one('beforeunload', function() {
-        that.undelegateEvents();
-        that.stopListening();
-      });
+        this.undelegateEvents();
+        this.stopListening();
+      }.bind(this));
 
       // Load more if needed on window resize.
       $(window).on("resize", function() {
-        if (that._rendered) {
-          that._lazyLoadMore();
+        if (this._rendered) {
+          this._lazyLoadMore();
         }
-      });
+      }.bind(this));
     },
     events: {
-      'scroll': '_onScroll',
+      'scroll': '_onScroll'
     },
     sort: _.debounce(function() {
-      var that = this;
       this.collection.each(function(note, i) {
-        var view = that.subViews[note.id];
+        var view = this.subViews[note.id];
         if (view && !view.isEditing()) {
           view.remove();
-          that._insertAt(i, view);
+          this._insertAt(i, view);
         }
-      });
+      }, this);
     }, 100),
     reset: function() {
       this.renderNext = 0;
       if (this._rendered) {
         this.$notelist.empty();
-        this.collection.every(_.mask(_.bind(this._onAdd, this), 0, 1));
+        this.collection.every(_.mask(this._onAdd, 0, 1), this);
         // Why does lazyLoadMore not work here??? It calls lazyLoadMore but
         // nothing happens. It works from the console!?!?!?!?! It doesn't even
         // work if I delay it by *seconds*!!! WHY???? WTF!!!
@@ -217,7 +211,6 @@
       }
     },
     render: function() {
-      var that = this;
       if (!this._rendered) {
         this.$notelist = $('<ul class="notelist">');
         this.$el.append(this.$notelist);
@@ -229,7 +222,7 @@
           if (sorting) {
             e.stopImmediatePropagation();
           }
-        }, true);
+        }.bind(this), true);
 
         var current;
         var height;
@@ -247,12 +240,12 @@
             current = ui.placeholder.nextAll(':not(.ui-sortable-helper)').first();
             current.css('margin-top', height);
 
-          },
+          }.bind(this),
           change: function(event, ui) {
             current.stop(true).animate({'margin-top': 2}, 100);
             current = ui.placeholder.nextAll(':not(.ui-sortable-helper)').first();
             current.stop(true).animate({'margin-top': height}, 100);
-          },
+          }.bind(this),
           stop: function(event, ui) {
             $(document.body).toggleClass("gripping", false);
             current.css('margin-top', 2);
@@ -270,14 +263,14 @@
 
             // This needs to be set after the click event has been triggered.
             _.defer(function() { sorting = false; });
-          }
+          }.bind(this)
         });
 
         this._rendered = true;
         this.setShrinkNotes(L.preferences.get('shrinkNotes'));
         this.setSearchFailed(this.collection.searchFail);
       }
-      _.defer(_.bind(this.reset, this));
+      _.defer(this.reset.bind(this));
       return this;
     },
     setSearchFailed : function(state) {
@@ -346,7 +339,7 @@
         if (index < this.renderNext) {
           this.renderNext += 1;
         }
-        this._fixHeight();
+        this._fixScrollHeight();
       } else if (index < this.renderNext) {
         // If I choose not to render, fix the render next index.
         this.renderNext = index;
@@ -376,11 +369,11 @@
       view.remove(options);
       delete this.subViews[id];
 
-      this._fixHeight();
-
+      this._fixScrollHeight();
       this._lazyLoadMore();
     },
-    _fixHeight: _.throttle(function() {
+    _fixScrollHeight: _.throttle(function() {
+      // Makes the scrollbar "look" right.
       this.$notelist.css("min-height", 36*this.collection.size());
     }, 100)
   });

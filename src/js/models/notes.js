@@ -25,7 +25,7 @@
       });
     },
     initialized: function() {
-      this.on('change:contents change:meta', _.bind(this._onChange, this), this);
+      this.on('change:contents change:meta', this._onChange, this);
     },
     _onChange: function(model, value, options) {
       // Allow setting without marking the note as modified.
@@ -171,12 +171,12 @@
         if (this.indexOf(note) < this._searchCursor) {
           this._searchCursor--;
         }
-      });
+      }, this);
       this.on('add', function(note, c, options) {
         if (this.indexOf(note) < this._searchCursor) {
           this._searchCursor++;
         }
-      });
+      }, this);
       // Add notes if they change to match the current terms. Do not remove
       // notes as this could be annoying.
       this.listenTo(this.backingCollection, 'change', function(note) {
@@ -210,6 +210,7 @@
      * @param {LisIt.models.Note} note The note to consider adding.
      **/
     _onAdd: function(note, options) {
+      var action = (options || {}).action;
       if (this.searchFail && this.matcher(note)) {
         // Refilter
         if (!this.searching) {
@@ -218,7 +219,8 @@
         }
         this.searchFail = false;
         this.trigger('change:searchFail', this, this.searchFail);
-      } else if ((options || {}).action !== "create" && !this.matcher(note)) {
+      } else if (action !== "create" && action !== "move" && !this.matcher(note)) {
+        // Always insert note on create or move.
         return;
       }
       // Avoid sorting.
@@ -279,7 +281,6 @@
 
       debug('search::start');
 
-      var that = this;
       if (arguments.length > 0) {
         this._terms = newTerms;
       }
@@ -292,41 +293,41 @@
       // new note in the omnibox.
       var matched = false; // Have we matched a note
       this.backingCollection.each(function (note, index) {
-        that.searchQueue.add(function() {
-          if (that.matcher(note)) {
+        this.searchQueue.add(function() {
+          if (this.matcher(note)) {
             // If this is the first matched note, remove all previous notes in
             // one go.
             if(!matched) {
               matched = true;
-              if (that.searchFail) {
-                that.searchFail = false;
-                that.trigger('change:searchFail', that, that.searchFail);
+              if (this.searchFail) {
+                this.searchFail = false;
+                this.trigger('change:searchFail', this, this.searchFail);
               }
-              that.remove(that.backingCollection.slice(0,index), {action: "filter"});
+              this.remove(this.backingCollection.slice(0,index), {action: "filter"});
             }
-            that.add(note, {at: that._searchCursor, sort: false});
-            that._searchCursor++;
+            this.add(note, {at: this._searchCursor, sort: false});
+            this._searchCursor++;
           } else if (matched) {
             // If we have matched notes, just directly remove the note.
-            that.remove(note, {action: "filter"});
+            this.remove(note, {action: "filter"});
           }
-        });
-      });
+        }.bind(this));
+      }, this);
 
       this.searchQueue.add(function() {
-        that.searching = false;
+        this.searching = false;
         debug('search::end');
-        // Use boolean because that.searchFail may not be set
-        if (Boolean(that.searchFail) === matched) {
-          that.searchFail = !that.searchFail;
-          that.trigger('change:searchFail', that, that.searchFail);
+        // Use boolean because this.searchFail may not be set
+        if (Boolean(this.searchFail) === matched) {
+          this.searchFail = !this.searchFail;
+          this.trigger('change:searchFail', this, this.searchFail);
         }
-        if (that.searchFail) {
-          that.trigger('search:fail search:end', that._terms, that.searchID);
+        if (this.searchFail) {
+          this.trigger('search:fail search:end', this._terms, this.searchID);
         } else {
-          that.trigger('search:complete search:end', that._terms, that.searchID);
+          this.trigger('search:complete search:end', this._terms, this.searchID);
         }
-      });
+      }.bind(this));
 
       return this.searchID;
     }
@@ -346,20 +347,19 @@
       return false;
     },
     initialize: function() {
-      var that = this;
       // Start saving immediately after loading before fetching related.
       this.once('sync error', function() {
         // Perform an initial flush to save any changes that might have occured
         // durring fetch.
-        that.save();
-        _.each(that.relations, function(v, k) {
-          that.listenTo(that.get(k), 'add remove', function(model, collection, options) {
+        this.save();
+        _.each(this.relations, function(v, k) {
+          this.listenTo(this.get(k), 'add remove', function(model, collection, options) {
             if (!(options && options.nosave)) {
-              that.save();
+              this.save();
             }
           });
-        });
-      });
+        }, this);
+      }, this);
     },
     initialized: function() {
       // No need to add this early.

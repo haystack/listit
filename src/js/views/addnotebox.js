@@ -13,16 +13,16 @@
       'keydown[esc]           .editor'    : '_onCloseTriggered'
     },
     initialize: function() {
-      var that = this;
       window.onbeforeunload = function(e) {
-        if (that._rendered) {
+        if (this._rendered) {
           var message = "You have an unsaved list.it note open.";
           e.returnValue = message;
           return message;
         } else {
+          // Silence warnings.
           return undefined;
         }
-      };
+      }.bind(this);
     },
     saveNote: function() {
       this.model.set({contents: L.util.strip(this.editor.getText())});

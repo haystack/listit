@@ -51,12 +51,11 @@
       if (this.options) {
         options = _.extend({}, this.options, options);
       }
-      var that = this;
       _.each(viewOptions, function(option) {
         if (options[option]) {
-          that[option] = options[option];
+          this[option] = options[option];
         }
-      });
+      }, this);
 
       this.options = options;
 
@@ -73,8 +72,6 @@
         return;
       }
 
-      var that = this;
-
       _.each(events, function(method, key) {
         var evt = eventMap[key];
 
@@ -83,15 +80,15 @@
         }
 
         if (!_.isFunction(method)) {
-          method = that[events[key]];
+          method = this[events[key]];
         }
 
         if (!method) {
           throw new Error('Method "' + events[key] + '" does not exist');
         }
 
-        that.omnibox[evt].addListener(_.bind(method, that));
-      });
+        this.omnibox[evt].addListener(method.bind(this));
+      }, this);
     }
   });
 

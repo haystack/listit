@@ -7,12 +7,10 @@
     id: 'page-main',
     className: 'page',
     initialize: function(options) {
-      var that = this;
-
       $(window).one('beforeunload', function() {
-        that.undelegateEvents();
-        that.stopListening();
-      });
+        this.undelegateEvents();
+        this.stopListening();
+      }.bind(this));
 
       if (options && options.panels) {
         this.panels = options.panels;
@@ -27,25 +25,24 @@
     },
     render: function() {
       if (!this._rendered) {
-        var that = this;
         this.$el.html(L.templates["pages/main"]());
 
         $(window).on('keydown', null, 'F5', function(event) {
-          if (that.$el.is(':visible')) {
+          if (this.$el.is(':visible')) {
             event.preventDefault();
             L.server.syncNotes();
           }
-        });
+        }.bind(this));
 
         _.each(this.panels, function(view, id) {
-          that.$("#main-"+id).html(view.render().$el);
-        });
+          this.$("#main-"+id).html(view.render().$el);
+        }, this);
         this._rendered = true;
       } else {
         // Always re-render
         _.each(this.panels, function(view, id) {
           view.render();
-        });
+        }, this);
       }
       return this;
     }

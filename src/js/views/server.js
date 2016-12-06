@@ -23,11 +23,10 @@
       this._focused = $(ev.target);
     },
     initialize: function() {
-      var that = this;
       $(window).one('beforeunload', function() {
-        that.undelegateEvents();
-        that.stopListening();
-      });
+        this.undelegateEvents();
+        this.stopListening();
+      }.bind(this));
       this.listenTo(this.model, 'change:error', _.mask(this.updateError, 1));
       this.listenTo(this.model, 'change:registered', _.mask(this.updateRegistered, 1));
       this.listenTo(this.model, 'change:email', _.mask(this.updateEmail, 1));
@@ -118,7 +117,6 @@
       // modal fields are toggled based on their mode-* fields
       var shown = this.$el.find('.modal.mode-'+mode);
       var hidden = this.$el.find('.modal:not(.mode-'+mode+')');
-      var that = this;
 
       // Slide
       // Disable/enable fields to disable validation.
@@ -127,15 +125,15 @@
         L.util.slideSwitch(hidden, shown, function() {
           hidden.disableFields();
           //Refocus
-          if (that._focused) {
-            if (that._focused.is(':visible')) {
-              that._focused.focus();
+          if (this._focused) {
+            if (this._focused.is(':visible')) {
+              this._focused.focus();
             } else {
-              that._focused = that.$el.find('.field:first:visible');
-              that._focused.focus();
+              this._focused = this.$el.find('.field:first:visible');
+              this._focused.focus();
             }
           }
-        });
+        }.bind(this));
       } else {
         shown.enableFields().show();
         hidden.disableFields().hide();

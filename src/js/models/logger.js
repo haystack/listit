@@ -28,13 +28,12 @@
       });
     },
     initialized: function() {
-      var that = this;
       if (this.isNew()) {
         L.gvent.trigger('log:request:data', this);
       }
-      var debouncedSave = _.debounce(_.bind(this.save, this), 100);
+      var debouncedSave = _.debounce(this.save.bind(this), 100);
       this.listenTo(this, "change", function(m) {
-        if (!that.isNew()) {
+        if (!this.isNew()) {
           debouncedSave();
         }
       });
@@ -87,27 +86,26 @@
       return false;
     },
     initialize: function(models, options) {
-      var that = this;
       // Call destructors on exit
       this.listenTo(L.gvent, 'sys:exit', function() {
-        _.each(that.observers, function(obs) {
+        _.each(this.observers, function(obs) {
           obs._started = false;
           obs.stop();
-        });
+        }, this);
       });
       this.once('sync error', function() {
-        var debouncedSave = _.debounce(_.bind(that.save, that), 10);
+        var debouncedSave = _.debounce(this.save.bind(this), 10);
         // Perform an initial flush to save any changes that might have occured
         // durring fetch.
-        that.save();
-        _.each(that.relations, function(v, k) {
-          that.listenTo(that.get(k), 'add remove', function(model, collection, options) {
+        this.save();
+        _.each(this.relations, function(v, k) {
+          this.listenTo(this.get(k), 'add remove', function(model, collection, options) {
             if (!(options && options.nosave)) {
               debouncedSave();
             }
           });
-        });
-      });
+        }, this);
+      }, this);
     },
     initialized: function() {
       // Initialize observers.
@@ -116,7 +114,7 @@
         Ctor.prototype = obs;
         var inst = new Ctor();
         return inst;
-      });
+      }.bind(this));
 
       L.server.ready(function() {
         // React to changes.

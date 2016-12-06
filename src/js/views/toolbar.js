@@ -5,11 +5,10 @@
     tagName: 'div',
     attributes: {'style': 'display: none;'}, // css isn't working for some reason
     initialize: function() {
-      var that = this;
       $(window).one('beforeunload', function() {
-        that.undelegateEvents();
-        that.stopListening();
-      });
+        this.undelegateEvents();
+        this.stopListening();
+      }.bind(this));
     },
     render: function() {
       this.$el.html(L.templates["toolbar"]({

@@ -38,23 +38,7 @@
     toJSON: function(options) {
       return _.pick(this.attributes, this.include);
     },
-    initialize: function() {
-      _(this).bindAll(
-        '_syncNotesFailure',
-        '_syncNotesSuccess',
-        '_syncNotesEnter',
-        '_syncNotesReschedule',
-        '_syncNotesExit',
-        '_syncLogsEnter',
-        '_syncLogsReschedule',
-        'packageNote',
-        'unpackageNote',
-        'syncNotes',
-        'syncLogs'
-      );
-    },
     initialized: function() {
-      var that = this;
       this.listenTo(this, _.reduce(this.include, function(memo, attr) {
         return memo+" change:"+attr;
       }, ""), _.mask(this.save));
@@ -78,13 +62,13 @@
 
       this.listenTo(this, 'change:registered', function(server, registered) {
         // Don't start if not running.
-        if (!that.get('running')) {
+        if (!this.get('running')) {
           return;
         }
         if (registered) {
-          that.resume();
+          this.resume();
         } else {
-          that.pause();
+          this.pause();
         }
       });
 
@@ -112,16 +96,15 @@
       // Call with auth token if needed. Do it this way to allow for
       // asynchronous authentication (password prompts etc.)
       if (options.auth && !options.authToken) {
-        var that = this;
         L.authmanager.getToken(function(token) {
           if (token) {
             options.authToken = token;
-            that.ajax(options);
+            this.ajax(options);
           } else {
             (options.error || $.noop)(L.models.Server.errors.AUTHENTICATION_FAILURE, 'User not authenticated');
             (options.complete || $.noop)();
           }
-        });
+        }.bind(this));
         return;
       }
 
@@ -151,16 +134,15 @@
     },
     syncNotes : function(synchronous) {
       if (this._syncNotesEnter()) {
-        var that = this;
         this.pullNotes({
-          error: that._syncNotesFailure,
+          error: this._syncNotesFailure.bind(this),
           success: function() {
-            that.pushNotes({
-              error: that._syncNotesFailure,
-              success: that._syncNotesSuccess
+            this.pushNotes({
+              error: this._syncNotesFailure.bind(this),
+              success: this._syncNotesSuccess.bind(this)
             }, synchronous);
           }
-        }, synchronous);
+        }.bind(this), synchronous);
       }
     },
     _syncNotesEnter: function() {
@@ -182,7 +164,7 @@
     _syncNotesReschedule: function() {
       var interval = this.get('noteSyncInterval');
       if (interval > 0) {
-        this.set('noteSyncTimer', setTimeout(this.syncNotes, interval));
+        this.set('noteSyncTimer', setTimeout(this.syncNotes.bind(this), interval));
       }
     },
     _syncNotesFailure: function(xhdr, stat) {
@@ -197,25 +179,23 @@
       this._syncNotesExit();
     },
     pullNotes : function(options, synchronous) {
-      var that = this;
       this.ajax({
         method: 'notes',
         dataType: 'json',
         auth: true,
         async: !synchronous,
         success: function(results) {
-          that.unbundleNotes(results, function() {
+          this.unbundleNotes(results, function() {
             if (options.success) {
               options.success(results);
             }
-          });
-        },
+          }.bind(this));
+        }.bind(this),
         error: options.error,
         complete: options.complete
       });
     },
     pushNotes : function(options, synchrounous) {
-      var that = this;
       this.ajax({
         method: 'notespostmulti',
         dataType: 'json',
@@ -223,20 +203,19 @@
         async: !synchrounous,
         data: JSON.stringify(this.bundleNotes()),
         success: function(response) {
-          if (that.commitNotes(response.committed)) {
+          if (this.commitNotes(response.committed)) {
             if (options && options.success) {
               options.success();
             }
           } else if (options && options.error) {
             options.error(L.models.Server.errors.COMMIT_FAILURE);
           }
-        },
+        }.bind(this),
         error: options && options.error,
         complete: options && options.complete
       });
     },
     syncLogs : function() {
-      var that = this;
       if (this._syncLogsEnter()) {
         this.ajax({
           method: 'post_json_chrome_logs',
@@ -244,15 +223,15 @@
           data: JSON.stringify(this.bundleLogs()),
           error: function(code, error) {
             debug('syncLogs::failed', error);
-          },
+          }.bind(this),
           success: function(response) {
             L.logger.clearUntil(response.lastTimeRecorded);
             debug('syncLogs::succeeded');
-          },
+          }.bind(this),
           complete: function() {
-            that.set('syncingLogs', false);
-            that._syncLogsReschedule();
-          }
+            this.set('syncingLogs', false);
+            this._syncLogsReschedule();
+          }.bind(this)
         });
       }
     },
@@ -277,11 +256,10 @@
     _syncLogsReschedule: function() {
       var interval = this.get('logSyncInterval');
       if (interval > 0) {
-        this.set('logSyncTimer', setTimeout(this.syncLogs, interval));
+        this.set('logSyncTimer', setTimeout(this.syncLogs.bind(this), interval));
       }
     },
     resume: function() {
-      var that = this;
       if (!this.get('paused')) {
         return;
       } else {
@@ -289,15 +267,15 @@
       }
       if (this.get('noteSyncInterval', -1) > 0) {
         L.notebook.ready(function() {
-          that.syncNotes();
+          this.syncNotes();
           $(window).off('beforeunload.lastSync');
-          $(window).on('beforeunload.lastSync', _.bind(that.syncNotes, that, true));
-        });
+          $(window).on('beforeunload.lastSync', this.syncNotes.bind(this, true));
+        }.bind(this));
       }
       if (this.get('logSyncInterval', -1) > 0) {
         L.logger.ready(function() {
-          that.syncLogs();
-        });
+          this.syncLogs();
+        }.bind(this));
       }
     },
     pause: function() {
@@ -351,13 +329,12 @@
       if (DEBUG_MODE && window.console && window.console.time) {
         window.console.time('bundle notes');
       }
-      var that = this,
-          bundle = [],
+      var bundle = [],
           bundleNote = function(note, deleted) {
             if (note.get('modified')) {
-              bundle.push(that.packageNote(note, deleted));
+              bundle.push(this.packageNote(note, deleted));
             }
-          };
+          }.bind(this);
 
 
       // Push magic note.
@@ -437,7 +414,6 @@
 
       var magic,
           newVersion,
-          that = this,
           notes = L.notebook.get('notes'),
           deletedNotes = L.notebook.get('deletedNotes'),
           toBeDestroyed = L.notebook.get('toBeDestroyed'),
@@ -450,7 +426,7 @@
       _.each(result, unbundleQueue.wrap(function(noteResult) {
         // Unpackage
         var note, deleted;
-        var noteJSON = that.unpackageNote(noteResult.fields);
+        var noteJSON = this.unpackageNote(noteResult.fields);
 
         // Handle magic note.
         if (noteJSON.id < 0) {
@@ -503,7 +479,7 @@
         } else {
           (deleted ? toAddDeleted : toAdd).push(new L.models.Note(noteJSON));
         }
-      }));
+      }), this);
 
       unbundleQueue.add(function() {
         // This section shouldn't be interrupted
@@ -537,7 +513,7 @@
       unbundleQueue.add(function() {
         _.each(toAdd, unbundleQueue.wrap(function(n) {n.save();}));
         _.each(toAddDeleted, unbundleQueue.wrap(function(n) {n.save();}));
-        unbundleQueue.add(_.bind(L.notebook.save, L.notebook));
+        unbundleQueue.add(L.notebook.save.bind(L.notebook));
         unbundleQueue.add(function() {
           if (DEBUG_MODE && window.console && window.console.time) {
             window.console.timeEnd('unbundle notes');
@@ -580,7 +556,6 @@
     },
     login: function(email, password, options) {
       var hashpass = L.util.makeHashpass(email, password);
-      var that = this;
       this.set({
         email: '',
         registered: false
@@ -593,25 +568,24 @@
         success: function(response) {
           // Don't change state really done.
           L.authmanager.setToken(hashpass, function() {
-            that.set({
+            this.set({
               studies: _.kmap(_.omit(response, "code"), function(v) { return v !== 0; }),
               email: email,
               registered: true,
               error: undefined
             });
-          });
+          }.bind(this));
         },
         error: function(code, message, jqXHR) {
           if (jqXHR.status === 401) {
-            that.set('error', 'Invalid email or password.');
+            this.set('error', 'Invalid email or password.');
           } else {
-            that.set('error', 'Connection Error.');
+            this.set('error', 'Connection Error.');
           }
-        }
+        }.bind(this)
       });
     },
     register: function(email, password, couhes, options) {
-      var that = this;
       // Pulled from zen/tags site
       var firstname = '';
       var lastname = '';
@@ -633,17 +607,17 @@
         cache: false,
         success: function(response) {
           L.authmanager.setToken(L.util.makeHashpass(email, password), function() {
-            that.set({
+            this.set({
               studies: _.kmap(_.omit(response, "code"), function(v) { return v !== 0; }),
               registered: true,
               error: undefined,
               email: email
             });
-          });
-        },
+          }.bind(this));
+        }.bind(this),
         error: function() {
-          that.set('error', 'Failed to register user.');
-        }
+          this.set('error', 'Failed to register user.');
+        }.bind(this)
       });
     },
     logout: function() {

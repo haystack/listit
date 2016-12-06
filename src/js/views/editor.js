@@ -42,7 +42,6 @@
       }
     },
     render: function() {
-      var that = this;
       this.$el.html(L.templates["editor"]({
         content: this.initialContent,
         toolbarItems: this.toolbarItems,
@@ -57,9 +56,9 @@
         $bottombar.find('.editor-icons').html(this.actions);
       }
 
-      that.squire = new Squire($entry.get(0));
-      that.squire.setHTML(that.initialContent);
-      that.squire.moveCursorToStart();
+      this.squire = new Squire($entry.get(0));
+      this.squire.setHTML(this.initialContent);
+      this.squire.moveCursorToStart();
 
       var matchers = [
         {
@@ -114,22 +113,22 @@
           squire.setSelection(currentRange);
         }
       }
-      that.squire.addEventListener('input', function(e) {
-        that.squire.modifyDocument(function() {
-          var range = that.squire.getSelection();
-          that.squire._saveRangeToBookmark(range);
-          $(that.squire.getRoot()).cut(".auto_format");
-          that.squire._getRangeAndRemoveBookmark(range);
-          that.squire.setSelection(range);
+      this.squire.addEventListener('input', function(e) {
+        this.squire.modifyDocument(function() {
+          var range = this.squire.getSelection();
+          this.squire._saveRangeToBookmark(range);
+          $(this.squire.getRoot()).cut(".auto_format");
+          this.squire._getRangeAndRemoveBookmark(range);
+          this.squire.setSelection(range);
           _.each(matchers, function(matcher) {
-            highlight(that.squire, matcher, that.squire.getRoot());
-          });
-        });
-        that.$el.trigger(e);
-      });
+            highlight(this.squire, matcher, this.squire.getRoot());
+          }.bind(this));
+        }.bind(this));
+        this.$el.trigger(e);
+      }.bind(this));
 
-      that.squire.addEventListener('pathChange', _.bind(that._updateFormatState, that));
-      that._updateFormatState();
+      this.squire.addEventListener('pathChange', this._updateFormatState.bind(this));
+      this._updateFormatState();
 
       return this;
     },
@@ -152,28 +151,27 @@
       return this.$(".editor-entry").prop("spellcheck", state);
     },
     _updateFormatState: function(evt) {
-      var that = this;
       var fontInfo = this.squire.getFontInfo();
-      this.$(".editor-toolbar-buttons .editor-toggle").each(function() {
-        var tag = $(this).data("tag");
-        var hasFormat = that.squire.hasFormat(tag);
-        $(this).toggleClass("active", hasFormat);
-      });
-      this.$(".editor-toolbar-buttons .editor-select").each(function() {
-        var prop = $(this).data("property");
+      this.$(".editor-toolbar-buttons .editor-toggle").each(function(idx, el) {
+        var tag = $(el).data("tag");
+        var hasFormat = this.squire.hasFormat(tag);
+        $(el).toggleClass("active", hasFormat);
+      }.bind(this));
+      this.$(".editor-toolbar-buttons .editor-select").each(function(idx, el) {
+        var prop = $(el).data("property");
         var currentValue = fontInfo[prop];
-        $(".editor-option", this).removeClass("active");
+        $(".editor-option", el).removeClass("active");
         if (!!currentValue) {
           // Using jquery doesn't work here. WTF?
-          this.dataset.value = currentValue;
-          $(this).addClass("active");
-          $(".editor-option[data-value=" + currentValue + "]", this).addClass("active");
+          el.dataset.value = currentValue;
+          $(el).addClass("active");
+          $(".editor-option[data-value=" + currentValue + "]", el).addClass("active");
         } else {
-          delete this.dataset["value"];
-          $(this).removeClass("active");
-          $(".editor-option:not([data-value])", this).addClass("active");
+          delete el.dataset["value"];
+          $(el).removeClass("active");
+          $(".editor-option:not([data-value])", el).addClass("active");
         }
-      });
+      }.bind(this));
     },
     _onEditorFormatSelect: function(evt) {
       evt.preventDefault();
@@ -211,9 +209,8 @@
       }
     },
     setText: function(text) {
-      var that = this;
       if (this.squire) {
-        that.squire.setHTML(text);
+        this.squire.setHTML(text);
       } else {
         this.initialContent = text;
       }

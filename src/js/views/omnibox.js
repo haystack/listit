@@ -9,15 +9,14 @@
   L.views.OmniboxView = Backbone.View.extend({
     className: 'omnibox note-creator',
     initialize: function() {
-      var that = this;
       $(window).one('beforeunload', function() {
-        if (that._rendered) {
-          that.undelegateEvents();
-          that.stopListening();
-          that.storeText();
-          that.storeSearch();
+        if (this._rendered) {
+          this.undelegateEvents();
+          this.stopListening();
+          this.storeText();
+          this.storeSearch();
         }
-      });
+      }.bind(this));
 
       this.model.set('untouched', true); // View untouched by user.
       this.listenTo(this.model, 'change:text', function(m, t, o) {
@@ -82,20 +81,19 @@
       this._rendered = true;
 
       // Bind
-      var that = this;
       $(window).on('keydown', null, 'ctrl+f', function(event) {
         // If the omnibox is actually visible.
-        if (that.$el.is(':visible')) {
+        if (this.$el.is(':visible')) {
           event.preventDefault(); // Don't open the findbar
           event.stopPropagation(); // Otherwise, we close the findbar with the same event...
-          if (that.$searchbar.is(':focus')) {
-            that.model.set('searchState', false);
+          if (this.$searchbar.is(':focus')) {
+            this.model.set('searchState', false);
           } else {
-            that.model.set('searchState', true);
-            that.$searchbar.select().focus();
+            this.model.set('searchState', true);
+            this.$searchbar.select().focus();
           }
         }
-      });
+      }.bind(this));
       return this;
     },
     events: {
@@ -203,12 +201,11 @@
   L.views.ControlsView = Backbone.View.extend({
     className: 'controls',
     initialize: function() {
-      var that = this;
       $(window).one('beforeunload', function() {
-        that.undelegateEvents();
-        L.preferences.off(null, null, that);
-        L.server.off(null, null, that);
-      });
+        this.undelegateEvents();
+        L.preferences.off(null, null, this);
+        L.server.off(null, null, this);
+      }.bind(this));
       this.listenTo(L.omnibox, 'change:searchState', this.render);
       this.listenTo(L.server, 'change:syncingNotes', this.render);
       this.listenTo(L.sidebar, 'change:searchFail', this.render);
