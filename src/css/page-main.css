@@ -37,3 +37,9 @@
   flex: 1;
   overflow-x: auto;
 }
+
+
+#main-notes > .notes {
+    /* Always scroll notes */
+    overflow-y: scroll;
+}
